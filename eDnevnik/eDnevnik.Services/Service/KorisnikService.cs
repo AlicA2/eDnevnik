@@ -2,6 +2,7 @@
 using eDnevnik.Model.Requests;
 using eDnevnik.Services.Database;
 using eDnevnik.Services.IServices;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,9 @@ namespace eDnevnik.Services.Service
             _mapper = mapper;
         }
 
-        public List<Model.Models.Korisnik> Get()
+        public async Task<List<Model.Models.Korisnik>> Get()
         {
-            var entityList = _context.Korisnici.ToList();
+            var entityList =await _context.Korisnici.ToListAsync();
 
             return _mapper.Map<List<Model.Models.Korisnik>>(entityList);
         }

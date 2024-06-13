@@ -12,8 +12,8 @@ using eDnevnik.Services;
 namespace eDnevnik.Services.Migrations
 {
     [DbContext(typeof(eDnevnikDBContext))]
-    [Migration("20240612132955_Roles")]
-    partial class Roles
+    [Migration("20240613143415_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -53,23 +53,23 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             KorisnikUlogaID = 1,
-                            DatumIzmjene = new DateTime(2024, 6, 12, 15, 29, 55, 192, DateTimeKind.Local).AddTicks(2152),
+                            DatumIzmjene = new DateTime(2024, 6, 13, 16, 34, 15, 447, DateTimeKind.Local).AddTicks(9203),
                             KorisnikID = 1,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 2,
-                            DatumIzmjene = new DateTime(2024, 6, 12, 15, 29, 55, 192, DateTimeKind.Local).AddTicks(2237),
+                            DatumIzmjene = new DateTime(2024, 6, 13, 16, 34, 15, 447, DateTimeKind.Local).AddTicks(9240),
                             KorisnikID = 2,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 3,
-                            DatumIzmjene = new DateTime(2024, 6, 12, 15, 29, 55, 192, DateTimeKind.Local).AddTicks(2240),
+                            DatumIzmjene = new DateTime(2024, 6, 13, 16, 34, 15, 447, DateTimeKind.Local).AddTicks(9243),
                             KorisnikID = 3,
-                            UlogaID = 3
+                            UlogaID = 2
                         });
                 });
 
@@ -100,6 +100,9 @@ namespace eDnevnik.Services.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("OdjeljenjeID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Prezime")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -111,6 +114,8 @@ namespace eDnevnik.Services.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("KorisnikID");
+
+                    b.HasIndex("OdjeljenjeID");
 
                     b.ToTable("Korisnici");
 
@@ -150,37 +155,80 @@ namespace eDnevnik.Services.Migrations
                         });
                 });
 
-            modelBuilder.Entity("eDnevnik.Services.Database.Proizvodi", b =>
+            modelBuilder.Entity("eDnevnik.Services.Database.Ocjene", b =>
                 {
-                    b.Property<int>("ProizvodId")
+                    b.Property<int>("OcjenaID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProizvodId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OcjenaID"), 1L, 1);
 
-                    b.Property<decimal?>("Cijena")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<DateTime>("Datum")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Naziv")
+                    b.Property<int>("Ocjena")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PredmetID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProfesorID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UcenikID")
+                        .HasColumnType("int");
+
+                    b.HasKey("OcjenaID");
+
+                    b.HasIndex("PredmetID");
+
+                    b.HasIndex("ProfesorID");
+
+                    b.HasIndex("UcenikID");
+
+                    b.ToTable("Ocjene");
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.Odjeljenje", b =>
+                {
+                    b.Property<int>("OdjeljenjeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OdjeljenjeID"), 1L, 1);
+
+                    b.Property<string>("NazivOdjeljenja")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ProizvodId");
+                    b.Property<int?>("RazrednikID")
+                        .HasColumnType("int");
 
-                    b.ToTable("Proizvodi");
+                    b.HasKey("OdjeljenjeID");
 
-                    b.HasData(
-                        new
-                        {
-                            ProizvodId = 1,
-                            Cijena = 20m,
-                            Naziv = "amar"
-                        },
-                        new
-                        {
-                            ProizvodId = 2,
-                            Cijena = 30m,
-                            Naziv = "alic"
-                        });
+                    b.HasIndex("RazrednikID");
+
+                    b.ToTable("Odjeljenje");
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.Predmet", b =>
+                {
+                    b.Property<int>("PredmetID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PredmetID"), 1L, 1);
+
+                    b.Property<string>("Naziv")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Opis")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PredmetID");
+
+                    b.ToTable("Predmeti");
                 });
 
             modelBuilder.Entity("eDnevnik.Services.Database.Uloge", b =>
@@ -207,20 +255,29 @@ namespace eDnevnik.Services.Migrations
                         {
                             UlogaID = 1,
                             Naziv = "admin",
-                            Opis = "admin ili profesor"
+                            Opis = "admin/profesor"
                         },
                         new
                         {
                             UlogaID = 2,
                             Naziv = "učenik",
-                            Opis = "učenik/ca"
-                        },
-                        new
-                        {
-                            UlogaID = 3,
-                            Naziv = "roditelj",
-                            Opis = "roditelj"
+                            Opis = "učenik/roditelj"
                         });
+                });
+
+            modelBuilder.Entity("KorisnikPredmet", b =>
+                {
+                    b.Property<int>("PredmetID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UceniciKorisnikID")
+                        .HasColumnType("int");
+
+                    b.HasKey("PredmetID", "UceniciKorisnikID");
+
+                    b.HasIndex("UceniciKorisnikID");
+
+                    b.ToTable("KorisnikPredmet");
                 });
 
             modelBuilder.Entity("eDnevnik.Services.Database.KorisniciUloge", b =>
@@ -244,7 +301,79 @@ namespace eDnevnik.Services.Migrations
 
             modelBuilder.Entity("eDnevnik.Services.Database.Korisnik", b =>
                 {
+                    b.HasOne("eDnevnik.Services.Database.Odjeljenje", "Odjeljenje")
+                        .WithMany("Ucenici")
+                        .HasForeignKey("OdjeljenjeID");
+
+                    b.Navigation("Odjeljenje");
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.Ocjene", b =>
+                {
+                    b.HasOne("eDnevnik.Services.Database.Predmet", "Predmet")
+                        .WithMany("Ocjene")
+                        .HasForeignKey("PredmetID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("eDnevnik.Services.Database.Korisnik", "Profesor")
+                        .WithMany()
+                        .HasForeignKey("ProfesorID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("eDnevnik.Services.Database.Korisnik", "Ucenik")
+                        .WithMany("Ocjene")
+                        .HasForeignKey("UcenikID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Predmet");
+
+                    b.Navigation("Profesor");
+
+                    b.Navigation("Ucenik");
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.Odjeljenje", b =>
+                {
+                    b.HasOne("eDnevnik.Services.Database.Korisnik", "Razrednik")
+                        .WithMany()
+                        .HasForeignKey("RazrednikID");
+
+                    b.Navigation("Razrednik");
+                });
+
+            modelBuilder.Entity("KorisnikPredmet", b =>
+                {
+                    b.HasOne("eDnevnik.Services.Database.Predmet", null)
+                        .WithMany()
+                        .HasForeignKey("PredmetID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eDnevnik.Services.Database.Korisnik", null)
+                        .WithMany()
+                        .HasForeignKey("UceniciKorisnikID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.Korisnik", b =>
+                {
                     b.Navigation("KorisniciUloge");
+
+                    b.Navigation("Ocjene");
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.Odjeljenje", b =>
+                {
+                    b.Navigation("Ucenici");
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.Predmet", b =>
+                {
+                    b.Navigation("Ocjene");
                 });
 
             modelBuilder.Entity("eDnevnik.Services.Database.Uloge", b =>

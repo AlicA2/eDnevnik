@@ -17,9 +17,9 @@ namespace eDnevnik.Controllers
         }
 
         [HttpGet()]
-        public IEnumerable<Model.Models.Korisnik> Get()
+        public async Task<IEnumerable<Model.Models.Korisnik>> Get()
         {
-            return _service.Get();
+            return await _service.Get();
         }
         [HttpPost()]
         public Model.Models.Korisnik Insert(KorisniciInsertRequest request)

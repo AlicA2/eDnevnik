@@ -8,6 +8,10 @@ namespace eDnevnik.Services
         public DbSet<Korisnik> Korisnici { get; set; }
         public DbSet<Uloge> Uloge { get; set; }
         public DbSet<KorisniciUloge> korisniciUloges { get; set; }
+        public DbSet<Odjeljenje> Odjeljenje { get; set; }
+        public DbSet<Ocjene> Ocjene { get; set; }
+        public DbSet<Predmet> Predmeti { get; set; }
+
 
         public eDnevnikDBContext(DbContextOptions<eDnevnikDBContext> options):base(options)
     { }

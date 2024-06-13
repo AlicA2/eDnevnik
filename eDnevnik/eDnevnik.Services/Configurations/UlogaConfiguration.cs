@@ -15,10 +15,6 @@ namespace eDnevnik.Services.Configurations
             base.Configure(builder);
 
             builder.HasKey(e => e.UlogaID);
-
-            builder.HasMany(u => u.KorisniciUloge)
-                .WithOne(ko => ko.Uloga)
-                .HasForeignKey(ko => ko.UlogaID);
         }
     }
 }

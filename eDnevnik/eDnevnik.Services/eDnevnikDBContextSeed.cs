@@ -15,6 +15,63 @@ namespace eDnevnik.Services
             SeedUloge(modelBuilder);
             SeedKorisnici(modelBuilder);
             SeedKorisniciUloge(modelBuilder);
+            SeedPredmeti(modelBuilder);
+            SeedOcjene(modelBuilder);
+            SeedOdjeljenje(modelBuilder);
+        }
+
+        private void SeedOcjene(ModelBuilder modelBuilder)
+        {
+            //    modelBuilder.Entity<Ocjene>().HasData(
+            //        new Ocjene
+            //        {
+            //            OcjenaID = 1,
+            //            Ocjena=5,
+            //            Datum=DateTime.Now,
+            //            UcenikID=2,
+            //            PredmetID=1,
+            //            ProfesorID=1
+            //        },
+            //             new Ocjene
+            //             {
+            //                 OcjenaID = 2,
+            //                 Ocjena = 4,
+            //                 Datum = DateTime.Now,
+            //                 UcenikID = 2,
+            //                 PredmetID = 2,
+            //                 ProfesorID = 1
+            //             }
+            //        );
+        }
+
+        private void SeedPredmeti(ModelBuilder modelBuilder)
+            {
+                //    modelBuilder.Entity<Predmet>().HasData(
+                //        new Predmet
+                //        {
+                //            PredmetID = 1,
+                //            Naziv = "Matematika",
+                //            Opis = "Sabiranje,oduzimanje,množenje,dijeljenje"
+                //        },
+                //        new Predmet
+                //        {
+                //            PredmetID = 2,
+                //            Naziv = "Biologija",
+                //            Opis = "Biljke"
+                //        }
+                //        ); ;
+            }
+
+        private void SeedOdjeljenje(ModelBuilder modelBuilder)
+        {
+            //modelBuilder.Entity<Odjeljenje>().HasData(
+            //    new Odjeljenje
+            //    {
+            //        OdjeljenjeID = 1,
+            //        NazivOdjeljenja = "1A",
+            //        RazrednikID = 1
+            //    }
+            //    );
         }
 
         private void SeedKorisniciUloge(ModelBuilder modelBuilder)
@@ -38,7 +95,7 @@ namespace eDnevnik.Services
                 {
                     KorisnikUlogaID = 3,
                     KorisnikID = 3,
-                    UlogaID = 3,
+                    UlogaID = 2,
                     DatumIzmjene = DateTime.Now
                 }
                 );
@@ -51,19 +108,13 @@ namespace eDnevnik.Services
                 {
                     UlogaID = 1,
                     Naziv="admin",
-                    Opis="admin ili profesor"
+                    Opis="admin/profesor"
                 },
                  new Uloge
                  {
                      UlogaID = 2,
                      Naziv = "učenik",
-                     Opis = "učenik/ca"
-                 }, 
-                 new Uloge
-                 {
-                     UlogaID = 3,
-                     Naziv = "roditelj",
-                     Opis = "roditelj"
+                     Opis = "učenik/roditelj"
                  }
                 );
         }

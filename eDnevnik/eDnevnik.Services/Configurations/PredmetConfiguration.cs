@@ -1,0 +1,23 @@
+﻿using eDnevnik.Services.Database;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace eDnevnik.Services.Configurations
+{
+    public class PredmetConfiguration : BaseConfiguration<Predmet>
+    {
+        public override void Configure(EntityTypeBuilder<Predmet> builder)
+        {
+            base.Configure(builder);
+            builder.HasKey(p => p.PredmetID);
+
+            builder.HasMany(p => p.Ocjene)
+                     .WithOne(o => o.Predmet)
+                     .HasForeignKey(o => o.PredmetID);
+        }
+    }
+}
