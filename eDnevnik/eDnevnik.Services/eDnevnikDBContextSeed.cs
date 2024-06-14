@@ -22,56 +22,56 @@ namespace eDnevnik.Services
 
         private void SeedOcjene(ModelBuilder modelBuilder)
         {
-            //    modelBuilder.Entity<Ocjene>().HasData(
-            //        new Ocjene
-            //        {
-            //            OcjenaID = 1,
-            //            Ocjena=5,
-            //            Datum=DateTime.Now,
-            //            UcenikID=2,
-            //            PredmetID=1,
-            //            ProfesorID=1
-            //        },
-            //             new Ocjene
-            //             {
-            //                 OcjenaID = 2,
-            //                 Ocjena = 4,
-            //                 Datum = DateTime.Now,
-            //                 UcenikID = 2,
-            //                 PredmetID = 2,
-            //                 ProfesorID = 1
-            //             }
-            //        );
+            modelBuilder.Entity<Ocjene>().HasData(
+                new Ocjene
+                {
+                    OcjenaID = 1,
+                    Ocjena = 5,
+                    Datum = DateTime.Now,
+                    UcenikID = 2,
+                    PredmetID = 1,
+                    ProfesorID = 1
+                },
+                     new Ocjene
+                     {
+                         OcjenaID = 2,
+                         Ocjena = 4,
+                         Datum = DateTime.Now,
+                         UcenikID = 2,
+                         PredmetID = 2,
+                         ProfesorID = 1
+                     }
+                );
         }
 
         private void SeedPredmeti(ModelBuilder modelBuilder)
-            {
-                //    modelBuilder.Entity<Predmet>().HasData(
-                //        new Predmet
-                //        {
-                //            PredmetID = 1,
-                //            Naziv = "Matematika",
-                //            Opis = "Sabiranje,oduzimanje,množenje,dijeljenje"
-                //        },
-                //        new Predmet
-                //        {
-                //            PredmetID = 2,
-                //            Naziv = "Biologija",
-                //            Opis = "Biljke"
-                //        }
-                //        ); ;
-            }
+        {
+            modelBuilder.Entity<Predmet>().HasData(
+                new Predmet
+                {
+                    PredmetID = 1,
+                    Naziv = "Matematika",
+                    Opis = "Sabiranje,oduzimanje,množenje,dijeljenje"
+                },
+                new Predmet
+                {
+                    PredmetID = 2,
+                    Naziv = "Biologija",
+                    Opis = "Biljke"
+                }
+                ); ;
+        }
 
         private void SeedOdjeljenje(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Odjeljenje>().HasData(
-            //    new Odjeljenje
-            //    {
-            //        OdjeljenjeID = 1,
-            //        NazivOdjeljenja = "1A",
-            //        RazrednikID = 1
-            //    }
-            //    );
+            modelBuilder.Entity<Odjeljenje>().HasData(
+                new Odjeljenje
+                {
+                    OdjeljenjeID = 1,
+                    NazivOdjeljenja = "1A",
+                    RazrednikID = 1
+                }
+                );
         }
 
         private void SeedKorisniciUloge(ModelBuilder modelBuilder)
