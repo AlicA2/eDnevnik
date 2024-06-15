@@ -3,9 +3,8 @@
 
 namespace eDnevnik.Services.IServices
 {
-    public interface IKorisnikService : IService<Model.Models.Korisnik, Model.SearchObjects.KorisnikSearchObject>
+    public interface IKorisnikService : ICRUDService<Model.Models.Korisnik, Model.SearchObjects.KorisnikSearchObject, Model.Requests.KorisniciInsertRequest, Model.Requests.KorisniciUpdateRequest>
     {
-        //Model.Models.Korisnik Insert(KorisniciInsertRequest request);
-        //Model.Models.Korisnik Update(int id, KorisniciUpdateRequest request);
+
     }
 }

@@ -11,7 +11,7 @@ namespace eDnevnik.Services.Database
         public int PredmetID { get; set; }
         public string Naziv { get; set; } = null!;
         public string? Opis { get; set; }
-        public virtual ICollection<Korisnik> Ucenici { get; } = new List<Korisnik>();
-        public virtual ICollection<Ocjene> Ocjene { get; } = new List<Ocjene>();
+        public virtual ICollection<Korisnik>? Ucenici { get; } = new List<Korisnik>();
+        public virtual ICollection<Ocjene>? Ocjene { get; } = new List<Ocjene>();
     }
 }

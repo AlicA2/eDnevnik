@@ -29,6 +29,8 @@ namespace eDnevnik.Services
 
             query = AddFilter(query, search);
 
+            query = AddInclude(query, search);
+
             if(search?.Page.HasValue == true && search?.PageSize.HasValue == true)
             {
                 query = query.Take(search.PageSize.Value).Skip(search.Page.Value * search.PageSize.Value);
@@ -48,6 +50,11 @@ namespace eDnevnik.Services
         }
         
         public virtual IQueryable<TDb> AddFilter(IQueryable<TDb> query, TSearch? search = null)
+        {
+            return query;
+        }
+
+        public virtual IQueryable<TDb> AddInclude(IQueryable<TDb> query, TSearch? search = null)
         {
             return query;
         }

@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace eDnevnik.Model.SearchObjects
 {
-    public class KorisnikSearchObject : BaseSearchObject
+    public class PredmetSearchObject : BaseSearchObject
     {
-        public string? Ime { get; set; }
+        public string? Naziv { get; set; }
         public string? FTS { get; set; }
-        public bool? isUlogeIncluded { get; set; }
     }
 }
