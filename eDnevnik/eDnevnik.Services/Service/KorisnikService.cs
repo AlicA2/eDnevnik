@@ -2,7 +2,9 @@
 using eDnevnik.Model.Requests;
 using eDnevnik.Model.SearchObjects;
 using eDnevnik.Services.Database;
+using eDnevnik.Services.Helpers;
 using eDnevnik.Services.IServices;
+using eDnevnik.Services.KorisnikStateMachine;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,10 +16,11 @@ namespace eDnevnik.Services.Service
 {
     public class KorisnikService : BaseCRUDService<Model.Models.Korisnik, Database.Korisnik, KorisnikSearchObject, KorisniciInsertRequest, KorisniciUpdateRequest>, IKorisnikService
     {
-        public KorisnikService(eDnevnikDBContext context, IMapper mapper)
-            :base(context, mapper)
+        public BaseState _baseState { get; set; }
+        public KorisnikService(BaseState baseState, eDnevnikDBContext context, IMapper mapper)
+            : base(context, mapper)
         {
- 
+            _baseState = baseState;
         }
         public override IQueryable<Korisnik> AddFilter(IQueryable<Korisnik> query, KorisnikSearchObject? search = null)
         {
@@ -63,11 +66,55 @@ namespace eDnevnik.Services.Service
 
         public override IQueryable<Korisnik> AddInclude(IQueryable<Korisnik> query, KorisnikSearchObject? search = null)
         {
-            if(search?.isUlogeIncluded == true)
+            if (search?.isUlogeIncluded == true)
             {
                 query = query.Include("KorisniciUloge.Uloga");
             }
             return base.AddInclude(query, search);
         }
+
+        public override async Task<Model.Models.Korisnik> Insert(KorisniciInsertRequest insert)
+        {
+            if (insert.Password != insert.PasswordPotvrda)
+                throw new Exception("Passwords do not match.");
+
+            var (hash, salt) = PasswordHelper.CreatePasswordHash(insert.Password);
+
+            var entity = new Korisnik
+            {
+                Ime = insert.Ime,
+                Prezime = insert.Prezime,
+                Email = insert.Email,
+                Telefon = insert.Telefon,
+                KorisnickoIme = insert.KorisnickoIme,
+                Status = insert.Status,
+                LozinkaHash = hash,
+                LozinkaSalt = salt
+            };
+
+            _context.Korisnici.Add(entity);
+            await _context.SaveChangesAsync();
+
+            var model = _mapper.Map<Model.Models.Korisnik>(entity);
+
+            return model;
+        }
+
+        public override async Task<Model.Models.Korisnik> Update(int id, KorisniciUpdateRequest update)
+        {
+            var entity = await _context.Korisnici.FindAsync(id);
+            var state = _baseState.CreateState(entity.StateMachine);
+            return await state.Update(id, update);
+            //var entity = await _context.Korisnici.FindAsync(id);
+            //var state = _baseState.CreateState(entity.StateMachine);
+
+            //if (entity == null)
+            //{
+            //    throw new KeyNotFoundException($"Entity with ID {id} not found.");
+            //}
+
+            //return await state.Update(id, update);
+        }
+
     }
 }

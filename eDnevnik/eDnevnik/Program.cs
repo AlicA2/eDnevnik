@@ -1,5 +1,6 @@
 using eDnevnik.Services;
 using eDnevnik.Services.IServices;
+using eDnevnik.Services.KorisnikStateMachine;
 using eDnevnik.Services.Service;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IKorisnikService, KorisnikService>();
 builder.Services.AddTransient<IPredmetService, PredmetService>();
 builder.Services.AddTransient<IOdjeljenjeService, OdjeljenjeService>();
+
+builder.Services.AddTransient<BaseState>();
+builder.Services.AddTransient<InitialKorisnikState>();
+builder.Services.AddTransient<ActiveKorisnikState>();
+builder.Services.AddTransient<DraftKorisnikState>();
+
 
 
 

@@ -13,6 +13,7 @@ namespace eDnevnik.Services.Database
         public string Prezime { get; set; } = null!;
         public string? Email { get; set; }
         public string? Telefon { get; set; }
+        public string? StateMachine { get; set; }
         public string KorisnickoIme { get; set; } = null!;
         public string LozinkaHash { get; set; } = null!;
         public string LozinkaSalt { get; set; } = null!;

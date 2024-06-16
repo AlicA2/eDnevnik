@@ -17,6 +17,7 @@ namespace eDnevnik.Model.Models
         public string? Email { get; set; }
 
         public string? Telefon { get; set; }
+        public string? StateMachine { get; set; }
 
         public string KorisnickoIme { get; set; } = null!;
         public string? LozinkaHash { get; set; }
