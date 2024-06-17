@@ -22,7 +22,7 @@ namespace eDnevnik.Services.KorisnikStateMachine
             var entity = await set.FindAsync(id);
             entity.StateMachine = "draft";
 
-            _mapper.Map(Update, entity);
+            _mapper.Map(request, entity);
 
             await _context.SaveChangesAsync();
             return _mapper.Map<Model.Models.Korisnik>(entity);

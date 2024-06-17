@@ -88,6 +88,7 @@ namespace eDnevnik.Services.Service
                 Telefon = insert.Telefon,
                 KorisnickoIme = insert.KorisnickoIme,
                 Status = insert.Status,
+                StateMachine = "initial",
                 LozinkaHash = hash,
                 LozinkaSalt = salt
             };
@@ -105,15 +106,6 @@ namespace eDnevnik.Services.Service
             var entity = await _context.Korisnici.FindAsync(id);
             var state = _baseState.CreateState(entity.StateMachine);
             return await state.Update(id, update);
-            //var entity = await _context.Korisnici.FindAsync(id);
-            //var state = _baseState.CreateState(entity.StateMachine);
-
-            //if (entity == null)
-            //{
-            //    throw new KeyNotFoundException($"Entity with ID {id} not found.");
-            //}
-
-            //return await state.Update(id, update);
         }
 
     }
