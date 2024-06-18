@@ -73,40 +73,40 @@ namespace eDnevnik.Services.Service
             return base.AddInclude(query, search);
         }
 
-        public override async Task<Model.Models.Korisnik> Insert(KorisniciInsertRequest insert)
-        {
-            if (insert.Password != insert.PasswordPotvrda)
-                throw new Exception("Passwords do not match.");
+        //public override async Task<Model.Models.Korisnik> Insert(KorisniciInsertRequest insert)
+        //{
+        //    if (insert.Password != insert.PasswordPotvrda)
+        //        throw new Exception("Passwords do not match.");
 
-            var (hash, salt) = PasswordHelper.CreatePasswordHash(insert.Password);
+        //    var (hash, salt) = PasswordHelper.CreatePasswordHash(insert.Password);
 
-            var entity = new Korisnik
-            {
-                Ime = insert.Ime,
-                Prezime = insert.Prezime,
-                Email = insert.Email,
-                Telefon = insert.Telefon,
-                KorisnickoIme = insert.KorisnickoIme,
-                Status = insert.Status,
-                StateMachine = "initial",
-                LozinkaHash = hash,
-                LozinkaSalt = salt
-            };
+        //    var entity = new Korisnik
+        //    {
+        //        Ime = insert.Ime,
+        //        Prezime = insert.Prezime,
+        //        Email = insert.Email,
+        //        Telefon = insert.Telefon,
+        //        KorisnickoIme = insert.KorisnickoIme,
+        //        Status = insert.Status,
+        //        StateMachine = "initial",
+        //        LozinkaHash = hash,
+        //        LozinkaSalt = salt
+        //    };
 
-            _context.Korisnici.Add(entity);
-            await _context.SaveChangesAsync();
+        //    _context.Korisnici.Add(entity);
+        //    await _context.SaveChangesAsync();
 
-            var model = _mapper.Map<Model.Models.Korisnik>(entity);
+        //    var model = _mapper.Map<Model.Models.Korisnik>(entity);
 
-            return model;
-        }
+        //    return model;
+        //}
 
-        public override async Task<Model.Models.Korisnik> Update(int id, KorisniciUpdateRequest update)
-        {
-            var entity = await _context.Korisnici.FindAsync(id);
-            var state = _baseState.CreateState(entity.StateMachine);
-            return await state.Update(id, update);
-        }
+        //public override async Task<Model.Models.Korisnik> Update(int id, KorisniciUpdateRequest update)
+        //{
+        //    var entity = await _context.Korisnici.FindAsync(id);
+        //    var state = _baseState.CreateState(entity.StateMachine);
+        //    return await state.Update(id, update);
+        //}
 
     }
 }

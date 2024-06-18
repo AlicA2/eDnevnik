@@ -20,23 +20,23 @@ namespace eDnevnik.Services.KorisnikStateMachine
             _mapper = mapper;
             _serviceProvider = serviceProvider;
         }
-        public virtual Task<Model.Models.Korisnik> Insert(KorisniciInsertRequest request)
+        public virtual Task<Model.Models.Predmet> Insert(PredmetInsertRequest request)
         {
             throw new Exception("Not allowed");
         }
-        public virtual Task<Model.Models.Korisnik> Update(int id, KorisniciUpdateRequest request)
+        public virtual Task<Model.Models.Predmet> Update(int id, PredmetUpdateRequest request)
         {
             throw new Exception("Not allowed");
         }
-        public virtual Task<Model.Models.Korisnik> Activate(int id)
+        public virtual Task<Model.Models.Predmet> Activate(int id)
         {
             throw new Exception("Not allowed");
         }
-        public virtual Task<Model.Models.Korisnik> Hide(int id)
+        public virtual Task<Model.Models.Predmet> Hide(int id)
         {
             throw new Exception("Not allowed");
         }
-        public virtual Task<Model.Models.Korisnik> Delete(int id)
+        public virtual Task<Model.Models.Predmet> Delete(int id)
         {
             throw new Exception("Not allowed");
         }
@@ -46,13 +46,13 @@ namespace eDnevnik.Services.KorisnikStateMachine
             switch (stateName)
             {
                 case "initial":
-                    return _serviceProvider.GetService<InitialKorisnikState>();
+                    return _serviceProvider.GetService<InitialPredmetState>();
                     break;
                 case "draft":
-                    return _serviceProvider.GetService<DraftKorisnikState>();
+                    return _serviceProvider.GetService<DraftPredmetState>();
                     break;
                 case "active":
-                    return _serviceProvider.GetService<ActiveKorisnikState>();
+                    return _serviceProvider.GetService<ActivePredmetState>();
                     break;
                         
                 default:

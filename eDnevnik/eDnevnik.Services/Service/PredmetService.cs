@@ -3,6 +3,7 @@ using eDnevnik.Model.Requests;
 using eDnevnik.Model.SearchObjects;
 using eDnevnik.Services.Database;
 using eDnevnik.Services.IServices;
+using eDnevnik.Services.KorisnikStateMachine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,11 @@ namespace eDnevnik.Services.Service
 {
     public class PredmetService : BaseCRUDService<Model.Models.Predmet, Database.Predmet, PredmetSearchObject, PredmetInsertRequest, PredmetUpdateRequest>, IPredmetService
     {
-        public PredmetService(eDnevnikDBContext context, IMapper mapper)
+        public BaseState _baseState { get; set; }
+        public PredmetService(BaseState baseState, eDnevnikDBContext context, IMapper mapper)
             : base(context, mapper)
         {
-
+            _baseState=baseState;
         }
         public override IQueryable<Predmet> AddFilter(IQueryable<Predmet> query, PredmetSearchObject? search = null)
         {
@@ -40,5 +42,26 @@ namespace eDnevnik.Services.Service
         //    }
         //    return base.AddInclude(query, search);
         //}
+
+        public override async Task<Model.Models.Predmet> Insert(PredmetInsertRequest insert)
+        {
+            var state = _baseState.CreateState("initial");
+            return await state.Insert(insert);
+        }
+
+        public override async Task<Model.Models.Predmet> Update(int id, PredmetUpdateRequest update)
+        {
+            var entity = await _context.Predmeti.FindAsync(id);
+            var state = _baseState.CreateState(entity.StateMachine);
+            return await state.Update(id, update);
+        }
+
+        public async Task<Model.Models.Predmet> Activate(int id)
+        {
+            var entity = await _context.Predmeti.FindAsync(id);
+            var state = _baseState.CreateState(entity.StateMachine);
+            return await state.Activate(id);
+        }
+
     }
 }

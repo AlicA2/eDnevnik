@@ -13,5 +13,10 @@ namespace eDnevnik.Controllers
         public PredmetController(ILogger<BaseController<Predmet, PredmetSearchObject>> logger, IPredmetService service) : base(logger, service)
         {
         }
+        [HttpPut("{id}/activate")]
+        public virtual async Task<Model.Models.Predmet> Activate(int id)
+        {
+            return await (_service as IPredmetService).Activate(id);
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace eDnevnik.Services.Database
         public string? Opis { get; set; }
         public virtual ICollection<Korisnik>? Ucenici { get; } = new List<Korisnik>();
         public virtual ICollection<Ocjene>? Ocjene { get; } = new List<Ocjene>();
+        public string? StateMachine { get; set; }
     }
 }

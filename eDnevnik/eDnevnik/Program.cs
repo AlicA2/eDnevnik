@@ -13,9 +13,13 @@ builder.Services.AddTransient<IPredmetService, PredmetService>();
 builder.Services.AddTransient<IOdjeljenjeService, OdjeljenjeService>();
 
 builder.Services.AddTransient<BaseState>();
-builder.Services.AddTransient<InitialKorisnikState>();
-builder.Services.AddTransient<ActiveKorisnikState>();
-builder.Services.AddTransient<DraftKorisnikState>();
+builder.Services.AddTransient<InitialPredmetState>();
+builder.Services.AddTransient<ActivePredmetState>();
+builder.Services.AddTransient<DraftPredmetState>();
+
+//builder.Services.AddTransient<InitialKorisnikState>();
+//builder.Services.AddTransient<ActiveKorisnikState>();
+//builder.Services.AddTransient<DraftKorisnikState>();
 
 
 
