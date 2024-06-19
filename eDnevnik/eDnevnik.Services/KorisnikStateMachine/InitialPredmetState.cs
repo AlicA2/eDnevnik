@@ -27,5 +27,14 @@ namespace eDnevnik.Services.KorisnikStateMachine
             return _mapper.Map<Model.Models.Predmet>(entity);
         }
 
+        public override async Task<List<string>> AllowedActions()
+        {
+            var list = await base.AllowedActions();
+
+            list.Add("insert");
+
+            return list;
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eDnevnik.Model;
 using eDnevnik.Model.Requests;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -22,23 +23,23 @@ namespace eDnevnik.Services.KorisnikStateMachine
         }
         public virtual Task<Model.Models.Predmet> Insert(PredmetInsertRequest request)
         {
-            throw new Exception("Not allowed");
+            throw new UserException("Not allowed");
         }
         public virtual Task<Model.Models.Predmet> Update(int id, PredmetUpdateRequest request)
         {
-            throw new Exception("Not allowed");
+            throw new UserException("Not allowed");
         }
         public virtual Task<Model.Models.Predmet> Activate(int id)
         {
-            throw new Exception("Not allowed");
+            throw new UserException("Not allowed");
         }
         public virtual Task<Model.Models.Predmet> Hide(int id)
         {
-            throw new Exception("Not allowed");
+            throw new UserException("Not allowed");
         }
         public virtual Task<Model.Models.Predmet> Delete(int id)
         {
-            throw new Exception("Not allowed");
+            throw new UserException("Not allowed");
         }
 
         public BaseState CreateState(string stateName)
@@ -46,6 +47,7 @@ namespace eDnevnik.Services.KorisnikStateMachine
             switch (stateName)
             {
                 case "initial":
+                    case null:
                     return _serviceProvider.GetService<InitialPredmetState>();
                     break;
                 case "draft":
@@ -58,6 +60,11 @@ namespace eDnevnik.Services.KorisnikStateMachine
                 default:
                     throw new Exception("Not allowed");
             }
+        }
+
+        public virtual async Task<List<string>> AllowedActions()
+        {
+            return new List<string>();
         }
     }
 }

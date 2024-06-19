@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eDnevnik.Model;
 using eDnevnik.Model.Models;
 using eDnevnik.Model.Requests;
 using System;
@@ -21,6 +22,14 @@ namespace eDnevnik.Services.KorisnikStateMachine
             var entity = await set.FindAsync(id);
             entity.StateMachine = "draft";
 
+            foreach (var ocjena in entity.Ocjene)
+            {
+                if(ocjena.Ocjena<0 || ocjena.Ocjena > 5)
+                {
+                    throw new UserException("Ocjena nije validna");
+                }
+            }
+
             _mapper.Map(request, entity);
 
             await _context.SaveChangesAsync();
@@ -39,6 +48,14 @@ namespace eDnevnik.Services.KorisnikStateMachine
             await _context.SaveChangesAsync();
             return _mapper.Map<Model.Models.Predmet>(entity);
         }
+        public override async Task<List<string>> AllowedActions()
+        {
+            var list = await base.AllowedActions();
 
+            list.Add("Update");
+            list.Add("Activate");
+
+            return list;
+        }
     }
 }

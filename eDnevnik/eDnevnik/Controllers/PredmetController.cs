@@ -18,5 +18,17 @@ namespace eDnevnik.Controllers
         {
             return await (_service as IPredmetService).Activate(id);
         }
+
+        [HttpPut("{id}/hide")]
+        public virtual async Task<Model.Models.Predmet> Hide(int id)
+        {
+            return await (_service as IPredmetService).Hide(id);
+        }
+
+        [HttpGet("{id}/allowedActions")]
+        public virtual async Task<List<string>> AllowedActions(int id)
+        {
+            return await (_service as IPredmetService).AllowedActions(id);
+        }
     }
 }

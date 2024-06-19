@@ -1,3 +1,4 @@
+using eDnevnik.Filters;
 using eDnevnik.Services;
 using eDnevnik.Services.IServices;
 using eDnevnik.Services.KorisnikStateMachine;
@@ -25,7 +26,9 @@ builder.Services.AddTransient<DraftPredmetState>();
 
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers( x => {
+    x.Filters.Add<ErrorFilter>();
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
