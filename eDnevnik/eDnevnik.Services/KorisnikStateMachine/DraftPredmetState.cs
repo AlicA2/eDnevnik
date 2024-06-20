@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using EasyNetQ;
 using eDnevnik.Model;
 using eDnevnik.Model.Models;
 using eDnevnik.Model.Requests;
+using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace eDnevnik.Services.KorisnikStateMachine
         public DraftPredmetState(IServiceProvider serviceProvider, eDnevnikDBContext context, IMapper mapper) : base(serviceProvider, context, mapper)
         {
         }
-        public override async Task<Predmet>Update(int id, PredmetUpdateRequest request)
+        public override async Task<Predmet> Update(int id, PredmetUpdateRequest request)
         {
             var set = _context.Set<Database.Predmet>();
 
@@ -24,7 +26,7 @@ namespace eDnevnik.Services.KorisnikStateMachine
 
             foreach (var ocjena in entity.Ocjene)
             {
-                if(ocjena.Ocjena<0 || ocjena.Ocjena > 5)
+                if (ocjena.Ocjena < 0 || ocjena.Ocjena > 5)
                 {
                     throw new UserException("Ocjena nije validna");
                 }
@@ -46,7 +48,33 @@ namespace eDnevnik.Services.KorisnikStateMachine
 
 
             await _context.SaveChangesAsync();
-            return _mapper.Map<Model.Models.Predmet>(entity);
+
+
+            //var factory = new ConnectionFactory { HostName = "localhost" };
+            //using var connection = factory.CreateConnection();
+            //using var channel = connection.CreateModel();
+
+            //channel.QueueDeclare(queue: "predmet_added",
+            //                    durable: false,
+            //                    exclusive: false,
+            //                    autoDelete: false,
+            //                    arguments: null);
+
+            //string message = "Predmet Activated";//$"{entity.PredmetID}, {entity.Naziv},{entity.Opis}";
+            //var body = Encoding.UTF8.GetBytes(message);
+
+            //channel.BasicPublish(exchange: string.Empty,
+            //                    routingKey: "predmet_added",
+            //                    basicProperties: null,
+            //                    body: body);
+
+
+
+            var mappedEntity = _mapper.Map<Model.Models.Predmet>(entity);
+
+            using var bus = RabbitHutch.CreateBus("host=localhost");
+            bus.PubSub.Publish(mappedEntity);
+            return mappedEntity;
         }
         public override async Task<List<string>> AllowedActions()
         {

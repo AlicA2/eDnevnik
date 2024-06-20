@@ -73,6 +73,26 @@ namespace eDnevnik.Services.Service
             return base.AddInclude(query, search);
         }
 
+        public async Task<Model.Models.Korisnik> Login(string username, string password)
+        {
+            var entity =await _context.Korisnici.Include("KorisniciUloge.Uloga").FirstOrDefaultAsync(x => x.KorisnickoIme == username);
+
+            if (entity == null)
+            {
+                return null;
+            }
+
+            var hash = GenerateHash(entity.LozinkaSalt, password);
+
+            if (hash != entity.LozinkaHash)
+            {
+                return null;
+            }
+
+            return _mapper.Map<Model.Models.Korisnik>(entity);
+
+        }
+
         //public override async Task<Model.Models.Korisnik> Insert(KorisniciInsertRequest insert)
         //{
         //    if (insert.Password != insert.PasswordPotvrda)

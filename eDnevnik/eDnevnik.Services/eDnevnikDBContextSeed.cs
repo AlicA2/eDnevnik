@@ -125,13 +125,13 @@ namespace eDnevnik.Services
                 new Korisnik
                 {
                     KorisnikID = 1,
-                    Ime="admin",
-                    Prezime="admin",
-                    Email="adminadmin@gmail.com",
-                    Telefon="+38700000000",
-                    KorisnickoIme="admin",
-                    LozinkaHash="",
-                    LozinkaSalt="",
+                    Ime = "admin",
+                    Prezime = "admin",
+                    Email = "adminadmin@gmail.com",
+                    Telefon = "060000000",
+                    KorisnickoIme = "admin",
+                    LozinkaHash = "JfJzsL3ngGWki+Dn67C+8WLy73I=",
+                    LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg=="
                 },
                   new Korisnik
                   {

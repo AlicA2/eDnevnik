@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using eDnevnik.Model.Models;
+using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;

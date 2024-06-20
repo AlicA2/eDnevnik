@@ -1,5 +1,6 @@
 ﻿using eDnevnik.Model;
 using eDnevnik.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eDnevnik.Controllers
@@ -17,6 +18,7 @@ namespace eDnevnik.Controllers
             _service = service;
         }
         [HttpPost]
+        //[Authorize(Roles="admin")]
         public virtual async Task<T> Insert(TInsert insert)
         {
             return await _service.Insert(insert);
