@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eDnevnik.Model", "eDnevnik.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eDnevnik.Services", "eDnevnik.Services\eDnevnik.Services.csproj", "{99C3CAF2-BCA6-4071-83B8-92B516E1834D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eDnevnik.Subscriber", "eDnevnik.Subscriber\eDnevnik.Subscriber.csproj", "{643B8FE3-92A3-4495-9DED-3B1EB2878FBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eDnevnik.Subscriber", "eDnevnik.Subscriber\eDnevnik.Subscriber.csproj", "{643B8FE3-92A3-4495-9DED-3B1EB2878FBC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2FE53D8D-1228-4775-841D-36B41B530007}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
