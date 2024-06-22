@@ -64,6 +64,7 @@ builder.Services.AddAuthentication("BasicAuthentication")
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<eDnevnikDBContext>(options=>options.UseSqlServer(connectionString));
+
 var app = builder.Build();
 
 
@@ -80,5 +81,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dataContext = scope.ServiceProvider.GetRequiredService<eDnevnikDBContext>();
+    var conn = dataContext.Database.GetConnectionString();
+    dataContext.Database.Migrate();
+}
 
 app.Run();
