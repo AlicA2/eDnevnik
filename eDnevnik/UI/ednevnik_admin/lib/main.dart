@@ -1,3 +1,4 @@
+import 'package:ednevnik_admin/screens/pocetna.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -31,14 +32,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      home: LoginPage(),
     );
   }
 }
 
 class MyAppBar extends StatelessWidget {
   String? title;
-  MyAppBar({Key? key, required this.title}) : super(key:key);
+  MyAppBar({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +55,12 @@ class Counter extends StatefulWidget {
 }
 
 class _CounterState extends State<Counter> {
-
   int _count = 0;
 
-  void _incrementCounter(){
-  setState(() {
-    _count++;
-  });
+  void _incrementCounter() {
+    setState(() {
+      _count++;
+    });
   }
 
   @override
@@ -68,7 +68,10 @@ class _CounterState extends State<Counter> {
     return Column(
       children: [
         Text('You have pushed button $_count times'),
-        ElevatedButton(onPressed: _incrementCounter, child: Text("Pritisni"),)
+        ElevatedButton(
+          onPressed: _incrementCounter,
+          child: Text("Pritisni"),
+        )
       ],
     );
   }
@@ -86,82 +89,125 @@ class LayoutExamples extends StatelessWidget {
           color: Colors.red,
           child: Center(
             child: Container(
-              height:100,
+              height: 100,
               color: Colors.blue,
               child: Text("eDnevnik"),
               alignment: Alignment.center,
-            ),),
-        ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Text("Item 1"),
-          Text("Item 2"),
-          Text("Item 3")
-        ],
-      )
-    ],);
-  }
-}
-class MyMaterialApp extends StatelessWidget {
-    const MyMaterialApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return  MaterialApp(
-      title: 'eDnevnik APP',
-      theme: ThemeData(primarySwatch: Colors.blue,
-      appBarTheme: AppBarTheme(
-        backgroundColor: Colors.blue,
-      )),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("eDnevnik Desktop App"),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                decoration: InputDecoration(
-                  labelText: "Enter your name"
-                ),
-              ),
-            SizedBox(height:20,),
-            ElevatedButton(onPressed: (){
-              print("Button clicked");
-            }, child: Text("Submit"))
-            ],
+            ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(onPressed: (){
-
-        },
-        child: Icon(Icons.add),),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [Text("Item 1"), Text("Item 2"), Text("Item 3")],
         )
+      ],
     );
   }
 }
 
+class MyMaterialApp extends StatelessWidget {
+  const MyMaterialApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        title: 'eDnevnik APP',
+        theme: ThemeData(
+            primarySwatch: Colors.blue,
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.blue,
+            )),
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text("eDnevnik Desktop App"),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextField(
+                  decoration: InputDecoration(labelText: "Enter your name"),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      print("Button clicked");
+                    },
+                    child: Text("Submit"))
+              ],
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {},
+            child: Icon(Icons.add),
+          ),
+        ));
+  }
+}
+
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
+
+  TextEditingController _usernameController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login"),),
+      appBar: AppBar(
+        title: Text("Login"),
+        backgroundColor: Colors.blue,
+      ),
       body: Center(
-        child: Container(
-          width: 400,
-          child: Card(
+          child: Container(
+        constraints: BoxConstraints(maxWidth: 400, maxHeight: 400),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                Image.network("https://www.fit.ba/content/public/images/og-image.jpg"),
+                //Image.network("https://www.fit.ba/content/public/images/og-image.jpg", height: 100, width: 100,),
+                Image.asset(
+                  "assets/images/eDnevnik.png",
+                  height: 200,
+                  width: 300,
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                      labelText: "Username", prefixIcon: Icon(Icons.email)),
+                  controller: _usernameController,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                      labelText: "Password", prefixIcon: Icon(Icons.password)),
+                  controller: _passwordController,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    var username = _usernameController.text;
+                    var password = _passwordController.text;
+                    print("Login proceeded $username $password");
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const PredmetListScreen(),
+                      ),
+                    );
+                  },
+                  child: Text("Login"),
+                )
               ],
             ),
           ),
-        )
-      ),
+        ),
+      )),
     );
   }
 }
