@@ -1,8 +1,15 @@
-import 'package:ednevnik_admin/screens/pocetna.dart';
+import 'package:ednevnik_admin/providers/predmet_provider.dart';
+import 'package:ednevnik_admin/screens/odjeljenje_screen.dart';
+import 'package:ednevnik_admin/screens/predmet_screen.dart';
+import 'package:ednevnik_admin/utils/util.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => PredmetProvider())],
+    child: const MyMaterialApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -111,39 +118,10 @@ class MyMaterialApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'eDnevnik APP',
-        theme: ThemeData(
-            primarySwatch: Colors.blue,
-            appBarTheme: AppBarTheme(
-              backgroundColor: Colors.blue,
-            )),
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text("eDnevnik Desktop App"),
-          ),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextField(
-                  decoration: InputDecoration(labelText: "Enter your name"),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      print("Button clicked");
-                    },
-                    child: Text("Submit"))
-              ],
-            ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {},
-            child: Icon(Icons.add),
-          ),
-        ));
+      title: 'Material app',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: LoginPage(),
+    );
   }
 }
 
@@ -152,9 +130,11 @@ class LoginPage extends StatelessWidget {
 
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
+  late PredmetProvider _predmetProvider;
 
   @override
   Widget build(BuildContext context) {
+    _predmetProvider = context.read<PredmetProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Text("Login"),
@@ -191,15 +171,32 @@ class LoginPage extends StatelessWidget {
                   height: 10,
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     var username = _usernameController.text;
                     var password = _passwordController.text;
                     print("Login proceeded $username $password");
+
+                    Authorization.username = username;
+                    Authorization.password = password;
+
+                    try {
+                      await _predmetProvider.get();
+
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const PredmetListScreen(),
+                        builder: (context) => const OdjeljenjeListScreen(),
                       ),
                     );
+                    } on Exception catch (e) {
+                      // TODO
+                      showDialog(context: context, builder: (BuildContext context)=>AlertDialog(
+                        title:Text("Error"),
+                        content: Text(e.toString()),
+                        actions: [
+                          TextButton(onPressed: ()=>Navigator.pop(context), child: Text("OK"),)
+                        ]
+                      ));
+                    }
                   },
                   child: Text("Login"),
                 )
