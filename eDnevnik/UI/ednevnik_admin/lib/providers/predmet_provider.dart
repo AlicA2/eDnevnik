@@ -3,7 +3,7 @@ import 'package:ednevnik_admin/utils/util.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-
+// Ucim RS II Teoriju
 class PredmetProvider with ChangeNotifier {
   static String? _baseUrl;
   String _endPoint = "Predmet";
