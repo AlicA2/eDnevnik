@@ -22,16 +22,19 @@ namespace eDnevnik.Services.Service
         }
         public override IQueryable<Predmet> AddFilter(IQueryable<Predmet> query, PredmetSearchObject? search = null)
         {
-            if (!string.IsNullOrWhiteSpace(search.Naziv))
+            var filteredQuery = base.AddFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search?.FTS))
             {
-                query = query.Where(x => x.Naziv.StartsWith(search.Naziv));
-            }
-            if (!string.IsNullOrWhiteSpace(search.FTS))
-            {
-                query = query.Where(x => x.Naziv.Contains(search.Naziv));
+                filteredQuery = filteredQuery.Where(x=>x.Naziv.Contains(search.FTS) || x.Naziv.Contains(search.FTS));
             }
 
-            return base.AddFilter(query, search);
+            if (!string.IsNullOrWhiteSpace(search?.Naziv))
+            {
+                filteredQuery = filteredQuery.Where(x => x.Naziv == search.Naziv);
+            }
+
+            return filteredQuery;
         }
 
         //public override IQueryable<Korisnik> AddInclude(IQueryable<Korisnik> query, PredmetSearchObject? search = null)

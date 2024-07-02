@@ -1,13 +1,13 @@
-import 'package:ednevnik_admin/providers/predmet_provider.dart';
-import 'package:ednevnik_admin/screens/odjeljenje_screen.dart';
-import 'package:ednevnik_admin/screens/predmet_screen.dart';
+import 'package:ednevnik_admin/providers/subject_provider.dart';
+import 'package:ednevnik_admin/screens/department_screen.dart';
+import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => PredmetProvider())],
+    providers: [ChangeNotifierProvider(create: (_) => SubjectProvider())],
     child: const MyMaterialApp(),
   ));
 }
@@ -130,11 +130,12 @@ class LoginPage extends StatelessWidget {
 
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
-  late PredmetProvider _predmetProvider;
+  
+  late SubjectProvider _predmetProvider;
 
   @override
   Widget build(BuildContext context) {
-    _predmetProvider = context.read<PredmetProvider>();
+    _predmetProvider = context.read<SubjectProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Text("Login"),
@@ -184,7 +185,7 @@ class LoginPage extends StatelessWidget {
 
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const OdjeljenjeListScreen(),
+                        builder: (context) => const DepartmentListScreen(),
                       ),
                     );
                     } on Exception catch (e) {

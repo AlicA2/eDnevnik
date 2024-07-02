@@ -1,6 +1,6 @@
 import 'package:ednevnik_admin/main.dart';
-import 'package:ednevnik_admin/screens/predmet_screen.dart';
-import 'package:ednevnik_admin/screens/odjeljenje_screen.dart';
+import 'package:ednevnik_admin/screens/subject_screen.dart';
+import 'package:ednevnik_admin/screens/department_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -22,6 +22,7 @@ class _MasterScreenWidgetStateState extends State<MasterScreenWidget> {
     return Scaffold(
     appBar: AppBar(
       title: widget.title_widget ?? Text(widget.tittle ?? ""),
+      backgroundColor: Colors.blue,
     ),
     drawer: Drawer(
       child: ListView(
@@ -37,7 +38,7 @@ class _MasterScreenWidgetStateState extends State<MasterScreenWidget> {
             onTap:(){
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context)=>
-                  const PredmetDetailScreen(),
+                  const SubjectDetailScreen(),
                 )
               );
             }
@@ -47,7 +48,7 @@ class _MasterScreenWidgetStateState extends State<MasterScreenWidget> {
             onTap:(){
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context)=>
-                  const OdjeljenjeListScreen(),
+                  const DepartmentListScreen(),
                 )
               );
             }
