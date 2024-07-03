@@ -1,5 +1,7 @@
+import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
-import 'package:ednevnik_admin/screens/department_screen.dart';
+import 'package:ednevnik_admin/providers/user_provider.dart';
+import 'package:ednevnik_admin/screens/single_subject_screen.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/utils/util.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,9 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => SubjectProvider())],
+    providers: [ChangeNotifierProvider(create: (_) => SubjectProvider()),
+    ChangeNotifierProvider(create: (_) => DepartmentProvider()),
+    ChangeNotifierProvider(create: (_) => UserProvider())],
     child: const MyMaterialApp(),
   ));
 }
@@ -185,7 +189,7 @@ class LoginPage extends StatelessWidget {
 
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const DepartmentListScreen(),
+                        builder: (context) => SubjectDetailScreen(),
                       ),
                     );
                     } on Exception catch (e) {

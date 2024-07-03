@@ -2,7 +2,7 @@ import 'package:ednevnik_admin/main.dart';
 import 'package:ednevnik_admin/models/result.dart';
 import 'package:ednevnik_admin/models/subject.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
-import 'package:ednevnik_admin/screens/department_screen.dart';
+import 'package:ednevnik_admin/screens/single_subject_screen.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -69,7 +69,7 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
           ),
           ElevatedButton(
               onPressed: () async {
-                print("login proceed");
+                // print("login proceed");
                 //Navigator.of(context).pop();
       
                 // Navigator.of(context).push(
@@ -88,6 +88,15 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                 // print("data: ${data.result[0].opis}");
               },
               child: Text("Pretraga")),
+                        ElevatedButton(
+              onPressed: () async {
+                 Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => SingleSubjectListScreen(subject: null,),
+                                ),
+                            );
+              },
+              child: Text("Dodaj predmet"))
               // _buildDataListView()
         ]),
     );
@@ -97,6 +106,7 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
     return Expanded(
           child: SingleChildScrollView(
             child: DataTable(
+                
                 columns: const [
                   DataColumn(
                     label: const Expanded(
@@ -132,7 +142,15 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                   ),
                 ],
                 rows: result?.result
-                        .map((Subject e) => DataRow(cells: [
+                        .map((Subject e) => DataRow(onSelectChanged: (selected)=>{
+                          if(selected == true){
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => SingleSubjectListScreen(subject: e,),
+                                ),
+                            )
+                          }
+                        },cells: [
                               DataCell(Text(e.predmetID.toString() ?? "")),
                               DataCell(Text(e.naziv ?? "")),
                               DataCell(Text(e.opis ?? "")),
