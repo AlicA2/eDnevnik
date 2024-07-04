@@ -82,6 +82,24 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
   }
 
+    Future<T> delete(int id, [dynamic request]) async {
+    var url = "$_baseUrl$_endPoint/$id";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var requestBody = request ?? {"delete": true};
+    var jsonRequest = jsonEncode(requestBody);
+
+    var response = await http.delete(uri, headers: headers, body: jsonRequest);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw Exception("Error while trying to delete!");
+    }
+  }
+
   T fromJson(data){
     throw Exception("Method not implemented");
   }
