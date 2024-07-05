@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace eDnevnik.Services.IServices
 {
-    public interface IPredmetService : ICRUDService<Model.Models.Predmet, Model.SearchObjects.PredmetSearchObject, Model.Requests.PredmetInsertRequest, Model.Requests.PredmetUpdateRequest>
+    public interface IPredmetService : ICRUDService<Model.Models.Predmet, Model.SearchObjects.PredmetSearchObject, Model.Requests.PredmetInsertRequest, Model.Requests.PredmetUpdateRequest, Model.Requests.PredmetDeleteRequest>
     {
         Task<Model.Models.Predmet> Activate(int id);
         Task<Model.Models.Predmet> Hide(int id);

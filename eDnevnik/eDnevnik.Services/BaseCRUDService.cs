@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace eDnevnik.Services
 {
-    public class BaseCRUDService<T, TDb, TSearch, TInsert, TUpdate> : BaseService<T, TDb, TSearch> where T : class where TDb : class where TSearch : Model.SearchObjects.BaseSearchObject
+    public class BaseCRUDService<T, TDb, TSearch, TInsert, TUpdate, TDelete> : BaseService<T, TDb, TSearch> where T : class where TDb : class where TSearch : Model.SearchObjects.BaseSearchObject
     {
         public BaseCRUDService(eDnevnikDBContext context, IMapper mapper) : base(context, mapper)
         {
@@ -42,6 +42,29 @@ namespace eDnevnik.Services
 
             await _context.SaveChangesAsync();
             return _mapper.Map<T>(entity);
+        }
+        public virtual async Task<T> Delete(int id, TDelete delete)
+        {
+            try
+            {
+                var set = _context.Set<TDb>();
+                var entity = await set.FindAsync(id);
+
+                if (entity == null)
+                {
+                    return null;
+                }
+                set.Remove(entity);
+
+                await _context.SaveChangesAsync();
+                return _mapper.Map<T>(entity);
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"Greška prilikom brisanja entiteta: {ex.Message}");
+                throw;
+            }
         }
     }
 }

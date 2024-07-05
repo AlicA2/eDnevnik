@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace eDnevnik.Controllers
 {
     [ApiController]
-    public class PredmetController : BaseCRUDController<Model.Models.Predmet, PredmetSearchObject, PredmetInsertRequest, PredmetUpdateRequest>
+    public class PredmetController : BaseCRUDController<Model.Models.Predmet, PredmetSearchObject, PredmetInsertRequest, PredmetUpdateRequest, PredmetDeleteRequest>
     {
         public PredmetController(ILogger<BaseController<Predmet, PredmetSearchObject>> logger, IPredmetService service) : base(logger, service)
         {

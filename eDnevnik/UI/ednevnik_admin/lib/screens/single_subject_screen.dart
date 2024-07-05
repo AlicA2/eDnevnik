@@ -72,6 +72,8 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
   Future initForm() async{ // za dobavljanje podataka s API-a
     userResult = await _userProvider.get();
     departmentResult = await _departmentProvider.get();
+
+    
     print(userResult);
     print(departmentResult);
   }
@@ -87,6 +89,28 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+               ElevatedButton(
+              onPressed: () async {
+               if(widget.subject!=null && widget.subject!.predmetID!=null){
+                try{
+                  print('Deleting subject with ID: ${widget.subject!.predmetID}');
+                  await _subjectProvider.delete(widget.subject!.predmetID!);
+                  Navigator.pop(context);
+                }catch(e){
+                  showDialog(context: context, builder: (BuildContext context)=>
+                  AlertDialog(
+                    title: Text("Error"),
+                    content: Text(e.toString()),
+                    actions: [
+                      TextButton(onPressed: ()=>
+                      Navigator.pop(context), child: Text("OK"))
+                    ],
+                  ));
+                }
+               }
+              },
+              child: Text("Izbriši predmet")),
+
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: ElevatedButton(onPressed: () async {
@@ -118,6 +142,7 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
 
                 }, child: Text('Sačuvaj')),
               ),
+             
             ],
           )
         ],

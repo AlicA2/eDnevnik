@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace eDnevnik.Controllers
 {
     [Route("[controller]")]
-    public class BaseCRUDController<T, TSearch, TInsert, TUpdate> : BaseController<T, TSearch> where T : class where TSearch : class
+    public class BaseCRUDController<T, TSearch, TInsert, TUpdate, TDelete> : BaseController<T, TSearch> where T : class where TSearch : class
     {
-        protected new readonly ICRUDService<T, TSearch, TInsert, TUpdate> _service;
+        protected new readonly ICRUDService<T, TSearch, TInsert, TUpdate, TDelete> _service;
         protected readonly ILogger<BaseController<T, TSearch>> _logger;
 
-        public BaseCRUDController(ILogger<BaseController<T, TSearch>> logger, ICRUDService<T, TSearch, TInsert, TUpdate> service)
+        public BaseCRUDController(ILogger<BaseController<T, TSearch>> logger, ICRUDService<T, TSearch, TInsert, TUpdate, TDelete> service)
             : base(logger, service)
         {
             _logger = logger;
@@ -27,6 +27,12 @@ namespace eDnevnik.Controllers
         public virtual async Task<T> Update(int id, [FromBody]TUpdate update)
         {
             return await _service.Update(id, update);
+        }
+
+        [HttpDelete("{id}")]
+        public virtual async Task<T> Delete(int id, [FromBody] TDelete delete)
+        {
+            return await _service.Delete(id, delete);
         }
     }
 }

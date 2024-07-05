@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace eDnevnik.Services.Service
 {
-    public class KorisnikService : BaseCRUDService<Model.Models.Korisnik, Database.Korisnik, KorisnikSearchObject, KorisniciInsertRequest, KorisniciUpdateRequest>, IKorisnikService
+    public class KorisnikService : BaseCRUDService<Model.Models.Korisnik, Database.Korisnik, KorisnikSearchObject, KorisniciInsertRequest, KorisniciUpdateRequest, KorisniciDeleteRequest>, IKorisnikService
     {
         public BaseState _baseState { get; set; }
         public KorisnikService(BaseState baseState, eDnevnikDBContext context, IMapper mapper)

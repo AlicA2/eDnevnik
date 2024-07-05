@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace eDnevnik.Services.Service
 {
-    public class OdjeljenjeService : BaseCRUDService<Model.Models.Odjeljenje, Database.Odjeljenje, OdjeljenjeSearchObject, OdjeljenjeInsertRequest, OdjeljenjeUpdateRequest>, IOdjeljenjeService
+    public class OdjeljenjeService : BaseCRUDService<Model.Models.Odjeljenje, Database.Odjeljenje, OdjeljenjeSearchObject, OdjeljenjeInsertRequest, OdjeljenjeUpdateRequest, OdjeljenjeDeleteRequest>, IOdjeljenjeService
     {
         public OdjeljenjeService(eDnevnikDBContext context, IMapper mapper)
             : base(context, mapper)

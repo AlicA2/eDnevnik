@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace eDnevnik.Services.Service
 {
-    public class PredmetService : BaseCRUDService<Model.Models.Predmet, Database.Predmet, PredmetSearchObject, PredmetInsertRequest, PredmetUpdateRequest>, IPredmetService
+    public class PredmetService : BaseCRUDService<Model.Models.Predmet, Database.Predmet, PredmetSearchObject, PredmetInsertRequest, PredmetUpdateRequest, PredmetDeleteRequest>, IPredmetService
     {
         public BaseState _baseState { get; set; }
         public PredmetService(BaseState baseState, eDnevnikDBContext context, IMapper mapper)

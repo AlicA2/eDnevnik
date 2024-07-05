@@ -16,4 +16,5 @@ class SubjectProvider extends BaseProvider<Subject> {
     // TODO: implement fromJson
     return Subject.fromJson(data);
   }
+
 }
