@@ -17,6 +17,8 @@ namespace eDnevnik.Services.KorisnikStateMachine
         public DraftPredmetState(IServiceProvider serviceProvider, eDnevnikDBContext context, IMapper mapper) : base(serviceProvider, context, mapper)
         {
         }
+
+
         public override async Task<Predmet> Update(int id, PredmetUpdateRequest request)
         {
             var set = _context.Set<Database.Predmet>();
@@ -85,5 +87,6 @@ namespace eDnevnik.Services.KorisnikStateMachine
 
             return list;
         }
+
     }
 }
