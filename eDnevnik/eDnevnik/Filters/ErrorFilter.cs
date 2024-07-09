@@ -9,9 +9,9 @@ namespace eDnevnik.Filters
     {
         public override void OnException(ExceptionContext context)
         {
-            if(context.Exception is UserException)
+            if (context.Exception is UserException)
             {
-                context.ModelState.AddModelError("UserError", context.Exception.Message);
+                context.ModelState.AddModelError("userError", context.Exception.Message);
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             }
             else
@@ -21,10 +21,10 @@ namespace eDnevnik.Filters
 
             }
 
-            var list = context.ModelState.Where(x => x.Value.Errors.Count() > 0)
-                .ToDictionary(x=>x.Key, y=>y.Value.Errors.Select(z=>z.ErrorMessage));
+            var list = context.ModelState.Where(x => x.Value.Errors.Count() > 0).
+                ToDictionary(x => x.Key, y => y.Value.Errors.Select(z => z.ErrorMessage));
 
-            context.Result = new JsonResult(new { errors =  list });
+            context.Result = new JsonResult(new { errors = list });
         }
     }
 }

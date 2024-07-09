@@ -1,4 +1,5 @@
 import 'package:ednevnik_admin/main.dart';
+import 'package:ednevnik_admin/screens/department_screen.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
 import 'package:flutter/material.dart';
@@ -44,11 +45,11 @@ class _MasterScreenWidgetStateState extends State<MasterScreenWidget> {
             }
           ),
            ListTile(
-            title: Text("Početna"),
+            title: Text("Odjeljenja"),
             onTap:(){
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context)=>
-                  SingleSubjectListScreen(),
+                  DepartmentDetailScreen(),
                 )
               );
             }
