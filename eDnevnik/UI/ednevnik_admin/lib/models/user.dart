@@ -1,3 +1,5 @@
+import 'package:ednevnik_admin/models/roles.dart';
+import 'package:ednevnik_admin/models/user_roles.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user.g.dart';
@@ -13,8 +15,10 @@ class User{
  String? stateMachine;
  String? korisnickoIme;
  String? lozinka;
+List<UsersRoles>? korisniciUloge;
+List<Roles>? uloge;
 
-User(this.korisnikId,this.ime,this.prezime,this.email,this.telefon,this.stateMachine,this.korisnickoIme,this.lozinka);
+User(this.korisnikId,this.ime,this.prezime,this.email,this.telefon,this.stateMachine,this.korisnickoIme,this.lozinka, this.korisniciUloge, this.uloge);
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

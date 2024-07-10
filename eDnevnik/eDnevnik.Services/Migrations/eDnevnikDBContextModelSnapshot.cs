@@ -51,23 +51,30 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             KorisnikUlogaID = 1,
-                            DatumIzmjene = new DateTime(2024, 6, 19, 14, 31, 18, 600, DateTimeKind.Local).AddTicks(2827),
+                            DatumIzmjene = new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9525),
                             KorisnikID = 1,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 2,
-                            DatumIzmjene = new DateTime(2024, 6, 19, 14, 31, 18, 600, DateTimeKind.Local).AddTicks(2951),
+                            DatumIzmjene = new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9577),
                             KorisnikID = 2,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 3,
-                            DatumIzmjene = new DateTime(2024, 6, 19, 14, 31, 18, 600, DateTimeKind.Local).AddTicks(2956),
+                            DatumIzmjene = new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9581),
                             KorisnikID = 3,
                             UlogaID = 2
+                        },
+                        new
+                        {
+                            KorisnikUlogaID = 4,
+                            DatumIzmjene = new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9584),
+                            KorisnikID = 4,
+                            UlogaID = 1
                         });
                 });
 
@@ -153,6 +160,17 @@ namespace eDnevnik.Services.Migrations
                             LozinkaSalt = "",
                             Prezime = "roditelj",
                             Telefon = "+38700000000"
+                        },
+                        new
+                        {
+                            KorisnikID = 4,
+                            Email = "denismusic@gmail.com",
+                            Ime = "Denis",
+                            KorisnickoIme = "denis",
+                            LozinkaHash = "JfJzsL3ngGWki+Dn67C+8WLy73I=",
+                            LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg==",
+                            Prezime = "Music",
+                            Telefon = "060300400"
                         });
                 });
 
@@ -193,7 +211,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 1,
-                            Datum = new DateTime(2024, 6, 19, 14, 31, 18, 600, DateTimeKind.Local).AddTicks(3095),
+                            Datum = new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9647),
                             Ocjena = 5,
                             PredmetID = 1,
                             ProfesorID = 1,
@@ -202,7 +220,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 2,
-                            Datum = new DateTime(2024, 6, 19, 14, 31, 18, 600, DateTimeKind.Local).AddTicks(3116),
+                            Datum = new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9652),
                             Ocjena = 4,
                             PredmetID = 2,
                             ProfesorID = 1,
@@ -237,6 +255,12 @@ namespace eDnevnik.Services.Migrations
                             OdjeljenjeID = 1,
                             NazivOdjeljenja = "1A",
                             RazrednikID = 1
+                        },
+                        new
+                        {
+                            OdjeljenjeID = 2,
+                            NazivOdjeljenja = "2A",
+                            RazrednikID = 4
                         });
                 });
 

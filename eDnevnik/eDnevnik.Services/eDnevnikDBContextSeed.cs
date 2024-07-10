@@ -70,6 +70,12 @@ namespace eDnevnik.Services
                     OdjeljenjeID = 1,
                     NazivOdjeljenja = "1A",
                     RazrednikID = 1
+                },
+                new Odjeljenje
+                {
+                    OdjeljenjeID = 2,
+                    NazivOdjeljenja = "2A",
+                    RazrednikID = 4
                 }
                 );
         }
@@ -96,6 +102,13 @@ namespace eDnevnik.Services
                     KorisnikUlogaID = 3,
                     KorisnikID = 3,
                     UlogaID = 2,
+                    DatumIzmjene = DateTime.Now
+                },
+                new KorisniciUloge
+                {
+                    KorisnikUlogaID = 4,
+                    KorisnikID = 4,
+                    UlogaID = 1,
                     DatumIzmjene = DateTime.Now
                 }
                 );
@@ -154,6 +167,16 @@ namespace eDnevnik.Services
                         KorisnickoIme = "roditelj",
                         LozinkaHash = "",
                         LozinkaSalt = "",
+                    }, new Korisnik
+                    {
+                        KorisnikID = 4,
+                        Ime = "Denis",
+                        Prezime = "Music",
+                        Email = "denismusic@gmail.com",
+                        Telefon = "060300400",
+                        KorisnickoIme = "denis",
+                        LozinkaHash = "JfJzsL3ngGWki+Dn67C+8WLy73I=",
+                        LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg=="
                     }
                 );
         }

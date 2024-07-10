@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace eDnevnik.Services.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Update01 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,8 @@ namespace eDnevnik.Services.Migrations
                     PredmetID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Naziv = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Opis = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Opis = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StateMachine = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -47,6 +48,7 @@ namespace eDnevnik.Services.Migrations
                     Prezime = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Telefon = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StateMachine = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     KorisnickoIme = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LozinkaHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LozinkaSalt = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -165,12 +167,22 @@ namespace eDnevnik.Services.Migrations
 
             migrationBuilder.InsertData(
                 table: "Korisnici",
-                columns: new[] { "KorisnikID", "Email", "Ime", "KorisnickoIme", "LozinkaHash", "LozinkaSalt", "OdjeljenjeID", "Prezime", "Status", "Telefon" },
+                columns: new[] { "KorisnikID", "Email", "Ime", "KorisnickoIme", "LozinkaHash", "LozinkaSalt", "OdjeljenjeID", "Prezime", "StateMachine", "Status", "Telefon" },
                 values: new object[,]
                 {
-                    { 1, "adminadmin@gmail.com", "admin", "admin", "", "", null, "admin", null, "+38700000000" },
-                    { 2, "ucenik@gmail.com", "ucenik", "ucenik", "", "", null, "ucenik", null, "+38700000000" },
-                    { 3, "roditelj@gmail.com", "roditelj", "roditelj", "", "", null, "roditelj", null, "+38700000000" }
+                    { 1, "adminadmin@gmail.com", "admin", "admin", "JfJzsL3ngGWki+Dn67C+8WLy73I=", "7TUJfmgkkDvcY3PB/M4fhg==", null, "admin", null, null, "060000000" },
+                    { 2, "ucenik@gmail.com", "ucenik", "ucenik", "", "", null, "ucenik", null, null, "+38700000000" },
+                    { 3, "roditelj@gmail.com", "roditelj", "roditelj", "", "", null, "roditelj", null, null, "+38700000000" },
+                    { 4, "denismusic@gmail.com", "Denis", "denis", "JfJzsL3ngGWki+Dn67C+8WLy73I=", "7TUJfmgkkDvcY3PB/M4fhg==", null, "Music", null, null, "060300400" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Predmeti",
+                columns: new[] { "PredmetID", "Naziv", "Opis", "StateMachine" },
+                values: new object[,]
+                {
+                    { 1, "Matematika", "Sabiranje,oduzimanje,množenje,dijeljenje", null },
+                    { 2, "Biologija", "Biljke", null }
                 });
 
             migrationBuilder.InsertData(
@@ -183,19 +195,33 @@ namespace eDnevnik.Services.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "korisniciUloges",
-                columns: new[] { "KorisnikUlogaID", "DatumIzmjene", "KorisnikID", "UlogaID" },
-                values: new object[] { 1, new DateTime(2024, 6, 13, 16, 34, 15, 447, DateTimeKind.Local).AddTicks(9203), 1, 1 });
+                table: "Ocjene",
+                columns: new[] { "OcjenaID", "Datum", "Ocjena", "PredmetID", "ProfesorID", "UcenikID" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9647), 5, 1, 1, 2 },
+                    { 2, new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9652), 4, 2, 1, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Odjeljenje",
+                columns: new[] { "OdjeljenjeID", "NazivOdjeljenja", "RazrednikID" },
+                values: new object[,]
+                {
+                    { 1, "1A", 1 },
+                    { 2, "2A", 4 }
+                });
 
             migrationBuilder.InsertData(
                 table: "korisniciUloges",
                 columns: new[] { "KorisnikUlogaID", "DatumIzmjene", "KorisnikID", "UlogaID" },
-                values: new object[] { 2, new DateTime(2024, 6, 13, 16, 34, 15, 447, DateTimeKind.Local).AddTicks(9240), 2, 2 });
-
-            migrationBuilder.InsertData(
-                table: "korisniciUloges",
-                columns: new[] { "KorisnikUlogaID", "DatumIzmjene", "KorisnikID", "UlogaID" },
-                values: new object[] { 3, new DateTime(2024, 6, 13, 16, 34, 15, 447, DateTimeKind.Local).AddTicks(9243), 3, 2 });
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9525), 1, 1 },
+                    { 2, new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9577), 2, 2 },
+                    { 3, new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9581), 3, 2 },
+                    { 4, new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9584), 4, 1 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Korisnici_OdjeljenjeID",

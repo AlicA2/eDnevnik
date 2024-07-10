@@ -16,12 +16,17 @@ abstract class BaseProvider<T> with ChangeNotifier {
         defaultValue: "https://localhost:7260/");
   }
 
-  Future<SearchResult<T>> get({dynamic filter}) async {
+  Future<SearchResult<T>> get(
+      {dynamic filter, bool isUlogeIncluded = true}) async {
     var url = "$_baseUrl$_endPoint";
 
-    if(filter!=null){
+    if (filter != null) {
       var queryString = getQueryString(filter);
       url = "$url?$queryString";
+    }
+
+    if (isUlogeIncluded) {
+      url += (url.contains('?') ? '&' : '?') + 'isUlogeIncluded=true';
     }
 
     var uri = Uri.parse(url);
@@ -35,54 +40,53 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
       result.count = data['count'];
 
-      for (var item in data['result']){
+      for (var item in data['result']) {
         result.result.add(fromJson(item));
       }
 
       return result;
-    }else{
+    } else {
       throw new Exception("Unknown error");
     }
-
   }
 
-  Future<T> Insert(dynamic request) async{
+  Future<T> Insert(dynamic request) async {
     var url = "$_baseUrl$_endPoint";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
     var jsonRequest = jsonEncode(request);
 
-    var response = await http.post(uri,headers:headers, body: jsonRequest);
+    var response = await http.post(uri, headers: headers, body: jsonRequest);
 
-   if (isValidResponse(response)) {
+    if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
 
       return fromJson(data);
-    }else{
+    } else {
       throw new Exception("Unknown error");
     }
   }
 
-    Future<T> Update(int id, [dynamic request]) async{
+  Future<T> Update(int id, [dynamic request]) async {
     var url = "$_baseUrl$_endPoint/$id";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
     var jsonRequest = jsonEncode(request);
 
-    var response = await http.put(uri,headers:headers, body: jsonRequest);
+    var response = await http.put(uri, headers: headers, body: jsonRequest);
 
-   if (isValidResponse(response)) {
+    if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
 
       return fromJson(data);
-    }else{
+    } else {
       throw new Exception("Unknown error");
     }
   }
 
-    Future<T> delete(int id, [dynamic request]) async {
+  Future<T> delete(int id, [dynamic request]) async {
     var url = "$_baseUrl$_endPoint/$id";
     var uri = Uri.parse(url);
     var headers = createHeaders();
@@ -100,7 +104,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
   }
 
-  T fromJson(data){
+  T fromJson(data) {
     throw Exception("Method not implemented");
   }
 
@@ -119,7 +123,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     String username = Authorization.username ?? "";
     String password = Authorization.password ?? "";
 
-    print("passed creds: $username, $password");
+    // print("passed creds: $username, $password");
 
     String basicAuth =
         "Basic ${base64Encode(utf8.encode("$username:$password"))}";
@@ -163,5 +167,4 @@ abstract class BaseProvider<T> with ChangeNotifier {
     });
     return query;
   }
-
 }
