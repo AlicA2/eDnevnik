@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace eDnevnik.Services.Migrations
 {
-    public partial class Update01 : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -165,6 +165,38 @@ namespace eDnevnik.Services.Migrations
                         principalColumn: "KorisnikID");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Poruke",
+                columns: table => new
+                {
+                    PorukaID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProfesorID = table.Column<int>(type: "int", nullable: false),
+                    RoditeljID = table.Column<int>(type: "int", nullable: false),
+                    UcenikID = table.Column<int>(type: "int", nullable: false),
+                    SadrzajPoruke = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DatumSlanja = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Poruke", x => x.PorukaID);
+                    table.ForeignKey(
+                        name: "FK_Poruke_Korisnici_ProfesorID",
+                        column: x => x.ProfesorID,
+                        principalTable: "Korisnici",
+                        principalColumn: "KorisnikID");
+                    table.ForeignKey(
+                        name: "FK_Poruke_Korisnici_RoditeljID",
+                        column: x => x.RoditeljID,
+                        principalTable: "Korisnici",
+                        principalColumn: "KorisnikID");
+                    table.ForeignKey(
+                        name: "FK_Poruke_Korisnici_UcenikID",
+                        column: x => x.UcenikID,
+                        principalTable: "Korisnici",
+                        principalColumn: "KorisnikID");
+                });
+
             migrationBuilder.InsertData(
                 table: "Korisnici",
                 columns: new[] { "KorisnikID", "Email", "Ime", "KorisnickoIme", "LozinkaHash", "LozinkaSalt", "OdjeljenjeID", "Prezime", "StateMachine", "Status", "Telefon" },
@@ -199,8 +231,8 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "OcjenaID", "Datum", "Ocjena", "PredmetID", "ProfesorID", "UcenikID" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9647), 5, 1, 1, 2 },
-                    { 2, new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9652), 4, 2, 1, 2 }
+                    { 1, new DateTime(2024, 7, 10, 13, 58, 18, 319, DateTimeKind.Local).AddTicks(6537), 5, 1, 1, 2 },
+                    { 2, new DateTime(2024, 7, 10, 13, 58, 18, 319, DateTimeKind.Local).AddTicks(6544), 4, 2, 1, 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -217,10 +249,10 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "KorisnikUlogaID", "DatumIzmjene", "KorisnikID", "UlogaID" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9525), 1, 1 },
-                    { 2, new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9577), 2, 2 },
-                    { 3, new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9581), 3, 2 },
-                    { 4, new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9584), 4, 1 }
+                    { 1, new DateTime(2024, 7, 10, 13, 58, 18, 319, DateTimeKind.Local).AddTicks(6409), 1, 1 },
+                    { 2, new DateTime(2024, 7, 10, 13, 58, 18, 319, DateTimeKind.Local).AddTicks(6462), 2, 2 },
+                    { 3, new DateTime(2024, 7, 10, 13, 58, 18, 319, DateTimeKind.Local).AddTicks(6466), 3, 2 },
+                    { 4, new DateTime(2024, 7, 10, 13, 58, 18, 319, DateTimeKind.Local).AddTicks(6470), 4, 1 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -263,6 +295,21 @@ namespace eDnevnik.Services.Migrations
                 table: "Odjeljenje",
                 column: "RazrednikID");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_Poruke_ProfesorID",
+                table: "Poruke",
+                column: "ProfesorID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Poruke_RoditeljID",
+                table: "Poruke",
+                column: "RoditeljID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Poruke_UcenikID",
+                table: "Poruke",
+                column: "UcenikID");
+
             migrationBuilder.AddForeignKey(
                 name: "FK_Korisnici_Odjeljenje_OdjeljenjeID",
                 table: "Korisnici",
@@ -285,6 +332,9 @@ namespace eDnevnik.Services.Migrations
 
             migrationBuilder.DropTable(
                 name: "Ocjene");
+
+            migrationBuilder.DropTable(
+                name: "Poruke");
 
             migrationBuilder.DropTable(
                 name: "Uloge");

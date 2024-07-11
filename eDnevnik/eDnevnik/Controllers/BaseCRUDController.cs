@@ -24,7 +24,7 @@ namespace eDnevnik.Controllers
             return await _service.Insert(insert);
         }
         [HttpPut("{id}")]
-        public virtual async Task<T> Update(int id, [FromBody]TUpdate update)
+        public virtual async Task<T> Update(int id, [FromBody] TUpdate update)
         {
             return await _service.Update(id, update);
         }
@@ -36,4 +36,3 @@ namespace eDnevnik.Controllers
         }
     }
 }
-

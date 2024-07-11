@@ -41,29 +41,4 @@ class UserProvider extends BaseProvider<User> {
       throw Exception("Unexpected error occurred while fetching user data");
     }
   }
-
-  Future<List<User>> getUsersByRole() async {
-    var url = "$_baseUrl$_endpoint";
-    var uri = Uri.parse(url);
-    var headers = createHeaders();
-
-    var response = await http.get(uri, headers: headers);
-
-    if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
-      List<User> users = [];
-
-      for (var item in jsonData['result']) {
-        var user = User.fromJson(item);
-        if (user.korisniciUloge != null &&
-            user.korisniciUloge!.any((role) => role.ulogaID == 1)) {
-          users.add(user);
-        }
-      }
-
-      return users;
-    } else {
-      throw Exception('Failed to load users');
-    }
-  }
 }

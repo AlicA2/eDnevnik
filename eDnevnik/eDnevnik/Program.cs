@@ -15,12 +15,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IKorisnikService, KorisnikService>();
 builder.Services.AddTransient<IPredmetService, PredmetService>();
 builder.Services.AddTransient<IOdjeljenjeService, OdjeljenjeService>();
+builder.Services.AddTransient<IPorukeService, PorukeService>();
+
+
 
 builder.Services.AddTransient<BaseState>();
 builder.Services.AddTransient<InitialPredmetState>();
 builder.Services.AddTransient<ActivePredmetState>();
 builder.Services.AddTransient<DraftPredmetState>();
-
 
 
 //builder.Services.AddTransient<InitialKorisnikState>();
@@ -31,9 +33,11 @@ builder.Services.AddTransient<DraftPredmetState>();
 
 
 
-builder.Services.AddControllers( x => {
+builder.Services.AddControllers(x =>
+{
     x.Filters.Add<ErrorFilter>();
 });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

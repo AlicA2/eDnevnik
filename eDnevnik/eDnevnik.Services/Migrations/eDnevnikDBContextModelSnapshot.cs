@@ -51,28 +51,28 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             KorisnikUlogaID = 1,
-                            DatumIzmjene = new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9525),
+                            DatumIzmjene = new DateTime(2024, 7, 10, 13, 58, 18, 319, DateTimeKind.Local).AddTicks(6409),
                             KorisnikID = 1,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 2,
-                            DatumIzmjene = new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9577),
+                            DatumIzmjene = new DateTime(2024, 7, 10, 13, 58, 18, 319, DateTimeKind.Local).AddTicks(6462),
                             KorisnikID = 2,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 3,
-                            DatumIzmjene = new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9581),
+                            DatumIzmjene = new DateTime(2024, 7, 10, 13, 58, 18, 319, DateTimeKind.Local).AddTicks(6466),
                             KorisnikID = 3,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 4,
-                            DatumIzmjene = new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9584),
+                            DatumIzmjene = new DateTime(2024, 7, 10, 13, 58, 18, 319, DateTimeKind.Local).AddTicks(6470),
                             KorisnikID = 4,
                             UlogaID = 1
                         });
@@ -211,7 +211,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 1,
-                            Datum = new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9647),
+                            Datum = new DateTime(2024, 7, 10, 13, 58, 18, 319, DateTimeKind.Local).AddTicks(6537),
                             Ocjena = 5,
                             PredmetID = 1,
                             ProfesorID = 1,
@@ -220,7 +220,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 2,
-                            Datum = new DateTime(2024, 7, 9, 18, 38, 44, 465, DateTimeKind.Local).AddTicks(9652),
+                            Datum = new DateTime(2024, 7, 10, 13, 58, 18, 319, DateTimeKind.Local).AddTicks(6544),
                             Ocjena = 4,
                             PredmetID = 2,
                             ProfesorID = 1,
@@ -262,6 +262,41 @@ namespace eDnevnik.Services.Migrations
                             NazivOdjeljenja = "2A",
                             RazrednikID = 4
                         });
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.Poruke", b =>
+                {
+                    b.Property<int>("PorukaID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PorukaID"), 1L, 1);
+
+                    b.Property<DateTime>("DatumSlanja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProfesorID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoditeljID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SadrzajPoruke")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UcenikID")
+                        .HasColumnType("int");
+
+                    b.HasKey("PorukaID");
+
+                    b.HasIndex("ProfesorID");
+
+                    b.HasIndex("RoditeljID");
+
+                    b.HasIndex("UcenikID");
+
+                    b.ToTable("Poruke");
                 });
 
             modelBuilder.Entity("eDnevnik.Services.Database.Predmet", b =>
@@ -412,6 +447,33 @@ namespace eDnevnik.Services.Migrations
                         .HasForeignKey("RazrednikID");
 
                     b.Navigation("Razrednik");
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.Poruke", b =>
+                {
+                    b.HasOne("eDnevnik.Services.Database.Korisnik", "Profesor")
+                        .WithMany()
+                        .HasForeignKey("ProfesorID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("eDnevnik.Services.Database.Korisnik", "Roditelj")
+                        .WithMany()
+                        .HasForeignKey("RoditeljID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("eDnevnik.Services.Database.Korisnik", "Ucenik")
+                        .WithMany()
+                        .HasForeignKey("UcenikID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Profesor");
+
+                    b.Navigation("Roditelj");
+
+                    b.Navigation("Ucenik");
                 });
 
             modelBuilder.Entity("KorisnikPredmet", b =>

@@ -1,4 +1,5 @@
 import 'package:ednevnik_admin/providers/department_provider.dart';
+import 'package:ednevnik_admin/providers/message_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
@@ -11,6 +12,7 @@ void main() {
   runApp(MultiProvider(
     providers: [ChangeNotifierProvider(create: (_) => SubjectProvider()),
     ChangeNotifierProvider(create: (_) => DepartmentProvider()),
+    ChangeNotifierProvider(create: (_) => MessageProvider()),
     ChangeNotifierProvider(create: (_) => UserProvider())],
     child: const MyMaterialApp(),
   ));

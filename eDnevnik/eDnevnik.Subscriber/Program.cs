@@ -50,3 +50,15 @@ void HandleTextMessage(Predmet entity)
 {
     Console.WriteLine($"Received: {entity?.PredmetID},{entity.Naziv}");
 }
+
+//using (var bus = RabbitHutch.CreateBus("host=localhost"))
+//{
+//    bus.PubSub.Subscribe<Poruka>("test", HandleTextMessagee);
+//    Console.WriteLine("Listening for messages. Hit <return> to quit.");
+//    Console.Read();
+//}
+
+//void HandleTextMessagee(Poruka entity)
+//{
+//    Console.WriteLine($"Received: {entity?.PorukaID},{entity.SadrzajPoruke}");
+//}

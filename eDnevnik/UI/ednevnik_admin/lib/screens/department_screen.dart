@@ -57,7 +57,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
         Expanded(
           child: TextField(
             decoration: InputDecoration(labelText: "Naziv ili šifra"),
-            controller: _ftsController,
+            controller: _nazivSifraController,
           ),
         ),
         SizedBox(
@@ -66,7 +66,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
         Expanded(
           child: TextField(
             decoration: InputDecoration(labelText: "Šifra"),
-            controller: _nazivSifraController,
+            controller: _ftsController,
           ),
         ),
         ElevatedButton(
@@ -80,7 +80,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
 
               var data = await _departmentProvider.get(filter: {
                 'fts': _ftsController.text,
-                'sifra': _nazivSifraController.text
+                'NazivOdjeljenja': _nazivSifraController.text
               });
 
               setState(() {
@@ -153,7 +153,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
                               },
                           cells: [
                             DataCell(Text(e.odjeljenjeID.toString() ?? "")),
-                            DataCell(Text(e.nazivOdjeljenja ?? "")),
+                            DataCell(Text(e.nazivOdjeljenja ?? "N/A")),
                             DataCell(FutureBuilder<User>(
                                 future: _userProvider.getById(e.razrednikID!),
                                 builder: (context, snapshot) {

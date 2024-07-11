@@ -26,6 +26,10 @@ namespace eDnevnik.Services
             CreateMap<Database.Odjeljenje, Model.Models.Odjeljenje>();
             CreateMap<Model.Requests.OdjeljenjeInsertRequest, Services.Database.Odjeljenje>();
             CreateMap<Model.Requests.OdjeljenjeUpdateRequest, Services.Database.Odjeljenje>();
+
+            CreateMap<Database.Poruke, Model.Models.Poruka>();
+            CreateMap<Model.Requests.PorukaInsertRequest, Services.Database.Poruke>();
+            CreateMap<Model.Requests.PorukaUpdateRequest, Services.Database.Poruke>();
         }
     }
 }
