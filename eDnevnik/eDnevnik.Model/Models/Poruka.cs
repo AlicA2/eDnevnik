@@ -13,6 +13,7 @@ namespace eDnevnik.Model.Models
         public int RoditeljID { get; set; }
         public int UcenikID { get; set; }
         public string SadrzajPoruke { get; set; }
+        public string Odgovor { get; set; } = null!;
         public DateTime DatumSlanja { get; set; }
     }
 }

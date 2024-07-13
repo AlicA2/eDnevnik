@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:ednevnik_admin/models/result.dart';
 import 'package:ednevnik_admin/models/message.dart';
-import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/message_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
@@ -22,6 +21,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
 
   TextEditingController _ftsController = TextEditingController();
   TextEditingController _nazivSifraController = TextEditingController();
+  TextEditingController _replyController = TextEditingController();
 
   @override
   void didChangeDependencies() {
@@ -41,9 +41,48 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         return "Unknown";
       }
     } catch (e) {
-      print('Error fetching user name: $e');
       return "Unknown";
     }
+  }
+
+  void _replyToMessage(Message message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Odgovor na poruku'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(message.sadrzajPoruke ?? 'N/A'),
+              TextField(
+                controller: _replyController,
+                decoration: InputDecoration(labelText: 'Vaš odgovor'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Zatvori'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: Text('Pošalji poruku'),
+              onPressed: () async {
+                message.odgovor = _replyController.text;
+                await _messageProvider.Update(message.porukaID!, message);
+                Navigator.of(context).pop();
+                setState(() {
+                  _replyController.clear();
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -57,7 +96,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
           ],
         ),
       ),
-      tittle: "Messages",
+      tittle: "Poruke",
     );
   }
 
@@ -91,11 +130,6 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
               });
             },
             child: Text("Pretraga"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-            },
-            child: Text("Dodaj poruku"),
           ),
         ],
       ),
@@ -147,11 +181,20 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                 ),
               ),
             ),
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  "Odgovor",
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
           ],
           rows: result?.result.map((Message e) {
             return DataRow(
               onSelectChanged: (selected) {
                 if (selected == true) {
+                  _replyToMessage(e);
                 }
               },
               cells: [
@@ -186,6 +229,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                 ),
                 DataCell(Text(e.sadrzajPoruke ?? "")),
                 DataCell(Text(DateFormat('dd/MM/yyyy').format(e.datumSlanja ?? DateTime.now()))),
+                DataCell(Text(e.odgovor ?? "")),
               ],
             );
           }).toList() ?? [],

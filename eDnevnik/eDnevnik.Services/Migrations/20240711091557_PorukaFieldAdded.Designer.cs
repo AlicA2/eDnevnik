@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eDnevnik.Services;
 
@@ -11,9 +12,10 @@ using eDnevnik.Services;
 namespace eDnevnik.Services.Migrations
 {
     [DbContext(typeof(eDnevnikDBContext))]
-    partial class eDnevnikDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240711091557_PorukaFieldAdded")]
+    partial class PorukaFieldAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,62 +23,6 @@ namespace eDnevnik.Services.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("eDnevnik.Services.Database.Casovi", b =>
-                {
-                    b.Property<int>("CasoviID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CasoviID"), 1L, 1);
-
-                    b.Property<int>("GodisnjiPlanProgramID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NazivCasa")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Opis")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CasoviID");
-
-                    b.HasIndex("GodisnjiPlanProgramID");
-
-                    b.ToTable("Casovi");
-                });
-
-            modelBuilder.Entity("eDnevnik.Services.Database.GodisnjiPlanProgram", b =>
-                {
-                    b.Property<int>("GodisnjiPlanProgramID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GodisnjiPlanProgramID"), 1L, 1);
-
-                    b.Property<string>("Naziv")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OdjeljenjeID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PredmetID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("brojCasova")
-                        .HasColumnType("int");
-
-                    b.HasKey("GodisnjiPlanProgramID");
-
-                    b.HasIndex("OdjeljenjeID");
-
-                    b.HasIndex("PredmetID");
-
-                    b.ToTable("GodisnjiPlanProgram");
-                });
 
             modelBuilder.Entity("eDnevnik.Services.Database.KorisniciUloge", b =>
                 {
@@ -107,28 +53,28 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             KorisnikUlogaID = 1,
-                            DatumIzmjene = new DateTime(2024, 7, 11, 15, 36, 5, 205, DateTimeKind.Local).AddTicks(1756),
+                            DatumIzmjene = new DateTime(2024, 7, 11, 11, 15, 57, 295, DateTimeKind.Local).AddTicks(8046),
                             KorisnikID = 1,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 2,
-                            DatumIzmjene = new DateTime(2024, 7, 11, 15, 36, 5, 205, DateTimeKind.Local).AddTicks(1806),
+                            DatumIzmjene = new DateTime(2024, 7, 11, 11, 15, 57, 295, DateTimeKind.Local).AddTicks(8094),
                             KorisnikID = 2,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 3,
-                            DatumIzmjene = new DateTime(2024, 7, 11, 15, 36, 5, 205, DateTimeKind.Local).AddTicks(1810),
+                            DatumIzmjene = new DateTime(2024, 7, 11, 11, 15, 57, 295, DateTimeKind.Local).AddTicks(8098),
                             KorisnikID = 3,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 4,
-                            DatumIzmjene = new DateTime(2024, 7, 11, 15, 36, 5, 205, DateTimeKind.Local).AddTicks(1813),
+                            DatumIzmjene = new DateTime(2024, 7, 11, 11, 15, 57, 295, DateTimeKind.Local).AddTicks(8101),
                             KorisnikID = 4,
                             UlogaID = 1
                         });
@@ -267,7 +213,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 1,
-                            Datum = new DateTime(2024, 7, 11, 15, 36, 5, 205, DateTimeKind.Local).AddTicks(1867),
+                            Datum = new DateTime(2024, 7, 11, 11, 15, 57, 295, DateTimeKind.Local).AddTicks(8232),
                             Ocjena = 5,
                             PredmetID = 1,
                             ProfesorID = 1,
@@ -276,7 +222,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 2,
-                            Datum = new DateTime(2024, 7, 11, 15, 36, 5, 205, DateTimeKind.Local).AddTicks(1872),
+                            Datum = new DateTime(2024, 7, 11, 11, 15, 57, 295, DateTimeKind.Local).AddTicks(8237),
                             Ocjena = 4,
                             PredmetID = 2,
                             ProfesorID = 1,
@@ -445,36 +391,6 @@ namespace eDnevnik.Services.Migrations
                     b.ToTable("KorisnikPredmet");
                 });
 
-            modelBuilder.Entity("eDnevnik.Services.Database.Casovi", b =>
-                {
-                    b.HasOne("eDnevnik.Services.Database.GodisnjiPlanProgram", "GodisnjiPlanProgram")
-                        .WithMany("Casovi")
-                        .HasForeignKey("GodisnjiPlanProgramID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GodisnjiPlanProgram");
-                });
-
-            modelBuilder.Entity("eDnevnik.Services.Database.GodisnjiPlanProgram", b =>
-                {
-                    b.HasOne("eDnevnik.Services.Database.Odjeljenje", "Odjeljenje")
-                        .WithMany()
-                        .HasForeignKey("OdjeljenjeID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("eDnevnik.Services.Database.Predmet", "Predmet")
-                        .WithMany()
-                        .HasForeignKey("PredmetID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Odjeljenje");
-
-                    b.Navigation("Predmet");
-                });
-
             modelBuilder.Entity("eDnevnik.Services.Database.KorisniciUloge", b =>
                 {
                     b.HasOne("eDnevnik.Services.Database.Korisnik", "Korisnik")
@@ -579,11 +495,6 @@ namespace eDnevnik.Services.Migrations
                         .HasForeignKey("UceniciKorisnikID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("eDnevnik.Services.Database.GodisnjiPlanProgram", b =>
-                {
-                    b.Navigation("Casovi");
                 });
 
             modelBuilder.Entity("eDnevnik.Services.Database.Korisnik", b =>

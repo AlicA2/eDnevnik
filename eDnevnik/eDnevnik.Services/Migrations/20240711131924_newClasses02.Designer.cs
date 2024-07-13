@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eDnevnik.Services;
 
@@ -11,9 +12,10 @@ using eDnevnik.Services;
 namespace eDnevnik.Services.Migrations
 {
     [DbContext(typeof(eDnevnikDBContext))]
-    partial class eDnevnikDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240711131924_newClasses02")]
+    partial class newClasses02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,28 +109,28 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             KorisnikUlogaID = 1,
-                            DatumIzmjene = new DateTime(2024, 7, 11, 15, 36, 5, 205, DateTimeKind.Local).AddTicks(1756),
+                            DatumIzmjene = new DateTime(2024, 7, 11, 15, 19, 23, 968, DateTimeKind.Local).AddTicks(291),
                             KorisnikID = 1,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 2,
-                            DatumIzmjene = new DateTime(2024, 7, 11, 15, 36, 5, 205, DateTimeKind.Local).AddTicks(1806),
+                            DatumIzmjene = new DateTime(2024, 7, 11, 15, 19, 23, 968, DateTimeKind.Local).AddTicks(334),
                             KorisnikID = 2,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 3,
-                            DatumIzmjene = new DateTime(2024, 7, 11, 15, 36, 5, 205, DateTimeKind.Local).AddTicks(1810),
+                            DatumIzmjene = new DateTime(2024, 7, 11, 15, 19, 23, 968, DateTimeKind.Local).AddTicks(337),
                             KorisnikID = 3,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 4,
-                            DatumIzmjene = new DateTime(2024, 7, 11, 15, 36, 5, 205, DateTimeKind.Local).AddTicks(1813),
+                            DatumIzmjene = new DateTime(2024, 7, 11, 15, 19, 23, 968, DateTimeKind.Local).AddTicks(340),
                             KorisnikID = 4,
                             UlogaID = 1
                         });
@@ -267,7 +269,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 1,
-                            Datum = new DateTime(2024, 7, 11, 15, 36, 5, 205, DateTimeKind.Local).AddTicks(1867),
+                            Datum = new DateTime(2024, 7, 11, 15, 19, 23, 968, DateTimeKind.Local).AddTicks(391),
                             Ocjena = 5,
                             PredmetID = 1,
                             ProfesorID = 1,
@@ -276,7 +278,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 2,
-                            Datum = new DateTime(2024, 7, 11, 15, 36, 5, 205, DateTimeKind.Local).AddTicks(1872),
+                            Datum = new DateTime(2024, 7, 11, 15, 19, 23, 968, DateTimeKind.Local).AddTicks(397),
                             Ocjena = 4,
                             PredmetID = 2,
                             ProfesorID = 1,

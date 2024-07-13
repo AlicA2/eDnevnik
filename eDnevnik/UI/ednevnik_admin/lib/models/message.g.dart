@@ -14,6 +14,7 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       datumSlanja: json['datumSlanja'] == null
           ? null
           : DateTime.parse(json['datumSlanja'] as String),
+      odgovor: json['odgovor'] as String?,
     );
 
 Map<String, dynamic> _$MessageToJson(Message instance) => <String, dynamic>{
@@ -21,5 +22,6 @@ Map<String, dynamic> _$MessageToJson(Message instance) => <String, dynamic>{
       'roditeljID': instance.roditeljID,
       'ucenikID': instance.ucenikID,
       'sadrzajPoruke': instance.sadrzajPoruke,
+      'odgovor': instance.odgovor,
       'datumSlanja': instance.datumSlanja?.toIso8601String(),
     };

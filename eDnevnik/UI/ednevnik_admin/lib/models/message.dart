@@ -8,9 +8,10 @@ class Message {
   int? roditeljID;
   int? ucenikID;
   String? sadrzajPoruke;
+  String? odgovor;
   DateTime? datumSlanja;
 
-  Message({this.porukaID, this.roditeljID, this.ucenikID, this.sadrzajPoruke, this.datumSlanja});
+  Message({this.porukaID, this.roditeljID, this.ucenikID, this.sadrzajPoruke, this.datumSlanja,this.odgovor});
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.

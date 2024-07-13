@@ -15,6 +15,7 @@ namespace eDnevnik.Services.Database
         //public string ImePrezimeRoditelja { get; set; }
         //public string PodaciOUceniku { get; set; }
         public string SadrzajPoruke { get; set; }
+        public string Odgovor { get; set; } = null!;
         public DateTime DatumSlanja { get; set; }
 
         public virtual Korisnik Profesor { get; set; } = null!;
