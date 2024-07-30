@@ -5,6 +5,7 @@ import 'package:ednevnik_admin/models/subject.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
+import 'package:ednevnik_admin/screens/classes_screen.dart';
 import 'package:ednevnik_admin/screens/single_annual_plan_program_screen.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
@@ -57,20 +58,19 @@ class _YearlyPlanAndProgramDetailScreenState
     });
   }
 
-String _getDepartmentName(int? id) {
-  return _departments.firstWhere(
-    (dept) => dept.odjeljenjeID == id, 
-    orElse: () => Department(0, '', 0)
-  ).nazivOdjeljenja ?? "";
-}
+  String _getDepartmentName(int? id) {
+    return _departments.firstWhere(
+      (dept) => dept.odjeljenjeID == id,
+      orElse: () => Department(0, '', 0),
+    ).nazivOdjeljenja ?? "";
+  }
 
-String _getSubjectName(int? id) {
-  return _subjects.firstWhere(
-    (sub) => sub.predmetID == id, 
-    orElse: () => Subject(0, '', '', "")
-  ).naziv ?? "";
-}
-
+  String _getSubjectName(int? id) {
+    return _subjects.firstWhere(
+      (sub) => sub.predmetID == id,
+      orElse: () => Subject(0, '', '', ""),
+    ).naziv ?? "";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,89 +87,86 @@ String _getSubjectName(int? id) {
     );
   }
 
-Widget _buildSearch() {
-  return Padding(
-    padding: const EdgeInsets.all(20.0),
-    child: Row(
-      children: [
-        Expanded(
-          child: DropdownButton<Department>(
-            hint: Text("Odjeljenje"),
-            value: _selectedDepartment,
-            onChanged: (Department? newValue) {
-              setState(() {
-                _selectedDepartment = newValue;
-              });
-            },
-            items: _departments.map((Department department) {
-              return DropdownMenuItem<Department>(
-                value: department,
-                child: Text(department.nazivOdjeljenja ?? ""),
-              );
-            }).toList(),
+  Widget _buildSearch() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: DropdownButton<Department>(
+              hint: Text("Odjeljenje"),
+              value: _selectedDepartment,
+              onChanged: (Department? newValue) {
+                setState(() {
+                  _selectedDepartment = newValue;
+                });
+              },
+              items: _departments.map((Department department) {
+                return DropdownMenuItem<Department>(
+                  value: department,
+                  child: Text(department.nazivOdjeljenja ?? ""),
+                );
+              }).toList(),
+            ),
           ),
-        ),
-        SizedBox(width: 10),
-        Expanded(
-          child: DropdownButton<Subject>(
-            hint: Text("Predmet"),
-            value: _selectedSubject,
-            onChanged: (Subject? newValue) {
-              setState(() {
-                _selectedSubject = newValue;
-              });
-            },
-            items: _subjects.map((Subject subject) {
-              return DropdownMenuItem<Subject>(
-                value: subject,
-                child: Text(subject.naziv ?? ""),
-              );
-            }).toList(),
+          SizedBox(width: 10),
+          Expanded(
+            child: DropdownButton<Subject>(
+              hint: Text("Predmet"),
+              value: _selectedSubject,
+              onChanged: (Subject? newValue) {
+                setState(() {
+                  _selectedSubject = newValue;
+                });
+              },
+              items: _subjects.map((Subject subject) {
+                return DropdownMenuItem<Subject>(
+                  value: subject,
+                  child: Text(subject.naziv ?? ""),
+                );
+              }).toList(),
+            ),
           ),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            var filter = {
-              'naziv': _nazivController.text,
-            };
-            if (_selectedDepartment != null) {
-              filter['odjeljenjeID'] = _selectedDepartment!.odjeljenjeID.toString();
-            }
-            if (_selectedSubject != null) {
-              filter['predmetID'] = _selectedSubject!.predmetID.toString();
-            }
+          ElevatedButton(
+            onPressed: () async {
+              var filter = {
+                'naziv': _nazivController.text,
+              };
+              if (_selectedDepartment != null) {
+                filter['odjeljenjeID'] = _selectedDepartment!.odjeljenjeID.toString();
+              }
+              if (_selectedSubject != null) {
+                filter['predmetID'] = _selectedSubject!.predmetID.toString();
+              }
 
-            // Debugging: Print filter parameters to console
-            print("Filter: $filter");
+              print("Filter: $filter");
 
-            var data = await _annualPlanProgramProvider.get(filter: filter);
+              var data = await _annualPlanProgramProvider.get(filter: filter);
 
-            setState(() {
-              result = data;
-            });
+              setState(() {
+                result = data;
+              });
 
-            // Debugging: Print result to console
-            print("Result: ${result?.result}");
-          },
-          child: Text("Pretraga"),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => SingleAnnualPlanProgramScreen(
-                  planProgram: null,
+              print("Result: ${result?.result}");
+            },
+            child: Text("Pretraga"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SingleAnnualPlanProgramScreen(
+                    planProgram: null,
+                  ),
                 ),
-              ),
-            );
-          },
-          child: Text("Dodaj Plan i Program"),
-        ),
-      ],
-    ),
-  );
-}
-
+              );
+            },
+            child: Text("Dodaj Plan i Program"),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildDataListView() {
     return Expanded(
@@ -203,14 +200,6 @@ Widget _buildSearch() {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  "Predmet",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
                   "Broj Časova",
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
@@ -219,39 +208,61 @@ Widget _buildSearch() {
             DataColumn(
               label: Expanded(
                 child: Text(
-                  "Classes",
+                  "",
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
             ),
           ],
-          rows: result?.result
-                  .map((AnnualPlanProgram e) => DataRow(
-                        onSelectChanged: (selected) {
-                          if (selected == true) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    SingleAnnualPlanProgramScreen(
-                                  planProgram: e,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                        cells: [
-                          DataCell(
-                              Text(e.godisnjiPlanProgramID?.toString() ?? "")),
-                          DataCell(Text(e.naziv ?? "")),
-                          DataCell(Text(_getDepartmentName(e.odjeljenjeID))),
-                          DataCell(Text(_getSubjectName(e.predmetID))),
-                          DataCell(Text(e.brojCasova?.toString() ?? "")),
-                          DataCell(Text(
-                              e.casovi.map((c) => c.nazivCasa).join(", "))),
-                        ],
-                      ))
-                  .toList() ??
-              [],
+          rows: result?.result.map((AnnualPlanProgram e) {
+            return DataRow(
+              onSelectChanged: (selected) {
+                if (selected == true) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SingleAnnualPlanProgramScreen(
+                        planProgram: e,
+                      ),
+                    ),
+                  );
+                }
+              },
+              cells: [
+                DataCell(Text(e.godisnjiPlanProgramID?.toString() ?? "")),
+                DataCell(Text(e.naziv ?? "")),
+                DataCell(Text(_getDepartmentName(e.odjeljenjeID))),
+                DataCell(Text(e.brojCasova?.toString() ?? "")),
+                DataCell(Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SingleAnnualPlanProgramScreen(
+                              planProgram: e,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.navigate_next),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ClassesDetailScreen(
+                              annualPlanProgramID: e.godisnjiPlanProgramID,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                )),
+              ],
+            );
+          }).toList() ?? [],
         ),
       ),
     );

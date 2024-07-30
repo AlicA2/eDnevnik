@@ -10,5 +10,7 @@ namespace eDnevnik.Model.Requests
     {
         public int brojCasova { get; set; }
         public string Naziv { get; set; }
+        public int OdjeljenjeID { get; set; }
+        public int PredmetID { get; set; }
     }
 }

@@ -3,6 +3,7 @@ import 'package:ednevnik_admin/screens/department_screen.dart';
 import 'package:ednevnik_admin/screens/messages_screen.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
+import 'package:ednevnik_admin/screens/user_profile_screen.dart';
 import 'package:ednevnik_admin/screens/yearly_plan_and_program_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -63,6 +64,13 @@ class _MasterScreenWidgetStateState extends State<MasterScreenWidget> {
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => LoginPage(),
+                  ));
+                }),
+                ListTile(
+                title: Text("Profil"),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ProfilScreen(),
                   ));
                 })
           ],

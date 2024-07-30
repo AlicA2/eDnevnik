@@ -20,10 +20,10 @@ namespace eDnevnik.Services.Configurations
                 .HasForeignKey(g => g.OdjeljenjeID)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany(g => g.Casovi)
-                .WithOne(c => c.GodisnjiPlanProgram)
-                .HasForeignKey(c => c.GodisnjiPlanProgramID)
-                .OnDelete(DeleteBehavior.Cascade);
+            //builder.HasMany(g => g.Casovi)
+            //    .WithOne(c => c.GodisnjiPlanProgram)
+            //    .HasForeignKey(c => c.GodisnjiPlanProgramID)
+            //    .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

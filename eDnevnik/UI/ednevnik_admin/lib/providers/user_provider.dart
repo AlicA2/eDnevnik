@@ -41,4 +41,41 @@ class UserProvider extends BaseProvider<User> {
       throw Exception("Unexpected error occurred while fetching user data");
     }
   }
+
+    Future<int> getLoged(String username, String password) async {
+    var url =
+        "$_baseUrl$_endpoint/GetLoged?username=$username&password=$password";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http.get(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception("Unexpected error occurred while logging in");
+    }
+  }
+
+  Future<void> updatePasswordAndUsername(int id, String oldPassword,
+      String korisnickoIme, String password, String passwordPotvrda) async {
+    var url =
+        "$_baseUrl$_endpoint/UpdatePasswordAndUsername?id=$id&oldPassword=$oldPassword";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+    var requestBody = jsonEncode({
+      'korisnickoIme': korisnickoIme,
+      'password': password,
+      'passwordPotvrda': passwordPotvrda
+    });
+
+    var response = await http.put(uri, headers: headers, body: requestBody);
+
+    if (!isValidResponse(response)) {
+      throw Exception(
+          "Unexpected error occurred while updating password and username");
+    }
+  }
+
 }

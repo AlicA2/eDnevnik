@@ -128,5 +128,82 @@ namespace eDnevnik.Services.Service
         //    return await state.Update(id, update);
         //}
 
+        public async Task<bool> VerifyOldPassword(int id, string oldPassword)
+        {
+            var entity = await _context.Korisnici.FindAsync(id);
+
+            if (entity == null)
+            {
+                throw new Exception("Korisnik nije pronađen");
+            }
+
+            var hash = GenerateHash(entity.LozinkaSalt, oldPassword);
+
+            return hash == entity.LozinkaHash;
+        }
+
+
+        public async Task<int?> GetLoged(string username, string password)
+        {
+            var entity = await _context.Korisnici.FirstOrDefaultAsync(x => x.KorisnickoIme == username);
+
+            if (entity == null)
+            {
+                return null;
+            }
+
+            var hash = GenerateHash(entity.LozinkaSalt, password);
+
+            if (hash != entity.LozinkaHash)
+            {
+                return null;
+            }
+
+            return entity.KorisnikID;
+        }
+        public async Task<(int? korisnikId, string uloga)> GetLogedWithRole(string username, string password)
+        {
+            var entity = await _context.Korisnici
+                .Include(x => x.KorisniciUloge)
+                .ThenInclude(x => x.Uloga)
+                .FirstOrDefaultAsync(x => x.KorisnickoIme == username);
+
+            if (entity == null)
+            {
+                return (null, null);
+            }
+
+            var hash = GenerateHash(entity.LozinkaSalt, password);
+
+            if (hash != entity.LozinkaHash)
+            {
+                return (null, null);
+            }
+
+            var uloga = entity.KorisniciUloge.FirstOrDefault()?.Uloga.Naziv;
+
+            return (entity.KorisnikID, uloga);
+        }
+
+        public async Task UpdatePasswordAndUsername(int id, KorisniciUpdateRequestLimited request)
+        {
+            var entity = await _context.Korisnici.FindAsync(id);
+
+            if (entity == null)
+            {
+                throw new Exception("Korisnik nije pronađen");
+            }
+
+            entity.KorisnickoIme = request.KorisnickoIme;
+
+            if (!string.IsNullOrWhiteSpace(request.Password))
+            {
+                entity.LozinkaSalt = GenerateSalt();
+                entity.LozinkaHash = GenerateHash(entity.LozinkaSalt, request.Password);
+            }
+
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+        }
     }
 }
