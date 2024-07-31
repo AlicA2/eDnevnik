@@ -8,17 +8,20 @@ import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/utils/util.dart';
+import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => SubjectProvider()),
-    ChangeNotifierProvider(create: (_) => DepartmentProvider()),
-    ChangeNotifierProvider(create: (_) => MessageProvider()),
-    ChangeNotifierProvider(create: (_) => UserProvider()),
-    ChangeNotifierProvider(create: (_) => AnnualPlanProgramProvider()),
-    ChangeNotifierProvider(create: (_) => ClassesProvider())],
+    providers: [
+      ChangeNotifierProvider(create: (_) => SubjectProvider()),
+      ChangeNotifierProvider(create: (_) => DepartmentProvider()),
+      ChangeNotifierProvider(create: (_) => MessageProvider()),
+      ChangeNotifierProvider(create: (_) => UserProvider()),
+      ChangeNotifierProvider(create: (_) => AnnualPlanProgramProvider()),
+      ChangeNotifierProvider(create: (_) => ClassesProvider())
+    ],
     child: const MyMaterialApp(),
   ));
 }
@@ -141,84 +144,81 @@ class LoginPage extends StatelessWidget {
 
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
-  
-  late SubjectProvider _predmetProvider;
 
   @override
   Widget build(BuildContext context) {
-    _predmetProvider = context.read<SubjectProvider>();
+    UserProvider _userProvider = context.read<UserProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Text("Login"),
         backgroundColor: Colors.blue,
       ),
       body: Center(
-          child: SingleChildScrollView(
-            child: Container(
-                    constraints: BoxConstraints(maxWidth: 400, maxHeight: 500),
-                    child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  //Image.network("https://www.fit.ba/content/public/images/og-image.jpg", height: 100, width: 100,),
-                  Image.asset(
-                    "assets/images/eDnevnik.png",
-                    height: 200,
-                    width: 300,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                        labelText: "Username", prefixIcon: Icon(Icons.email)),
-                    controller: _usernameController,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                        labelText: "Password", prefixIcon: Icon(Icons.password)),
-                    controller: _passwordController,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      var username = _usernameController.text;
-                      var password = _passwordController.text;
-                      // print("Login proceeded $username $password");
-            
-                      Authorization.username = username;
-                      Authorization.password = password;
-            
-                      try {
-                        await _predmetProvider.get();
-            
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SubjectDetailScreen(),
-                        ),
-                      );
-                      } on Exception catch (e) {
-                        // TODO
-                        showDialog(context: context, builder: (BuildContext context)=>AlertDialog(
-                          title:Text("Error"),
-                          content: Text(e.toString()),
-                          actions: [
-                            TextButton(onPressed: ()=>Navigator.pop(context), child: Text("OK"),)
-                          ]
-                        ));
-                      }
-                    },
-                    child: Text("Login"),
-                  )
-                ],
+        child: SingleChildScrollView(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 400, maxHeight: 500),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/images/eDnevnik.png",
+                      height: 200,
+                      width: 300,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          labelText: "Korisničko ime", prefixIcon: Icon(Icons.email)),
+                      controller: _usernameController,
+                    ),
+                    SizedBox(height: 10),
+                    TextField(
+                      decoration: InputDecoration(
+                          labelText: "Lozinka",
+                          prefixIcon: Icon(Icons.password)),
+                      controller: _passwordController,
+                      obscureText: true,
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () async {
+                        var username = _usernameController.text;
+                        var password = _passwordController.text;
+
+                        try {
+                          await _userProvider.login(username, password);
+
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => SubjectDetailScreen(),
+                            ),
+                          );
+                        } on Exception catch (e) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: Text("Error"),
+                              content: Text(e.toString()),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text("OK"),
+                                )
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                      child: Text("Prijava"),
+                    )
+                  ],
+                ),
               ),
             ),
-                    ),
-                  ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

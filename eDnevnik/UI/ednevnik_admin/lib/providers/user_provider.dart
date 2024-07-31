@@ -4,10 +4,8 @@ import 'package:ednevnik_admin/models/roles.dart';
 import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/base_provider.dart';
 import 'package:ednevnik_admin/utils/util.dart';
-import 'package:flutter/gestures.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 class UserProvider extends BaseProvider<User> {
   static const String _baseUrl = String.fromEnvironment("baseUrl",
@@ -16,8 +14,11 @@ class UserProvider extends BaseProvider<User> {
 
   UserProvider() : super("Korisnik");
 
+  User? _loggedInUser;
+  
+  User? get loggedInUser => _loggedInUser;
 
- @override
+  @override
   User fromJson(data) {
     var korisnik = User.fromJson(data);
     if (data['korisniciUloge'] != null) {
@@ -42,7 +43,7 @@ class UserProvider extends BaseProvider<User> {
     }
   }
 
-    Future<int> getLoged(String username, String password) async {
+  Future<int> getLoged(String username, String password) async {
     var url =
         "$_baseUrl$_endpoint/GetLoged?username=$username&password=$password";
     var uri = Uri.parse(url);
@@ -56,6 +57,15 @@ class UserProvider extends BaseProvider<User> {
     } else {
       throw Exception("Unexpected error occurred while logging in");
     }
+  }
+
+  Future<void> login(String username, String password) async {
+    Authorization.username = username;
+    Authorization.password = password;
+    
+    int userId = await getLoged(username, password);
+    _loggedInUser = await getById(userId);
+    notifyListeners();
   }
 
   Future<void> updatePasswordAndUsername(int id, String oldPassword,
@@ -77,5 +87,4 @@ class UserProvider extends BaseProvider<User> {
           "Unexpected error occurred while updating password and username");
     }
   }
-
 }

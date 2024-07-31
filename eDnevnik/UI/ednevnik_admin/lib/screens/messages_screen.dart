@@ -17,29 +17,35 @@ class MessageDetailScreen extends StatefulWidget {
 class _MessageDetailScreenState extends State<MessageDetailScreen> {
   SearchResult<Message>? result;
   late MessageProvider _messageProvider;
-  UserProvider? _userProvider;
+  late UserProvider _userProvider;
 
   TextEditingController _ftsController = TextEditingController();
   TextEditingController _nazivSifraController = TextEditingController();
   TextEditingController _replyController = TextEditingController();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     _messageProvider = context.read<MessageProvider>();
-    if (_userProvider == null) {
-      _userProvider = context.read<UserProvider>();
-    }
+    _userProvider = context.read<UserProvider>();
+    _fetchMessages();
+  }
+
+  Future<void> _fetchMessages() async {
+    var data = await _messageProvider.get(filter: {
+      'fts': _ftsController.text,
+      'naziv': _nazivSifraController.text,
+    });
+
+    setState(() {
+      result = data;
+    });
   }
 
   Future<String> getUserName(int userId) async {
     try {
-      if (_userProvider != null) {
-        var user = await _userProvider!.getById(userId);
-        return "${user.ime} ${user.prezime}";
-      } else {
-        return "Unknown";
-      }
+      var user = await _userProvider.getById(userId);
+      return "${user.ime} ${user.prezime}";
     } catch (e) {
       return "Unknown";
     }
@@ -119,16 +125,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
             ),
           ),
           ElevatedButton(
-            onPressed: () async {
-              var data = await _messageProvider.get(filter: {
-                'fts': _ftsController.text,
-                'naziv': _nazivSifraController.text,
-              });
-
-              setState(() {
-                result = data;
-              });
-            },
+            onPressed: _fetchMessages,
             child: Text("Pretraga"),
           ),
         ],
@@ -200,7 +197,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
               cells: [
                 DataCell(Text(e.porukaID?.toString() ?? "")),
                 DataCell(
-                  FutureBuilder(
+                  FutureBuilder<String>(
                     future: getUserName(e.roditeljID ?? 0),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -208,13 +205,13 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                       } else if (snapshot.hasError) {
                         return Text("Error");
                       } else {
-                        return Text(snapshot.data?.toString() ?? "Unknown");
+                        return Text(snapshot.data ?? "Unknown");
                       }
                     },
                   ),
                 ),
                 DataCell(
-                  FutureBuilder(
+                  FutureBuilder<String>(
                     future: getUserName(e.ucenikID ?? 0),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -222,7 +219,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                       } else if (snapshot.hasError) {
                         return Text("Error");
                       } else {
-                        return Text(snapshot.data?.toString() ?? "Unknown");
+                        return Text(snapshot.data ?? "Unknown");
                       }
                     },
                   ),

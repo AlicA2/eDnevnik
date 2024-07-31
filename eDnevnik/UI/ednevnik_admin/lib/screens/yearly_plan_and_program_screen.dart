@@ -42,6 +42,7 @@ class _YearlyPlanAndProgramDetailScreenState
     _subjectProvider = context.read<SubjectProvider>();
     _fetchDepartments();
     _fetchSubjects();
+    _fetchAnnualPlanPrograms();
   }
 
   Future<void> _fetchDepartments() async {
@@ -55,6 +56,24 @@ class _YearlyPlanAndProgramDetailScreenState
     var data = await _subjectProvider.get();
     setState(() {
       _subjects = data.result;
+    });
+  }
+
+  Future<void> _fetchAnnualPlanPrograms() async {
+    var filter = {
+      'naziv': _nazivController.text,
+    };
+    if (_selectedDepartment != null) {
+      filter['odjeljenjeID'] = _selectedDepartment!.odjeljenjeID.toString();
+    }
+    if (_selectedSubject != null) {
+      filter['predmetID'] = _selectedSubject!.predmetID.toString();
+    }
+
+    var data = await _annualPlanProgramProvider.get(filter: filter);
+
+    setState(() {
+      result = data;
     });
   }
 
@@ -128,27 +147,7 @@ class _YearlyPlanAndProgramDetailScreenState
             ),
           ),
           ElevatedButton(
-            onPressed: () async {
-              var filter = {
-                'naziv': _nazivController.text,
-              };
-              if (_selectedDepartment != null) {
-                filter['odjeljenjeID'] = _selectedDepartment!.odjeljenjeID.toString();
-              }
-              if (_selectedSubject != null) {
-                filter['predmetID'] = _selectedSubject!.predmetID.toString();
-              }
-
-              print("Filter: $filter");
-
-              var data = await _annualPlanProgramProvider.get(filter: filter);
-
-              setState(() {
-                result = data;
-              });
-
-              print("Result: ${result?.result}");
-            },
+            onPressed: _fetchAnnualPlanPrograms,
             child: Text("Pretraga"),
           ),
           ElevatedButton(

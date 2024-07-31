@@ -9,6 +9,6 @@ namespace eDnevnik.Model.Requests
     public class PredmetUpdateRequest
     {
         public string Naziv { get; set; }
-        public string? Opis { get; set; }
+        public string Opis { get; set; }
     }
 }

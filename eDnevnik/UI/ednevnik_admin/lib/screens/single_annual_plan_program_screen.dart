@@ -69,7 +69,7 @@ class _SingleAnnualPlanProgramScreenState extends State<SingleAnnualPlanProgramS
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.planProgram?.naziv ?? 'New Plan and Program'),
+        title: Text(widget.planProgram?.naziv ?? 'Novi plan i program'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -93,7 +93,7 @@ class _SingleAnnualPlanProgramScreenState extends State<SingleAnnualPlanProgramS
                 FormBuilderTextField(
                   name: 'brojCasova',
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(labelText: 'Broj Časova'),
+                  decoration: InputDecoration(labelText: 'Broj časova'),
                 ),
                 SizedBox(height: 20),
                 FormBuilderDropdown<int>(
@@ -113,13 +113,13 @@ class _SingleAnnualPlanProgramScreenState extends State<SingleAnnualPlanProgramS
                   children: [
                     ElevatedButton(
                       onPressed: _saveForm,
-                      child: Text('Save'),
+                      child: Text('Spasi'),
                     ),
                     SizedBox(width: 10),
                     if (widget.planProgram != null)
                       ElevatedButton(
                         onPressed: _deletePlanProgram,
-                        child: Text('Delete'),
+                        child: Text('Izbriši'),
                       ),
                   ],
                 ),

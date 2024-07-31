@@ -1,13 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/result.dart';
 import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
@@ -17,106 +13,90 @@ class SingleDepartmentListScreen extends StatefulWidget {
   SingleDepartmentListScreen({Key? key, this.department}) : super(key: key);
 
   @override
-  State<SingleDepartmentListScreen> createState() =>
-      _SingleDepartmentListScreenState();
+  State<SingleDepartmentListScreen> createState() => _SingleDepartmentListScreenState();
 }
 
-class _SingleDepartmentListScreenState
-    extends State<SingleDepartmentListScreen> {
+class _SingleDepartmentListScreenState extends State<SingleDepartmentListScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
-  late DepartmentProvider
-      _departmentProvider; // Deklaracija providera koji će nam vraćati s API-a
-  late UserProvider
-      _userProvider; // Deklaracija providera koji će nam vraćati s API-a
+  late DepartmentProvider _departmentProvider;
+  late UserProvider _userProvider;
 
-  SearchResult<User>? userResult; // Primjer korištenja
-  SearchResult<Department>? departmentResult; // Primjer korištenja
+  SearchResult<User>? userResult;
+  SearchResult<Department>? departmentResult;
   List<DropdownMenuItem<String>> _razrednikDropdownItems = [];
+  String? _selectedRazrednikID;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     _initialValue = {
       'nazivOdjeljenja': widget.department?.nazivOdjeljenja ?? "",
       'razrednikID': widget.department?.razrednikID.toString() ?? "",
-      //'stateMachine': widget.subject?.stateMachine
     };
 
-    _departmentProvider =
-        context.read<DepartmentProvider>(); // Za vraćanje podataka s API-a
-    _userProvider =
-        context.read<UserProvider>(); // Za vraćanje podataka s API-a
-    // _subjectProvider = context.read<SubjectProvider>(); // Za vraćanje podataka s API-a
+    _departmentProvider = context.read<DepartmentProvider>();
+    _userProvider = context.read<UserProvider>();
 
     initForm();
   }
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
 
-        if(widget.department!=null){
+    if (widget.department != null) {
       setState(() {
-      _formKey.currentState?.patchValue({
-        'nazivOdjeljenja': widget.department?.nazivOdjeljenja ?? "",
-        'razrednikID': widget.department?.razrednikID.toString() ?? "",
-      });
+        _formKey.currentState?.patchValue({
+          'nazivOdjeljenja': widget.department?.nazivOdjeljenja ?? "",
+          'razrednikID': widget.department?.razrednikID.toString() ?? "",
+        });
       });
     }
   }
 
   Future initForm() async {
-    // za dobavljanje podataka s API-a
     userResult = await _userProvider.get();
     departmentResult = await _departmentProvider.get();
-
-    // razrednici = await _userProvider.getUsersByRole();
 
     setState(() {
       _razrednikDropdownItems = _buildRazrednikDropdownItems();
       if (widget.department != null) {
-        _formKey.currentState?.patchValue({
-          'razrednikID': widget.department?.razrednikID?.toString(),
-        });
+        _selectedRazrednikID = widget.department?.razrednikID?.toString();
       }
     });
-
-    // print(userResult);
-    // print(departmentResult);
   }
 
-List<DropdownMenuItem<String>> _buildRazrednikDropdownItems() {
-  if (userResult == null || userResult!.result == null) {
-    return [];
+  List<DropdownMenuItem<String>> _buildRazrednikDropdownItems() {
+    if (userResult == null || userResult!.result == null) {
+      return [];
+    }
+
+    var filteredUsers = userResult!.result!.where((user) =>
+        user.uloge!.any((role) => role.ulogaID == 1));
+
+    var dropdownItems = filteredUsers.map((user) {
+      return DropdownMenuItem<String>(
+        value: user.korisnikId.toString(),
+        child: Text('${user.ime} ${user.prezime}'),
+      );
+    }).toList();
+
+    return dropdownItems;
   }
-
-  // Filter users with UlogaID = 1
-  var filteredUsers = userResult!.result!.where((user) =>
-      user.uloge!.any((role) => role.ulogaID == 1));
-
-  // Map filtered users to DropdownMenuItem
-  var dropdownItems = filteredUsers.map((user) {
-    return DropdownMenuItem<String>(
-      value: user.korisnikId.toString(),
-      child: Text('${user.ime} ${user.prezime}'),
-    );
-  }).toList();
-
-  return dropdownItems;
-}
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      // child: _buildForm(),
-      child: SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             _buildForm(),
+            SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -157,10 +137,6 @@ List<DropdownMenuItem<String>> _buildRazrednikDropdownItems() {
                         var request =
                             new Map.from(_formKey.currentState!.value);
 
-                        // request['Slika'] = _base64Image; // Za sliku
-
-                        print(request['Slika']);
-
                         try {
                           if (widget.department == null) {
                             _departmentProvider.Insert(request);
@@ -170,7 +146,6 @@ List<DropdownMenuItem<String>> _buildRazrednikDropdownItems() {
                                 _formKey.currentState?.value);
                           }
                         } on Exception catch (e) {
-                          // TODO
                           showDialog(
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
@@ -200,72 +175,58 @@ List<DropdownMenuItem<String>> _buildRazrednikDropdownItems() {
     return FormBuilder(
       key: _formKey,
       initialValue: _initialValue,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            FormBuilderTextField(
-              decoration:
-                  InputDecoration(labelText: "Naziv ili šifra odjeljenja"),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: FormBuilderTextField(
+              decoration: InputDecoration(
+                  labelText: "Naziv ili šifra odjeljenja"),
               name: 'nazivOdjeljenja',
+              validator: (value) {
+                final regex = RegExp(r'^\d[A-Za-z]$');
+                if (value == null || !regex.hasMatch(value)) {
+                  return 'Unesite jednu brojku i jedno slovo (npr. 1A, 2B)';
+                }
+                return null;
+              },
             ),
-            SizedBox(
-              height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: DropdownButtonFormField<String>(
+              value: _selectedRazrednikID,
+              items: _razrednikDropdownItems.isNotEmpty
+                  ? _razrednikDropdownItems
+                  : [],
+              onChanged: (value) {
+                setState(() {
+                  _selectedRazrednikID = value;
+                  _formKey.currentState?.patchValue({'razrednikID': value});
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Razrednik',
+              ),
+              isExpanded: true,
+              // Use isExpanded to make sure the dropdown takes full width
             ),
-
-            FormBuilderDropdown(
-              name: 'razrednikID',
-              items: _razrednikDropdownItems.isNotEmpty ? _razrednikDropdownItems : [],
-              initialValue: _initialValue['razrednikID'],
-              decoration: InputDecoration(labelText: 'Razrednik'),
-            ),
-
-            // SizedBox(height: 20,),
-            // FormBuilderField(
-            //   builder: (field) {
-            //     return InputDecorator(
-            //       decoration: InputDecoration(
-            //         label: Text('Odaberite sliku'),
-            //         errorText: field.errorText,
-            //       ),
-            //       child: ListTile(
-            //         leading: Icon(Icons.photo),
-            //         title: Text('Select image'),
-            //         trailing: Icon(Icons.file_upload),
-            //         onTap: getImage,
-            //       ),
-            //     );
-            //   },
-            //   name: 'imageID',
-            // ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  File? _image;
-  String? _base64Image;
+  // File? _image;
+  // String? _base64Image;
 
-  Future getImage() async {
-    var result = await FilePicker.platform.pickFiles(type: FileType.image);
+  // Future getImage() async {
+  //   var result = await FilePicker.platform.pickFiles(type: FileType.image);
 
-    if (result != null && result.files.single.path != null) {
-      _image = File(result.files.single.path!);
-      _base64Image = base64Encode(_image!.readAsBytesSync());
-    }
-  }
-
-//   List<DropdownMenuItem<String>> _buildRazrednikDropdownItems() {
-//     if (razrednici == null) {
-//       return [];
-//     }
-
-//     return razrednici!.map((user) {
-//       return DropdownMenuItem<String>(
-//         value: user.korisnikId.toString(),
-//         child: Text('${user.ime} ${user.prezime}'),
-//       );
-//     }).toList();
-//   }
+  //   if (result != null && result.files.single.path != null) {
+  //     _image = File(result.files.single.path!);
+  //     _base64Image = base64Encode(_image!.readAsBytesSync());
+  //   }
+  // }
 }

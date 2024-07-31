@@ -5,78 +5,204 @@ import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
 import 'package:ednevnik_admin/screens/user_profile_screen.dart';
 import 'package:ednevnik_admin/screens/yearly_plan_and_program_screen.dart';
+import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 
 class MasterScreenWidget extends StatefulWidget {
-  Widget? child;
-  String? tittle;
-  Widget? title_widget;
+  final Widget? child;
+  final String? tittle;
+  final Widget? title_widget;
   MasterScreenWidget({this.child, this.tittle, this.title_widget, Key? key})
       : super(key: key);
 
   @override
-  State<MasterScreenWidget> createState() => _MasterScreenWidgetStateState();
+  State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
 }
 
-class _MasterScreenWidgetStateState extends State<MasterScreenWidget> {
+class _MasterScreenWidgetState extends State<MasterScreenWidget> {
+  bool _isHoveringLogoff = false;
+  bool _isDrawerOpen = true;
+
+  void _showLogoffDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Odjava"),
+          content: Text("Da li ste sigurni da želite se odjaviti?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Odustani"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => LoginPage(),
+                ));
+              },
+              child: Text("Odjava"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _toggleDrawer() {
+    setState(() {
+      _isDrawerOpen = !_isDrawerOpen;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = context.watch<UserProvider>();
+    String imePrezime = userProvider.loggedInUser != null 
+      ? "${userProvider.loggedInUser!.ime} ${userProvider.loggedInUser!.prezime}"
+      : "";
+
     return Scaffold(
       appBar: AppBar(
-        title: widget.title_widget ?? Text(widget.tittle ?? ""),
-        backgroundColor: Colors.blue,
-      ),
-      drawer: Drawer(
-        child: ListView(
+        leading: null,
+        automaticallyImplyLeading: false,
+        title: Row(
           children: [
-            ListTile(
-                title: Text("Predmeti"),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const SubjectDetailScreen(),
-                  ));
-                }),
-            ListTile(
-                title: Text("Odjeljenja"),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => DepartmentDetailScreen(),
-                  ));
-                }),
-            ListTile(
-                title: Text("Poruke"),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MessageDetailScreen(),
-                  ));
-                }),
-            ListTile(
-                title: Text("Godišnji plan i program"),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => YearlyPlanAndProgramDetailScreen(),
-                  ));
-                }),
-            ListTile(
-                title: Text("Login"),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ));
-                }),
-                ListTile(
-                title: Text("Profil"),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ProfilScreen(),
-                  ));
-                })
+            IconButton(
+              icon: Icon(_isDrawerOpen ? Icons.close : Icons.menu),
+              onPressed: _toggleDrawer,
+            ),
+            SizedBox(width: 16),
+            widget.title_widget ?? Text(widget.tittle ?? ""),
           ],
         ),
+        actions: [
+          PopupMenuButton(
+            offset: Offset(0, 40),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'profile',
+                child: Text('Prikazi profil'),
+              ),
+            ],
+            onSelected: (value) {
+              if (value == 'profile') {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProfilScreen(),
+                ));
+              }
+            },
+            child: Row(
+              children: [
+                Text(
+                  imePrezime,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black.withOpacity(0.7),
+                  ),
+                ),
+                SizedBox(width: 8),
+                CircleAvatar(
+                  radius: 12,
+                  child: Icon(
+                    Icons.person,
+                    size: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 30),
+          MouseRegion(
+            onEnter: (_) => setState(() => _isHoveringLogoff = true),
+            onExit: (_) => setState(() => _isHoveringLogoff = false),
+            child: GestureDetector(
+              onTap: _showLogoffDialog,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.logout,
+                    color: _isHoveringLogoff ? Colors.black.withOpacity(0.6) : Colors.black,
+                    size: 16,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    "Odjavi se",
+                    style: TextStyle(
+                      color: _isHoveringLogoff ? Colors.black.withOpacity(0.6) : Colors.black,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(width: 40),
+        ],
+        backgroundColor: Colors.blue,
       ),
-      body: widget.child!,
+      body: Row(
+        children: [
+          if (_isDrawerOpen) 
+            Container(
+              width: 250,
+              child: Drawer(
+                child: ListView(
+                  children: [
+                    ListTile(
+                      title: Text("Predmeti"),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const SubjectDetailScreen(),
+                        ));
+                      }
+                    ),
+                    ListTile(
+                      title: Text("Odjeljenja"),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => DepartmentDetailScreen(),
+                        ));
+                      }
+                    ),
+                    ListTile(
+                      title: Text("Poruke"),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MessageDetailScreen(),
+                        ));
+                      }
+                    ),
+                    ListTile(
+                      title: Text("Godišnji plan i program"),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => YearlyPlanAndProgramDetailScreen(),
+                        ));
+                      }
+                    ),
+                    ListTile(
+                      title: Text("Profil"),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ProfilScreen(),
+                        ));
+                      }
+                    )
+                  ],
+                ),
+              ),
+            ),
+          Expanded(
+            flex: 5,
+            child: widget.child!,
+          ),
+        ],
+      ),
     );
   }
 }
