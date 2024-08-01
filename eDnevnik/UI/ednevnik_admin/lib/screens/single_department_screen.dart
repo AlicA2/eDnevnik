@@ -6,6 +6,7 @@ import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 
 class SingleDepartmentListScreen extends StatefulWidget {
@@ -13,59 +14,41 @@ class SingleDepartmentListScreen extends StatefulWidget {
   SingleDepartmentListScreen({Key? key, this.department}) : super(key: key);
 
   @override
-  State<SingleDepartmentListScreen> createState() => _SingleDepartmentListScreenState();
+  State<SingleDepartmentListScreen> createState() =>
+      _SingleDepartmentListScreenState();
 }
 
-class _SingleDepartmentListScreenState extends State<SingleDepartmentListScreen> {
+class _SingleDepartmentListScreenState
+    extends State<SingleDepartmentListScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
-  Map<String, dynamic> _initialValue = {};
   late DepartmentProvider _departmentProvider;
   late UserProvider _userProvider;
 
   SearchResult<User>? userResult;
-  SearchResult<Department>? departmentResult;
   List<DropdownMenuItem<String>> _razrednikDropdownItems = [];
   String? _selectedRazrednikID;
 
   @override
   void initState() {
     super.initState();
-
-    _initialValue = {
-      'nazivOdjeljenja': widget.department?.nazivOdjeljenja ?? "",
-      'razrednikID': widget.department?.razrednikID.toString() ?? "",
-    };
-
     _departmentProvider = context.read<DepartmentProvider>();
     _userProvider = context.read<UserProvider>();
-
-    initForm();
+    _initForm();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if (widget.department != null) {
-      setState(() {
-        _formKey.currentState?.patchValue({
-          'nazivOdjeljenja': widget.department?.nazivOdjeljenja ?? "",
-          'razrednikID': widget.department?.razrednikID.toString() ?? "",
-        });
-      });
-    }
-  }
-
-  Future initForm() async {
+  Future<void> _initForm() async {
     userResult = await _userProvider.get();
-    departmentResult = await _departmentProvider.get();
-
     setState(() {
       _razrednikDropdownItems = _buildRazrednikDropdownItems();
-      if (widget.department != null) {
-        _selectedRazrednikID = widget.department?.razrednikID?.toString();
-      }
     });
+
+    if (widget.department != null) {
+      _formKey.currentState?.patchValue({
+        'nazivOdjeljenja': widget.department?.nazivOdjeljenja ?? "",
+        'razrednikID': widget.department?.razrednikID?.toString() ?? "",
+      });
+      _selectedRazrednikID = widget.department?.razrednikID?.toString();
+    }
   }
 
   List<DropdownMenuItem<String>> _buildRazrednikDropdownItems() {
@@ -73,124 +56,178 @@ class _SingleDepartmentListScreenState extends State<SingleDepartmentListScreen>
       return [];
     }
 
-    var filteredUsers = userResult!.result!.where((user) =>
-        user.uloge!.any((role) => role.ulogaID == 1));
+    var filteredUsers = userResult!.result!
+        .where((user) => user.uloge!.any((role) => role.ulogaID == 1));
 
-    var dropdownItems = filteredUsers.map((user) {
+    return filteredUsers.map((user) {
       return DropdownMenuItem<String>(
         value: user.korisnikId.toString(),
         child: Text('${user.ime} ${user.prezime}'),
       );
     }).toList();
+  }
 
-    return dropdownItems;
+  Future<bool> _isNazivOdjeljenjaExists(String nazivOdjeljenja,
+      [int? currentId]) async {
+    var departments = await _departmentProvider.get();
+    return departments.result?.any((d) =>
+            d.nazivOdjeljenja == nazivOdjeljenja &&
+            d.odjeljenjeID != currentId) ??
+        false;
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      // tittle: widget.department?.nazivOdjeljenja ?? "Lista Odjeljenja",
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             _buildForm(),
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ElevatedButton(
+                if (widget.department != null) ...[
+                  ElevatedButton(
                     onPressed: () async {
                       if (widget.department != null &&
                           widget.department!.odjeljenjeID != null) {
                         try {
-                          print(
-                              'Deleting department with ID: ${widget.department!.odjeljenjeID}');
                           await _departmentProvider
                               .delete(widget.department!.odjeljenjeID!);
-                          Navigator.pop(context);
+                          Navigator.pop(context, true);
                         } catch (e) {
                           showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("OK"))
-                                    ],
-                                  ));
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: Text("Error"),
+                              content: Text(e.toString()),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text("OK"),
+                                ),
+                              ],
+                            ),
+                          );
                         }
                       }
                     },
-                    child: Text("Izbriši Odjeljenje")),
+                    child: Text("Izbriši Odjeljenje"),
+                  ),
+                ],
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: ElevatedButton(
-                      onPressed: () async {
-                        _formKey.currentState?.saveAndValidate();
-                        print(_formKey.currentState?.value);
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Odustani'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState?.saveAndValidate() ?? false) {
+                        var formValues = _formKey.currentState!.value;
+                        var nazivOdjeljenja =
+                            formValues['nazivOdjeljenja'] as String;
+                        var razrednikID = _selectedRazrednikID;
 
-                        var request =
-                            new Map.from(_formKey.currentState!.value);
+                        if (await _isNazivOdjeljenjaExists(
+                            nazivOdjeljenja, widget.department?.odjeljenjeID)) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: Text("Error"),
+                              content: Text(
+                                  "Odjeljenje sa ovim nazivom već postoji."),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text("OK"),
+                                ),
+                              ],
+                            ),
+                          );
+                          return;
+                        }
+
+                        Map<String, dynamic> request = {
+                          'nazivOdjeljenja': nazivOdjeljenja,
+                          'razrednikID': razrednikID == null
+                              ? null
+                              : int.parse(razrednikID),
+                        };
 
                         try {
                           if (widget.department == null) {
-                            _departmentProvider.Insert(request);
+                            await _departmentProvider.Insert(request);
                           } else {
                             await _departmentProvider.Update(
-                                widget.department!.odjeljenjeID!,
-                                _formKey.currentState?.value);
+                              widget.department!.odjeljenjeID!,
+                              request,
+                            );
                           }
-                        } on Exception catch (e) {
+                          Navigator.pop(context, true);
+                        } catch (e) {
                           showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                      title: Text("Error"),
-                                      content: Text(e.toString()),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("OK"),
-                                        )
-                                      ]));
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: Text("Error"),
+                              content: Text(e.toString()),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text("OK"),
+                                ),
+                              ],
+                            ),
+                          );
                         }
-                      },
-                      child: Text('Sačuvaj')),
+                      }
+                    },
+                    child: Text('Sačuvaj'),
+                  ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
-      tittle: this.widget.department?.nazivOdjeljenja ?? "Lista Odjeljenja",
     );
   }
 
   FormBuilder _buildForm() {
     return FormBuilder(
       key: _formKey,
-      initialValue: _initialValue,
+      initialValue: {
+        'nazivOdjeljenja': widget.department?.nazivOdjeljenja ?? "",
+        'razrednikID': widget.department?.razrednikID?.toString() ?? "",
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: FormBuilderTextField(
-              decoration: InputDecoration(
-                  labelText: "Naziv ili šifra odjeljenja"),
               name: 'nazivOdjeljenja',
-              validator: (value) {
-                final regex = RegExp(r'^\d[A-Za-z]$');
-                if (value == null || !regex.hasMatch(value)) {
-                  return 'Unesite jednu brojku i jedno slovo (npr. 1A, 2B)';
-                }
-                return null;
-              },
+              decoration: InputDecoration(
+                labelText: "Naziv ili šifra odjeljenja",
+              ),
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(
+                    errorText: 'Ovo polje je obavezno.'),
+                FormBuilderValidators.match(
+                  RegExp(r'^[0-9][A-Z]$'),
+                  errorText:
+                      'Neispravan unos, Unesite jedan broj i jedno veliko slovo (npr. 1A, 2B)',
+                ),
+              ]),
             ),
           ),
           Padding(
@@ -210,23 +247,12 @@ class _SingleDepartmentListScreenState extends State<SingleDepartmentListScreen>
                 labelText: 'Razrednik',
               ),
               isExpanded: true,
-              // Use isExpanded to make sure the dropdown takes full width
+              validator: FormBuilderValidators.required(
+                  errorText: 'Razrednik ne smije biti prazan'),
             ),
           ),
         ],
       ),
     );
   }
-
-  // File? _image;
-  // String? _base64Image;
-
-  // Future getImage() async {
-  //   var result = await FilePicker.platform.pickFiles(type: FileType.image);
-
-  //   if (result != null && result.files.single.path != null) {
-  //     _image = File(result.files.single.path!);
-  //     _base64Image = base64Encode(_image!.readAsBytesSync());
-  //   }
-  // }
 }

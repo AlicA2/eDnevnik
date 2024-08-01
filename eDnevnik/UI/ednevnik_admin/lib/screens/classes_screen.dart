@@ -57,7 +57,7 @@ Future<void> _fetchClasses() async {
           _buildDataListView(),
         ]),
       ),
-      tittle: "Časovi",
+      // tittle: "Časovi",
     );
   }
 

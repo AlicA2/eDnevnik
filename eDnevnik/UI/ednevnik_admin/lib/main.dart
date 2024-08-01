@@ -150,7 +150,7 @@ class LoginPage extends StatelessWidget {
     UserProvider _userProvider = context.read<UserProvider>();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: Text("Prijava"),
         backgroundColor: Colors.blue,
       ),
       body: Center(

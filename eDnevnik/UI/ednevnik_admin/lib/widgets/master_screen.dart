@@ -11,10 +11,8 @@ import 'package:provider/provider.dart';
 
 class MasterScreenWidget extends StatefulWidget {
   final Widget? child;
-  final String? tittle;
   final Widget? title_widget;
-  MasterScreenWidget({this.child, this.tittle, this.title_widget, Key? key})
-      : super(key: key);
+  MasterScreenWidget({this.child, this.title_widget, Key? key}) : super(key: key);
 
   @override
   State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
@@ -23,7 +21,7 @@ class MasterScreenWidget extends StatefulWidget {
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   bool _isHoveringLogoff = false;
   bool _isDrawerOpen = true;
-
+  
   void _showLogoffDialog() {
     showDialog(
       context: context,
@@ -77,7 +75,22 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               onPressed: _toggleDrawer,
             ),
             SizedBox(width: 16),
-            widget.title_widget ?? Text(widget.tittle ?? ""),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'e',
+                    style: TextStyle(color: Colors.blue.withOpacity(0.8), fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: 'Dnevnik',
+                    style: TextStyle(color: Colors.grey.withOpacity(0.8), fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 16),
+            widget.title_widget ?? Container(),
           ],
         ),
         actions: [
@@ -86,7 +99,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'profile',
-                child: Text('Prikazi profil'),
+                child: Text('Prikaži profil'),
               ),
             ],
             onSelected: (value) {
@@ -143,31 +156,33 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
           ),
           SizedBox(width: 40),
         ],
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.white,
       ),
       body: Row(
         children: [
-          if (_isDrawerOpen) 
+          if (_isDrawerOpen)
             Container(
               width: 250,
               child: Drawer(
                 child: ListView(
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Općenito",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                     ListTile(
                       title: Text("Predmeti"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const SubjectDetailScreen(),
                         ));
-                      }
-                    ),
-                    ListTile(
-                      title: Text("Odjeljenja"),
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => DepartmentDetailScreen(),
-                        ));
-                      }
+                      },
                     ),
                     ListTile(
                       title: Text("Poruke"),
@@ -175,23 +190,33 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => MessageDetailScreen(),
                         ));
-                      }
+                      },
                     ),
                     ListTile(
-                      title: Text("Godišnji plan i program"),
+                      title: Text("Plan i program"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => YearlyPlanAndProgramDetailScreen(),
                         ));
-                      }
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Nastava",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                     ListTile(
-                      title: Text("Profil"),
+                      title: Text("Odjeljenja"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProfilScreen(),
+                          builder: (context) => DepartmentDetailScreen(),
                         ));
-                      }
+                      },
                     )
                   ],
                 ),

@@ -51,11 +51,6 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
     initForm();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
   Future initForm() async {
     userResult = await _userProvider.get();
     departmentResult = await _departmentProvider.get();
@@ -104,93 +99,133 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      child: Column(
-        children: [
-          _buildForm(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  if (widget.subject != null &&
-                      widget.subject!.predmetID != null) {
-                    try {
-                      print(
-                          'Deleting subject with ID: ${widget.subject!.predmetID}');
-                      await _subjectProvider.delete(widget.subject!.predmetID!);
-                      Navigator.pop(context, 'deleted');
-                    } catch (e) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: Text("Error"),
-                          content: Text(e.toString()),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("OK"),
-                            )
-                          ],
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: Text("Izbriši predmet"),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState?.saveAndValidate() ?? false) {
-                      print(_formKey.currentState?.value);
+      child: Container(
+        color: Color(0xFFF7F2FA),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              children: [
+                _buildScreenName(),
+                SizedBox(height: 16.0),
+                _buildForm(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (widget.subject != null && widget.subject!.predmetID != null)
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (widget.subject != null &&
+                              widget.subject!.predmetID != null) {
+                            try {
+                              print(
+                                  'Deleting subject with ID: ${widget.subject!.predmetID}');
+                              await _subjectProvider.delete(widget.subject!.predmetID!);
+                              Navigator.pop(context, 'deleted');
+                            } catch (e) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text(e.toString()),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("OK"),
+                                    )
+                                  ],
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        child: Text("Izbriši predmet"),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Odustani'),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState?.saveAndValidate() ?? false) {
+                            print(_formKey.currentState?.value);
 
-                      var request = new Map.from(_formKey.currentState!.value);
+                            var request = new Map.from(_formKey.currentState!.value);
 
-                      try {
-                        if (widget.subject == null) {
-                          await _subjectProvider.Insert(request);
-                          Navigator.pop(context, 'added');
-                        } else {
-                          await _subjectProvider.Update(
-                              widget.subject!.predmetID!,
-                              _formKey.currentState?.value);
-                          Navigator.pop(context, 'updated');
-                        }
-                      } on Exception catch (e) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: Text("Error"),
-                            content: Text(e.toString()),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text("OK"),
-                              )
-                            ],
-                          ),
-                        );
-                      }
-                    }
-                  },
-                  child: Text('Sačuvaj'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Odustani'),
-                ),
-              ),
-            ],
-          )
-        ],
+                            try {
+                              if (widget.subject == null) {
+                                await _subjectProvider.Insert(request);
+                                Navigator.pop(context, 'added');
+                              } else {
+                                await _subjectProvider.Update(
+                                    widget.subject!.predmetID!,
+                                    _formKey.currentState?.value);
+                                Navigator.pop(context, 'updated');
+                              }
+                            } on Exception catch (e) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text(e.toString()),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: Text("OK"),
+                                    )
+                                  ],
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        child: Text('Sačuvaj'),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
       ),
-      tittle: this.widget.subject?.naziv ?? "Lista Predmeta",
+    );
+  }
+
+  Widget _buildScreenName() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(5),
+            topLeft: Radius.circular(20),
+            topRight: Radius.elliptical(5, 5),
+            bottomRight: Radius.circular(30.0),
+          ),
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          widget.subject == null ? "Dodavanje predmeta" : "Uređivanje predmeta",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 
@@ -203,7 +238,7 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
         child: Column(
           children: [
             FormBuilderTextField(
-              decoration: InputDecoration(labelText: "Naziv ili šifra predmeta"),
+              decoration: InputDecoration(labelText: "Naziv predmeta"),
               name: 'naziv',
               validator: _validateNaziv,
             ),
@@ -217,17 +252,5 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
         ),
       ),
     );
-  }
-
-  File? _image;
-  String? _base64Image;
-
-  Future getImage() async {
-    var result = await FilePicker.platform.pickFiles(type: FileType.image);
-
-    if (result != null && result.files.single.path != null) {
-      _image = File(result.files.single.path!);
-      _base64Image = base64Encode(_image!.readAsBytesSync());
-    }
   }
 }

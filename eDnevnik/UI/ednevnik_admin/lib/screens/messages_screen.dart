@@ -19,9 +19,9 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   late MessageProvider _messageProvider;
   late UserProvider _userProvider;
 
-  TextEditingController _ftsController = TextEditingController();
-  TextEditingController _nazivSifraController = TextEditingController();
-  TextEditingController _replyController = TextEditingController();
+  final TextEditingController _ftsController = TextEditingController();
+  final TextEditingController _nazivSifraController = TextEditingController();
+  final TextEditingController _replyController = TextEditingController();
 
   @override
   void initState() {
@@ -56,26 +56,26 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Odgovor na poruku'),
+          title: const Text('Odgovor na poruku'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(message.sadrzajPoruke ?? 'N/A'),
               TextField(
                 controller: _replyController,
-                decoration: InputDecoration(labelText: 'Vaš odgovor'),
+                decoration: const InputDecoration(labelText: 'Vaš odgovor'),
               ),
             ],
           ),
           actions: [
             TextButton(
-              child: Text('Zatvori'),
+              child: const Text('Zatvori'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             ElevatedButton(
-              child: Text('Pošalji poruku'),
+              child: const Text('Pošalji poruku'),
               onPressed: () async {
                 message.odgovor = _replyController.text;
                 await _messageProvider.Update(message.porukaID!, message);
@@ -95,143 +95,209 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       child: Container(
-        child: Column(
-          children: [
-            _buildSearch(),
-            _buildDataListView(),
-          ],
+        color: const Color(0xFFF7F2FA),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              children: [
+                _buildScreenName(),
+                SizedBox(height: 16.0),
+                _buildSearch(),
+                Expanded(child: _buildDataListView()),
+              ],
+            ),
+          ),
         ),
       ),
-      tittle: "Poruke",
+    );
+  }
+
+  Widget _buildScreenName() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(5),
+            topLeft: Radius.circular(20),
+            topRight: Radius.elliptical(5, 5),
+            bottomRight: Radius.circular(30.0),
+          ),
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          "Poruke",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildSearch() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(labelText: "Naziv ili šifra"),
-              controller: _ftsController,
-            ),
-          ),
-          SizedBox(width: 10),
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(labelText: "Šifra"),
-              controller: _nazivSifraController,
-            ),
-          ),
-          ElevatedButton(
-            onPressed: _fetchMessages,
-            child: Text("Pretraga"),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: "Naziv ili šifra",
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  controller: _ftsController,
+                ),
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: "Šifra",
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  controller: _nazivSifraController,
+                ),
+              ),
+              SizedBox(width: 20),
+              ElevatedButton(
+                onPressed: _fetchMessages,
+                child: Text("Pretraga"),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDataListView() {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: DataTable(
-          columns: const [
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Broj poruka",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+Widget _buildDataListView() {
+  return SingleChildScrollView(
+    child: DataTable(
+      columns: const [
+        DataColumn(
+          label: Expanded(
+            child: Text(
+              "Redni broj",
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text(
+              "Roditelj",
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text(
+              "Učenik",
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text(
+              "Sadržaj poruke",
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text(
+              "Datum slanja",
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text(
+              "Odgovor",
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text(
+              "",
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+        ),
+      ],
+      rows: result?.result.asMap().entries.map((entry) {
+        int index = entry.key;
+        Message e = entry.value;
+        return DataRow(
+          cells: [
+            DataCell(Text((index + 1).toString())),
+            DataCell(
+              FutureBuilder<String>(
+                future: getUserName(e.roditeljID ?? 0),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Text("Loading...");
+                  } else if (snapshot.hasError) {
+                    return const Text("Error");
+                  } else {
+                    return Text(snapshot.data ?? "Unknown");
+                  }
+                },
               ),
             ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Roditelj",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataCell(
+              FutureBuilder<String>(
+                future: getUserName(e.ucenikID ?? 0),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Text("Loading...");
+                  } else if (snapshot.hasError) {
+                    return const Text("Error");
+                  } else {
+                    return Text(snapshot.data ?? "Unknown");
+                  }
+                },
               ),
             ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Učenik",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Sadrzaj Poruke",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Datum Slanja",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Odgovor",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+            DataCell(Text(e.sadrzajPoruke ?? "")),
+            DataCell(Text(DateFormat('dd/MM/yyyy').format(e.datumSlanja ?? DateTime.now()))),
+            DataCell(Text(e.odgovor ?? "")),
+            DataCell(
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.reply),
+                    onPressed: () {
+                      _replyToMessage(e);
+                    },
+                  ),
+                ],
               ),
             ),
           ],
-          rows: result?.result.map((Message e) {
-            return DataRow(
-              onSelectChanged: (selected) {
-                if (selected == true) {
-                  _replyToMessage(e);
-                }
-              },
-              cells: [
-                DataCell(Text(e.porukaID?.toString() ?? "")),
-                DataCell(
-                  FutureBuilder<String>(
-                    future: getUserName(e.roditeljID ?? 0),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Loading...");
-                      } else if (snapshot.hasError) {
-                        return Text("Error");
-                      } else {
-                        return Text(snapshot.data ?? "Unknown");
-                      }
-                    },
-                  ),
-                ),
-                DataCell(
-                  FutureBuilder<String>(
-                    future: getUserName(e.ucenikID ?? 0),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Loading...");
-                      } else if (snapshot.hasError) {
-                        return Text("Error");
-                      } else {
-                        return Text(snapshot.data ?? "Unknown");
-                      }
-                    },
-                  ),
-                ),
-                DataCell(Text(e.sadrzajPoruke ?? "")),
-                DataCell(Text(DateFormat('dd/MM/yyyy').format(e.datumSlanja ?? DateTime.now()))),
-                DataCell(Text(e.odgovor ?? "")),
-              ],
-            );
-          }).toList() ?? [],
-        ),
-      ),
-    );
-  }
+          onSelectChanged: null,
+        );
+      }).toList() ?? [],
+    ),
+  );
+}
+
 }

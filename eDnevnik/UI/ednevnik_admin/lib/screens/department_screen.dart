@@ -43,6 +43,19 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
     });
   }
 
+  Future<void> _navigateToAddEditDepartment([Department? department]) async {
+    final shouldRefresh = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SingleDepartmentListScreen(department: department),
+      ),
+    );
+
+    if (shouldRefresh == true) {
+      await _fetchDepartments();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
@@ -54,7 +67,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
           ],
         ),
       ),
-      tittle: "Odjeljenja",
+      // tittle: "Odjeljenja",
     );
   }
 
@@ -81,15 +94,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
             child: Text("Pretraga"),
           ),
           ElevatedButton(
-            onPressed: () async {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SingleDepartmentListScreen(
-                    department: null,
-                  ),
-                ),
-              );
-            },
+            onPressed: () => _navigateToAddEditDepartment(),
             child: Text("Dodaj odjeljenje"),
           ),
         ],
@@ -131,33 +136,30 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
                   .map((Department e) => DataRow(
                         onSelectChanged: (selected) {
                           if (selected == true) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => SingleDepartmentListScreen(
-                                  department: e,
-                                ),
-                              ),
-                            );
+                            _navigateToAddEditDepartment(e);
                           }
                         },
                         cells: [
                           DataCell(Text(e.odjeljenjeID.toString() ?? "")),
                           DataCell(Text(e.nazivOdjeljenja ?? "N/A")),
-                          DataCell(FutureBuilder<User>(
-                            future: _userProvider.getById(e.razrednikID!),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return CircularProgressIndicator();
-                              } else if (snapshot.hasError) {
-                                return Text("Error");
-                              } else {
-                                var user = snapshot.data;
-                                var ime = user?.ime ?? '';
-                                var prezime = user?.prezime ?? '';
-                                return Text('$ime $prezime');
-                              }
-                            },
-                          )),
+                          DataCell(e.razrednikID != null
+                              ? FutureBuilder<User>(
+                                  future: _userProvider.getById(e.razrednikID!),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text("Error");
+                                    } else {
+                                      var user = snapshot.data;
+                                      var ime = user?.ime ?? '';
+                                      var prezime = user?.prezime ?? '';
+                                      return Text('$ime $prezime');
+                                    }
+                                  },
+                                )
+                              : Text("N/A")),
                         ],
                       ))
                   .toList() ??

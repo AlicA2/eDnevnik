@@ -84,25 +84,28 @@ class _ProfilScreenState extends State<ProfilScreen> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MasterScreenWidget(
-      tittle: widget.korisnik != null ? 'Uredite Vaš profil' : '',
+@override
+Widget build(BuildContext context) {
+  return MasterScreenWidget(
+    // tittle: widget.korisnik != null ? 'Uredite Vaš profil' : '',
+    child: Align(
+      alignment: Alignment.topLeft,
       child: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(10),
-          child: Row(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: _buildDataListView(),
-              ),
+              _buildDataListView(),
             ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
+
 
   Widget _buildDataListView() {
     return Column(children: [

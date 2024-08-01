@@ -102,7 +102,7 @@ class _YearlyPlanAndProgramDetailScreenState
           ],
         ),
       ),
-      tittle: "Godišnji Plan i Program",
+      // tittle: "Godišnji Plan i Program",
     );
   }
 
