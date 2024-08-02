@@ -248,7 +248,7 @@ Widget _buildDataListView() {
         Message e = entry.value;
         return DataRow(
           cells: [
-            DataCell(Text((index + 1).toString())),
+            DataCell(Text((index + 1).toString())), 
             DataCell(
               FutureBuilder<String>(
                 future: getUserName(e.roditeljID ?? 0),

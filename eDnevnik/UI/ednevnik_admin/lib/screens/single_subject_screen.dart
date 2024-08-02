@@ -113,50 +113,47 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
                 _buildScreenName(),
                 SizedBox(height: 16.0),
                 _buildForm(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    if (widget.subject != null && widget.subject!.predmetID != null)
-                      ElevatedButton(
-                        onPressed: () async {
-                          if (widget.subject != null &&
-                              widget.subject!.predmetID != null) {
-                            try {
-                              print(
-                                  'Deleting subject with ID: ${widget.subject!.predmetID}');
-                              await _subjectProvider.delete(widget.subject!.predmetID!);
-                              Navigator.pop(context, 'deleted');
-                            } catch (e) {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: Text("Error"),
-                                  content: Text(e.toString()),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Text("OK"),
-                                    )
-                                  ],
-                                ),
-                              );
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (widget.subject != null && widget.subject!.predmetID != null)
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (widget.subject != null && widget.subject!.predmetID != null) {
+                              try {
+                                print('Deleting subject with ID: ${widget.subject!.predmetID}');
+                                await _subjectProvider.delete(widget.subject!.predmetID!);
+                                Navigator.pop(context, 'deleted');
+                              } catch (e) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(e.toString()),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("OK"),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
                             }
-                          }
-                        },
-                        child: Text("Izbriši predmet"),
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: ElevatedButton(
+                          },
+                          child: Text("Izbriši predmet"),
+                        ),
+                      Spacer(),
+                      ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
                         child: Text('Odustani'),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: ElevatedButton(
+                      SizedBox(width: 10),
+                      ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState?.saveAndValidate() ?? false) {
                             print(_formKey.currentState?.value);
@@ -192,9 +189,9 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
                         },
                         child: Text('Sačuvaj'),
                       ),
-                    )
-                  ],
-                )
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

@@ -21,7 +21,7 @@ class MasterScreenWidget extends StatefulWidget {
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   bool _isHoveringLogoff = false;
   bool _isDrawerOpen = true;
-  
+
   void _showLogoffDialog() {
     showDialog(
       context: context,
@@ -177,6 +177,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       ),
                     ),
                     ListTile(
+                      leading: Icon(Icons.library_books), // Subject icon
                       title: Text("Predmeti"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -185,6 +186,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       },
                     ),
                     ListTile(
+                      leading: Icon(Icons.message), // Message icon
                       title: Text("Poruke"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -193,6 +195,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       },
                     ),
                     ListTile(
+                      leading: Icon(Icons.insert_chart), // Dataset icon
                       title: Text("Plan i program"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -211,13 +214,14 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       ),
                     ),
                     ListTile(
+                      leading: Icon(Icons.group), // Department icon
                       title: Text("Odjeljenja"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => DepartmentDetailScreen(),
                         ));
                       },
-                    )
+                    ),
                   ],
                 ),
               ),

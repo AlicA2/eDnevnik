@@ -3,6 +3,7 @@ using eDnevnik.Model.Requests;
 using eDnevnik.Model.SearchObjects;
 using eDnevnik.Services.Database;
 using eDnevnik.Services.IServices;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,11 @@ namespace eDnevnik.Services.Service
                 }
             }
             return base.AddFilter(query, search);
+        }
+        public async Task<bool> CheckIfExists(int odjeljenjeID, int predmetID)
+        {
+            return await _context.GodisnjiPlanProgram
+                .AnyAsync(x => x.OdjeljenjeID == odjeljenjeID && x.PredmetID == predmetID);
         }
     }
 }

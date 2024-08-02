@@ -209,25 +209,26 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
     );
   }
 
-  Widget _buildAddButton() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 20.0, bottom: 20.0),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: ElevatedButton(
-          onPressed: () async {
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => SingleSubjectListScreen(subject: null),
-              ),
-            );
-            if (result == 'added' || result == 'updated' || result == 'deleted') {
-              _fetchSubjects();
-            }
-          },
-          child: Text("Dodaj predmet"),
-        ),
+Widget _buildAddButton() {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 20.0),
+    child: Align(
+      alignment: Alignment.center,
+      child: ElevatedButton(
+        onPressed: () async {
+          final result = await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => SingleSubjectListScreen(subject: null),
+            ),
+          );
+          if (result == 'added' || result == 'updated' || result == 'deleted') {
+            _fetchSubjects();
+          }
+        },
+        child: Text("Dodaj predmet"),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }

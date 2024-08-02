@@ -79,122 +79,103 @@ class _SingleDepartmentListScreenState
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      // tittle: widget.department?.nazivOdjeljenja ?? "Lista Odjeljenja",
       child: Padding(
         padding: const EdgeInsets.all(16.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildScreenName(),
+              SizedBox(height: 16.0),
+              _buildForm(),
+              SizedBox(height: 20),
+              _buildActionButtons(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildScreenName() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(5),
+          topLeft: Radius.circular(20),
+          topRight: Radius.elliptical(5, 5),
+          bottomRight: Radius.circular(30.0),
+        ),
+      ),
+      padding: const EdgeInsets.all(16.0),
+      child: Text(
+        widget.department == null
+            ? "Dodavanje odjeljenja"
+            : "Uređivanje odjeljenja",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildForm() {
+    return FormBuilder(
+      key: _formKey,
+      initialValue: {
+        'nazivOdjeljenja': widget.department?.nazivOdjeljenja ?? "",
+        'razrednikID': widget.department?.razrednikID?.toString() ?? "",
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildForm(),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if (widget.department != null) ...[
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (widget.department != null &&
-                          widget.department!.odjeljenjeID != null) {
-                        try {
-                          await _departmentProvider
-                              .delete(widget.department!.odjeljenjeID!);
-                          Navigator.pop(context, true);
-                        } catch (e) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: Text("Error"),
-                              content: Text(e.toString()),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: Text("OK"),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      }
-                    },
-                    child: Text("Izbriši Odjeljenje"),
-                  ),
-                ],
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Odustani'),
-                  ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: FormBuilderTextField(
+                name: 'nazivOdjeljenja',
+                decoration: InputDecoration(
+                  labelText: "Naziv ili šifra odjeljenja",
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState?.saveAndValidate() ?? false) {
-                        var formValues = _formKey.currentState!.value;
-                        var nazivOdjeljenja =
-                            formValues['nazivOdjeljenja'] as String;
-                        var razrednikID = _selectedRazrednikID;
-
-                        if (await _isNazivOdjeljenjaExists(
-                            nazivOdjeljenja, widget.department?.odjeljenjeID)) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: Text("Error"),
-                              content: Text(
-                                  "Odjeljenje sa ovim nazivom već postoji."),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: Text("OK"),
-                                ),
-                              ],
-                            ),
-                          );
-                          return;
-                        }
-
-                        Map<String, dynamic> request = {
-                          'nazivOdjeljenja': nazivOdjeljenja,
-                          'razrednikID': razrednikID == null
-                              ? null
-                              : int.parse(razrednikID),
-                        };
-
-                        try {
-                          if (widget.department == null) {
-                            await _departmentProvider.Insert(request);
-                          } else {
-                            await _departmentProvider.Update(
-                              widget.department!.odjeljenjeID!,
-                              request,
-                            );
-                          }
-                          Navigator.pop(context, true);
-                        } catch (e) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: Text("Error"),
-                              content: Text(e.toString()),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: Text("OK"),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      }
-                    },
-                    child: Text('Sačuvaj'),
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(
+                      errorText: 'Ovo polje je obavezno.'),
+                  FormBuilderValidators.match(
+                    RegExp(r'^[0-9][A-Z]$'),
+                    errorText:
+                        'Neispravan unos, Unesite jedan broj i jedno veliko slovo (npr. 1A, 2B)',
                   ),
+                ]),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: DropdownButtonFormField<String>(
+                value: _selectedRazrednikID,
+                items: _razrednikDropdownItems.isNotEmpty
+                    ? _razrednikDropdownItems
+                    : [],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedRazrednikID = value;
+                    _formKey.currentState?.patchValue({'razrednikID': value});
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: 'Razrednik',
                 ),
-              ],
+                isExpanded: true,
+                validator: FormBuilderValidators.required(
+                    errorText: 'Razrednik ne smije biti prazan'),
+              ),
             ),
           ],
         ),
@@ -202,57 +183,112 @@ class _SingleDepartmentListScreenState
     );
   }
 
-  FormBuilder _buildForm() {
-    return FormBuilder(
-      key: _formKey,
-      initialValue: {
-        'nazivOdjeljenja': widget.department?.nazivOdjeljenja ?? "",
-        'razrednikID': widget.department?.razrednikID?.toString() ?? "",
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: FormBuilderTextField(
-              name: 'nazivOdjeljenja',
-              decoration: InputDecoration(
-                labelText: "Naziv ili šifra odjeljenja",
-              ),
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(
-                    errorText: 'Ovo polje je obavezno.'),
-                FormBuilderValidators.match(
-                  RegExp(r'^[0-9][A-Z]$'),
-                  errorText:
-                      'Neispravan unos, Unesite jedan broj i jedno veliko slovo (npr. 1A, 2B)',
-                ),
-              ]),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: DropdownButtonFormField<String>(
-              value: _selectedRazrednikID,
-              items: _razrednikDropdownItems.isNotEmpty
-                  ? _razrednikDropdownItems
-                  : [],
-              onChanged: (value) {
-                setState(() {
-                  _selectedRazrednikID = value;
-                  _formKey.currentState?.patchValue({'razrednikID': value});
-                });
-              },
-              decoration: InputDecoration(
-                labelText: 'Razrednik',
-              ),
-              isExpanded: true,
-              validator: FormBuilderValidators.required(
-                  errorText: 'Razrednik ne smije biti prazan'),
-            ),
-          ),
-        ],
+Widget _buildActionButtons() {
+  return Row(
+    children: [
+      if (widget.department != null) ...[
+        ElevatedButton(
+          onPressed: () async {
+            if (widget.department != null &&
+                widget.department!.odjeljenjeID != null) {
+              try {
+                await _departmentProvider
+                    .delete(widget.department!.odjeljenjeID!);
+                Navigator.pop(context, true);
+              } catch (e) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: Text("Error"),
+                    content: Text(e.toString()),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("OK"),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            }
+          },
+          child: Text("Izbriši Odjeljenje"),
+        ),
+        SizedBox(width: 16.0), // Add spacing between the delete button and the following buttons
+      ],
+      Spacer(), // Push the following buttons to the right
+      ElevatedButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Text('Odustani'),
       ),
-    );
-  }
+      SizedBox(width: 16.0),
+      ElevatedButton(
+        onPressed: () async {
+          if (_formKey.currentState?.saveAndValidate() ?? false) {
+            var formValues = _formKey.currentState!.value;
+            var nazivOdjeljenja =
+                formValues['nazivOdjeljenja'] as String;
+            var razrednikID = _selectedRazrednikID;
+
+            if (await _isNazivOdjeljenjaExists(
+                nazivOdjeljenja, widget.department?.odjeljenjeID)) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: Text("Error"),
+                  content: Text(
+                      "Odjeljenje sa ovim nazivom već postoji."),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("OK"),
+                    ),
+                  ],
+                ),
+              );
+              return;
+            }
+
+            Map<String, dynamic> request = {
+              'nazivOdjeljenja': nazivOdjeljenja,
+              'razrednikID': razrednikID == null
+                  ? null
+                  : int.parse(razrednikID),
+            };
+
+            try {
+              if (widget.department == null) {
+                await _departmentProvider.Insert(request);
+              } else {
+                await _departmentProvider.Update(
+                  widget.department!.odjeljenjeID!,
+                  request,
+                );
+              }
+              Navigator.pop(context, true);
+            } catch (e) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: Text("Error"),
+                  content: Text(e.toString()),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("OK"),
+                    ),
+                  ],
+                ),
+              );
+            }
+          }
+        },
+        child: Text('Sačuvaj'),
+      ),
+    ],
+  );
+}
+
 }

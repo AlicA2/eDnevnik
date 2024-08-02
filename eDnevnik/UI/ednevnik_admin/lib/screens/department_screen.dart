@@ -1,13 +1,12 @@
-import 'package:ednevnik_admin/main.dart';
+import 'package:ednevnik_admin/models/user.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/result.dart';
-import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/screens/single_department_screen.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class DepartmentDetailScreen extends StatefulWidget {
   const DepartmentDetailScreen({Key? key}) : super(key: key);
@@ -21,8 +20,8 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
   late DepartmentProvider _departmentProvider;
   late UserProvider _userProvider;
 
-  TextEditingController _ftsController = TextEditingController();
-  TextEditingController _nazivSifraController = TextEditingController();
+  final TextEditingController _ftsController = TextEditingController();
+  final TextEditingController _nazivSifraController = TextEditingController();
 
   @override
   void initState() {
@@ -60,14 +59,59 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       child: Container(
-        child: Column(
-          children: [
-            _buildSearch(),
-            _buildDataListView(),
-          ],
+        color: const Color(0xFFF7F2FA),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              children: [
+                _buildScreenName(),
+                SizedBox(height: 16.0),
+                _buildSearch(),
+                Expanded(child: _buildDataListView()),
+                SizedBox(height: 16.0),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ElevatedButton(
+                    onPressed: () => _navigateToAddEditDepartment(),
+                    child: Text("Dodaj odjeljenje"),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
-      // tittle: "Odjeljenja",
+    );
+  }
+
+  Widget _buildScreenName() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(5),
+            topLeft: Radius.circular(20),
+            topRight: Radius.elliptical(5, 5),
+            bottomRight: Radius.circular(30.0),
+          ),
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          "Odjeljenja",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 
@@ -78,24 +122,27 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
         children: [
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Naziv ili šifra"),
+              decoration: InputDecoration(
+                labelText: "Naziv ili šifra",
+                prefixIcon: Icon(Icons.search),
+              ),
               controller: _nazivSifraController,
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 20),
           Expanded(
             child: TextField(
-              decoration: InputDecoration(labelText: "Šifra"),
+              decoration: InputDecoration(
+                labelText: "Šifra",
+                prefixIcon: Icon(Icons.search),
+              ),
               controller: _ftsController,
             ),
           ),
+          SizedBox(width: 20),
           ElevatedButton(
             onPressed: _fetchDepartments,
             child: Text("Pretraga"),
-          ),
-          ElevatedButton(
-            onPressed: () => _navigateToAddEditDepartment(),
-            child: Text("Dodaj odjeljenje"),
           ),
         ],
       ),
@@ -103,68 +150,77 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
   }
 
   Widget _buildDataListView() {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: DataTable(
-          columns: const [
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "ID",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+    return SingleChildScrollView(
+      child: DataTable(
+        columns: const [
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Redni broj",
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Naziv odjeljenja",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Naziv odjeljenja",
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Razrednik",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Razrednik",
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
-          ],
-          rows: result?.result
-                  .map((Department e) => DataRow(
-                        onSelectChanged: (selected) {
-                          if (selected == true) {
-                            _navigateToAddEditDepartment(e);
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Akcije",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
+        ],
+        rows: result?.result.asMap().entries.map((entry) {
+          int index = entry.key;
+          Department e = entry.value;
+          return DataRow(
+            cells: [
+              DataCell(Text((index + 1).toString())), // Redni broj
+              DataCell(Text(e.nazivOdjeljenja ?? "N/A")),
+              DataCell(
+                e.razrednikID != null
+                    ? FutureBuilder<User>(
+                        future: _userProvider.getById(e.razrednikID!),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text("Error");
+                          } else {
+                            var user = snapshot.data;
+                            var ime = user?.ime ?? '';
+                            var prezime = user?.prezime ?? '';
+                            return Text('$ime $prezime');
                           }
                         },
-                        cells: [
-                          DataCell(Text(e.odjeljenjeID.toString() ?? "")),
-                          DataCell(Text(e.nazivOdjeljenja ?? "N/A")),
-                          DataCell(e.razrednikID != null
-                              ? FutureBuilder<User>(
-                                  future: _userProvider.getById(e.razrednikID!),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return CircularProgressIndicator();
-                                    } else if (snapshot.hasError) {
-                                      return Text("Error");
-                                    } else {
-                                      var user = snapshot.data;
-                                      var ime = user?.ime ?? '';
-                                      var prezime = user?.prezime ?? '';
-                                      return Text('$ime $prezime');
-                                    }
-                                  },
-                                )
-                              : Text("N/A")),
-                        ],
-                      ))
-                  .toList() ??
-              [],
-        ),
+                      )
+                    : Text("N/A"),
+              ),
+              DataCell(
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () => _navigateToAddEditDepartment(e),
+                ),
+              ),
+            ],
+          );
+        }).toList() ?? [],
       ),
     );
   }

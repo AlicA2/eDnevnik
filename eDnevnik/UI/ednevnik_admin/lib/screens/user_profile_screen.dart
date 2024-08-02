@@ -414,11 +414,10 @@ Widget _buildUserIcon() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      // Pomjeri ikonu ulijevo
       Padding(
         padding: const EdgeInsets.only(right: 15),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.end, // Postavi mainAxisAlignment na end
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Column(
               children: [
@@ -426,33 +425,32 @@ Widget _buildUserIcon() {
                   onPressed: () {
                     _showSettingsMenu(context);
                   },
-                  icon: const Icon(Icons.settings, size: 35), // Povećaj veličinu ikone
+                  icon: const Icon(Icons.settings, size: 35),
                 ),
                 const Text(
                   'Postavke',
-                  style: TextStyle(fontSize: 14), // Postavi veličinu fonta
+                  style: TextStyle(fontSize: 14),
                 ),
               ],
             ),
           ],
         ),
       ),
-      // Povećaj veličinu CircleAvatar
       CircleAvatar(
         backgroundColor: Colors.blue,
-        radius: 60, // Povećaj radius
+        radius: 60,
         child: Container(
-          padding: const EdgeInsets.all(4), // Povećaj padding za veći krug oko avatar
+          padding: const EdgeInsets.all(4),
           decoration: const BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
           ),
           child: const CircleAvatar(
-            radius: 58, // Povećaj radius
+            radius: 58,
             backgroundColor: Colors.blue,
             child: Icon(
               Icons.person,
-              size: 60, // Povećaj veličinu ikone unutar avatar
+              size: 60,
               color: Colors.white,
             ),
           ),
@@ -487,18 +485,15 @@ Widget _buildUserIcon() {
                     if (value == null || value.isEmpty) {
                       return 'Polje ne smije biti prazno';
                     }
-                    // Show error only if the button is pressed
                     if (_isChangePasswordButtonPressed && value != Authorization.password) {
                       return 'Trenutna lozinka nije ispravna';
                     }
                     return null;
                   },
                   onChanged: (value) {
-                    // Clear the button press flag on text change
                     setState(() {
                       _isChangePasswordButtonPressed = false;
                     });
-                    // Trigger form validation when the input changes
                     _changePasswordFormKey.currentState?.validate();
                   },
                 ),
@@ -515,7 +510,6 @@ Widget _buildUserIcon() {
                     return null;
                   },
                   onChanged: (value) {
-                    // Trigger form validation when the input changes
                     _changePasswordFormKey.currentState?.validate();
                   },
                 ),
@@ -535,7 +529,6 @@ Widget _buildUserIcon() {
                     return null;
                   },
                   onChanged: (value) {
-                    // Trigger form validation when the input changes
                     _changePasswordFormKey.currentState?.validate();
                   },
                 ),
@@ -546,7 +539,6 @@ Widget _buildUserIcon() {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              // Clear controllers and reset flag
               _oldPasswordController.clear();
               _passwordController.clear();
               _confirmPasswordController.clear();
@@ -560,7 +552,7 @@ Widget _buildUserIcon() {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                _isChangePasswordButtonPressed = true; // Set the flag to true
+                _isChangePasswordButtonPressed = true;
               });
               if (_changePasswordFormKey.currentState?.validate() ?? false) {
                 _changePassword();
@@ -577,7 +569,6 @@ Widget _buildUserIcon() {
 
   Future<void> _changePassword() async {
     try {
-      // All validation is handled in the form validator
       await _korisniciProvider.updatePasswordAndUsername(
         ulogovaniKorisnikId!,
         _oldPasswordController.text,

@@ -45,6 +45,20 @@ class _YearlyPlanAndProgramDetailScreenState
     _fetchAnnualPlanPrograms();
   }
 
+  void _navigateToAddOrEditScreen([AnnualPlanProgram? planProgram]) async {
+  final result = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => SingleAnnualPlanProgramScreen(planProgram: planProgram),
+    ),
+  );
+
+  if (result == true) {
+    _fetchAnnualPlanPrograms();
+  }
+}
+
+
   Future<void> _fetchDepartments() async {
     var data = await _departmentProvider.get();
     setState(() {
@@ -95,14 +109,52 @@ class _YearlyPlanAndProgramDetailScreenState
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       child: Container(
-        child: Column(
-          children: [
-            _buildSearch(),
-            _buildDataListView(),
-          ],
+        color: Color(0xFFF7F2FA),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              children: [
+                _buildScreenName(),
+                SizedBox(height: 16.0),
+                _buildSearch(),
+                Expanded(child: _buildDataListView()),
+                _buildAddButton(),
+              ],
+            ),
+          ),
         ),
       ),
-      // tittle: "Godišnji Plan i Program",
+    );
+  }
+
+  Widget _buildScreenName() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(5),
+            topLeft: Radius.circular(20),
+            topRight: Radius.elliptical(5, 5),
+            bottomRight: Radius.circular(30.0),
+          ),
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          "Godišnji plan i program",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 
@@ -146,21 +198,10 @@ class _YearlyPlanAndProgramDetailScreenState
               }).toList(),
             ),
           ),
+          SizedBox(width: 10),
           ElevatedButton(
             onPressed: _fetchAnnualPlanPrograms,
             child: Text("Pretraga"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SingleAnnualPlanProgramScreen(
-                    planProgram: null,
-                  ),
-                ),
-              );
-            },
-            child: Text("Dodaj Plan i Program"),
           ),
         ],
       ),
@@ -168,102 +209,113 @@ class _YearlyPlanAndProgramDetailScreenState
   }
 
   Widget _buildDataListView() {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: DataTable(
-          columns: const [
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "ID",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+    return SingleChildScrollView(
+      child: DataTable(
+        columns: const [
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Redni broj",
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Naziv",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Naziv",
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Odjeljenje",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Odjeljenje",
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "Broj Časova",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Predmet",
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  "",
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Broj Časova",
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
-          ],
-          rows: result?.result.map((AnnualPlanProgram e) {
-            return DataRow(
-              onSelectChanged: (selected) {
-                if (selected == true) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SingleAnnualPlanProgramScreen(
-                        planProgram: e,
-                      ),
-                    ),
-                  );
-                }
-              },
-              cells: [
-                DataCell(Text(e.godisnjiPlanProgramID?.toString() ?? "")),
-                DataCell(Text(e.naziv ?? "")),
-                DataCell(Text(_getDepartmentName(e.odjeljenjeID))),
-                DataCell(Text(e.brojCasova?.toString() ?? "")),
-                DataCell(Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => SingleAnnualPlanProgramScreen(
-                              planProgram: e,
-                            ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
+        ],
+        rows: result?.result.asMap().entries.map((entry) {
+          int index = entry.key + 1;
+          AnnualPlanProgram e = entry.value;
+          return DataRow(
+            cells: [
+              DataCell(Text(index.toString())),
+              DataCell(Text(e.naziv ?? "")),
+              DataCell(Text(_getDepartmentName(e.odjeljenjeID))),
+              DataCell(Text(_getSubjectName(e.predmetID))),
+              DataCell(Text(e.brojCasova?.toString() ?? "")),
+              DataCell(Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SingleAnnualPlanProgramScreen(
+                            planProgram: e,
                           ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.navigate_next),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ClassesDetailScreen(
-                              annualPlanProgramID: e.godisnjiPlanProgramID,
-                            ),
+                        ),
+                      );
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.navigate_next),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ClassesDetailScreen(
+                            annualPlanProgramID: e.godisnjiPlanProgramID,
                           ),
-                        );
-                      },
-                    ),
-                  ],
-                )),
-              ],
-            );
-          }).toList() ?? [],
-        ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              )),
+            ],
+          );
+        }).toList() ?? [],
       ),
     );
   }
+
+  Widget _buildAddButton() {
+  return Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: ElevatedButton(
+      onPressed: () {
+        _navigateToAddOrEditScreen();
+      },
+      child: Text("Dodaj novi plan i program"),
+    ),
+  );
+}
+
 }
