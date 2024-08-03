@@ -87,7 +87,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
 @override
 Widget build(BuildContext context) {
   return MasterScreenWidget(
-    // tittle: widget.korisnik != null ? 'Uredite Vaš profil' : '',
     child: Align(
       alignment: Alignment.topLeft,
       child: SingleChildScrollView(

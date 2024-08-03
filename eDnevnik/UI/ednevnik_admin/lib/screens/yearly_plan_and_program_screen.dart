@@ -46,18 +46,18 @@ class _YearlyPlanAndProgramDetailScreenState
   }
 
   void _navigateToAddOrEditScreen([AnnualPlanProgram? planProgram]) async {
-  final result = await Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => SingleAnnualPlanProgramScreen(planProgram: planProgram),
-    ),
-  );
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            SingleAnnualPlanProgramScreen(planProgram: planProgram),
+      ),
+    );
 
-  if (result == true) {
-    _fetchAnnualPlanPrograms();
+    if (result == true) {
+      _fetchAnnualPlanPrograms();
+    }
   }
-}
-
 
   Future<void> _fetchDepartments() async {
     var data = await _departmentProvider.get();
@@ -92,17 +92,23 @@ class _YearlyPlanAndProgramDetailScreenState
   }
 
   String _getDepartmentName(int? id) {
-    return _departments.firstWhere(
-      (dept) => dept.odjeljenjeID == id,
-      orElse: () => Department(0, '', 0),
-    ).nazivOdjeljenja ?? "";
+    return _departments
+            .firstWhere(
+              (dept) => dept.odjeljenjeID == id,
+              orElse: () => Department(0, '', 0),
+            )
+            .nazivOdjeljenja ??
+        "";
   }
 
   String _getSubjectName(int? id) {
-    return _subjects.firstWhere(
-      (sub) => sub.predmetID == id,
-      orElse: () => Subject(0, '', '', ""),
-    ).naziv ?? "";
+    return _subjects
+            .firstWhere(
+              (sub) => sub.predmetID == id,
+              orElse: () => Subject(0, '', '', ""),
+            )
+            .naziv ??
+        "";
   }
 
   @override
@@ -200,6 +206,10 @@ class _YearlyPlanAndProgramDetailScreenState
           ),
           SizedBox(width: 10),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blue,
+            ),
             onPressed: _fetchAnnualPlanPrograms,
             child: Text("Pretraga"),
           ),
@@ -262,60 +272,59 @@ class _YearlyPlanAndProgramDetailScreenState
           ),
         ],
         rows: result?.result.asMap().entries.map((entry) {
-          int index = entry.key + 1;
-          AnnualPlanProgram e = entry.value;
-          return DataRow(
-            cells: [
-              DataCell(Text(index.toString())),
-              DataCell(Text(e.naziv ?? "")),
-              DataCell(Text(_getDepartmentName(e.odjeljenjeID))),
-              DataCell(Text(_getSubjectName(e.predmetID))),
-              DataCell(Text(e.brojCasova?.toString() ?? "")),
-              DataCell(Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SingleAnnualPlanProgramScreen(
-                            planProgram: e,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.navigate_next),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ClassesDetailScreen(
-                            annualPlanProgramID: e.godisnjiPlanProgramID,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+              int index = entry.key + 1;
+              AnnualPlanProgram e = entry.value;
+              return DataRow(
+                cells: [
+                  DataCell(Text(index.toString())),
+                  DataCell(Text(e.naziv ?? "")),
+                  DataCell(Text(_getDepartmentName(e.odjeljenjeID))),
+                  DataCell(Text(_getSubjectName(e.predmetID))),
+                  DataCell(Text(e.brojCasova?.toString() ?? "")),
+                  DataCell(Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          _navigateToAddOrEditScreen(e);
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.navigate_next),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ClassesDetailScreen(
+                                annualPlanProgramID: e.godisnjiPlanProgramID,
+                                predmetID: e.predmetID,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  )),
                 ],
-              )),
-            ],
-          );
-        }).toList() ?? [],
+              );
+            }).toList() ??
+            [],
       ),
     );
   }
 
   Widget _buildAddButton() {
-  return Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: ElevatedButton(
-      onPressed: () {
-        _navigateToAddOrEditScreen();
-      },
-      child: Text("Dodaj novi plan i program"),
-    ),
-  );
-}
-
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.blue,
+        ),
+        onPressed: () {
+          _navigateToAddOrEditScreen();
+        },
+        child: Text("Dodaj novi plan i program"),
+      ),
+    );
+  }
 }

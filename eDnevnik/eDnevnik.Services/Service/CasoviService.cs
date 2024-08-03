@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eDnevnik.Model;
 using eDnevnik.Model.Requests;
 using eDnevnik.Model.SearchObjects;
 using eDnevnik.Services.Database;
@@ -48,12 +49,12 @@ namespace eDnevnik.Services.Service
 
             if (godisnjiPlanProgram == null)
             {
-                throw new Exception("Godisnji Plan Program not found.");
+                throw new UserException("Godisnji Plan Program not found.");
             }
 
             if (godisnjiPlanProgram.Casovi.Count >= godisnjiPlanProgram.brojCasova)
             {
-                throw new Exception($"Cannot add more than {godisnjiPlanProgram.brojCasova} Casovi for this Godisnji Plan Program.");
+                throw new UserException($"Ne možete imati više od {godisnjiPlanProgram.brojCasova} časova za ovaj godišnji plan i program.");
             }
 
             return await base.Insert(request);
@@ -67,15 +68,18 @@ namespace eDnevnik.Services.Service
 
             if (godisnjiPlanProgram == null)
             {
-                throw new Exception("Godisnji Plan Program not found.");
+                throw new UserException("Godisnji Plan Program not found.");
             }
 
-            if (godisnjiPlanProgram.Casovi.Count >= godisnjiPlanProgram.brojCasova)
+            var currentCasoviCount = godisnjiPlanProgram.Casovi.Count(x => x.CasoviID != id);
+
+            if (currentCasoviCount >= godisnjiPlanProgram.brojCasova)
             {
-                throw new Exception($"Cannot update more than {godisnjiPlanProgram.brojCasova} Casovi for this Godisnji Plan Program.");
+                throw new UserException($"Cannot update more than {godisnjiPlanProgram.brojCasova} Casovi for this Godisnji Plan Program.");
             }
 
             return await base.Update(id, request);
         }
+
     }
 }

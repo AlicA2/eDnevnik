@@ -118,18 +118,27 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      if (widget.subject != null && widget.subject!.predmetID != null)
+                      if (widget.subject != null &&
+                          widget.subject!.predmetID != null)
                         ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.blue,
+                          ),
                           onPressed: () async {
-                            if (widget.subject != null && widget.subject!.predmetID != null) {
+                            if (widget.subject != null &&
+                                widget.subject!.predmetID != null) {
                               try {
-                                print('Deleting subject with ID: ${widget.subject!.predmetID}');
-                                await _subjectProvider.delete(widget.subject!.predmetID!);
+                                print(
+                                    'Deleting subject with ID: ${widget.subject!.predmetID}');
+                                await _subjectProvider
+                                    .delete(widget.subject!.predmetID!);
                                 Navigator.pop(context, 'deleted');
                               } catch (e) {
                                 showDialog(
                                   context: context,
-                                  builder: (BuildContext context) => AlertDialog(
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
                                     title: Text("Error"),
                                     content: Text(e.toString()),
                                     actions: [
@@ -147,6 +156,10 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
                         ),
                       Spacer(),
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.blue,
+                        ),
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -154,11 +167,17 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
                       ),
                       SizedBox(width: 10),
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.blue,
+                        ),
                         onPressed: () async {
-                          if (_formKey.currentState?.saveAndValidate() ?? false) {
+                          if (_formKey.currentState?.saveAndValidate() ??
+                              false) {
                             print(_formKey.currentState?.value);
 
-                            var request = new Map.from(_formKey.currentState!.value);
+                            var request =
+                                new Map.from(_formKey.currentState!.value);
 
                             try {
                               if (widget.subject == null) {

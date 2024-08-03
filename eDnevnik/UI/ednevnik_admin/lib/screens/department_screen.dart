@@ -78,6 +78,9 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
                     onPressed: () => _navigateToAddEditDepartment(),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white, backgroundColor: Colors.blue,
+                    ),
                     child: Text("Dodaj odjeljenje"),
                   ),
                 ),
@@ -142,6 +145,9 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
           SizedBox(width: 20),
           ElevatedButton(
             onPressed: _fetchDepartments,
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white, backgroundColor: Colors.blue,
+            ),
             child: Text("Pretraga"),
           ),
         ],
@@ -180,7 +186,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
           DataColumn(
             label: Expanded(
               child: Text(
-                "Akcije",
+                "",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
@@ -191,7 +197,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
           Department e = entry.value;
           return DataRow(
             cells: [
-              DataCell(Text((index + 1).toString())), // Redni broj
+              DataCell(Text((index + 1).toString())),
               DataCell(Text(e.nazivOdjeljenja ?? "N/A")),
               DataCell(
                 e.razrednikID != null

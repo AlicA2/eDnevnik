@@ -155,11 +155,19 @@ class _SingleAnnualPlanProgramScreenState
                         children: [
                           if (widget.planProgram != null)
                             ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.blue,
+                              ),
                               onPressed: _deletePlanProgram,
                               child: Text('Brisanje plana i programa'),
                             ),
                           Spacer(),
                           ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.blue,
+                            ),
                             onPressed: () {
                               Navigator.pop(context);
                             },
@@ -167,6 +175,10 @@ class _SingleAnnualPlanProgramScreenState
                           ),
                           SizedBox(width: 10),
                           ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.blue,
+                            ),
                             onPressed: _saveForm,
                             child: Text('Sačuvaj'),
                           ),
@@ -211,78 +223,78 @@ class _SingleAnnualPlanProgramScreenState
     );
   }
 
-Future<void> _saveForm() async {
-  if (_formKey.currentState?.saveAndValidate() ?? false) {
-    var formValues = _formKey.currentState?.value;
-    try {
-      if (widget.planProgram == null) {
-        bool exists = await _planProgramProvider.checkIfExists(
-            formValues?['odjeljenjeID'] ?? 0, formValues?['predmetID'] ?? 0);
+  Future<void> _saveForm() async {
+    if (_formKey.currentState?.saveAndValidate() ?? false) {
+      var formValues = _formKey.currentState?.value;
+      try {
+        if (widget.planProgram == null) {
+          bool exists = await _planProgramProvider.checkIfExists(
+              formValues?['odjeljenjeID'] ?? 0, formValues?['predmetID'] ?? 0);
 
-        if (exists) {
-          _showErrorDialog(
-              'Plan i program za izabrano odjeljenje i predmet već postoji.');
-          return;
-        }
-        await _planProgramProvider.Insert(formValues);
-      } else {
-        final id = widget.planProgram!.godisnjiPlanProgramID;
-        if (id != null) {
-          await _planProgramProvider.Update(id, formValues);
+          if (exists) {
+            _showErrorDialog(
+                'Plan i program za izabrano odjeljenje i predmet već postoji.');
+            return;
+          }
+          await _planProgramProvider.Insert(formValues);
         } else {
-          throw Exception('PlanProgram ID is null');
+          final id = widget.planProgram!.godisnjiPlanProgramID;
+          if (id != null) {
+            await _planProgramProvider.Update(id, formValues);
+          } else {
+            throw Exception('PlanProgram ID is null');
+          }
         }
+        Navigator.pop(context, true);
+      } catch (e) {
+        _showErrorDialog(e.toString());
       }
-      Navigator.pop(context, true);
-    } catch (e) {
-      _showErrorDialog(e.toString());
     }
   }
-}
 
-Future<void> _deletePlanProgram() async {
-  final shouldDelete = await _showConfirmationDialog();
-  if (shouldDelete) {
-    try {
-      if (widget.planProgram != null) {
-        final id = widget.planProgram!.godisnjiPlanProgramID;
-        if (id != null) {
-          await _planProgramProvider.delete(id);
-          Navigator.pop(context, true);
-        } else {
-          throw Exception('PlanProgram ID is null');
+  Future<void> _deletePlanProgram() async {
+    final shouldDelete = await _showConfirmationDialog();
+    if (shouldDelete) {
+      try {
+        if (widget.planProgram != null) {
+          final id = widget.planProgram!.godisnjiPlanProgramID;
+          if (id != null) {
+            await _planProgramProvider.delete(id);
+            Navigator.pop(context, true);
+          } else {
+            throw Exception('PlanProgram ID is null');
+          }
         }
+      } catch (e) {
+        _showErrorDialog(e.toString());
       }
-    } catch (e) {
-      _showErrorDialog(e.toString());
     }
   }
-}
 
-
-Future<bool> _showConfirmationDialog() async {
-  return await showDialog<bool>(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Potvrda brisanja'),
-        content: Text('Da li ste sigurni da želite obrisati plan i program?'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Otkaži'),
-            onPressed: () => Navigator.of(context).pop(false),
-          ),
-          TextButton(
-            child: Text('Obriši'),
-            onPressed: () => Navigator.of(context).pop(true),
-          ),
-        ],
-      );
-    },
-  ) ?? false;
-}
-
+  Future<bool> _showConfirmationDialog() async {
+    return await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Potvrda brisanja'),
+              content:
+                  Text('Da li ste sigurni da želite obrisati plan i program?'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Otkaži'),
+                  onPressed: () => Navigator.of(context).pop(false),
+                ),
+                TextButton(
+                  child: Text('Obriši'),
+                  onPressed: () => Navigator.of(context).pop(true),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
 
   void _showErrorDialog(String message) {
     showDialog(

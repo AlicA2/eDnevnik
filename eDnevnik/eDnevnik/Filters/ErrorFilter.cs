@@ -1,6 +1,7 @@
 ﻿using eDnevnik.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Linq;
 using System.Net;
 
 namespace eDnevnik.Filters
@@ -9,22 +10,28 @@ namespace eDnevnik.Filters
     {
         public override void OnException(ExceptionContext context)
         {
-            if (context.Exception is UserException)
+            if (context.Exception is UserException userException)
             {
-                context.ModelState.AddModelError("userError", context.Exception.Message);
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Result = new JsonResult(new
+                {
+                    errors = new
+                    {
+                        message = userException.Message
+                    }
+                });
             }
             else
             {
-                context.ModelState.AddModelError("ERROR", "Server side error");
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
+                context.Result = new JsonResult(new
+                {
+                    errors = new
+                    {
+                        message = "Server side error"
+                    }
+                });
             }
-
-            var list = context.ModelState.Where(x => x.Value.Errors.Count() > 0).
-                ToDictionary(x => x.Key, y => y.Value.Errors.Select(z => z.ErrorMessage));
-
-            context.Result = new JsonResult(new { errors = list });
         }
     }
 }

@@ -1,5 +1,6 @@
 import 'package:ednevnik_admin/main.dart';
 import 'package:ednevnik_admin/screens/department_screen.dart';
+import 'package:ednevnik_admin/screens/help_support_screen.dart';
 import 'package:ednevnik_admin/screens/messages_screen.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
@@ -20,6 +21,7 @@ class MasterScreenWidget extends StatefulWidget {
 
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   bool _isHoveringLogoff = false;
+  bool _isHoveringHelp = false;
   bool _isDrawerOpen = true;
 
   void _showLogoffDialog() {
@@ -131,26 +133,63 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
           ),
           SizedBox(width: 30),
           MouseRegion(
+            onEnter: (_) => setState(() => _isHoveringHelp = true),
+            onExit: (_) => setState(() => _isHoveringHelp = false),
+            child: AnimatedOpacity(
+              opacity: _isHoveringHelp ? 0.6 : 1.0,
+              duration: Duration(milliseconds: 300),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => HelpPage(),
+                  ));
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.help_outline,
+                      color: Colors.black,
+                      size: 16,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      "Pomoć i podrška",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 30,),
+          MouseRegion(
             onEnter: (_) => setState(() => _isHoveringLogoff = true),
             onExit: (_) => setState(() => _isHoveringLogoff = false),
-            child: GestureDetector(
-              onTap: _showLogoffDialog,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.logout,
-                    color: _isHoveringLogoff ? Colors.black.withOpacity(0.6) : Colors.black,
-                    size: 16,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    "Odjavi se",
-                    style: TextStyle(
-                      color: _isHoveringLogoff ? Colors.black.withOpacity(0.6) : Colors.black,
-                      fontSize: 14,
+            child: AnimatedOpacity(
+              opacity: _isHoveringLogoff ? 0.6 : 1.0,
+              duration: Duration(milliseconds: 300),
+              child: GestureDetector(
+                onTap: _showLogoffDialog,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.logout,
+                      color: Colors.black,
+                      size: 16,
                     ),
-                  ),
-                ],
+                    SizedBox(width: 8),
+                    Text(
+                      "Odjavi se",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -177,7 +216,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       ),
                     ),
                     ListTile(
-                      leading: Icon(Icons.library_books), // Subject icon
+                      leading: Icon(Icons.library_books), 
                       title: Text("Predmeti"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -186,7 +225,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       },
                     ),
                     ListTile(
-                      leading: Icon(Icons.message), // Message icon
+                      leading: Icon(Icons.message), 
                       title: Text("Poruke"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -195,7 +234,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       },
                     ),
                     ListTile(
-                      leading: Icon(Icons.insert_chart), // Dataset icon
+                      leading: Icon(Icons.insert_chart), 
                       title: Text("Plan i program"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -214,7 +253,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       ),
                     ),
                     ListTile(
-                      leading: Icon(Icons.group), // Department icon
+                      leading: Icon(Icons.group), 
                       title: Text("Odjeljenja"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
