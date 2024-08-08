@@ -4,10 +4,11 @@ using eDnevnik.Services.Database;
 
 namespace eDnevnik.Services.Configurations
 {
-    public class CasoviConfiguration : IEntityTypeConfiguration<Casovi>
+    public class CasoviConfiguration : BaseConfiguration<Casovi>
     {
-        public void Configure(EntityTypeBuilder<Casovi> builder)
+        public override void Configure(EntityTypeBuilder<Casovi> builder)
         {
+            base.Configure(builder);
             builder.HasKey(c => c.CasoviID);
 
             //builder.HasOne(c => c.GodisnjiPlanProgram)

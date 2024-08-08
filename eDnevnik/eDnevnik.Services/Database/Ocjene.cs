@@ -9,13 +9,11 @@ namespace eDnevnik.Services.Database
     public partial class Ocjene
     {
         public int OcjenaID { get; set; }
-        public int Ocjena { get; set; }
+        public int VrijednostOcjene { get; set; }
         public DateTime Datum { get; set; }
-        public int UcenikID { get; set; }
+        public int KorisnikID { get; set; }
+        public virtual Korisnik Korisnik { get; set; } = null!;
         public int PredmetID { get; set; }
-        public int ProfesorID { get; set; }
-        public virtual Korisnik Ucenik { get; set; } = null!;
         public virtual Predmet Predmet { get; set; } = null!;
-        public virtual Korisnik Profesor { get; set; } = null!;
     }
 }

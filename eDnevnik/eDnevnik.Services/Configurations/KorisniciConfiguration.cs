@@ -1,4 +1,5 @@
 ﻿using eDnevnik.Services.Database;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -15,16 +16,10 @@ namespace eDnevnik.Services.Configurations
             base.Configure(builder);
             builder.HasKey(p => p.KorisnikID);
 
-            builder.HasOne(k => k.Odjeljenje)
-                 .WithMany(o => o.Ucenici)
-                 .HasForeignKey(k => k.OdjeljenjeID);
-
-            builder.HasMany(k => k.Ocjene)
-                   .WithOne(o => o.Ucenik)
-                   .HasForeignKey(o => o.UcenikID);
-
-            builder.HasMany(k => k.Predmeti)
-                   .WithMany(p => p.Ucenici);
+            builder.HasMany(k => k.KorisniciUloge)
+                   .WithOne(ku => ku.Korisnik)
+                   .HasForeignKey(ku => ku.KorisnikID)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

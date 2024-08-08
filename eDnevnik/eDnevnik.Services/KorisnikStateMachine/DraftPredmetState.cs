@@ -28,7 +28,7 @@ namespace eDnevnik.Services.KorisnikStateMachine
 
             foreach (var ocjena in entity.Ocjene)
             {
-                if (ocjena.Ocjena < 0 || ocjena.Ocjena > 5)
+                if (ocjena.VrijednostOcjene < 0 || ocjena.VrijednostOcjene > 5)
                 {
                     throw new UserException("Ocjena nije validna");
                 }

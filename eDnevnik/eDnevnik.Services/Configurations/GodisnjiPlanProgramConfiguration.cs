@@ -4,26 +4,28 @@ using eDnevnik.Services.Database;
 
 namespace eDnevnik.Services.Configurations
 {
-    public class GodisnjiPlanProgramConfiguration : IEntityTypeConfiguration<GodisnjiPlanProgram>
+    public class GodisnjiPlanProgramConfiguration : BaseConfiguration<GodisnjiPlanProgram>
     {
-        public void Configure(EntityTypeBuilder<GodisnjiPlanProgram> builder)
+        public override void Configure(EntityTypeBuilder<GodisnjiPlanProgram> builder)
         {
-            builder.HasKey(g => g.GodisnjiPlanProgramID);
+            base.Configure(builder);
+            builder.HasKey(gp => gp.GodisnjiPlanProgramID);
 
-            builder.HasOne(g => g.Predmet)
-                .WithMany()
-                .HasForeignKey(g => g.PredmetID)
-                .OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(gp => gp.Skola)
+                   .WithMany(s => s.GodisnjiPlanProgrami)
+                   .HasForeignKey(gp => gp.SkolaID)
+                   .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(g => g.Odjeljenje)
-                .WithMany()
-                .HasForeignKey(g => g.OdjeljenjeID)
-                .OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(gp => gp.Predmet)
+                   .WithMany()
+                   .HasForeignKey(gp => gp.PredmetID)
+                   .OnDelete(DeleteBehavior.Restrict);
 
-            //builder.HasMany(g => g.Casovi)
-            //    .WithOne(c => c.GodisnjiPlanProgram)
-            //    .HasForeignKey(c => c.GodisnjiPlanProgramID)
-            //    .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(gp => gp.Odjeljenje)
+                   .WithMany()
+                   .HasForeignKey(gp => gp.OdjeljenjeID)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
+
 }

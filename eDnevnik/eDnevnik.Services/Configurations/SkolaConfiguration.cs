@@ -9,23 +9,22 @@ using System.Threading.Tasks;
 
 namespace eDnevnik.Services.Configurations
 {
-    public class OdjeljenjeConfiguration : BaseConfiguration<Odjeljenje>
+    public class SkolaConfiguration : BaseConfiguration<Skola>
     {
-        public override void Configure(EntityTypeBuilder<Odjeljenje> builder)
+        public override void Configure(EntityTypeBuilder<Skola> builder)
         {
             base.Configure(builder);
-            builder.HasKey(o => o.OdjeljenjeID);
+            builder.HasKey(p => p.SkolaID);
 
-            builder.HasOne(o => o.Skola)
-                   .WithMany(s => s.Odjeljenja)
+            builder.HasMany(s => s.Odjeljenja)
+                   .WithOne(o => o.Skola)
                    .HasForeignKey(o => o.SkolaID)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(o => o.Predmeti)
-                   .WithOne(p => p.Odjeljenje)
-                   .HasForeignKey(p => p.OdjeljenjeID)
+            builder.HasMany(s => s.GodisnjiPlanProgrami)
+                   .WithOne(gp => gp.Skola)
+                   .HasForeignKey(gp => gp.SkolaID)
                    .OnDelete(DeleteBehavior.Restrict);
         }
     }
-
 }

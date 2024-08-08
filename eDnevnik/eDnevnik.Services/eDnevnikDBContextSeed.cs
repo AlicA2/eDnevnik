@@ -1,10 +1,6 @@
 ﻿using eDnevnik.Services.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eDnevnik.Services
 {
@@ -18,6 +14,29 @@ namespace eDnevnik.Services
             SeedPredmeti(modelBuilder);
             SeedOcjene(modelBuilder);
             SeedOdjeljenje(modelBuilder);
+            SeedSkola(modelBuilder);
+        }
+
+        private void SeedSkola(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Skola>().HasData(
+                new Skola
+                {
+                    SkolaID = 1,
+                    Naziv = "Fakultet Informacijskih Tehnologija",
+                    Grad = "Mostar",
+                    Drzava = "BiH",
+                    Adresa = "Sjeverni logor bb",
+                },
+                new Skola
+                {
+                    SkolaID = 2,
+                    Naziv = "Srednja Tehnička Škola",
+                    Grad = "Mostar",
+                    Drzava = "BiH",
+                    Adresa = "Trg Ivana Krndelja bb",
+                }
+            );
         }
 
         private void SeedOcjene(ModelBuilder modelBuilder)
@@ -26,22 +45,22 @@ namespace eDnevnik.Services
                 new Ocjene
                 {
                     OcjenaID = 1,
-                    Ocjena = 5,
+                    VrijednostOcjene = 5,
                     Datum = DateTime.Now,
-                    UcenikID = 2,
+                    KorisnikID = 2,
                     PredmetID = 1,
-                    ProfesorID = 1
+                    //ProfesorID = 1  
                 },
-                     new Ocjene
-                     {
-                         OcjenaID = 2,
-                         Ocjena = 4,
-                         Datum = DateTime.Now,
-                         UcenikID = 2,
-                         PredmetID = 2,
-                         ProfesorID = 1
-                     }
-                );
+                new Ocjene
+                {
+                    OcjenaID = 2,
+                    VrijednostOcjene = 4,
+                    Datum = DateTime.Now,
+                    KorisnikID = 2,
+                    PredmetID = 2,
+                    //ProfesorID = 1
+                }
+            );
         }
 
         private void SeedPredmeti(ModelBuilder modelBuilder)
@@ -51,15 +70,17 @@ namespace eDnevnik.Services
                 {
                     PredmetID = 1,
                     Naziv = "Matematika",
-                    Opis = "Sabiranje,oduzimanje,množenje,dijeljenje"
+                    Opis = "Sabiranje, oduzimanje, množenje, dijeljenje",
+                    OdjeljenjeID = 1,
                 },
                 new Predmet
                 {
                     PredmetID = 2,
                     Naziv = "Biologija",
-                    Opis = "Biljke"
+                    Opis = "Biljke",
+                    OdjeljenjeID = 1
                 }
-                ); ;
+            );
         }
 
         private void SeedOdjeljenje(ModelBuilder modelBuilder)
@@ -69,15 +90,15 @@ namespace eDnevnik.Services
                 {
                     OdjeljenjeID = 1,
                     NazivOdjeljenja = "1A",
-                    RazrednikID = 1
+                    SkolaID = 1
                 },
                 new Odjeljenje
                 {
                     OdjeljenjeID = 2,
                     NazivOdjeljenja = "2A",
-                    RazrednikID = 4
+                    SkolaID = 1
                 }
-                );
+            );
         }
 
         private void SeedKorisniciUloge(ModelBuilder modelBuilder)
@@ -85,10 +106,10 @@ namespace eDnevnik.Services
             modelBuilder.Entity<KorisniciUloge>().HasData(
                 new KorisniciUloge
                 {
-                    KorisnikUlogaID=1,
-                    KorisnikID=1,
-                    UlogaID=1,
-                    DatumIzmjene=DateTime.Now
+                    KorisnikUlogaID = 1,
+                    KorisnikID = 1,
+                    UlogaID = 1,
+                    DatumIzmjene = DateTime.Now
                 },
                 new KorisniciUloge
                 {
@@ -111,7 +132,7 @@ namespace eDnevnik.Services
                     UlogaID = 1,
                     DatumIzmjene = DateTime.Now
                 }
-                );
+            );
         }
 
         private void SeedUloge(ModelBuilder modelBuilder)
@@ -120,16 +141,16 @@ namespace eDnevnik.Services
                 new Uloge
                 {
                     UlogaID = 1,
-                    Naziv="admin",
-                    Opis="admin/profesor"
+                    Naziv = "admin",
+                    Opis = "admin/profesor"
                 },
-                 new Uloge
-                 {
-                     UlogaID = 2,
-                     Naziv = "učenik",
-                     Opis = "učenik/roditelj"
-                 }
-                );
+                new Uloge
+                {
+                    UlogaID = 2,
+                    Naziv = "učenik",
+                    Opis = "učenik/roditelj"
+                }
+            );
         }
 
         private void SeedKorisnici(ModelBuilder modelBuilder)
@@ -144,41 +165,42 @@ namespace eDnevnik.Services
                     Telefon = "060000000",
                     KorisnickoIme = "admin",
                     LozinkaHash = "JfJzsL3ngGWki+Dn67C+8WLy73I=",
-                    LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg=="
+                    LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg==",
                 },
-                  new Korisnik
-                  {
-                      KorisnikID = 2,
-                      Ime = "ucenik",
-                      Prezime = "ucenik",
-                      Email = "ucenik@gmail.com",
-                      Telefon = "+38700000000",
-                      KorisnickoIme = "ucenik",
-                      LozinkaHash = "",
-                      LozinkaSalt = "",
-                  },
-                    new Korisnik
-                    {
-                        KorisnikID = 3,
-                        Ime = "roditelj",
-                        Prezime = "roditelj",
-                        Email = "roditelj@gmail.com",
-                        Telefon = "+38700000000",
-                        KorisnickoIme = "roditelj",
-                        LozinkaHash = "",
-                        LozinkaSalt = "",
-                    }, new Korisnik
-                    {
-                        KorisnikID = 4,
-                        Ime = "Denis",
-                        Prezime = "Music",
-                        Email = "denismusic@gmail.com",
-                        Telefon = "060300400",
-                        KorisnickoIme = "denis",
-                        LozinkaHash = "JfJzsL3ngGWki+Dn67C+8WLy73I=",
-                        LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg=="
-                    }
-                );
+                new Korisnik
+                {
+                    KorisnikID = 2,
+                    Ime = "ucenik",
+                    Prezime = "ucenik",
+                    Email = "ucenik@gmail.com",
+                    Telefon = "+38700000000",
+                    KorisnickoIme = "ucenik",
+                    LozinkaHash = "",
+                    LozinkaSalt = ""
+                },
+                new Korisnik
+                {
+                    KorisnikID = 3,
+                    Ime = "roditelj",
+                    Prezime = "roditelj",
+                    Email = "roditelj@gmail.com",
+                    Telefon = "+38700000000",
+                    KorisnickoIme = "roditelj",
+                    LozinkaHash = "",
+                    LozinkaSalt = ""
+                },
+                new Korisnik
+                {
+                    KorisnikID = 4,
+                    Ime = "Denis",
+                    Prezime = "Music",
+                    Email = "denismusic@gmail.com",
+                    Telefon = "060300400",
+                    KorisnickoIme = "denis",
+                    LozinkaHash = "JfJzsL3ngGWki+Dn67C+8WLy73I=",
+                    LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg=="
+                }
+            );
         }
     }
 }

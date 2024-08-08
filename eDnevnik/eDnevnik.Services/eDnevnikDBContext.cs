@@ -14,6 +14,7 @@ namespace eDnevnik.Services
         public DbSet<Poruke> Poruke { get; set; }
         public DbSet<GodisnjiPlanProgram> GodisnjiPlanProgram { get; set; }
         public DbSet<Casovi> Casovi { get; set; }
+        public DbSet<Skola> Skola { get; set; }
 
 
         public eDnevnikDBContext(DbContextOptions<eDnevnikDBContext> options):base(options)
