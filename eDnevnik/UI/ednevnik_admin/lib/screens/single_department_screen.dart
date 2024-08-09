@@ -2,6 +2,7 @@ import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/result.dart';
 import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
+import 'package:ednevnik_admin/providers/selected_school_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _SingleDepartmentListScreenState
   final _formKey = GlobalKey<FormBuilderState>();
   late DepartmentProvider _departmentProvider;
   late UserProvider _userProvider;
+  late SelectedSchoolProvider _selectedSchoolProvider;
 
   SearchResult<User>? userResult;
   List<DropdownMenuItem<String>> _razrednikDropdownItems = [];
@@ -33,6 +35,7 @@ class _SingleDepartmentListScreenState
     super.initState();
     _departmentProvider = context.read<DepartmentProvider>();
     _userProvider = context.read<UserProvider>();
+    _selectedSchoolProvider = context.watch<SelectedSchoolProvider>();
     _initForm();
   }
 
@@ -243,6 +246,11 @@ class _SingleDepartmentListScreenState
               var formValues = _formKey.currentState!.value;
               var nazivOdjeljenja = formValues['nazivOdjeljenja'] as String;
               var razrednikID = _selectedRazrednikID;
+              var selectedSchool = _selectedSchoolProvider.selectedSchool;
+
+              print(nazivOdjeljenja);
+              print(razrednikID);
+              print(selectedSchool);
 
               if (await _isNazivOdjeljenjaExists(
                   nazivOdjeljenja, widget.department?.odjeljenjeID)) {
@@ -266,6 +274,7 @@ class _SingleDepartmentListScreenState
                 'nazivOdjeljenja': nazivOdjeljenja,
                 'razrednikID':
                     razrednikID == null ? null : int.parse(razrednikID),
+                'SkolaID': selectedSchool?.skolaID,
               };
 
               try {
@@ -297,8 +306,7 @@ class _SingleDepartmentListScreenState
           },
           child: Text('Sačuvaj'),
         ),
-          SizedBox(width:16),
-
+        SizedBox(width: 16,)
       ],
     );
   }

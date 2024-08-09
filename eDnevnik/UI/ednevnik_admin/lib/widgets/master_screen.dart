@@ -1,4 +1,10 @@
 import 'package:ednevnik_admin/main.dart';
+import 'package:ednevnik_admin/models/result.dart';
+import 'package:ednevnik_admin/models/school.dart';
+import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
+import 'package:ednevnik_admin/providers/department_provider.dart';
+import 'package:ednevnik_admin/providers/school_provider.dart';
+import 'package:ednevnik_admin/providers/selected_school_provider.dart';
 import 'package:ednevnik_admin/screens/department_screen.dart';
 import 'package:ednevnik_admin/screens/help_support_screen.dart';
 import 'package:ednevnik_admin/screens/messages_screen.dart';
@@ -23,6 +29,54 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   bool _isHoveringLogoff = false;
   bool _isHoveringHelp = false;
   bool _isDrawerOpen = true;
+  List<School> _schools=[];
+  School? _selectedSchool;
+
+  @override
+  void initState(){
+    super.initState();
+    _loadSchools();
+  }
+
+  Future<void> _loadSchools()async {
+     try {
+      final schoolProvider = context.read<SchoolProvider>();
+      final SearchResult<School> result = await schoolProvider.get();
+      if (result != null && result.result != null) {
+        setState(() {
+          _schools = result.result;
+          if (_schools.isNotEmpty) {
+            _selectedSchool = _schools.first;
+            if (_selectedSchool?.skolaID != null) {
+              context.read<SelectedSchoolProvider>().setSelectedSchool(_selectedSchool);
+            }
+          } else {
+            _selectedSchool = null;
+              context.read<SelectedSchoolProvider>().setSelectedSchool(null);
+          }
+        });
+      } else {
+        setState(() {
+          _schools = [];
+        });
+      }
+    } catch (e) {
+      print("Failed to load schools: $e");
+    }
+  }
+
+  Future<void> _filterDataBySchool(int skolaID) async {
+    try {
+      final departmentProvider = context.read<DepartmentProvider>();
+      final yearlyPlanProvider = context.read<AnnualPlanProgramProvider>();
+
+      await departmentProvider.get(filter: {'SkolaID': skolaID});
+
+      await yearlyPlanProvider.get(filter: {'SkolaID': skolaID});
+    } catch (e) {
+      print("Failed to filter data by school: $e");
+    }
+  }
 
   void _showLogoffDialog() {
     showDialog(
@@ -93,6 +147,23 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ),
             SizedBox(width: 16),
             widget.title_widget ?? Container(),
+            SizedBox(width:55),
+            DropdownButton<School>(
+              value: _selectedSchool,
+              hint: Text('Izaberi školu'),
+              onChanged: (School? newValue) {
+                setState(() {
+                  _selectedSchool = newValue;
+              context.read<SelectedSchoolProvider>().setSelectedSchool(newValue);
+                });
+              },
+              items: _schools.map<DropdownMenuItem<School>>((School school) {
+                return DropdownMenuItem<School>(
+                  value: school,
+                  child: Text(school.naziv ?? ''),
+                );
+              }).toList(),
+            ),
           ],
         ),
         actions: [

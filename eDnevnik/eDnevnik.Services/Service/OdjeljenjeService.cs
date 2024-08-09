@@ -21,16 +21,22 @@ namespace eDnevnik.Services.Service
         }
         public override IQueryable<Odjeljenje> AddFilter(IQueryable<Odjeljenje> query, OdjeljenjeSearchObject? search = null)
         {
-            if (!string.IsNullOrWhiteSpace(search.NazivOdjeljenja))
+            if (search != null)
             {
-                query = query.Where(x => x.NazivOdjeljenja.StartsWith(search.NazivOdjeljenja));
+                if (!string.IsNullOrWhiteSpace(search.NazivOdjeljenja))
+                {
+                    query = query.Where(x => x.NazivOdjeljenja.StartsWith(search.NazivOdjeljenja));
+                }
+                if (!string.IsNullOrWhiteSpace(search.FTS))
+                {
+                    query = query.Where(x => x.NazivOdjeljenja.Contains(search.NazivOdjeljenja));
+                }
+                if (search.SkolaID.HasValue)
+                {
+                    query = query.Where(x => x.SkolaID == search.SkolaID.Value);
+                }
             }
-            if (!string.IsNullOrWhiteSpace(search.FTS))
-            {
-                query = query.Where(x => x.NazivOdjeljenja.Contains(search.NazivOdjeljenja));
-            }
-
-            return base.AddFilter(query, search);
+                return base.AddFilter(query, search);
         }
         public override IQueryable<Odjeljenje> AddInclude(IQueryable<Odjeljenje> query, OdjeljenjeSearchObject? search = null)
         {

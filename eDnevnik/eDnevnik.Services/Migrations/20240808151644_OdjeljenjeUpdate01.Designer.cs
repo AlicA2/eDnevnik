@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eDnevnik.Services;
 
@@ -11,9 +12,10 @@ using eDnevnik.Services;
 namespace eDnevnik.Services.Migrations
 {
     [DbContext(typeof(eDnevnikDBContext))]
-    partial class eDnevnikDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240808151644_OdjeljenjeUpdate01")]
+    partial class OdjeljenjeUpdate01
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,92 +48,6 @@ namespace eDnevnik.Services.Migrations
                     b.HasIndex("GodisnjiPlanProgramID");
 
                     b.ToTable("Casovi");
-
-                    b.HasData(
-                        new
-                        {
-                            CasoviID = 1,
-                            GodisnjiPlanProgramID = 1,
-                            NazivCasa = "Cas 1",
-                            Opis = "Opis Casa 1"
-                        },
-                        new
-                        {
-                            CasoviID = 2,
-                            GodisnjiPlanProgramID = 1,
-                            NazivCasa = "Cas 2",
-                            Opis = "Opis Casa 2"
-                        },
-                        new
-                        {
-                            CasoviID = 3,
-                            GodisnjiPlanProgramID = 1,
-                            NazivCasa = "Cas 3",
-                            Opis = "Opis Casa 3"
-                        },
-                        new
-                        {
-                            CasoviID = 4,
-                            GodisnjiPlanProgramID = 1,
-                            NazivCasa = "Cas 4",
-                            Opis = "Opis Casa 4"
-                        },
-                        new
-                        {
-                            CasoviID = 5,
-                            GodisnjiPlanProgramID = 1,
-                            NazivCasa = "Cas 5",
-                            Opis = "Opis Casa 5"
-                        },
-                        new
-                        {
-                            CasoviID = 6,
-                            GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 1",
-                            Opis = "Opis Casa 6"
-                        },
-                        new
-                        {
-                            CasoviID = 7,
-                            GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 2",
-                            Opis = "Opis Casa 7"
-                        },
-                        new
-                        {
-                            CasoviID = 8,
-                            GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 3",
-                            Opis = "Opis Casa 8"
-                        },
-                        new
-                        {
-                            CasoviID = 9,
-                            GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 4",
-                            Opis = "Opis Casa 9"
-                        },
-                        new
-                        {
-                            CasoviID = 10,
-                            GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 5",
-                            Opis = "Opis Casa 10"
-                        },
-                        new
-                        {
-                            CasoviID = 11,
-                            GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 6",
-                            Opis = "Opis Casa 11"
-                        },
-                        new
-                        {
-                            CasoviID = 12,
-                            GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 7",
-                            Opis = "Opis Casa 12"
-                        });
                 });
 
             modelBuilder.Entity("eDnevnik.Services.Database.GodisnjiPlanProgram", b =>
@@ -168,26 +84,6 @@ namespace eDnevnik.Services.Migrations
                     b.HasIndex("SkolaID");
 
                     b.ToTable("GodisnjiPlanProgram");
-
-                    b.HasData(
-                        new
-                        {
-                            GodisnjiPlanProgramID = 1,
-                            Naziv = "Plan 1",
-                            OdjeljenjeID = 1,
-                            PredmetID = 1,
-                            SkolaID = 1,
-                            brojCasova = 5
-                        },
-                        new
-                        {
-                            GodisnjiPlanProgramID = 2,
-                            Naziv = "Plan 2",
-                            OdjeljenjeID = 2,
-                            PredmetID = 2,
-                            SkolaID = 2,
-                            brojCasova = 7
-                        });
                 });
 
             modelBuilder.Entity("eDnevnik.Services.Database.KorisniciUloge", b =>
@@ -219,28 +115,28 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             KorisnikUlogaID = 1,
-                            DatumIzmjene = new DateTime(2024, 8, 8, 17, 32, 7, 378, DateTimeKind.Local).AddTicks(9563),
+                            DatumIzmjene = new DateTime(2024, 8, 8, 17, 16, 44, 95, DateTimeKind.Local).AddTicks(2892),
                             KorisnikID = 1,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 2,
-                            DatumIzmjene = new DateTime(2024, 8, 8, 17, 32, 7, 378, DateTimeKind.Local).AddTicks(9620),
+                            DatumIzmjene = new DateTime(2024, 8, 8, 17, 16, 44, 95, DateTimeKind.Local).AddTicks(2936),
                             KorisnikID = 2,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 3,
-                            DatumIzmjene = new DateTime(2024, 8, 8, 17, 32, 7, 378, DateTimeKind.Local).AddTicks(9624),
+                            DatumIzmjene = new DateTime(2024, 8, 8, 17, 16, 44, 95, DateTimeKind.Local).AddTicks(2940),
                             KorisnikID = 3,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 4,
-                            DatumIzmjene = new DateTime(2024, 8, 8, 17, 32, 7, 378, DateTimeKind.Local).AddTicks(9628),
+                            DatumIzmjene = new DateTime(2024, 8, 8, 17, 16, 44, 95, DateTimeKind.Local).AddTicks(2943),
                             KorisnikID = 4,
                             UlogaID = 1
                         });
@@ -374,7 +270,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 1,
-                            Datum = new DateTime(2024, 8, 8, 17, 32, 7, 378, DateTimeKind.Local).AddTicks(9685),
+                            Datum = new DateTime(2024, 8, 8, 17, 16, 44, 95, DateTimeKind.Local).AddTicks(3061),
                             KorisnikID = 2,
                             PredmetID = 1,
                             VrijednostOcjene = 5
@@ -382,7 +278,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 2,
-                            Datum = new DateTime(2024, 8, 8, 17, 32, 7, 378, DateTimeKind.Local).AddTicks(9691),
+                            Datum = new DateTime(2024, 8, 8, 17, 16, 44, 95, DateTimeKind.Local).AddTicks(3066),
                             KorisnikID = 2,
                             PredmetID = 2,
                             VrijednostOcjene = 4
@@ -505,16 +401,14 @@ namespace eDnevnik.Services.Migrations
                             PredmetID = 1,
                             Naziv = "Matematika",
                             OdjeljenjeID = 1,
-                            Opis = "Sabiranje, oduzimanje, množenje, dijeljenje",
-                            StateMachine = "draft"
+                            Opis = "Sabiranje, oduzimanje, množenje, dijeljenje"
                         },
                         new
                         {
                             PredmetID = 2,
                             Naziv = "Biologija",
                             OdjeljenjeID = 1,
-                            Opis = "Biljke",
-                            StateMachine = "draft"
+                            Opis = "Biljke"
                         });
                 });
 

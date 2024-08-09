@@ -43,6 +43,11 @@ namespace eDnevnik.Services
             CreateMap<Model.Requests.GodisnjiPlanProgramInsertRequest, Services.Database.GodisnjiPlanProgram>();
             CreateMap<Model.Requests.GodisnjiPlanProgramUpdateRequest, Services.Database.GodisnjiPlanProgram>();
             CreateMap<Model.Requests.GodisnjiPlanProgramDeleteRequest, Services.Database.GodisnjiPlanProgram>();
+
+            CreateMap<Database.Skola, Model.Models.Skola>();
+            CreateMap<Model.Requests.SkolaInsertRequest, Services.Database.Skola>();
+            CreateMap<Model.Requests.SkolaUpdateRequest, Services.Database.Skola>();
+            CreateMap<Model.Requests.SkolaDeleteRequest, Services.Database.Skola>();
         }
     }
 }

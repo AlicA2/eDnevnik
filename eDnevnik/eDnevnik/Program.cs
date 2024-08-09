@@ -18,6 +18,7 @@ builder.Services.AddTransient<IOdjeljenjeService, OdjeljenjeService>();
 builder.Services.AddTransient<IPorukeService, PorukeService>();
 builder.Services.AddTransient<ICasoviService, CasoviService>();
 builder.Services.AddTransient<IGodisnjiPlanProgramService, GodisnjiPlanProgramService>();
+builder.Services.AddTransient<ISkolaService, SkolaService>();
 
 
 

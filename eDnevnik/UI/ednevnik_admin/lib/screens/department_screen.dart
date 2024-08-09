@@ -1,10 +1,13 @@
+import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/user.dart';
+import 'package:ednevnik_admin/providers/selected_school_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/result.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
+import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/screens/single_department_screen.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 
@@ -17,8 +20,12 @@ class DepartmentDetailScreen extends StatefulWidget {
 
 class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
   SearchResult<Department>? result;
+  List<School> _schools = [];
+  School? _selectedSchool;
+
   late DepartmentProvider _departmentProvider;
   late UserProvider _userProvider;
+  late SchoolProvider _schoolProvider;
 
   final TextEditingController _ftsController = TextEditingController();
   final TextEditingController _nazivSifraController = TextEditingController();
@@ -28,13 +35,51 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
     super.initState();
     _departmentProvider = context.read<DepartmentProvider>();
     _userProvider = context.read<UserProvider>();
-    _fetchDepartments();
+    _schoolProvider = context.read<SchoolProvider>();
+    _loadSchools();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SelectedSchoolProvider>().addListener(_onSchoolChanged);
+    });
+  }
+@override
+  void dispose() {
+    context.read<SelectedSchoolProvider>().removeListener(_onSchoolChanged);
+    super.dispose();
+  }
+    void _onSchoolChanged() {
+    final selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
+    if (selectedSchool != null && selectedSchool != _selectedSchool) {
+      setState(() {
+        _selectedSchool = selectedSchool;
+        _fetchDepartments();
+      });
+    }
+  }
+  Future<void> _loadSchools() async {
+    try {
+      final SearchResult<School> schoolResult = await _schoolProvider.get();
+      if (schoolResult.result != null) {
+        setState(() {
+          _schools = schoolResult.result;
+          if (_schools.isNotEmpty) {
+            _selectedSchool = _schools.first;
+            _fetchDepartments();
+          } else {
+            _selectedSchool = null;
+          }
+        });
+      }
+    } catch (e) {
+      print("Failed to load schools: $e");
+    }
   }
 
   Future<void> _fetchDepartments() async {
     var data = await _departmentProvider.get(filter: {
       'fts': _ftsController.text,
-      'NazivOdjeljenja': _nazivSifraController.text
+      'NazivOdjeljenja': _nazivSifraController.text,
+      'SkolaID': _selectedSchool?.skolaID,
     });
 
     setState(() {
@@ -156,6 +201,42 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
   }
 
   Widget _buildDataListView() {
+    final rows = result?.result.asMap().entries.map((entry) {
+      int index = entry.key;
+      Department e = entry.value;
+      return DataRow(
+        cells: [
+          DataCell(Text((index + 1).toString())),
+          DataCell(Text(e.nazivOdjeljenja ?? "N/A")),
+          DataCell(
+            e.razrednikID != null
+                ? FutureBuilder<User>(
+                    future: _userProvider.getById(e.razrednikID!),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text("Error");
+                      } else {
+                        var user = snapshot.data;
+                        var ime = user?.ime ?? '';
+                        var prezime = user?.prezime ?? '';
+                        return Text('$ime $prezime');
+                      }
+                    },
+                  )
+                : Text("N/A"),
+          ),
+          DataCell(
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () => _navigateToAddEditDepartment(e),
+            ),
+          ),
+        ],
+      );
+    }).toList() ?? [];
+
     return SingleChildScrollView(
       child: DataTable(
         columns: const [
@@ -192,41 +273,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
             ),
           ),
         ],
-        rows: result?.result.asMap().entries.map((entry) {
-          int index = entry.key;
-          Department e = entry.value;
-          return DataRow(
-            cells: [
-              DataCell(Text((index + 1).toString())),
-              DataCell(Text(e.nazivOdjeljenja ?? "N/A")),
-              DataCell(
-                e.razrednikID != null
-                    ? FutureBuilder<User>(
-                        future: _userProvider.getById(e.razrednikID!),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            return Text("Error");
-                          } else {
-                            var user = snapshot.data;
-                            var ime = user?.ime ?? '';
-                            var prezime = user?.prezime ?? '';
-                            return Text('$ime $prezime');
-                          }
-                        },
-                      )
-                    : Text("N/A"),
-              ),
-              DataCell(
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () => _navigateToAddEditDepartment(e),
-                ),
-              ),
-            ],
-          );
-        }).toList() ?? [],
+        rows: rows,
       ),
     );
   }

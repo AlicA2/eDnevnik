@@ -11,10 +11,10 @@ namespace eDnevnik.Services.Configurations
             base.Configure(builder);
             builder.HasKey(c => c.CasoviID);
 
-            //builder.HasOne(c => c.GodisnjiPlanProgram)
-            //    .WithMany(g => g.Casovi)
-            //    .HasForeignKey(c => c.GodisnjiPlanProgramID)
-            //    .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(c => c.GodisnjiPlanProgram)
+                .WithMany(g => g.Casovi)
+                .HasForeignKey(c => c.GodisnjiPlanProgramID)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

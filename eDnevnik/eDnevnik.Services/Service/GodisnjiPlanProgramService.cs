@@ -31,6 +31,10 @@ namespace eDnevnik.Services.Service
                 {
                     query = query.Where(x => x.Naziv.Contains(search.FTS));
                 }
+                if (search.SkolaID.HasValue)
+                {
+                    query = query.Where(x=>x.SkolaID == search.SkolaID.Value);
+                }
                 if (search.OdjeljenjeID.HasValue)
                 {
                     query = query.Where(x => x.OdjeljenjeID == search.OdjeljenjeID.Value);

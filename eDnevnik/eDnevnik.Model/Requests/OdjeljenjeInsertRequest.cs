@@ -11,6 +11,7 @@ namespace eDnevnik.Model.Requests
     {
         public string NazivOdjeljenja { get; set; }
         public int? RazrednikID { get; set; }
+        public int? SkolaID { get; set; }
         public virtual ICollection<Korisnik> Ucenici { get; } = new List<Korisnik>();
     }
 }

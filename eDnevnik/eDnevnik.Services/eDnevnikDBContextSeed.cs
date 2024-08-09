@@ -15,6 +15,121 @@ namespace eDnevnik.Services
             SeedOcjene(modelBuilder);
             SeedOdjeljenje(modelBuilder);
             SeedSkola(modelBuilder);
+            SeedGodisnjiPlanProgram(modelBuilder);
+            SeedCasovi(modelBuilder);
+        }
+        private void SeedGodisnjiPlanProgram(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<GodisnjiPlanProgram>().HasData(
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 1,
+                    brojCasova = 5,
+                    Naziv = "Plan 1",
+                    OdjeljenjeID = 1,
+                    PredmetID = 1,
+                    SkolaID = 1,
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 2,
+                    brojCasova = 7,
+                    Naziv = "Plan 2",
+                    OdjeljenjeID = 2,
+                    PredmetID = 2,
+                    SkolaID = 2
+                }
+            );
+        }
+
+        private void SeedCasovi(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Casovi>().HasData(
+                new Casovi
+                {
+                    CasoviID = 1,
+                    NazivCasa = "Cas 1",
+                    Opis = "Opis Casa 1",
+                    GodisnjiPlanProgramID = 1
+                },
+                new Casovi
+                {
+                    CasoviID = 2,
+                    NazivCasa = "Cas 2",
+                    Opis = "Opis Casa 2",
+                    GodisnjiPlanProgramID = 1
+                },
+                new Casovi
+                {
+                    CasoviID = 3,
+                    NazivCasa = "Cas 3",
+                    Opis = "Opis Casa 3",
+                    GodisnjiPlanProgramID = 1
+                },
+                new Casovi
+                {
+                    CasoviID = 4,
+                    NazivCasa = "Cas 4",
+                    Opis = "Opis Casa 4",
+                    GodisnjiPlanProgramID = 1
+                },
+                new Casovi
+                {
+                    CasoviID = 5,
+                    NazivCasa = "Cas 5",
+                    Opis = "Opis Casa 5",
+                    GodisnjiPlanProgramID = 1
+                },
+                new Casovi
+                {
+                    CasoviID = 6,
+                    NazivCasa = "Cas 1",
+                    Opis = "Opis Casa 6",
+                    GodisnjiPlanProgramID = 2
+                },
+                new Casovi
+                {
+                    CasoviID = 7,
+                    NazivCasa = "Cas 2",
+                    Opis = "Opis Casa 7",
+                    GodisnjiPlanProgramID = 2
+                },
+                new Casovi
+                {
+                    CasoviID = 8,
+                    NazivCasa = "Cas 3",
+                    Opis = "Opis Casa 8",
+                    GodisnjiPlanProgramID = 2
+                },
+                new Casovi
+                {
+                    CasoviID = 9,
+                    NazivCasa = "Cas 4",
+                    Opis = "Opis Casa 9",
+                    GodisnjiPlanProgramID = 2
+                },
+                new Casovi
+                {
+                    CasoviID = 10,
+                    NazivCasa = "Cas 5",
+                    Opis = "Opis Casa 10",
+                    GodisnjiPlanProgramID = 2
+                },
+                new Casovi
+                {
+                    CasoviID = 11,
+                    NazivCasa = "Cas 6",
+                    Opis = "Opis Casa 11",
+                    GodisnjiPlanProgramID = 2
+                },
+                new Casovi
+                {
+                    CasoviID = 12,
+                    NazivCasa = "Cas 7",
+                    Opis = "Opis Casa 12",
+                    GodisnjiPlanProgramID = 2
+                }
+            );
         }
 
         private void SeedSkola(ModelBuilder modelBuilder)
@@ -72,13 +187,15 @@ namespace eDnevnik.Services
                     Naziv = "Matematika",
                     Opis = "Sabiranje, oduzimanje, množenje, dijeljenje",
                     OdjeljenjeID = 1,
+                    StateMachine="draft"
                 },
                 new Predmet
                 {
                     PredmetID = 2,
                     Naziv = "Biologija",
                     Opis = "Biljke",
-                    OdjeljenjeID = 1
+                    OdjeljenjeID = 1,
+                    StateMachine ="draft"
                 }
             );
         }
@@ -90,13 +207,15 @@ namespace eDnevnik.Services
                 {
                     OdjeljenjeID = 1,
                     NazivOdjeljenja = "1A",
-                    SkolaID = 1
+                    SkolaID = 1,
+                    RazrednikID=1
                 },
                 new Odjeljenje
                 {
                     OdjeljenjeID = 2,
                     NazivOdjeljenja = "2A",
-                    SkolaID = 1
+                    SkolaID = 1,
+                    RazrednikID = 4
                 }
             );
         }
