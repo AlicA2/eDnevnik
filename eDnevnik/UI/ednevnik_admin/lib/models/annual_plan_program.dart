@@ -10,9 +10,10 @@ class AnnualPlanProgram{
   String? naziv;
   int? predmetID;
   int? odjeljenjeID;
+  int? skolaID;
   // List<Classes> casovi = [];
 
-  AnnualPlanProgram(this.godisnjiPlanProgramID,this.brojCasova,this.naziv,this.predmetID, this.odjeljenjeID);
+  AnnualPlanProgram(this.godisnjiPlanProgramID,this.brojCasova,this.naziv,this.predmetID, this.odjeljenjeID,this.skolaID);
 
     /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

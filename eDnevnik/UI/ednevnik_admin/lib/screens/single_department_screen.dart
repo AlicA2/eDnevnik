@@ -1,7 +1,9 @@
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/result.dart';
+import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
+import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/selected_school_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
@@ -24,7 +26,10 @@ class _SingleDepartmentListScreenState
   final _formKey = GlobalKey<FormBuilderState>();
   late DepartmentProvider _departmentProvider;
   late UserProvider _userProvider;
-  late SelectedSchoolProvider _selectedSchoolProvider;
+  late SchoolProvider _schoolProvider;
+
+  List<School> _schools = [];
+  School? _selectedSchool;
 
   SearchResult<User>? userResult;
   List<DropdownMenuItem<String>> _razrednikDropdownItems = [];
@@ -33,22 +38,59 @@ class _SingleDepartmentListScreenState
   @override
   void initState() {
     super.initState();
+
     _departmentProvider = context.read<DepartmentProvider>();
     _userProvider = context.read<UserProvider>();
-    _selectedSchoolProvider = context.watch<SelectedSchoolProvider>();
+    _schoolProvider = context.read<SchoolProvider>();
+    
+    _selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
+    context.read<SelectedSchoolProvider>().addListener(_onSchoolChanged);
+    
+    _loadSchools();
     _initForm();
+  }
+
+  void _onSchoolChanged() {
+    if (mounted) {
+      setState(() {
+        _selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
+      });
+    }
+  }
+
+  Future<void> _loadSchools() async {
+    try {
+      final SearchResult<School> schoolResult = await _schoolProvider.get();
+      if (schoolResult.result != null) {
+        if (mounted) {
+          setState(() {
+            _schools = schoolResult.result!;
+            if (_schools.isNotEmpty) {
+              _selectedSchool = _schools.first;
+            } else {
+              _selectedSchool = null;
+            }
+          });
+        }
+      }
+    } catch (e) {
+      print("Failed to load schools: $e");
+    }
   }
 
   Future<void> _initForm() async {
     userResult = await _userProvider.get();
-    setState(() {
-      _razrednikDropdownItems = _buildRazrednikDropdownItems();
-    });
+    if (mounted) {
+      setState(() {
+        _razrednikDropdownItems = _buildRazrednikDropdownItems();
+      });
+    }
 
     if (widget.department != null) {
       _formKey.currentState?.patchValue({
         'nazivOdjeljenja': widget.department?.nazivOdjeljenja ?? "",
         'razrednikID': widget.department?.razrednikID?.toString() ?? "",
+        'skolaID': widget.department?.skolaID?.toString() ?? "",
       });
       _selectedRazrednikID = widget.department?.razrednikID?.toString();
     }
@@ -79,7 +121,7 @@ class _SingleDepartmentListScreenState
         false;
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       child: Padding(
@@ -246,19 +288,19 @@ class _SingleDepartmentListScreenState
               var formValues = _formKey.currentState!.value;
               var nazivOdjeljenja = formValues['nazivOdjeljenja'] as String;
               var razrednikID = _selectedRazrednikID;
-              var selectedSchool = _selectedSchoolProvider.selectedSchool;
+              
 
               print(nazivOdjeljenja);
               print(razrednikID);
-              print(selectedSchool);
 
               if (await _isNazivOdjeljenjaExists(
                   nazivOdjeljenja, widget.department?.odjeljenjeID)) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                    title: Text("Error"),
-                    content: Text("Odjeljenje sa ovim nazivom već postoji."),
+                    title: Text("Greška"),
+                    content: Text(
+                        "Odjeljenje sa nazivom '$nazivOdjeljenja' već postoji."),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context),
@@ -270,28 +312,28 @@ class _SingleDepartmentListScreenState
                 return;
               }
 
-              Map<String, dynamic> request = {
-                'nazivOdjeljenja': nazivOdjeljenja,
-                'razrednikID':
-                    razrednikID == null ? null : int.parse(razrednikID),
-                'SkolaID': selectedSchool?.skolaID,
-              };
-
               try {
                 if (widget.department == null) {
-                  await _departmentProvider.Insert(request);
+                  await _departmentProvider.Insert({
+                    "NazivOdjeljenja": nazivOdjeljenja,
+                    "RazrednikID": int.parse(razrednikID!),
+                    "SkolaID": _selectedSchool?.skolaID ?? 0,
+                  });
                 } else {
                   await _departmentProvider.Update(
-                    widget.department!.odjeljenjeID!,
-                    request,
-                  );
+                      widget.department!.odjeljenjeID!,
+                      {
+                        "NazivOdjeljenja": nazivOdjeljenja,
+                        "RazrednikID": int.parse(razrednikID!),
+                        "SkolaID": _selectedSchool?.skolaID ?? 0,
+                      });
                 }
                 Navigator.pop(context, true);
               } catch (e) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                    title: Text("Error"),
+                    title: Text("Greška"),
                     content: Text(e.toString()),
                     actions: [
                       TextButton(
@@ -306,7 +348,6 @@ class _SingleDepartmentListScreenState
           },
           child: Text('Sačuvaj'),
         ),
-        SizedBox(width: 16,)
       ],
     );
   }

@@ -7,8 +7,9 @@ class Department{
   int? odjeljenjeID;
   String? nazivOdjeljenja;
   int? razrednikID;
+  int? skolaID;
 
-  Department(this.odjeljenjeID,this.nazivOdjeljenja,this.razrednikID);
+  Department(this.odjeljenjeID,this.nazivOdjeljenja,this.razrednikID,this.skolaID);
 
     /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

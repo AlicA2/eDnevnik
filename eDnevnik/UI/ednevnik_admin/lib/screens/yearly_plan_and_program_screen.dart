@@ -95,7 +95,7 @@ class _YearlyPlanAndProgramDetailScreenState
     return _departments
             .firstWhere(
               (dept) => dept.odjeljenjeID == id,
-              orElse: () => Department(0, '', 0),
+              orElse: () => Department(0, '', 0, 0),
             )
             .nazivOdjeljenja ??
         "";
