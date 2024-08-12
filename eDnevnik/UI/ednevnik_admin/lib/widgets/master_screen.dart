@@ -19,7 +19,16 @@ import 'package:provider/provider.dart';
 class MasterScreenWidget extends StatefulWidget {
   final Widget? child;
   final Widget? title_widget;
-  MasterScreenWidget({this.child, this.title_widget, Key? key}) : super(key: key);
+  final bool? disableSchoolDropdown;
+
+  MasterScreenWidget({
+    this.child,
+    this.title_widget,
+    this.disableSchoolDropdown,
+    Key? key,
+  }) : super(key: key);
+
+  // MasterScreenWidget({this.child, this.title_widget, Key? key}) : super(key: key);
 
   @override
   State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
@@ -151,10 +160,10 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             DropdownButton<School>(
               value: _selectedSchool,
               hint: Text('Izaberi školu'),
-              onChanged: (School? newValue) {
+              onChanged: widget.disableSchoolDropdown == true ? null : (School? newValue) {
                 setState(() {
                   _selectedSchool = newValue;
-              context.read<SelectedSchoolProvider>().setSelectedSchool(newValue);
+                  context.read<SelectedSchoolProvider>().setSelectedSchool(newValue);
                 });
               },
               items: _schools.map<DropdownMenuItem<School>>((School school) {

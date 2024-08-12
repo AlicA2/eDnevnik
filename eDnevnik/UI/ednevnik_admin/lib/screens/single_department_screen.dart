@@ -124,6 +124,7 @@ class _SingleDepartmentListScreenState
  @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      disableSchoolDropdown: widget.department != null,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(

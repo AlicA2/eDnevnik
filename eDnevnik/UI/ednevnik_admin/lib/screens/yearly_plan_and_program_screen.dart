@@ -2,9 +2,12 @@ import 'package:ednevnik_admin/models/annual_plan_program.dart';
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/result.dart';
 import 'package:ednevnik_admin/models/subject.dart';
+import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
+import 'package:ednevnik_admin/providers/school_provider.dart';
+import 'package:ednevnik_admin/providers/selected_school_provider.dart';
 import 'package:ednevnik_admin/screens/classes_screen.dart';
 import 'package:ednevnik_admin/screens/single_annual_plan_program_screen.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
@@ -25,24 +28,64 @@ class _YearlyPlanAndProgramDetailScreenState
   late AnnualPlanProgramProvider _annualPlanProgramProvider;
   late DepartmentProvider _departmentProvider;
   late SubjectProvider _subjectProvider;
+  late SchoolProvider _schoolProvider;
 
   TextEditingController _nazivController = TextEditingController();
 
   Department? _selectedDepartment;
   Subject? _selectedSubject;
+  School? _selectedSchool;
 
   List<Department> _departments = [];
   List<Subject> _subjects = [];
+  List<School> _schools = [];
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     _annualPlanProgramProvider = context.read<AnnualPlanProgramProvider>();
     _departmentProvider = context.read<DepartmentProvider>();
     _subjectProvider = context.read<SubjectProvider>();
-    _fetchDepartments();
-    _fetchSubjects();
-    _fetchAnnualPlanPrograms();
+    _schoolProvider = context.read<SchoolProvider>();
+
+    _loadSchools();
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SelectedSchoolProvider>().addListener(_onSchoolChanged);
+    });
+  }
+
+  void _onSchoolChanged() {
+    final selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
+    if (selectedSchool != null && selectedSchool != _selectedSchool) {
+      setState(() {
+        _selectedSchool = selectedSchool;
+        _fetchDepartments();
+        _fetchSubjects();
+        _fetchAnnualPlanPrograms();
+      });
+    }
+  }
+
+  Future<void> _loadSchools() async {
+    try {
+      final SearchResult<School> schoolResult = await _schoolProvider.get();
+      if (schoolResult.result != null) {
+        setState(() {
+          _schools = schoolResult.result;
+          if (_schools.isNotEmpty) {
+            _selectedSchool = _schools.first;
+            _fetchDepartments();
+            _fetchSubjects();
+            _fetchAnnualPlanPrograms();
+          } else {
+            _selectedSchool = null;
+          }
+        });
+      }
+    } catch (e) {
+      print("Failed to load schools: $e");
+    }
   }
 
   void _navigateToAddOrEditScreen([AnnualPlanProgram? planProgram]) async {
@@ -60,14 +103,18 @@ class _YearlyPlanAndProgramDetailScreenState
   }
 
   Future<void> _fetchDepartments() async {
-    var data = await _departmentProvider.get();
+    var data = await _departmentProvider.get(filter: {
+      'SkolaID': _selectedSchool?.skolaID,
+    });
     setState(() {
       _departments = data.result;
     });
   }
 
   Future<void> _fetchSubjects() async {
-    var data = await _subjectProvider.get();
+    var data = await _subjectProvider.get(filter: {
+      'SkolaID': _selectedSchool?.skolaID,
+    });
     setState(() {
       _subjects = data.result;
     });
@@ -76,6 +123,7 @@ class _YearlyPlanAndProgramDetailScreenState
   Future<void> _fetchAnnualPlanPrograms() async {
     var filter = {
       'naziv': _nazivController.text,
+      'SkolaID': _selectedSchool?.skolaID,
     };
     if (_selectedDepartment != null) {
       filter['odjeljenjeID'] = _selectedDepartment!.odjeljenjeID.toString();

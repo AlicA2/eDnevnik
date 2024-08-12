@@ -1,7 +1,10 @@
 import 'package:ednevnik_admin/models/annual_plan_program.dart';
+import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
+import 'package:ednevnik_admin/providers/school_provider.dart';
+import 'package:ednevnik_admin/providers/selected_school_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -25,8 +28,13 @@ class _SingleAnnualPlanProgramScreenState
   late AnnualPlanProgramProvider _planProgramProvider;
   late DepartmentProvider _departmentProvider;
   late SubjectProvider _subjectProvider;
+  late SchoolProvider _schoolProvider;
+
   List<DropdownMenuItem<int>> _departmentDropdownItems = [];
   List<DropdownMenuItem<int>> _subjectDropdownItems = [];
+  List<DropdownMenuItem<int>> _schoolDropdownItems = [];
+
+  School? _selectedSchool;
 
   @override
   void initState() {
@@ -34,24 +42,49 @@ class _SingleAnnualPlanProgramScreenState
     _planProgramProvider = context.read<AnnualPlanProgramProvider>();
     _departmentProvider = context.read<DepartmentProvider>();
     _subjectProvider = context.read<SubjectProvider>();
+    _schoolProvider = context.read<SchoolProvider>();
+
+    _selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
+    context.read<SelectedSchoolProvider>().addListener(_onSchoolChanged);
+
     _initializeForm();
+  }
+
+  void _onSchoolChanged() {
+    if (mounted) {
+      setState(() {
+        _selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
+        _loadDropdownItems();
+      });
+    }
   }
 
   Future<void> _initializeForm() async {
     await _loadDropdownItems();
     if (widget.planProgram != null) {
+      // Check if the initial values exist in the dropdown items
+      final odjeljenjeExists = _departmentDropdownItems
+          .any((item) => item.value == widget.planProgram!.odjeljenjeID);
+      final predmetExists = _subjectDropdownItems
+          .any((item) => item.value == widget.planProgram!.predmetID);
+
       _formKey.currentState?.patchValue({
         'naziv': widget.planProgram?.naziv ?? '',
         'brojCasova': widget.planProgram?.brojCasova?.toString() ?? '',
-        'odjeljenjeID': widget.planProgram?.odjeljenjeID,
-        'predmetID': widget.planProgram?.predmetID,
+        'odjeljenjeID': odjeljenjeExists ? widget.planProgram?.odjeljenjeID : null,
+        'predmetID': predmetExists ? widget.planProgram?.predmetID : null,
       });
     }
   }
 
   Future<void> _loadDropdownItems() async {
-    var departments = await _departmentProvider.get();
-    var subjects = await _subjectProvider.get();
+    var departments = await _departmentProvider.get(filter: {
+      'SkolaID': _selectedSchool?.skolaID,
+    });
+
+    var subjects = await _subjectProvider.get(filter: {
+      'SkolaID': _selectedSchool?.skolaID,
+    });
 
     setState(() {
       _departmentDropdownItems = departments.result?.map((department) {
@@ -75,6 +108,7 @@ class _SingleAnnualPlanProgramScreenState
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      disableSchoolDropdown: widget.planProgram != null,
       child: Align(
         alignment: Alignment.topLeft,
         child: Padding(
@@ -88,13 +122,6 @@ class _SingleAnnualPlanProgramScreenState
               padding: const EdgeInsets.all(16.0),
               child: FormBuilder(
                 key: _formKey,
-                initialValue: {
-                  'naziv': widget.planProgram?.naziv ?? '',
-                  'brojCasova':
-                      widget.planProgram?.brojCasova?.toString() ?? '',
-                  'odjeljenjeID': widget.planProgram?.odjeljenjeID,
-                  'predmetID': widget.planProgram?.predmetID,
-                },
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
