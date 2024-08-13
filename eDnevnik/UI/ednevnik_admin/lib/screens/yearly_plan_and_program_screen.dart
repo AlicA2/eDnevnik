@@ -47,44 +47,24 @@ class _YearlyPlanAndProgramDetailScreenState
     _subjectProvider = context.read<SubjectProvider>();
     _schoolProvider = context.read<SchoolProvider>();
 
-    _loadSchools();
-    
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   context.read<SelectedSchoolProvider>().addListener(_onSchoolChanged);
-    // });
+    _fetchSchools();
   }
 
-  // void _onSchoolChanged() {
-  //   final selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
-  //   if (selectedSchool != null && selectedSchool != _selectedSchool) {
-  //     setState(() {
-  //       _selectedSchool = selectedSchool;
-  //       _fetchDepartments();
-  //       _fetchSubjects();
-  //       _fetchAnnualPlanPrograms();
-  //     });
-  //   }
-  // }
-
-  Future<void> _loadSchools() async {
+  Future<void> _fetchSchools() async {
     try {
-      final SearchResult<School> schoolResult = await _schoolProvider.get();
-      if (schoolResult.result != null) {
+      var schools = await _schoolProvider.get();
+      if (mounted) {
         setState(() {
-          _schools = schoolResult.result;
+          _schools = schools.result;
           if (_schools.isNotEmpty) {
             _selectedSchool = _schools.first;
             _fetchDepartments();
             _fetchSubjects();
             _fetchAnnualPlanPrograms();
-          } else {
-            _selectedSchool = null;
           }
         });
       }
-    } catch (e) {
-      print("Failed to load schools: $e");
-    }
+    } catch (e) {}
   }
 
   void _navigateToAddOrEditScreen([AnnualPlanProgram? planProgram]) async {
@@ -152,7 +132,7 @@ class _YearlyPlanAndProgramDetailScreenState
     return _subjects
             .firstWhere(
               (sub) => sub.predmetID == id,
-              orElse: () => Subject(0, '', '', "",0),
+              orElse: () => Subject(0, '', '', "", 0),
             )
             .naziv ??
         "";
@@ -188,26 +168,64 @@ class _YearlyPlanAndProgramDetailScreenState
   Widget _buildScreenName() {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(5),
-            topLeft: Radius.circular(20),
-            topRight: Radius.elliptical(5, 5),
-            bottomRight: Radius.circular(30.0),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(5),
+                topLeft: Radius.circular(20),
+                topRight: Radius.elliptical(5, 5),
+                bottomRight: Radius.circular(30.0),
+              ),
+            ),
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              "Godišnji plan i program",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-        ),
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          "Godišnji plan i program",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+          SizedBox(width: 16.0),
+          Expanded(
+            child: _buildSchoolDropdown(),
           ),
-        ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildSchoolDropdown() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          width: 300,
+          child: DropdownButton<School>(
+            value: _selectedSchool,
+            items: _schools.map((school) {
+              return DropdownMenuItem<School>(
+                value: school,
+                child: Text(school.naziv ?? "N/A"),
+              );
+            }).toList(),
+            onChanged: (School? newValue) {
+              setState(() {
+                _selectedSchool = newValue;
+                _selectedDepartment = null;
+                _selectedSubject = null;
+              });
+              _fetchAnnualPlanPrograms();
+              _fetchSubjects();
+              _fetchDepartments();
+            },
+          ),
+        ),
+      ],
     );
   }
 

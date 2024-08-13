@@ -41,12 +41,12 @@ class _SingleDepartmentListScreenState
     _departmentProvider = context.read<DepartmentProvider>();
     _userProvider = context.read<UserProvider>();
     _schoolProvider = context.read<SchoolProvider>();
-    
+
     _fetchSchools();
     _initForm();
   }
 
-   Future<void> _fetchSchools() async {
+  Future<void> _fetchSchools() async {
     try {
       var schools = await _schoolProvider.get();
       if (mounted) {
@@ -61,8 +61,7 @@ class _SingleDepartmentListScreenState
           }
         });
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> _initForm() async {
@@ -99,18 +98,17 @@ class _SingleDepartmentListScreenState
     }).toList();
   }
 
-  Future<bool> _isNazivOdjeljenjaExists(
-    String nazivOdjeljenja, int skolaID, [int? currentId]) async {
-  var departments = await _departmentProvider.get();
-  return departments.result?.any((d) =>
-          d.nazivOdjeljenja == nazivOdjeljenja &&
-          d.skolaID == skolaID &&
-          d.odjeljenjeID != currentId) ??
-      false;
-}
+  Future<bool> _isNazivOdjeljenjaExists(String nazivOdjeljenja, int skolaID,
+      [int? currentId]) async {
+    var departments = await _departmentProvider.get();
+    return departments.result?.any((d) =>
+            d.nazivOdjeljenja == nazivOdjeljenja &&
+            d.skolaID == skolaID &&
+            d.odjeljenjeID != currentId) ??
+        false;
+  }
 
-
- @override
+  @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       child: Padding(
@@ -160,6 +158,7 @@ class _SingleDepartmentListScreenState
             ),
           ),
         ),
+        SizedBox(width: 16.0),
         Expanded(
           child: _buildSchoolDropdown(),
         ),
@@ -167,37 +166,36 @@ class _SingleDepartmentListScreenState
     );
   }
 
-Widget _buildSchoolDropdown() {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.end,
-    children: [
-      Container(
-        width: 300,
-        child: DropdownButton<School>(
-          value: _selectedSchool,
-          items: _schools.map((school) {
-            return DropdownMenuItem<School>(
-              value: school,
-              child: Text(school.naziv ?? "N/A"),
-            );
-          }).toList(),
-          onChanged: widget.department == null
-              ? (School? newValue) {
-                  setState(() {
-                    _selectedSchool = newValue;
-                  });
-                }
-              : null,
-          disabledHint: Text(
-            _selectedSchool?.naziv ?? "N/A",
-            style: TextStyle(color: Colors.grey),
+  Widget _buildSchoolDropdown() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          width: 300,
+          child: DropdownButton<School>(
+            value: _selectedSchool,
+            items: _schools.map((school) {
+              return DropdownMenuItem<School>(
+                value: school,
+                child: Text(school.naziv ?? "N/A"),
+              );
+            }).toList(),
+            onChanged: widget.department == null
+                ? (School? newValue) {
+                    setState(() {
+                      _selectedSchool = newValue;
+                    });
+                  }
+                : null,
+            disabledHint: Text(
+              _selectedSchool?.naziv ?? "N/A",
+              style: TextStyle(color: Colors.grey),
+            ),
           ),
         ),
-      ),
-    ],
-  );
-}
-
+      ],
+    );
+  }
 
   Widget _buildForm() {
     return FormBuilder(
@@ -260,7 +258,7 @@ Widget _buildSchoolDropdown() {
     return Row(
       children: [
         if (widget.department != null) ...[
-          SizedBox(width:16),
+          SizedBox(width: 16),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
@@ -316,30 +314,30 @@ Widget _buildSchoolDropdown() {
               var formValues = _formKey.currentState!.value;
               var nazivOdjeljenja = formValues['nazivOdjeljenja'] as String;
               var razrednikID = _selectedRazrednikID;
-              
 
               print(nazivOdjeljenja);
               print(razrednikID);
 
               if (await _isNazivOdjeljenjaExists(
-    nazivOdjeljenja, _selectedSchool?.skolaID ?? 0, widget.department?.odjeljenjeID)) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) => AlertDialog(
-      title: Text("Greška"),
-      content: Text(
-          "Odjeljenje sa nazivom '$nazivOdjeljenja' već postoji u odabranoj školi."),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text("OK"),
-        ),
-      ],
-    ),
-  );
-  return;
-}
-
+                  nazivOdjeljenja,
+                  _selectedSchool?.skolaID ?? 0,
+                  widget.department?.odjeljenjeID)) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: Text("Greška"),
+                    content: Text(
+                        "Odjeljenje sa nazivom '$nazivOdjeljenja' već postoji u odabranoj školi."),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("OK"),
+                      ),
+                    ],
+                  ),
+                );
+                return;
+              }
 
               try {
                 if (widget.department == null) {
@@ -350,12 +348,11 @@ Widget _buildSchoolDropdown() {
                   });
                 } else {
                   await _departmentProvider.Update(
-                      widget.department!.odjeljenjeID!,
-                      {
-                        "NazivOdjeljenja": nazivOdjeljenja,
-                        "RazrednikID": int.parse(razrednikID!),
-                        "SkolaID": _selectedSchool?.skolaID ?? 0,
-                      });
+                      widget.department!.odjeljenjeID!, {
+                    "NazivOdjeljenja": nazivOdjeljenja,
+                    "RazrednikID": int.parse(razrednikID!),
+                    "SkolaID": _selectedSchool?.skolaID ?? 0,
+                  });
                 }
 
                 Navigator.pop(context, true);
