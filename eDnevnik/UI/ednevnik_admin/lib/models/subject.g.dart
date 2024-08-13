@@ -11,10 +11,12 @@ Subject _$SubjectFromJson(Map<String, dynamic> json) => Subject(
       json['naziv'] as String?,
       json['opis'] as String?,
       json['stateMachine'] as String?,
+      (json['skolaID'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$SubjectToJson(Subject instance) => <String, dynamic>{
       'predmetID': instance.predmetID,
+      'skolaID': instance.skolaID,
       'naziv': instance.naziv,
       'opis': instance.opis,
       'stateMachine': instance.stateMachine,

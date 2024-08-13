@@ -4,7 +4,6 @@ import 'package:ednevnik_admin/providers/classes_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/message_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
-import 'package:ednevnik_admin/providers/selected_school_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
@@ -24,7 +23,6 @@ void main() {
       ChangeNotifierProvider(create: (_) => AnnualPlanProgramProvider()),
       ChangeNotifierProvider(create: (_) => ClassesProvider()),
       ChangeNotifierProvider(create: (_) => SchoolProvider()),
-      ChangeNotifierProvider(create: (_) => SelectedSchoolProvider()),
     ],
     child: const MyMaterialApp(),
   ));

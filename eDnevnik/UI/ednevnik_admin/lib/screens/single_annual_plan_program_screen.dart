@@ -4,7 +4,6 @@ import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
-import 'package:ednevnik_admin/providers/selected_school_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -44,25 +43,14 @@ class _SingleAnnualPlanProgramScreenState
     _subjectProvider = context.read<SubjectProvider>();
     _schoolProvider = context.read<SchoolProvider>();
 
-    _selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
-    context.read<SelectedSchoolProvider>().addListener(_onSchoolChanged);
-
     _initializeForm();
   }
 
-  void _onSchoolChanged() {
-    if (mounted) {
-      setState(() {
-        _selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
-        _loadDropdownItems();
-      });
-    }
-  }
+
 
   Future<void> _initializeForm() async {
     await _loadDropdownItems();
     if (widget.planProgram != null) {
-      // Check if the initial values exist in the dropdown items
       final odjeljenjeExists = _departmentDropdownItems
           .any((item) => item.value == widget.planProgram!.odjeljenjeID);
       final predmetExists = _subjectDropdownItems
@@ -108,7 +96,7 @@ class _SingleAnnualPlanProgramScreenState
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      disableSchoolDropdown: widget.planProgram != null,
+      // disableSchoolDropdown: widget.planProgram != null,
       child: Align(
         alignment: Alignment.topLeft,
         child: Padding(

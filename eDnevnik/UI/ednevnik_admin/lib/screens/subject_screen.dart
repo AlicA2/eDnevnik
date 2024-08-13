@@ -1,5 +1,7 @@
 import 'package:ednevnik_admin/models/result.dart';
+import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/subject.dart';
+import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
@@ -16,6 +18,9 @@ class SubjectDetailScreen extends StatefulWidget {
 class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
   SearchResult<Subject>? result;
   late SubjectProvider _predmetProvider;
+  late SchoolProvider _schoolProvider;
+  School? _selectedSchool;
+  List<School> _schools = [];
 
   TextEditingController _ftsController = TextEditingController();
   TextEditingController _nazivSifraController = TextEditingController();
@@ -24,13 +29,17 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
   void initState() {
     super.initState();
     _predmetProvider = context.read<SubjectProvider>();
+    _schoolProvider = context.read<SchoolProvider>();
+
     _fetchSubjects();
+
   }
 
   Future<void> _fetchSubjects() async {
     var data = await _predmetProvider.get(filter: {
       'fts': _ftsController.text,
-      'sifra': _nazivSifraController.text
+      'sifra': _nazivSifraController.text,
+      'SkolaID': _selectedSchool?.skolaID
     });
 
     setState(() {

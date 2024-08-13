@@ -14,6 +14,7 @@ namespace eDnevnik.Services.Database
         public string Grad { get; set; }
         public string Drzava { get; set; }
         public virtual ICollection<Odjeljenje> Odjeljenja { get; set; } = new List<Odjeljenje>();
+        public virtual ICollection<Predmet> Predmeti { get; set; } = new List<Predmet>();
         public virtual ICollection<GodisnjiPlanProgram> GodisnjiPlanProgrami { get; set; } = new List<GodisnjiPlanProgram>();
     }
 }

@@ -7,7 +7,6 @@ import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
-import 'package:ednevnik_admin/providers/selected_school_provider.dart';
 import 'package:ednevnik_admin/screens/classes_screen.dart';
 import 'package:ednevnik_admin/screens/single_annual_plan_program_screen.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
@@ -50,22 +49,22 @@ class _YearlyPlanAndProgramDetailScreenState
 
     _loadSchools();
     
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SelectedSchoolProvider>().addListener(_onSchoolChanged);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   context.read<SelectedSchoolProvider>().addListener(_onSchoolChanged);
+    // });
   }
 
-  void _onSchoolChanged() {
-    final selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
-    if (selectedSchool != null && selectedSchool != _selectedSchool) {
-      setState(() {
-        _selectedSchool = selectedSchool;
-        _fetchDepartments();
-        _fetchSubjects();
-        _fetchAnnualPlanPrograms();
-      });
-    }
-  }
+  // void _onSchoolChanged() {
+  //   final selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
+  //   if (selectedSchool != null && selectedSchool != _selectedSchool) {
+  //     setState(() {
+  //       _selectedSchool = selectedSchool;
+  //       _fetchDepartments();
+  //       _fetchSubjects();
+  //       _fetchAnnualPlanPrograms();
+  //     });
+  //   }
+  // }
 
   Future<void> _loadSchools() async {
     try {
@@ -153,7 +152,7 @@ class _YearlyPlanAndProgramDetailScreenState
     return _subjects
             .firstWhere(
               (sub) => sub.predmetID == id,
-              orElse: () => Subject(0, '', '', ""),
+              orElse: () => Subject(0, '', '', "",0),
             )
             .naziv ??
         "";

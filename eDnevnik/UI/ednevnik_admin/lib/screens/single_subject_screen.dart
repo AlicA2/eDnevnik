@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/result.dart';
+import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/subject.dart';
 import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
+import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
@@ -29,6 +31,10 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
   late DepartmentProvider _departmentProvider;
   late UserProvider _userProvider;
   late SubjectProvider _subjectProvider;
+  late SchoolProvider _schoolProvider;
+
+  List<School> _schools = [];
+  School? _selectedSchool;
 
   SearchResult<User>? userResult;
   SearchResult<Department>? departmentResult;
@@ -41,12 +47,14 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
     _initialValue = {
       'naziv': widget.subject?.naziv,
       'opis': widget.subject?.opis,
-      'stateMachine': widget.subject?.stateMachine
+      'stateMachine': widget.subject?.stateMachine,
+      'SkolaID': widget.subject?.skolaID?.toString() ?? "",
     };
 
     _departmentProvider = context.read<DepartmentProvider>();
     _userProvider = context.read<UserProvider>();
     _subjectProvider = context.read<SubjectProvider>();
+    _schoolProvider = context.read<SchoolProvider>();
 
     initForm();
   }
@@ -99,6 +107,7 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
+      // disableSchoolDropdown: widget.subject != null,
       child: Container(
         color: Color(0xFFF7F2FA),
         child: Padding(
@@ -172,40 +181,40 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
                           backgroundColor: Colors.blue,
                         ),
                         onPressed: () async {
-                          if (_formKey.currentState?.saveAndValidate() ??
-                              false) {
-                            print(_formKey.currentState?.value);
+                        if (_formKey.currentState?.saveAndValidate() ?? false) {
+                          var request = Map.from(_formKey.currentState!.value);
 
-                            var request =
-                                new Map.from(_formKey.currentState!.value);
+                          request['skolaID'] = _selectedSchool?.skolaID ?? 0;
 
-                            try {
-                              if (widget.subject == null) {
-                                await _subjectProvider.Insert(request);
-                                Navigator.pop(context, 'added');
-                              } else {
-                                await _subjectProvider.Update(
-                                    widget.subject!.predmetID!,
-                                    _formKey.currentState?.value);
-                                Navigator.pop(context, 'updated');
-                              }
-                            } on Exception catch (e) {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: Text("Error"),
-                                  content: Text(e.toString()),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Text("OK"),
-                                    )
-                                  ],
-                                ),
-                              );
+                          print(request);
+
+                          try {
+                            if (widget.subject == null) {
+                              await _subjectProvider.Insert(request);
+                              Navigator.pop(context, 'added');
+                            } else {
+                              await _subjectProvider.Update(
+                                  widget.subject!.predmetID!, request);
+                              Navigator.pop(context, 'updated');
                             }
+                          } on Exception catch (e) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: Text("Error"),
+                                content: Text(e.toString()),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text("OK"),
+                                  )
+                                ],
+                              ),
+                            );
                           }
-                        },
+                        }
+                      },
+
                         child: Text('Sačuvaj'),
                       ),
                     ],

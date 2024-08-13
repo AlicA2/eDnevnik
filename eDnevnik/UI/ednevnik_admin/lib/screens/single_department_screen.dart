@@ -4,7 +4,6 @@ import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
-import 'package:ednevnik_admin/providers/selected_school_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
@@ -43,38 +42,26 @@ class _SingleDepartmentListScreenState
     _userProvider = context.read<UserProvider>();
     _schoolProvider = context.read<SchoolProvider>();
     
-    _selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
-    context.read<SelectedSchoolProvider>().addListener(_onSchoolChanged);
-    
-    _loadSchools();
+    _fetchSchools();
     _initForm();
   }
 
-  void _onSchoolChanged() {
-    if (mounted) {
-      setState(() {
-        _selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
-      });
-    }
-  }
-
-  Future<void> _loadSchools() async {
+   Future<void> _fetchSchools() async {
     try {
-      final SearchResult<School> schoolResult = await _schoolProvider.get();
-      if (schoolResult.result != null) {
-        if (mounted) {
-          setState(() {
-            _schools = schoolResult.result!;
-            if (_schools.isNotEmpty) {
-              _selectedSchool = _schools.first;
-            } else {
-              _selectedSchool = null;
-            }
-          });
-        }
+      var schools = await _schoolProvider.get();
+      if (mounted) {
+        setState(() {
+          _schools = schools.result;
+          if (_schools.isNotEmpty) {
+            _selectedSchool = widget.department != null
+                ? _schools.firstWhere(
+                    (school) => school.skolaID == widget.department?.skolaID,
+                    orElse: () => _schools.first)
+                : _schools.first;
+          }
+        });
       }
     } catch (e) {
-      print("Failed to load schools: $e");
     }
   }
 
@@ -112,19 +99,20 @@ class _SingleDepartmentListScreenState
     }).toList();
   }
 
-  Future<bool> _isNazivOdjeljenjaExists(String nazivOdjeljenja,
-      [int? currentId]) async {
-    var departments = await _departmentProvider.get();
-    return departments.result?.any((d) =>
-            d.nazivOdjeljenja == nazivOdjeljenja &&
-            d.odjeljenjeID != currentId) ??
-        false;
-  }
+  Future<bool> _isNazivOdjeljenjaExists(
+    String nazivOdjeljenja, int skolaID, [int? currentId]) async {
+  var departments = await _departmentProvider.get();
+  return departments.result?.any((d) =>
+          d.nazivOdjeljenja == nazivOdjeljenja &&
+          d.skolaID == skolaID &&
+          d.odjeljenjeID != currentId) ??
+      false;
+}
+
 
  @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      disableSchoolDropdown: widget.department != null,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Container(
@@ -148,29 +136,68 @@ class _SingleDepartmentListScreenState
   }
 
   Widget _buildScreenName() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(5),
-          topLeft: Radius.circular(20),
-          topRight: Radius.elliptical(5, 5),
-          bottomRight: Radius.circular(30.0),
+    return Row(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(5),
+              topLeft: Radius.circular(20),
+              topRight: Radius.elliptical(5, 5),
+              bottomRight: Radius.circular(30.0),
+            ),
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            widget.department == null
+                ? "Dodavanje odjeljenja"
+                : "Uređivanje odjeljenja",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
-      ),
-      padding: const EdgeInsets.all(16.0),
-      child: Text(
-        widget.department == null
-            ? "Dodavanje odjeljenja"
-            : "Uređivanje odjeljenja",
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+        Expanded(
+          child: _buildSchoolDropdown(),
         ),
-      ),
+      ],
     );
   }
+
+Widget _buildSchoolDropdown() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      Container(
+        width: 300,
+        child: DropdownButton<School>(
+          value: _selectedSchool,
+          items: _schools.map((school) {
+            return DropdownMenuItem<School>(
+              value: school,
+              child: Text(school.naziv ?? "N/A"),
+            );
+          }).toList(),
+          onChanged: widget.department == null
+              ? (School? newValue) {
+                  setState(() {
+                    _selectedSchool = newValue;
+                  });
+                }
+              : null,
+          disabledHint: Text(
+            _selectedSchool?.naziv ?? "N/A",
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
 
   Widget _buildForm() {
     return FormBuilder(
@@ -295,23 +322,24 @@ class _SingleDepartmentListScreenState
               print(razrednikID);
 
               if (await _isNazivOdjeljenjaExists(
-                  nazivOdjeljenja, widget.department?.odjeljenjeID)) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    title: Text("Greška"),
-                    content: Text(
-                        "Odjeljenje sa nazivom '$nazivOdjeljenja' već postoji."),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text("OK"),
-                      ),
-                    ],
-                  ),
-                );
-                return;
-              }
+    nazivOdjeljenja, _selectedSchool?.skolaID ?? 0, widget.department?.odjeljenjeID)) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: Text("Greška"),
+      content: Text(
+          "Odjeljenje sa nazivom '$nazivOdjeljenja' već postoji u odabranoj školi."),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text("OK"),
+        ),
+      ],
+    ),
+  );
+  return;
+}
+
 
               try {
                 if (widget.department == null) {
@@ -329,6 +357,7 @@ class _SingleDepartmentListScreenState
                         "SkolaID": _selectedSchool?.skolaID ?? 0,
                       });
                 }
+
                 Navigator.pop(context, true);
               } catch (e) {
                 showDialog(

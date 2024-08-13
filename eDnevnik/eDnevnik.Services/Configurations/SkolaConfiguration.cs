@@ -25,6 +25,11 @@ namespace eDnevnik.Services.Configurations
                    .WithOne(gp => gp.Skola)
                    .HasForeignKey(gp => gp.SkolaID)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(s => s.Predmeti)
+                   .WithOne(gp => gp.Skola)
+                   .HasForeignKey(gp => gp.SkolaID)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

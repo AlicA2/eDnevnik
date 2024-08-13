@@ -1,10 +1,7 @@
 import 'package:ednevnik_admin/main.dart';
 import 'package:ednevnik_admin/models/result.dart';
-import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
-import 'package:ednevnik_admin/providers/school_provider.dart';
-import 'package:ednevnik_admin/providers/selected_school_provider.dart';
 import 'package:ednevnik_admin/screens/department_screen.dart';
 import 'package:ednevnik_admin/screens/help_support_screen.dart';
 import 'package:ednevnik_admin/screens/messages_screen.dart';
@@ -19,16 +16,12 @@ import 'package:provider/provider.dart';
 class MasterScreenWidget extends StatefulWidget {
   final Widget? child;
   final Widget? title_widget;
-  final bool? disableSchoolDropdown;
 
   MasterScreenWidget({
     this.child,
     this.title_widget,
-    this.disableSchoolDropdown,
     Key? key,
   }) : super(key: key);
-
-  // MasterScreenWidget({this.child, this.title_widget, Key? key}) : super(key: key);
 
   @override
   State<MasterScreenWidget> createState() => _MasterScreenWidgetState();
@@ -38,53 +31,10 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   bool _isHoveringLogoff = false;
   bool _isHoveringHelp = false;
   bool _isDrawerOpen = true;
-  List<School> _schools=[];
-  School? _selectedSchool;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    _loadSchools();
-  }
-
-  Future<void> _loadSchools()async {
-     try {
-      final schoolProvider = context.read<SchoolProvider>();
-      final SearchResult<School> result = await schoolProvider.get();
-      if (result != null && result.result != null) {
-        setState(() {
-          _schools = result.result;
-          if (_schools.isNotEmpty) {
-            _selectedSchool = _schools.first;
-            if (_selectedSchool?.skolaID != null) {
-              context.read<SelectedSchoolProvider>().setSelectedSchool(_selectedSchool);
-            }
-          } else {
-            _selectedSchool = null;
-              context.read<SelectedSchoolProvider>().setSelectedSchool(null);
-          }
-        });
-      } else {
-        setState(() {
-          _schools = [];
-        });
-      }
-    } catch (e) {
-      print("Failed to load schools: $e");
-    }
-  }
-
-  Future<void> _filterDataBySchool(int skolaID) async {
-    try {
-      final departmentProvider = context.read<DepartmentProvider>();
-      final yearlyPlanProvider = context.read<AnnualPlanProgramProvider>();
-
-      await departmentProvider.get(filter: {'SkolaID': skolaID});
-
-      await yearlyPlanProvider.get(filter: {'SkolaID': skolaID});
-    } catch (e) {
-      print("Failed to filter data by school: $e");
-    }
   }
 
   void _showLogoffDialog() {
@@ -125,9 +75,9 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
-    String imePrezime = userProvider.loggedInUser != null 
-      ? "${userProvider.loggedInUser!.ime} ${userProvider.loggedInUser!.prezime}"
-      : "";
+    String imePrezime = userProvider.loggedInUser != null
+        ? "${userProvider.loggedInUser!.ime} ${userProvider.loggedInUser!.prezime}"
+        : "";
 
     return Scaffold(
       appBar: AppBar(
@@ -145,34 +95,23 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 children: [
                   TextSpan(
                     text: 'e',
-                    style: TextStyle(color: Colors.blue.withOpacity(0.8), fontSize: 30, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.blue.withOpacity(0.8),
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
                   ),
                   TextSpan(
                     text: 'Dnevnik',
-                    style: TextStyle(color: Colors.grey.withOpacity(0.8), fontSize: 30, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.grey.withOpacity(0.8),
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             ),
             SizedBox(width: 16),
             widget.title_widget ?? Container(),
-            SizedBox(width:55),
-            DropdownButton<School>(
-              value: _selectedSchool,
-              hint: Text('Izaberi školu'),
-              onChanged: widget.disableSchoolDropdown == true ? null : (School? newValue) {
-                setState(() {
-                  _selectedSchool = newValue;
-                  context.read<SelectedSchoolProvider>().setSelectedSchool(newValue);
-                });
-              },
-              items: _schools.map<DropdownMenuItem<School>>((School school) {
-                return DropdownMenuItem<School>(
-                  value: school,
-                  child: Text(school.naziv ?? ''),
-                );
-              }).toList(),
-            ),
           ],
         ),
         actions: [
@@ -244,7 +183,9 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               ),
             ),
           ),
-          SizedBox(width: 30,),
+          SizedBox(
+            width: 30,
+          ),
           MouseRegion(
             onEnter: (_) => setState(() => _isHoveringLogoff = true),
             onExit: (_) => setState(() => _isHoveringLogoff = false),
@@ -296,7 +237,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       ),
                     ),
                     ListTile(
-                      leading: Icon(Icons.library_books), 
+                      leading: Icon(Icons.library_books),
                       title: Text("Predmeti"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -305,7 +246,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       },
                     ),
                     ListTile(
-                      leading: Icon(Icons.message), 
+                      leading: Icon(Icons.message),
                       title: Text("Poruke"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -314,11 +255,12 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       },
                     ),
                     ListTile(
-                      leading: Icon(Icons.insert_chart), 
+                      leading: Icon(Icons.insert_chart),
                       title: Text("Plan i program"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => YearlyPlanAndProgramDetailScreen(),
+                          builder: (context) =>
+                              YearlyPlanAndProgramDetailScreen(),
                         ));
                       },
                     ),
@@ -333,7 +275,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       ),
                     ),
                     ListTile(
-                      leading: Icon(Icons.group), 
+                      leading: Icon(Icons.group),
                       title: Text("Odjeljenja"),
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(

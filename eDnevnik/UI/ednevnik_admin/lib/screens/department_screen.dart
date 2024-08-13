@@ -1,6 +1,5 @@
 import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/user.dart';
-import 'package:ednevnik_admin/providers/selected_school_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ednevnik_admin/models/department.dart';
@@ -36,42 +35,22 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
     _departmentProvider = context.read<DepartmentProvider>();
     _userProvider = context.read<UserProvider>();
     _schoolProvider = context.read<SchoolProvider>();
-    _loadSchools();
+    _fetchSchools();
+  }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SelectedSchoolProvider>().addListener(_onSchoolChanged);
-    });
-  }
-@override
-  void dispose() {
-    context.read<SelectedSchoolProvider>().removeListener(_onSchoolChanged);
-    super.dispose();
-  }
-    void _onSchoolChanged() {
-    final selectedSchool = context.read<SelectedSchoolProvider>().selectedSchool;
-    if (selectedSchool != null && selectedSchool != _selectedSchool) {
-      setState(() {
-        _selectedSchool = selectedSchool;
-        _fetchDepartments();
-      });
-    }
-  }
-  Future<void> _loadSchools() async {
+  Future<void> _fetchSchools() async {
     try {
-      final SearchResult<School> schoolResult = await _schoolProvider.get();
-      if (schoolResult.result != null) {
+      var schools = await _schoolProvider.get();
+      if (mounted) {
         setState(() {
-          _schools = schoolResult.result;
+          _schools = schools.result;
           if (_schools.isNotEmpty) {
             _selectedSchool = _schools.first;
-            _fetchDepartments();
-          } else {
-            _selectedSchool = null;
+            _fetchDepartments(); 
           }
         });
       }
     } catch (e) {
-      print("Failed to load schools: $e");
     }
   }
 
@@ -81,17 +60,19 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
       'NazivOdjeljenja': _nazivSifraController.text,
       'SkolaID': _selectedSchool?.skolaID,
     });
-
-    setState(() {
-      result = data;
-    });
+    if (mounted) {
+      setState(() {
+        result = data;
+      });
+    }
   }
 
   Future<void> _navigateToAddEditDepartment([Department? department]) async {
     final shouldRefresh = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SingleDepartmentListScreen(department: department),
+        builder: (context) =>
+            SingleDepartmentListScreen(department: department),
       ),
     );
 
@@ -114,9 +95,10 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
             ),
             child: Column(
               children: [
-                _buildScreenName(),
+                _buildScreenHeader(),
                 SizedBox(height: 16.0),
                 _buildSearch(),
+                SizedBox(height: 16.0),
                 Expanded(child: _buildDataListView()),
                 SizedBox(height: 16.0),
                 Padding(
@@ -124,7 +106,8 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
                   child: ElevatedButton(
                     onPressed: () => _navigateToAddEditDepartment(),
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white, backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.blue,
                     ),
                     child: Text("Dodaj odjeljenje"),
                   ),
@@ -137,29 +120,34 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
     );
   }
 
-  Widget _buildScreenName() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(5),
-            topLeft: Radius.circular(20),
-            topRight: Radius.elliptical(5, 5),
-            bottomRight: Radius.circular(30.0),
+  Widget _buildScreenHeader() {
+    return Row(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(5),
+              topLeft: Radius.circular(20),
+              topRight: Radius.elliptical(5, 5),
+              bottomRight: Radius.circular(30.0),
+            ),
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            "Odjeljenja",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          "Odjeljenja",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+        SizedBox(width: 16.0),
+        Expanded(
+          child: _buildSchoolDropdown(),
         ),
-      ),
+      ],
     );
   }
 
@@ -191,12 +179,39 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
           ElevatedButton(
             onPressed: _fetchDepartments,
             style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white, backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blue,
             ),
             child: Text("Pretraga"),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSchoolDropdown() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          width: 300,
+          child: DropdownButton<School>(
+            value: _selectedSchool,
+            items: _schools.map((school) {
+              return DropdownMenuItem<School>(
+                value: school,
+                child: Text(school.naziv ?? "N/A"),
+              );
+            }).toList(),
+            onChanged: (School? newValue) {
+              setState(() {
+                _selectedSchool = newValue;
+              });
+              _fetchDepartments();
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -213,7 +228,8 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
                 ? FutureBuilder<User>(
                     future: _userProvider.getById(e.razrednikID!),
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
                         return CircularProgressIndicator();
                       } else if (snapshot.hasError) {
                         return Text("Error");
@@ -235,7 +251,8 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
           ),
         ],
       );
-    }).toList() ?? [];
+    }).toList() ??
+    [];
 
     return SingleChildScrollView(
       child: DataTable(

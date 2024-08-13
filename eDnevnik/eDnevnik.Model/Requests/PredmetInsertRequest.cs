@@ -10,5 +10,6 @@ namespace eDnevnik.Model.Requests
     {
         public string Naziv { get; set; } 
         public string? Opis { get; set; }
+        public int? SkolaID { get; set; }
     }
 }

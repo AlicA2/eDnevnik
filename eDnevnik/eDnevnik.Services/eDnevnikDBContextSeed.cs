@@ -187,7 +187,8 @@ namespace eDnevnik.Services
                     Naziv = "Matematika",
                     Opis = "Sabiranje, oduzimanje, množenje, dijeljenje",
                     OdjeljenjeID = 1,
-                    StateMachine="draft"
+                    SkolaID = 1,
+                    StateMachine = "draft"
                 },
                 new Predmet
                 {
@@ -195,10 +196,12 @@ namespace eDnevnik.Services
                     Naziv = "Biologija",
                     Opis = "Biljke",
                     OdjeljenjeID = 1,
-                    StateMachine ="draft"
+                    SkolaID = 2,
+                    StateMachine = "draft"
                 }
             );
         }
+
 
         private void SeedOdjeljenje(ModelBuilder modelBuilder)
         {

@@ -8,11 +8,12 @@ part 'subject.g.dart';
  @JsonSerializable()
 class Subject{
   int? predmetID;
+  int? skolaID;
   String? naziv;
   String? opis;
   String? stateMachine;
 
-  Subject(this.predmetID,this.naziv,this.opis,this.stateMachine);
+  Subject(this.predmetID,this.naziv,this.opis,this.stateMachine,this.skolaID);
 
  /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
