@@ -103,7 +103,7 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
                                     foregroundColor: Colors.white,
                                     backgroundColor: Colors.blue,
                                   ),
-                                  onPressed: _showDeleteConfirmationDialog,
+                                  onPressed: () async { await _showDeleteConfirmationDialog;},
                                   child: Text('Izbriši čas'),
                                 ),
                               ],
@@ -130,7 +130,7 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
                                   foregroundColor: Colors.white,
                                   backgroundColor: Colors.blue,
                                 ),
-                                onPressed: _saveForm,
+                                onPressed: () async { await _saveForm;},
                                 child: widget.classes == null
                                     ? Text('Dodaj čas')
                                     : Text('Sačuvaj'),

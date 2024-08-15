@@ -254,6 +254,50 @@ class _SingleDepartmentListScreenState
     );
   }
 
+  Future<void> _confirmDelete() async {
+    bool? confirmDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Potvrda brisanja'),
+        content: Text('Da li ste sigurni da želite da obrišete ovo odjeljenje?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Odustani'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('Obriši'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmDelete == true) {
+      try {
+        if (widget.department != null && widget.department!.odjeljenjeID != null) {
+          await _departmentProvider.delete(widget.department!.odjeljenjeID!);
+          Navigator.pop(context, true);
+        }
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text("Greška"),
+            content: Text(e.toString()),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("OK"),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+
   Widget _buildActionButtons() {
     return Row(
       children: [
@@ -264,30 +308,7 @@ class _SingleDepartmentListScreenState
               foregroundColor: Colors.white,
               backgroundColor: Colors.blue,
             ),
-            onPressed: () async {
-              if (widget.department != null &&
-                  widget.department!.odjeljenjeID != null) {
-                try {
-                  await _departmentProvider
-                      .delete(widget.department!.odjeljenjeID!);
-                  Navigator.pop(context, true);
-                } catch (e) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: Text("Error"),
-                      content: Text(e.toString()),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text("OK"),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              }
-            },
+            onPressed: () async { await _confirmDelete;},
             child: Text("Izbriši Odjeljenje"),
           ),
           SizedBox(width: 16.0),

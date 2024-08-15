@@ -275,7 +275,7 @@ class _YearlyPlanAndProgramDetailScreenState
               foregroundColor: Colors.white,
               backgroundColor: Colors.blue,
             ),
-            onPressed: _fetchAnnualPlanPrograms,
+            onPressed: () async { await _fetchAnnualPlanPrograms;},
             child: Text("Pretraga"),
           ),
         ],
@@ -356,7 +356,7 @@ class _YearlyPlanAndProgramDetailScreenState
                       ),
                       IconButton(
                         icon: Icon(Icons.navigate_next),
-                        onPressed: () {
+                        onPressed: () async {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => ClassesDetailScreen(

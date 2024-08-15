@@ -176,7 +176,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.blue,
                 ),
-                onPressed: _fetchMessages,
+                onPressed: () async { await _fetchMessages;},
                 child: Text("Pretraga"),
               ),
             ],
@@ -292,7 +292,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                       children: [
                         IconButton(
                           icon: Icon(Icons.reply),
-                          onPressed: () {
+                          onPressed: () async{
                             _replyToMessage(e);
                           },
                         ),

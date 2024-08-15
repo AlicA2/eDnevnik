@@ -177,7 +177,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
           ),
           SizedBox(width: 20),
           ElevatedButton(
-            onPressed: _fetchDepartments,
+            onPressed: () async { await _fetchDepartments;},
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: Colors.blue,

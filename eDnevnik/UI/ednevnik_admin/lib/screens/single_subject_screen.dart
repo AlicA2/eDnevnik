@@ -56,7 +56,26 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
     _subjectProvider = context.read<SubjectProvider>();
     _schoolProvider = context.read<SchoolProvider>();
 
+    _fetchSchools();
     initForm();
+  }
+
+  Future<void> _fetchSchools() async {
+    try {
+      var schools = await _schoolProvider.get();
+      if (mounted) {
+        setState(() {
+          _schools = schools.result;
+          if (_schools.isNotEmpty) {
+            _selectedSchool = widget.subject != null
+                ? _schools.firstWhere(
+                    (school) => school.skolaID == widget.subject?.skolaID,
+                    orElse: () => _schools.first)
+                : _schools.first;
+          }
+        });
+      }
+    } catch (e) {}
   }
 
   Future initForm() async {
@@ -107,7 +126,6 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      // disableSchoolDropdown: widget.subject != null,
       child: Container(
         color: Color(0xFFF7F2FA),
         child: Padding(
@@ -134,33 +152,7 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
                             foregroundColor: Colors.white,
                             backgroundColor: Colors.blue,
                           ),
-                          onPressed: () async {
-                            if (widget.subject != null &&
-                                widget.subject!.predmetID != null) {
-                              try {
-                                print(
-                                    'Deleting subject with ID: ${widget.subject!.predmetID}');
-                                await _subjectProvider
-                                    .delete(widget.subject!.predmetID!);
-                                Navigator.pop(context, 'deleted');
-                              } catch (e) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text(e.toString()),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text("OK"),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-                            }
-                          },
+                          onPressed: () async {await _deleteSubject();},
                           child: Text("Izbriši predmet"),
                         ),
                       Spacer(),
@@ -228,29 +220,113 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
     );
   }
 
+Future<void> _deleteSubject() async {
+  if (widget.subject?.predmetID != null) {
+    bool? confirmDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Potvrda brisanja'),
+        content: Text('Da li ste sigurni da želite da obrišete ovaj predmet?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Odustani'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('Obriši'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmDelete == true) {
+      try {
+        print('Deleting subject with ID: ${widget.subject!.predmetID}');
+        await _subjectProvider.delete(widget.subject!.predmetID!);
+        Navigator.pop(context, 'deleted');
+      } catch (e) {
+        _showErrorDialog("Failed to delete subject: $e");
+      }
+    }
+  }
+}
+
+void _showErrorDialog(String message) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Error'),
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text('OK'),
+        ),
+      ],
+    ),
+  );
+}
+
+
   Widget _buildScreenName() {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(5),
-            topLeft: Radius.circular(20),
-            topRight: Radius.elliptical(5, 5),
-            bottomRight: Radius.circular(30.0),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(5),
+                topLeft: Radius.circular(20),
+                topRight: Radius.elliptical(5, 5),
+                bottomRight: Radius.circular(30.0),
+              ),
+            ),
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              widget.subject == null ? "Dodavanje predmeta" : "Uređivanje predmeta",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
+          SizedBox(width: 16.0),
+        Expanded(
+          child: _buildSchoolDropdown(),
         ),
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          widget.subject == null ? "Dodavanje predmeta" : "Uređivanje predmeta",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildSchoolDropdown() {
+    final isEditMode = widget.subject != null;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          width: 300,
+          child: DropdownButton<School>(
+            value: _selectedSchool,
+            hint: Text("Select School"),
+            onChanged: isEditMode ? null :(School? newValue) async {
+              setState(() {
+                _selectedSchool = newValue;
+              });
+            },
+            items: _schools.map((School school) {
+              return DropdownMenuItem<School>(
+                value: school,
+                child: Text(school.naziv ?? ""),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 
