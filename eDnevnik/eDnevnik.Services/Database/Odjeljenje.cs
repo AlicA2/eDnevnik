@@ -14,7 +14,7 @@ namespace eDnevnik.Services.Database
         public int? RazrednikID { get; set; }
         public virtual Korisnik Razrednik { get; set; }
         public virtual Skola Skola { get; set; } = null!;
-        public virtual ICollection<Predmet> Predmeti { get; set; } = new List<Predmet>();
+        public virtual ICollection<OdjeljenjePredmet> OdjeljenjePredmeti { get; set; } = new List<OdjeljenjePredmet>();
         public virtual ICollection<Korisnik> Ucenici { get; set; } = new List<Korisnik>();
     }
 }

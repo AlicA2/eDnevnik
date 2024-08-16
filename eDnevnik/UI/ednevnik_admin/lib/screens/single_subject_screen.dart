@@ -173,38 +173,7 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
                           backgroundColor: Colors.blue,
                         ),
                         onPressed: () async {
-                        if (_formKey.currentState?.saveAndValidate() ?? false) {
-                          var request = Map.from(_formKey.currentState!.value);
-
-                          request['skolaID'] = _selectedSchool?.skolaID ?? 0;
-
-                          print(request);
-
-                          try {
-                            if (widget.subject == null) {
-                              await _subjectProvider.Insert(request);
-                              Navigator.pop(context, 'added');
-                            } else {
-                              await _subjectProvider.Update(
-                                  widget.subject!.predmetID!, request);
-                              Navigator.pop(context, 'updated');
-                            }
-                          } on Exception catch (e) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: Text("Error"),
-                                content: Text(e.toString()),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text("OK"),
-                                  )
-                                ],
-                              ),
-                            );
-                          }
-                        }
+                        await _saveForm(context);
                       },
 
                         child: Text('Sačuvaj'),
@@ -218,6 +187,41 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _saveForm(BuildContext context) async {
+    if (_formKey.currentState?.saveAndValidate() ?? false) {
+      var request = Map.from(_formKey.currentState!.value);
+    
+      request['skolaID'] = _selectedSchool?.skolaID ?? 0;
+    
+      print(request);
+    
+      try {
+        if (widget.subject == null) {
+          await _subjectProvider.Insert(request);
+          Navigator.pop(context, 'added');
+        } else {
+          await _subjectProvider.Update(
+              widget.subject!.predmetID!, request);
+          Navigator.pop(context, 'updated');
+        }
+      } on Exception catch (e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text("Error"),
+            content: Text(e.toString()),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("OK"),
+              )
+            ],
+          ),
+        );
+      }
+    }
   }
 
 Future<void> _deleteSubject() async {

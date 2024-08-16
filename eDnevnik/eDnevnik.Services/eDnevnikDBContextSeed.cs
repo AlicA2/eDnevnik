@@ -186,7 +186,7 @@ namespace eDnevnik.Services
                     PredmetID = 1,
                     Naziv = "Matematika",
                     Opis = "Sabiranje, oduzimanje, množenje, dijeljenje",
-                    OdjeljenjeID = 1,
+                    //OdjeljenjeID = 1,
                     SkolaID = 1,
                     StateMachine = "draft"
                 },
@@ -195,7 +195,7 @@ namespace eDnevnik.Services
                     PredmetID = 2,
                     Naziv = "Biologija",
                     Opis = "Biljke",
-                    OdjeljenjeID = 1,
+                    //OdjeljenjeID = 1,
                     SkolaID = 2,
                     StateMachine = "draft"
                 }

@@ -1,5 +1,6 @@
 import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/user.dart';
+import 'package:ednevnik_admin/screens/department_subject_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ednevnik_admin/models/department.dart';
@@ -46,11 +47,12 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
           _schools = schools.result;
           if (_schools.isNotEmpty) {
             _selectedSchool = _schools.first;
-            _fetchDepartments(); 
+            _fetchDepartments();
           }
         });
       }
     } catch (e) {
+      // Handle error
     }
   }
 
@@ -177,7 +179,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
           ),
           SizedBox(width: 20),
           ElevatedButton(
-            onPressed: () async { await _fetchDepartments;},
+            onPressed: () async { await _fetchDepartments();},
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: Colors.blue,
@@ -228,8 +230,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
                 ? FutureBuilder<User>(
                     future: _userProvider.getById(e.razrednikID!),
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState ==
-                          ConnectionState.waiting) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
                       } else if (snapshot.hasError) {
                         return Text("Error");
@@ -242,6 +243,24 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
                     },
                   )
                 : Text("N/A"),
+          ),
+          DataCell(
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => DepartmentSubjectDetailScreen(
+                      departmentID: e.odjeljenjeID,
+                    ),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.blue,
+              ),
+              child: Text("Prikaz predmeta"),
+            ),
           ),
           DataCell(
             IconButton(
@@ -277,6 +296,14 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
             label: Expanded(
               child: Text(
                 "Razrednik",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Predmeti",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace eDnevnik.Services.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,19 +40,65 @@ namespace eDnevnik.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Odjeljenje",
+                name: "Predmeti",
                 columns: table => new
                 {
-                    OdjeljenjeID = table.Column<int>(type: "int", nullable: false)
+                    PredmetID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NazivOdjeljenja = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Naziv = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Opis = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StateMachine = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SkolaID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Odjeljenje", x => x.OdjeljenjeID);
+                    table.PrimaryKey("PK_Predmeti", x => x.PredmetID);
                     table.ForeignKey(
-                        name: "FK_Odjeljenje_Skola_SkolaID",
+                        name: "FK_Predmeti_Skola_SkolaID",
+                        column: x => x.SkolaID,
+                        principalTable: "Skola",
+                        principalColumn: "SkolaID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Casovi",
+                columns: table => new
+                {
+                    CasoviID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NazivCasa = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Opis = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GodisnjiPlanProgramID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Casovi", x => x.CasoviID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GodisnjiPlanProgram",
+                columns: table => new
+                {
+                    GodisnjiPlanProgramID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    brojCasova = table.Column<int>(type: "int", nullable: false),
+                    Naziv = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OdjeljenjeID = table.Column<int>(type: "int", nullable: false),
+                    PredmetID = table.Column<int>(type: "int", nullable: false),
+                    SkolaID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GodisnjiPlanProgram", x => x.GodisnjiPlanProgramID);
+                    table.ForeignKey(
+                        name: "FK_GodisnjiPlanProgram_Predmeti_PredmetID",
+                        column: x => x.PredmetID,
+                        principalTable: "Predmeti",
+                        principalColumn: "PredmetID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_GodisnjiPlanProgram_Skola_SkolaID",
                         column: x => x.SkolaID,
                         principalTable: "Skola",
                         principalColumn: "SkolaID",
@@ -79,33 +125,6 @@ namespace eDnevnik.Services.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Korisnici", x => x.KorisnikID);
-                    table.ForeignKey(
-                        name: "FK_Korisnici_Odjeljenje_OdjeljenjeID",
-                        column: x => x.OdjeljenjeID,
-                        principalTable: "Odjeljenje",
-                        principalColumn: "OdjeljenjeID");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Predmeti",
-                columns: table => new
-                {
-                    PredmetID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Naziv = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Opis = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StateMachine = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OdjeljenjeID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Predmeti", x => x.PredmetID);
-                    table.ForeignKey(
-                        name: "FK_Predmeti_Odjeljenje_OdjeljenjeID",
-                        column: x => x.OdjeljenjeID,
-                        principalTable: "Odjeljenje",
-                        principalColumn: "OdjeljenjeID",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -132,6 +151,60 @@ namespace eDnevnik.Services.Migrations
                         column: x => x.UlogaID,
                         principalTable: "Uloge",
                         principalColumn: "UlogaID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ocjene",
+                columns: table => new
+                {
+                    OcjenaID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VrijednostOcjene = table.Column<int>(type: "int", nullable: false),
+                    Datum = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    KorisnikID = table.Column<int>(type: "int", nullable: false),
+                    PredmetID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ocjene", x => x.OcjenaID);
+                    table.ForeignKey(
+                        name: "FK_Ocjene_Korisnici_KorisnikID",
+                        column: x => x.KorisnikID,
+                        principalTable: "Korisnici",
+                        principalColumn: "KorisnikID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Ocjene_Predmeti_PredmetID",
+                        column: x => x.PredmetID,
+                        principalTable: "Predmeti",
+                        principalColumn: "PredmetID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Odjeljenje",
+                columns: table => new
+                {
+                    OdjeljenjeID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NazivOdjeljenja = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SkolaID = table.Column<int>(type: "int", nullable: false),
+                    RazrednikID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Odjeljenje", x => x.OdjeljenjeID);
+                    table.ForeignKey(
+                        name: "FK_Odjeljenje_Korisnici_RazrednikID",
+                        column: x => x.RazrednikID,
+                        principalTable: "Korisnici",
+                        principalColumn: "KorisnikID");
+                    table.ForeignKey(
+                        name: "FK_Odjeljenje_Skola_SkolaID",
+                        column: x => x.SkolaID,
+                        principalTable: "Skola",
+                        principalColumn: "SkolaID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -172,87 +245,29 @@ namespace eDnevnik.Services.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GodisnjiPlanProgram",
+                name: "OdjeljenjePredmet",
                 columns: table => new
                 {
-                    GodisnjiPlanProgramID = table.Column<int>(type: "int", nullable: false)
+                    OdjeljenjePredmetID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    brojCasova = table.Column<int>(type: "int", nullable: false),
-                    Naziv = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OdjeljenjeID = table.Column<int>(type: "int", nullable: false),
                     PredmetID = table.Column<int>(type: "int", nullable: false),
-                    SkolaID = table.Column<int>(type: "int", nullable: false)
+                    OdjeljenjeID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GodisnjiPlanProgram", x => x.GodisnjiPlanProgramID);
+                    table.PrimaryKey("PK_OdjeljenjePredmet", x => x.OdjeljenjePredmetID);
                     table.ForeignKey(
-                        name: "FK_GodisnjiPlanProgram_Odjeljenje_OdjeljenjeID",
+                        name: "FK_OdjeljenjePredmet_Odjeljenje_OdjeljenjeID",
                         column: x => x.OdjeljenjeID,
                         principalTable: "Odjeljenje",
                         principalColumn: "OdjeljenjeID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_GodisnjiPlanProgram_Predmeti_PredmetID",
+                        name: "FK_OdjeljenjePredmet_Predmeti_PredmetID",
                         column: x => x.PredmetID,
                         principalTable: "Predmeti",
                         principalColumn: "PredmetID",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_GodisnjiPlanProgram_Skola_SkolaID",
-                        column: x => x.SkolaID,
-                        principalTable: "Skola",
-                        principalColumn: "SkolaID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ocjene",
-                columns: table => new
-                {
-                    OcjenaID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    VrijednostOcjene = table.Column<int>(type: "int", nullable: false),
-                    Datum = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    KorisnikID = table.Column<int>(type: "int", nullable: false),
-                    PredmetID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ocjene", x => x.OcjenaID);
-                    table.ForeignKey(
-                        name: "FK_Ocjene_Korisnici_KorisnikID",
-                        column: x => x.KorisnikID,
-                        principalTable: "Korisnici",
-                        principalColumn: "KorisnikID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Ocjene_Predmeti_PredmetID",
-                        column: x => x.PredmetID,
-                        principalTable: "Predmeti",
-                        principalColumn: "PredmetID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Casovi",
-                columns: table => new
-                {
-                    CasoviID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NazivCasa = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Opis = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GodisnjiPlanProgramID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Casovi", x => x.CasoviID);
-                    table.ForeignKey(
-                        name: "FK_Casovi_GodisnjiPlanProgram_GodisnjiPlanProgramID",
-                        column: x => x.GodisnjiPlanProgramID,
-                        principalTable: "GodisnjiPlanProgram",
-                        principalColumn: "GodisnjiPlanProgramID",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -286,11 +301,20 @@ namespace eDnevnik.Services.Migrations
 
             migrationBuilder.InsertData(
                 table: "Odjeljenje",
-                columns: new[] { "OdjeljenjeID", "NazivOdjeljenja", "SkolaID" },
+                columns: new[] { "OdjeljenjeID", "NazivOdjeljenja", "RazrednikID", "SkolaID" },
                 values: new object[,]
                 {
-                    { 1, "1A", 1 },
-                    { 2, "2A", 1 }
+                    { 1, "1A", 1, 1 },
+                    { 2, "2A", 4, 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Predmeti",
+                columns: new[] { "PredmetID", "Naziv", "Opis", "SkolaID", "StateMachine" },
+                values: new object[,]
+                {
+                    { 1, "Matematika", "Sabiranje, oduzimanje, množenje, dijeljenje", 1, "draft" },
+                    { 2, "Biologija", "Biljke", 2, "draft" }
                 });
 
             migrationBuilder.InsertData(
@@ -298,31 +322,48 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "KorisnikUlogaID", "DatumIzmjene", "KorisnikID", "UlogaID" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 8, 8, 15, 35, 19, 482, DateTimeKind.Local).AddTicks(796), 1, 1 },
-                    { 2, new DateTime(2024, 8, 8, 15, 35, 19, 482, DateTimeKind.Local).AddTicks(847), 2, 2 },
-                    { 3, new DateTime(2024, 8, 8, 15, 35, 19, 482, DateTimeKind.Local).AddTicks(851), 3, 2 },
-                    { 4, new DateTime(2024, 8, 8, 15, 35, 19, 482, DateTimeKind.Local).AddTicks(854), 4, 1 }
+                    { 1, new DateTime(2024, 8, 15, 11, 26, 55, 344, DateTimeKind.Local).AddTicks(7831), 1, 1 },
+                    { 2, new DateTime(2024, 8, 15, 11, 26, 55, 344, DateTimeKind.Local).AddTicks(7874), 2, 2 },
+                    { 3, new DateTime(2024, 8, 15, 11, 26, 55, 344, DateTimeKind.Local).AddTicks(7877), 3, 2 },
+                    { 4, new DateTime(2024, 8, 15, 11, 26, 55, 344, DateTimeKind.Local).AddTicks(7880), 4, 1 }
                 });
 
             migrationBuilder.InsertData(
-                table: "Predmeti",
-                columns: new[] { "PredmetID", "Naziv", "OdjeljenjeID", "Opis", "StateMachine" },
-                values: new object[] { 1, "Matematika", 1, "Sabiranje, oduzimanje, množenje, dijeljenje", null });
-
-            migrationBuilder.InsertData(
-                table: "Predmeti",
-                columns: new[] { "PredmetID", "Naziv", "OdjeljenjeID", "Opis", "StateMachine" },
-                values: new object[] { 2, "Biologija", 1, "Biljke", null });
-
-            migrationBuilder.InsertData(
-                table: "Ocjene",
-                columns: new[] { "OcjenaID", "Datum", "KorisnikID", "PredmetID", "VrijednostOcjene" },
-                values: new object[] { 1, new DateTime(2024, 8, 8, 15, 35, 19, 482, DateTimeKind.Local).AddTicks(908), 2, 1, 5 });
+                table: "GodisnjiPlanProgram",
+                columns: new[] { "GodisnjiPlanProgramID", "Naziv", "OdjeljenjeID", "PredmetID", "SkolaID", "brojCasova" },
+                values: new object[,]
+                {
+                    { 1, "Plan 1", 1, 1, 1, 5 },
+                    { 2, "Plan 2", 2, 2, 2, 7 }
+                });
 
             migrationBuilder.InsertData(
                 table: "Ocjene",
                 columns: new[] { "OcjenaID", "Datum", "KorisnikID", "PredmetID", "VrijednostOcjene" },
-                values: new object[] { 2, new DateTime(2024, 8, 8, 15, 35, 19, 482, DateTimeKind.Local).AddTicks(913), 2, 2, 4 });
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 8, 15, 11, 26, 55, 344, DateTimeKind.Local).AddTicks(7921), 2, 1, 5 },
+                    { 2, new DateTime(2024, 8, 15, 11, 26, 55, 344, DateTimeKind.Local).AddTicks(7925), 2, 2, 4 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Casovi",
+                columns: new[] { "CasoviID", "GodisnjiPlanProgramID", "NazivCasa", "Opis" },
+                values: new object[,]
+                {
+                    { 1, 1, "Cas 1", "Opis Casa 1" },
+                    { 2, 1, "Cas 2", "Opis Casa 2" },
+                    { 3, 1, "Cas 3", "Opis Casa 3" },
+                    { 4, 1, "Cas 4", "Opis Casa 4" },
+                    { 5, 1, "Cas 5", "Opis Casa 5" },
+                    { 6, 2, "Cas 1", "Opis Casa 6" },
+                    { 7, 2, "Cas 2", "Opis Casa 7" },
+                    { 8, 2, "Cas 3", "Opis Casa 8" },
+                    { 9, 2, "Cas 4", "Opis Casa 9" },
+                    { 10, 2, "Cas 5", "Opis Casa 10" },
+                    { 11, 2, "Cas 6", "Opis Casa 11" },
+                    { 12, 2, "Cas 7", "Opis Casa 12" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Casovi_GodisnjiPlanProgramID",
@@ -370,9 +411,24 @@ namespace eDnevnik.Services.Migrations
                 column: "PredmetID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Odjeljenje_RazrednikID",
+                table: "Odjeljenje",
+                column: "RazrednikID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Odjeljenje_SkolaID",
                 table: "Odjeljenje",
                 column: "SkolaID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OdjeljenjePredmet_OdjeljenjeID",
+                table: "OdjeljenjePredmet",
+                column: "OdjeljenjeID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OdjeljenjePredmet_PredmetID",
+                table: "OdjeljenjePredmet",
+                column: "PredmetID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Poruke_ProfesorID",
@@ -390,13 +446,40 @@ namespace eDnevnik.Services.Migrations
                 column: "UcenikID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Predmeti_OdjeljenjeID",
+                name: "IX_Predmeti_SkolaID",
                 table: "Predmeti",
-                column: "OdjeljenjeID");
+                column: "SkolaID");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Casovi_GodisnjiPlanProgram_GodisnjiPlanProgramID",
+                table: "Casovi",
+                column: "GodisnjiPlanProgramID",
+                principalTable: "GodisnjiPlanProgram",
+                principalColumn: "GodisnjiPlanProgramID",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_GodisnjiPlanProgram_Odjeljenje_OdjeljenjeID",
+                table: "GodisnjiPlanProgram",
+                column: "OdjeljenjeID",
+                principalTable: "Odjeljenje",
+                principalColumn: "OdjeljenjeID",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Korisnici_Odjeljenje_OdjeljenjeID",
+                table: "Korisnici",
+                column: "OdjeljenjeID",
+                principalTable: "Odjeljenje",
+                principalColumn: "OdjeljenjeID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Korisnici_Odjeljenje_OdjeljenjeID",
+                table: "Korisnici");
+
             migrationBuilder.DropTable(
                 name: "Casovi");
 
@@ -405,6 +488,9 @@ namespace eDnevnik.Services.Migrations
 
             migrationBuilder.DropTable(
                 name: "Ocjene");
+
+            migrationBuilder.DropTable(
+                name: "OdjeljenjePredmet");
 
             migrationBuilder.DropTable(
                 name: "Poruke");
@@ -416,13 +502,13 @@ namespace eDnevnik.Services.Migrations
                 name: "Uloge");
 
             migrationBuilder.DropTable(
-                name: "Korisnici");
-
-            migrationBuilder.DropTable(
                 name: "Predmeti");
 
             migrationBuilder.DropTable(
                 name: "Odjeljenje");
+
+            migrationBuilder.DropTable(
+                name: "Korisnici");
 
             migrationBuilder.DropTable(
                 name: "Skola");
