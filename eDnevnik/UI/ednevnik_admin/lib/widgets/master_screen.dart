@@ -5,6 +5,7 @@ import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/screens/department_screen.dart';
 import 'package:ednevnik_admin/screens/help_support_screen.dart';
 import 'package:ednevnik_admin/screens/messages_screen.dart';
+import 'package:ednevnik_admin/screens/student_screen.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
 import 'package:ednevnik_admin/screens/user_profile_screen.dart';
@@ -280,6 +281,15 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => DepartmentDetailScreen(),
+                        ));
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.person),
+                      title: Text("Učenici"),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => StudentDetailScreen(),
                         ));
                       },
                     ),

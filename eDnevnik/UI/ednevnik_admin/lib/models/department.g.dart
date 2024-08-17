@@ -11,6 +11,9 @@ Department _$DepartmentFromJson(Map<String, dynamic> json) => Department(
       json['nazivOdjeljenja'] as String?,
       (json['razrednikID'] as num?)?.toInt(),
       (json['skolaID'] as num?)?.toInt(),
+      (json['ucenici'] as List<dynamic>?)
+          ?.map((e) => User.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$DepartmentToJson(Department instance) =>
@@ -19,4 +22,5 @@ Map<String, dynamic> _$DepartmentToJson(Department instance) =>
       'nazivOdjeljenja': instance.nazivOdjeljenja,
       'razrednikID': instance.razrednikID,
       'skolaID': instance.skolaID,
+      'ucenici': instance.ucenici,
     };

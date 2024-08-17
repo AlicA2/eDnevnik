@@ -21,6 +21,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       (json['uloge'] as List<dynamic>?)
           ?.map((e) => Roles.fromJson(e as Map<String, dynamic>))
           .toList(),
+      (json['odjeljenjeID'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -32,6 +33,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'stateMachine': instance.stateMachine,
       'korisnickoIme': instance.korisnickoIme,
       'lozinka': instance.lozinka,
+      'odjeljenjeID': instance.odjeljenjeID,
       'korisniciUloge': instance.korisniciUloge,
       'uloge': instance.uloge,
     };

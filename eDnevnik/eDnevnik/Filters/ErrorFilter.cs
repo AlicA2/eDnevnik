@@ -10,28 +10,28 @@ namespace eDnevnik.Filters
     {
         public override void OnException(ExceptionContext context)
         {
-            //if (context.Exception is UserException userException)
-            //{
-            //    context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            //    context.Result = new JsonResult(new
-            //    {
-            //        errors = new
-            //        {
-            //            message = userException.Message
-            //        }
-            //    });
-            //}
-            //else
-            //{
-            //    context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            //    context.Result = new JsonResult(new
-            //    {
-            //        errors = new
-            //        {
-            //            message = "Server side error"
-            //        }
-            //    });
-            //}
+            if (context.Exception is UserException userException)
+            {
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Result = new JsonResult(new
+                {
+                    errors = new
+                    {
+                        message = userException.Message
+                    }
+                });
+            }
+            else
+            {
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Result = new JsonResult(new
+                {
+                    errors = new
+                    {
+                        message = "Server side error"
+                    }
+                });
+            }
         }
     }
 }

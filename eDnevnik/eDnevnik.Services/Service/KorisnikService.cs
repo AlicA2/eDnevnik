@@ -32,6 +32,14 @@ namespace eDnevnik.Services.Service
             {
                 query = query.Where(x => x.Ime.Contains(search.Ime));
             }
+            if (search?.UlogaID.HasValue == true)
+            {
+                query = query.Where(x => x.KorisniciUloge.Any(ku => ku.UlogaID == search.UlogaID.Value));
+            }
+            if (search.OdjeljenjeID.HasValue)
+            {
+                query = query.Where(x => x.OdjeljenjeID == search.OdjeljenjeID.Value);
+            }
 
             return base.AddFilter(query, search);
         }
@@ -92,41 +100,6 @@ namespace eDnevnik.Services.Service
             return _mapper.Map<Model.Models.Korisnik>(entity);
 
         }
-
-        //public override async Task<Model.Models.Korisnik> Insert(KorisniciInsertRequest insert)
-        //{
-        //    if (insert.Password != insert.PasswordPotvrda)
-        //        throw new Exception("Passwords do not match.");
-
-        //    var (hash, salt) = PasswordHelper.CreatePasswordHash(insert.Password);
-
-        //    var entity = new Korisnik
-        //    {
-        //        Ime = insert.Ime,
-        //        Prezime = insert.Prezime,
-        //        Email = insert.Email,
-        //        Telefon = insert.Telefon,
-        //        KorisnickoIme = insert.KorisnickoIme,
-        //        Status = insert.Status,
-        //        StateMachine = "initial",
-        //        LozinkaHash = hash,
-        //        LozinkaSalt = salt
-        //    };
-
-        //    _context.Korisnici.Add(entity);
-        //    await _context.SaveChangesAsync();
-
-        //    var model = _mapper.Map<Model.Models.Korisnik>(entity);
-
-        //    return model;
-        //}
-
-        //public override async Task<Model.Models.Korisnik> Update(int id, KorisniciUpdateRequest update)
-        //{
-        //    var entity = await _context.Korisnici.FindAsync(id);
-        //    var state = _baseState.CreateState(entity.StateMachine);
-        //    return await state.Update(id, update);
-        //}
 
         public async Task<bool> VerifyOldPassword(int id, string oldPassword)
         {

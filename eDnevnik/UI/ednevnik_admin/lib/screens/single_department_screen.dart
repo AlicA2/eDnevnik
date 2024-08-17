@@ -5,6 +5,7 @@ import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
+import 'package:ednevnik_admin/utils/department_delete_custom_exception.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -255,47 +256,54 @@ class _SingleDepartmentListScreenState
   }
 
   Future<void> _confirmDelete() async {
-    bool? confirmDelete = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Potvrda brisanja'),
-        content: Text('Da li ste sigurni da želite da obrišete ovo odjeljenje?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text('Odustani'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text('Obriši'),
-          ),
-        ],
-      ),
-    );
+  bool? confirmDelete = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Potvrda brisanja'),
+      content: Text('Da li ste sigurni da želite da obrišete ovo odjeljenje?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: Text('Odustani'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: Text('Obriši'),
+        ),
+      ],
+    ),
+  );
 
-    if (confirmDelete == true) {
-      try {
-        if (widget.department != null && widget.department!.odjeljenjeID != null) {
-          await _departmentProvider.delete(widget.department!.odjeljenjeID!);
-          Navigator.pop(context, true);
-        }
-      } catch (e) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text("Greška"),
-            content: Text(e.toString()),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text("OK"),
-              ),
-            ],
-          ),
-        );
+  if (confirmDelete == true) {
+    try {
+      if (widget.department != null && widget.department!.odjeljenjeID != null) {
+        await _departmentProvider.delete(widget.department!.odjeljenjeID!);
+        Navigator.pop(context, true);
       }
+    } on DepartmentDeleteException catch (e) {
+      _showErrorDialog(e.message);
+    } catch (e) {
+      _showErrorDialog('Ne možete obrisati odjeljenje koje ima predmete!');
     }
   }
+}
+
+void _showErrorDialog(String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) => AlertDialog(
+      title: Text("Greška"),
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text("OK"),
+        ),
+      ],
+    ),
+  );
+}
+
 
 
   Widget _buildActionButtons() {
@@ -308,7 +316,7 @@ class _SingleDepartmentListScreenState
               foregroundColor: Colors.white,
               backgroundColor: Colors.blue,
             ),
-            onPressed: () async { await _confirmDelete;},
+            onPressed: () async { await _confirmDelete();},
             child: Text("Izbriši Odjeljenje"),
           ),
           SizedBox(width: 16.0),

@@ -15,10 +15,11 @@ class User{
  String? stateMachine;
  String? korisnickoIme;
  String? lozinka;
+ int? odjeljenjeID;
 List<UsersRoles>? korisniciUloge;
 List<Roles>? uloge;
 
-User(this.korisnikId,this.ime,this.prezime,this.email,this.telefon,this.stateMachine,this.korisnickoIme,this.lozinka, this.korisniciUloge, this.uloge);
+User(this.korisnikId,this.ime,this.prezime,this.email,this.telefon,this.stateMachine,this.korisnickoIme,this.lozinka, this.korisniciUloge, this.uloge,this.odjeljenjeID);
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
@@ -30,34 +31,3 @@ User(this.korisnikId,this.ime,this.prezime,this.email,this.telefon,this.stateMac
   /// helper method `_$UserToJson`.
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }
-
-
-// {
-//   "result": [
-//     {
-//       "korisnikId": 0,
-//       "ime": "string",
-//       "prezime": "string",
-//       "email": "string",
-//       "telefon": "string",
-//       "stateMachine": "string",
-//       "korisnickoIme": "string",
-//       "lozinkaHash": "string",
-//       "lozinkaSalt": "string",
-//       "korisniciUloge": [
-//         {
-//           "korisnikUlogaID": 0,
-//           "korisnikID": 0,
-//           "ulogaID": 0,
-//           "datumIzmjene": "2024-07-02T11:26:25.619Z",
-//           "uloga": {
-//             "ulogaID": 0,
-//             "naziv": "string",
-//             "opis": "string"
-//           }
-//         }
-//       ]
-//     }
-//   ],
-//   "count": 0
-// }

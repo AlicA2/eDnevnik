@@ -1,6 +1,7 @@
 import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/screens/department_subject_screen.dart';
+import 'package:ednevnik_admin/screens/student_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ednevnik_admin/models/department.dart';
@@ -52,7 +53,6 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
         });
       }
     } catch (e) {
-      // Handle error
     }
   }
 
@@ -263,6 +263,24 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
             ),
           ),
           DataCell(
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => StudentDetailScreen(
+                    departmentID: e.odjeljenjeID,
+                  ),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blue,
+            ),
+              child: Text("Prikaz učenika"),
+            ),
+          ),
+          DataCell(
             IconButton(
               icon: Icon(Icons.edit),
               onPressed: () => _navigateToAddEditDepartment(e),
@@ -304,6 +322,14 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
             label: Expanded(
               child: Text(
                 "Predmeti",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Učenici",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),

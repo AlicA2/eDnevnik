@@ -11,5 +11,7 @@ namespace eDnevnik.Model.SearchObjects
         public string? Ime { get; set; }
         public string? FTS { get; set; }
         public bool? isUlogeIncluded { get; set; }
+        public int? OdjeljenjeID { get; set; }
+        public int? UlogaID { get; set; }
     }
 }

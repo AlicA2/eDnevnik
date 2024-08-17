@@ -19,5 +19,7 @@ namespace eDnevnik.Services.Database
         public string LozinkaSalt { get; set; } = null!;
         public bool? Status { get; set; }
         public virtual ICollection<KorisniciUloge> KorisniciUloge { get; } = new List<KorisniciUloge>();
+        public int? OdjeljenjeID { get; set; }
+        public virtual Odjeljenje Odjeljenje { get; set; }
     }
 }

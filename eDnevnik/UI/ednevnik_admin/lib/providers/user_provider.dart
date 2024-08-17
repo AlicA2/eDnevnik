@@ -15,7 +15,7 @@ class UserProvider extends BaseProvider<User> {
   UserProvider() : super("Korisnik");
 
   User? _loggedInUser;
-  
+
   User? get loggedInUser => _loggedInUser;
 
   @override
@@ -62,7 +62,7 @@ class UserProvider extends BaseProvider<User> {
   Future<void> login(String username, String password) async {
     Authorization.username = username;
     Authorization.password = password;
-    
+
     int userId = await getLoged(username, password);
     _loggedInUser = await getById(userId);
     notifyListeners();
@@ -87,4 +87,5 @@ class UserProvider extends BaseProvider<User> {
           "Unexpected error occurred while updating password and username");
     }
   }
+
 }
