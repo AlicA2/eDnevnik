@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eDnevnik.Model.Models
+namespace eDnevnik.Model.Requests
 {
-    public class Ocjene
+    public class OcjeneInsertRequest
     {
-        public int OcjenaID { get; set; }
         public int VrijednostOcjene { get; set; }
         public DateTime Datum { get; set; }
         public int KorisnikID { get; set; }

@@ -42,40 +42,55 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
   }
 
   Future<void> _fetchSchools() async {
-    try {
-      var schools = await _schoolProvider.get();
-      if (mounted) {
-        setState(() {
-          _schools = schools.result;
-          _fetchDepartmentsAndInitialize();
-        });
-      }
-    } catch (e) {
+  try {
+    var schools = await _schoolProvider.get();
+    if (mounted) {
       setState(() {
-        _isLoading = false;
+        _schools = schools.result;
+
+        if (_schools.isNotEmpty) {
+          _selectedSchool = _schools.first;
+          _fetchDepartmentsAndInitialize(schoolID: _selectedSchool!.skolaID);
+        } else {
+          _isLoading = false; 
+        }
       });
     }
+  } catch (e) {
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
 
-  Future<void> _fetchDepartmentsAndInitialize() async {
+
+  Future<void> _fetchDepartmentsAndInitialize({int? schoolID}) async {
     try {
-      var departments = await _departmentProvider.getDepartmentsWithStudents();
+      var allDepartments =
+          await _departmentProvider.getDepartmentsWithStudents();
+      List<Department> filteredDepartments = schoolID != null
+          ? allDepartments.where((dept) => dept.skolaID == schoolID).toList()
+          : allDepartments;
+
       setState(() {
-        _departments = departments;
+        _departments = filteredDepartments;
 
         if (widget.departmentID != null) {
           _selectedDepartment = _departments.firstWhere(
             (dept) => dept.odjeljenjeID == widget.departmentID,
-            orElse: () => _departments.first,
+            orElse: () => _departments.isNotEmpty
+                ? _departments.first
+                : Department(0, 'Default', 0, 0),
           );
           _selectedSchool = _schools.firstWhere(
             (school) => school.skolaID == _selectedDepartment?.skolaID,
-            orElse: () => _schools.first,
+            orElse: () => _schools.isNotEmpty ? _schools.first : School(),
           );
           _students = _selectedDepartment?.ucenici ?? [];
         } else {
-          _selectedSchool = _schools.isNotEmpty ? _schools.first : null;
-          _selectedDepartment = _departments.isNotEmpty ? _departments.first : null;
+          _selectedDepartment = _departments.isNotEmpty
+              ? _departments.first
+              : Department(0, 'Default', 0, 0);
           _students = _selectedDepartment?.ucenici ?? [];
         }
         _isLoading = false;
@@ -164,7 +179,8 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
           _selectedDepartment = null;
           _students = [];
         });
-        _fetchDepartmentsAndInitialize();
+
+        _fetchDepartmentsAndInitialize(schoolID: newValue?.skolaID);
       },
     );
   }
