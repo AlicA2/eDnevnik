@@ -22,15 +22,3 @@ class Classes{
   Map<String, dynamic> toJson() => _$ClassesToJson(this);
 
 }
-
-
-
-  // "result": [
-  //   {
-  //     "casoviID": 1,
-  //     "nazivCasa": "Metologija strucnog rada",
-  //     "opis": "seminarski",
-  //     "godisnjiPlanProgramID": 1
-  //   }
-  // ],
-  // "count": 1

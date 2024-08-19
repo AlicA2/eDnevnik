@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using eDnevnik.Model;
 using eDnevnik.Model.Requests;
 using eDnevnik.Model.SearchObjects;
 using eDnevnik.Services.Database;
 using eDnevnik.Services.IServices;
 using eDnevnik.Services.KorisnikStateMachine;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,14 +42,14 @@ namespace eDnevnik.Services.Service
             return base.AddFilter(query, search);
         }
 
-        //public override IQueryable<Korisnik> AddInclude(IQueryable<Korisnik> query, PredmetSearchObject? search = null)
-        //{
-        //    if (search?.isUlogeIncluded == true)
-        //    {
-        //        query = query.Include("KorisniciUloge.Uloga");
-        //    }
-        //    return base.AddInclude(query, search);
-        //}
+        public override IQueryable<Predmet> AddInclude(IQueryable<Predmet> query, PredmetSearchObject? search = null)
+        {
+            if (search?.isOcjeneIncluded == true)
+            {
+                query = query.Include(p => p.Ocjene);
+            }
+            return base.AddInclude(query, search);
+        }
 
         public override async Task<Model.Models.Predmet> Insert(PredmetInsertRequest insert)
         {
@@ -80,6 +82,36 @@ namespace eDnevnik.Services.Service
             var entity = await _context.Predmeti.FindAsync(id);
             var state = _baseState.CreateState(entity?.StateMachine ?? "initial");
             return await state.AllowedActions();
+        }
+
+        public async Task<bool> AddOcjena(int predmetID, OcjeneInsertRequest request)
+        {
+            var predmet = await _context.Predmeti
+                .Include(p => p.Ocjene)
+                .FirstOrDefaultAsync(p => p.PredmetID == predmetID);
+
+            if (predmet == null)
+            {
+                throw new ArgumentException("Predmet not found.");
+            }
+
+            var ocjena = new Ocjene
+            {
+                KorisnikID = request.KorisnikID,
+                PredmetID = predmetID,
+                VrijednostOcjene = request.VrijednostOcjene,
+                Datum = request.Datum
+            };
+
+            if(ocjena.VrijednostOcjene<1||ocjena.VrijednostOcjene>5)
+            {
+                throw new UserException("Ocjena koju ste unjeli nije validna! Možete davati ocjene samo od 1 do 5");
+            }
+            predmet.Ocjene.Add(ocjena);
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

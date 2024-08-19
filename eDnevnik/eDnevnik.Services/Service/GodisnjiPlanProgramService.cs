@@ -19,6 +19,14 @@ namespace eDnevnik.Services.Service
         {
 
         }
+        public override IQueryable<GodisnjiPlanProgram> AddInclude(IQueryable<GodisnjiPlanProgram> query, GodisnjiPlanProgramSearchObject? search = null)
+        {
+            if (search?.isCasoviIncluded == true)
+            {
+                query = query.Include(p => p.Casovi);
+            }
+            return base.AddInclude(query, search);
+        }
         public override IQueryable<GodisnjiPlanProgram> AddFilter(IQueryable<GodisnjiPlanProgram> query, GodisnjiPlanProgramSearchObject? search = null)
         {
             if (search != null)

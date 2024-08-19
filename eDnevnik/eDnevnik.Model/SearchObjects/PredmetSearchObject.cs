@@ -11,5 +11,7 @@ namespace eDnevnik.Model.SearchObjects
         public string? Naziv { get; set; }
         public string? FTS { get; set; }
         public int? SkolaID { get; set; }
+        public bool? isOcjeneIncluded { get; set; }
+
     }
 }

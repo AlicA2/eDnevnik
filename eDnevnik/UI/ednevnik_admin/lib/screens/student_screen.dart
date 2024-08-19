@@ -1,5 +1,6 @@
 import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
+import 'package:ednevnik_admin/screens/grade_screen.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -210,40 +211,67 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
   }
 
   Widget _buildDataListView() {
-    return SingleChildScrollView(
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Ime i prezime učenika",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
+  return SingleChildScrollView(
+    child: DataTable(
+      columns: const [
+        DataColumn(
+          label: Expanded(
+            child: Text(
+              "Ime i prezime učenika",
+              style: TextStyle(fontStyle: FontStyle.italic),
             ),
           ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Odjeljenje",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text(
+              "Odjeljenje",
+              style: TextStyle(fontStyle: FontStyle.italic),
             ),
           ),
-        ],
-        rows: _students.map((student) {
-          var department = _departments.firstWhere(
-            (dept) => dept.ucenici?.contains(student) ?? false,
-            orElse: () => Department(null, 'Unknown', null, null),
-          );
+        ),
+        DataColumn(
+          label: Expanded(
+            child: Text(
+              "Prikaži ocjene za učenika",
+              style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ),
+        ),
+      ],
+      rows: _students.map((student) {
+        var department = _departments.firstWhere(
+          (dept) => dept.ucenici?.contains(student) ?? false,
+          orElse: () => Department(null, 'Unknown', null, null),
+        );
 
-          return DataRow(
-            cells: [
-              DataCell(Text("${student.ime} ${student.prezime}")),
-              DataCell(Text(department.nazivOdjeljenja ?? "N/A")),
-            ],
-          );
-        }).toList(),
-      ),
-    );
-  }
+        return DataRow(
+          cells: [
+            DataCell(Text("${student.ime} ${student.prezime}")),
+            DataCell(Text(department.nazivOdjeljenja ?? "N/A")),
+            DataCell(
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => GradeDetailScreen(
+                        userID: student.korisnikId,
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue,
+                ),
+                child: Text("Prikaz ocjena"),
+              ),
+            ),
+          ],
+        );
+      }).toList(),
+    ),
+  );
+}
+
 }
