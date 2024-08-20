@@ -1,3 +1,4 @@
+import 'package:ednevnik_admin/screens/grade_edit_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ednevnik_admin/models/grade.dart';
@@ -392,17 +393,17 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
             DataCell(Text(_getGradeValues(subject))),
             DataCell(
               IconButton(
-                icon: Icon(Icons.info_outline),
+                icon: Icon(Icons.edit),
                 onPressed: () {
-                  _showGradeDetailsDialog(context, subject, grades);
+                  _showEditGradeDialog(context, grades);
                 },
               ),
             ),
             DataCell(
               IconButton(
-                icon: Icon(Icons.edit),
+                icon: Icon(Icons.info_outline),
                 onPressed: () {
-                  _showEditGradeDialog(context, grades.first);
+                  _showGradeDetailsDialog(context, subject, grades);
                 },
               ),
             ),
@@ -441,7 +442,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
           DataColumn(
             label: Expanded(
               child: Text(
-                "",
+                "Uredi ocjene",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
@@ -449,7 +450,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
           DataColumn(
             label: Expanded(
               child: Text(
-                "Edit",
+                "Info",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
@@ -460,96 +461,17 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
     );
   }
 
-  Future<void> _showEditGradeDialog(BuildContext context, Grade grade) async {
-  int? selectedGradeValue = grade.vrijednostOcjene;
-  Subject? selectedSubject = _subjects[grade.predmetID];
-
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Uredi ocjenu'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              TextFormField(
-                initialValue: _userFullName,
-                enabled: false,
-                decoration: InputDecoration(
-                  labelText: 'Učenik',
-                ),
-              ),
-              SizedBox(height: 16),
-              DropdownButtonFormField<int>(
-                value: selectedGradeValue,
-                items: [1, 2, 3, 4, 5].map((int value) {
-                  return DropdownMenuItem<int>(
-                    value: value,
-                    child: Text(value.toString()),
-                  );
-                }).toList(),
-                onChanged: (int? newValue) {
-                  if (mounted) {
-                    setState(() {
-                      selectedGradeValue = newValue!;
-                    });
-                  }
-                },
-                decoration: InputDecoration(
-                  labelText: 'Ocjena',
-                ),
-              ),
-              SizedBox(height: 16),
-              Text("Datum: ${grade.datum?.toLocal().toString().split(' ')[0] ?? 'N/A'}"),
-              SizedBox(height: 16),
-              Text("PredmetID: ${grade.predmetID}"),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Obriši'),
-            onPressed: () async {
-              try {
-                await _gradesProvider.delete(grade.ocjenaID!);
-                Navigator.of(context).pop();
-                _initializeData();
-              } catch (e) {
-                print("Error deleting grade: $e");
-              }
-            },
-          ),
-          TextButton(
-            child: Text('Odustani'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: Text('Spremi'),
-            onPressed: () async {
-              try {
-                Grade updatedGrade = Grade(
-                  grade.ocjenaID,
-                  selectedGradeValue,
-                  grade.datum,
-                  grade.korisnikID,
-                  grade.predmetID,
-                );
-
-                await _gradesProvider.Update(grade.ocjenaID!, updatedGrade);
-                Navigator.of(context).pop();
-                _initializeData();
-              } catch (e) {
-                print("Error updating grade: $e");
-              }
-            },
-          ),
-        ],
-      );
-    },
+void _showEditGradeDialog(BuildContext context, List<Grade> grades) async {
+  bool? dataChanged = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => EditGradesScreen(grades: grades),
+    ),
   );
+
+  if (dataChanged == true) {
+    _initializeData();
+  }
 }
 
 
