@@ -12,6 +12,5 @@ namespace eDnevnik.Model.Requests
         public DateTime Datum { get; set; }
         public int KorisnikID { get; set; }
         public int PredmetID { get; set; }
-        public int ProfesorID { get; set; }
     }
 }

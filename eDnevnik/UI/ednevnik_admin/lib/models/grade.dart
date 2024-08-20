@@ -9,10 +9,9 @@ class Grade {
   DateTime? datum;
   int? korisnikID;
   int? predmetID;
-  int? profesorID;
 
   Grade(this.ocjenaID, this.vrijednostOcjene, this.datum, this.korisnikID,
-      this.predmetID, this.profesorID);
+      this.predmetID);
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

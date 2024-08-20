@@ -38,6 +38,10 @@ namespace eDnevnik.Services.Service
                 {
                     query = query.Where(x => x.SkolaID == search.SkolaID.Value);
                 }
+                if (search.PredmetID.HasValue)
+                {
+                    query = query.Where(x => x.PredmetID == search.PredmetID.Value);
+                }
             }
             return base.AddFilter(query, search);
         }
@@ -108,10 +112,34 @@ namespace eDnevnik.Services.Service
                 throw new UserException("Ocjena koju ste unjeli nije validna! Možete davati ocjene samo od 1 do 5");
             }
             predmet.Ocjene.Add(ocjena);
+            predmet.ZakljucnaOcjena = await CalculateZakljucnaOcjena(predmetID);
 
             await _context.SaveChangesAsync();
 
             return true;
         }
+        
+        public async Task<decimal?> CalculateZakljucnaOcjena(int predmetID)
+        {
+            var predmet = await _context.Predmeti
+                .Include(p => p.Ocjene)
+                .FirstOrDefaultAsync(p => p.PredmetID == predmetID);
+
+            if (predmet == null || !predmet.Ocjene.Any())
+            {
+                return null;
+            }
+
+            var vrijednostiOcjena = predmet.Ocjene.Select(o => o.VrijednostOcjene).ToList();
+
+            decimal sum = vrijednostiOcjena.Sum();
+            int count = vrijednostiOcjena.Count;
+
+            decimal average = count > 0 ? sum / count : 0;
+
+            return Math.Round(average, 2);
+        }
+
+
     }
 }

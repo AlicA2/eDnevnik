@@ -13,6 +13,7 @@ namespace eDnevnik.Model.Models
         public string? Opis { get; set; }
         public int? SkolaID { get; set; }
         public string? StateMachine { get; set; }
+        public decimal? ZakljucnaOcjena { get; set; }
         public virtual ICollection<Ocjene> Ocjene { get; } = new List<Ocjene>();
 
 

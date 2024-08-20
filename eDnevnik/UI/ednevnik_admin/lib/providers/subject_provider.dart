@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ednevnik_admin/models/grade.dart';
 import 'package:ednevnik_admin/models/result.dart';
 import 'package:ednevnik_admin/models/subject.dart';
 import 'package:ednevnik_admin/providers/base_provider.dart';
@@ -17,6 +18,24 @@ class SubjectProvider extends BaseProvider<Subject> {
   Subject fromJson(data) {
     // TODO: implement fromJson
     return Subject.fromJson(data);
+  }
+  Future<bool> addOcjena(int predmetID, Grade grade) async {
+    var url = "$_baseUrl$_endpoint/AddOcjena?predmetID=$predmetID";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+    var body = jsonEncode({
+      "korisnikID": grade.korisnikID,
+      "vrijednostOcjene": grade.vrijednostOcjene,
+      "datum": grade.datum?.toIso8601String()
+    });
+
+    var response = await http.post(uri, headers: headers, body: body);
+
+    if (isValidResponse(response)) {
+      return true;
+    } else {
+      throw Exception("Error while adding grade: ${response.body}");
+    }
   }
 
   Future<Subject> getById(int id) async {

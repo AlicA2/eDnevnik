@@ -9,8 +9,7 @@ namespace eDnevnik.Model.Requests
     public class OcjeneUpdateRequest
     {
         public int VrijednostOcjene { get; set; }
-        public int KorisnikID { get; set; }
         public int PredmetID { get; set; }
-        public int ProfesorID { get; set; }
+        public DateTime Datum { get; set; }
     }
 }
