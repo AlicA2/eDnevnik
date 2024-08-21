@@ -17,7 +17,7 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
   late GradeProvider _gradesProvider;
   final Map<int, int?> _editedGrades = {};
 
-  bool _isDataChanged = false;  // Track if data was changed
+  bool _isDataChanged = false;
 
   @override
   void initState() {
@@ -65,7 +65,7 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
                 FloatingActionButton(
                   heroTag: 'backButton',
                   onPressed: () {
-                    Navigator.pop(context, _isDataChanged);  // Return the flag
+                    Navigator.pop(context, _isDataChanged);
                   },
                   backgroundColor: Colors.blue,
                   child: const Icon(Icons.arrow_back),
@@ -76,7 +76,7 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
                   child: const Icon(Icons.save),
                   onPressed: () async {
                     await _saveEditedGrades();
-                    Navigator.pop(context, true);  // Always return true on save
+                    Navigator.pop(context, true);
                   },
                   backgroundColor: Colors.blue,
                 ),
@@ -142,7 +142,7 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
                 if (mounted) {
                   setState(() {
                     _editedGrades[grade.ocjenaID!] = newValue;
-                    _isDataChanged = true;  // Mark data as changed
+                    _isDataChanged = true;
                   });
                 }
               },
