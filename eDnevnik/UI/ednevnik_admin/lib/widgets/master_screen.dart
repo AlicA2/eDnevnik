@@ -2,6 +2,7 @@ import 'package:ednevnik_admin/main.dart';
 import 'package:ednevnik_admin/models/result.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
+import 'package:ednevnik_admin/screens/calendar_screen.dart';
 import 'package:ednevnik_admin/screens/department_screen.dart';
 import 'package:ednevnik_admin/screens/help_support_screen.dart';
 import 'package:ednevnik_admin/screens/messages_screen.dart';
@@ -290,6 +291,15 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => StudentDetailScreen(),
+                        ));
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.calendar_today),
+                      title: Text("Kalendar"),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => CalendarDetailScreen(),
                         ));
                       },
                     ),
