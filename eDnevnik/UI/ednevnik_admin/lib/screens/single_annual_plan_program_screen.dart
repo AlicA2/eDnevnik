@@ -3,6 +3,7 @@ import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/subject.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
+import 'package:ednevnik_admin/providers/classes_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
@@ -30,6 +31,7 @@ class _SingleAnnualPlanProgramScreenState
   late DepartmentProvider _departmentProvider;
   late SubjectProvider _subjectProvider;
   late SchoolProvider _schoolProvider;
+  late ClassesProvider _classProvider;
 
   Department? _selectedDepartment;
   Subject? _selectedSubject;
@@ -50,6 +52,7 @@ class _SingleAnnualPlanProgramScreenState
     _departmentProvider = context.read<DepartmentProvider>();
     _subjectProvider = context.read<SubjectProvider>();
     _schoolProvider = context.read<SchoolProvider>();
+    _classProvider = context.read<ClassesProvider>();
 
     _fetchSchools();
   }
@@ -255,7 +258,7 @@ Widget build(BuildContext context) {
                             foregroundColor: Colors.white,
                             backgroundColor: Colors.blue,
                           ),
-                          onPressed: () async {await _saveForm;},
+                          onPressed: () async {await _saveForm();},
                           child: Text('Sačuvaj'),
                         ),
                       ],
@@ -376,42 +379,55 @@ Widget build(BuildContext context) {
 
 
   Future<void> _deletePlanProgram() async {
-  if (widget.planProgram?.godisnjiPlanProgramID != null) {
-    bool? confirmDelete = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Potvrda brisanja'),
-        content: Text('Da li ste sigurni da želite da obrišete ovaj plan i program?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text('Odustani'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text('Obriši'),
-          ),
-        ],
-      ),
-    );
+  final annualPlanProgramID = widget.planProgram?.godisnjiPlanProgramID;
 
-    if (confirmDelete == true) {
-      try {
-        await _planProgramProvider.delete(widget.planProgram!.godisnjiPlanProgramID!);
-        Navigator.pop(context, true);
-      } catch (e) {
-        _showErrorDialog("Failed to delete data: $e");
+  if (annualPlanProgramID != null) {
+    try {
+      final hasClasses = await _classProvider.hasClasses(annualPlanProgramID);
+
+      if (hasClasses) {
+        _showErrorDialog(
+          'Ne možete izbrisati plan i program jer postoje časovi povezani sa njim.'
+        );
+        return;
       }
+
+      bool? confirmDelete = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Potvrda brisanja'),
+          content: Text('Da li ste sigurni da želite da obrišete ovaj plan i program?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text('Odustani'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text('Obriši'),
+            ),
+          ],
+        ),
+      );
+
+      if (confirmDelete == true) {
+        await _planProgramProvider.delete(annualPlanProgramID);
+        Navigator.pop(context, true);
+      }
+    } catch (e) {
+      _showErrorDialog("Failed to delete data: $e");
     }
   }
 }
+
+
 
 
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
+        title: Text('Greška'),
         content: Text(message),
         actions: [
           TextButton(

@@ -3,6 +3,7 @@ using eDnevnik.Model.Requests;
 using eDnevnik.Model.SearchObjects;
 using eDnevnik.Services.Database;
 using eDnevnik.Services.IServices;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,11 @@ namespace eDnevnik.Services.Service
             : base(context, mapper)
         {
 
+        }
+        public async Task<bool> HasUsers(int korisnikID)
+        {
+            return await _context.Ocjene
+                .AnyAsync(c => c.KorisnikID == korisnikID);
         }
         public override IQueryable<Ocjene> AddFilter(IQueryable<Ocjene> query, OcjeneSearchObject? search = null)
         {

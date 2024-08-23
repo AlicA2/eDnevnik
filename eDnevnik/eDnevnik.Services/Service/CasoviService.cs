@@ -20,6 +20,11 @@ namespace eDnevnik.Services.Service
         {
 
         }
+        public async Task<bool> HasClasses(int godisnjiPlanProgramID)
+        {
+            return await _context.Casovi
+                .AnyAsync(c => c.GodisnjiPlanProgramID == godisnjiPlanProgramID);
+        }
         public override IQueryable<Casovi> AddFilter(IQueryable<Casovi> query, CasoviSearchObject? search = null)
         {
             if (search != null)

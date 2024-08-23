@@ -40,6 +40,7 @@ dependencies:
   flutter_form_builder: ^9.3.0
   file_picker: ^8.0.6
   form_builder_validators: ^11.0.0
+  table_calendar: ^3.1.2
 
 dev_dependencies:
   json_serializable: ^6.8.0

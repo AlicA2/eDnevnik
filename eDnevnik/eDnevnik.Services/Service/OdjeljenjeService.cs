@@ -75,7 +75,7 @@ namespace eDnevnik.Services.Service
                     query = query.Where(x => x.SkolaID == search.SkolaID.Value);
                 }
             }
-                return base.AddFilter(query, search);
+            return base.AddFilter(query, search);
         }
         public override IQueryable<Odjeljenje> AddInclude(IQueryable<Odjeljenje> query, OdjeljenjeSearchObject? search = null)
         {
@@ -114,12 +114,18 @@ namespace eDnevnik.Services.Service
         public override async Task<Model.Models.Odjeljenje> Delete(int id, OdjeljenjeDeleteRequest request)
         {
             var odjeljenje = await _context.Odjeljenje
+                .Include(o => o.Ucenici)
                 .Include(o => o.OdjeljenjePredmeti)
                 .FirstOrDefaultAsync(o => o.OdjeljenjeID == id);
 
             if (odjeljenje == null)
             {
                 throw new ArgumentException("Odjeljenje nije pronađeno.");
+            }
+
+            if (odjeljenje.Ucenici.Any())
+            {
+                throw new UserException("Ne možete izbrisati odjeljenje koje ima dodjeljene učenike.");
             }
 
             if (odjeljenje.OdjeljenjePredmeti.Any())
@@ -133,6 +139,5 @@ namespace eDnevnik.Services.Service
             var model = _mapper.Map<Model.Models.Odjeljenje>(odjeljenje);
             return model;
         }
-
     }
 }

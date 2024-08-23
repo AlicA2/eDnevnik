@@ -46,4 +46,19 @@ if (response.statusCode == 400) {
       throw Exception("Unknown error");
     }
   }
+
+  Future<bool> hasClasses(int annualPlanProgramID) async {
+    var url = "$_baseUrl$_endPoint/check?godisnjiPlanProgramID=$annualPlanProgramID";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http.get(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return data['hasClasses'] as bool;
+    } else {
+      throw Exception("Failed to check classes");
+    }
+  }
 }

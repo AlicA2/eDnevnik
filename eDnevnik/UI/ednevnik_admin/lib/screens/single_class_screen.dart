@@ -103,7 +103,7 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
                                     foregroundColor: Colors.white,
                                     backgroundColor: Colors.blue,
                                   ),
-                                  onPressed: () async { await _showDeleteConfirmationDialog;},
+                                  onPressed: () async { await _showDeleteConfirmationDialog();},
                                   child: Text('Izbriši čas'),
                                 ),
                               ],
@@ -130,7 +130,7 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
                                   foregroundColor: Colors.white,
                                   backgroundColor: Colors.blue,
                                 ),
-                                onPressed: () async { await _saveForm;},
+                                onPressed: () async { await _saveForm();},
                                 child: widget.classes == null
                                     ? Text('Dodaj čas')
                                     : Text('Sačuvaj'),
@@ -183,6 +183,7 @@ Future<void> _saveForm() async {
     print('Form values to be sent to backend: $formValues');
     try {
       if (widget.classes == null) {
+        print(formValues);
         await _classProvider.Insert(formValues);
       } else {
         final id = widget.classes!.casoviID;

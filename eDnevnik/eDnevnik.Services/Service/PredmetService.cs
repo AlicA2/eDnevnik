@@ -20,7 +20,7 @@ namespace eDnevnik.Services.Service
         public PredmetService(BaseState baseState, eDnevnikDBContext context, IMapper mapper)
             : base(context, mapper)
         {
-            _baseState=baseState;
+            _baseState = baseState;
         }
         public override IQueryable<Predmet> AddFilter(IQueryable<Predmet> query, PredmetSearchObject? search = null)
         {
@@ -107,19 +107,19 @@ namespace eDnevnik.Services.Service
                 Datum = request.Datum
             };
 
-            if(ocjena.VrijednostOcjene<1||ocjena.VrijednostOcjene>5)
+            if (ocjena.VrijednostOcjene < 1 || ocjena.VrijednostOcjene > 5)
             {
                 throw new UserException("Ocjena koju ste unjeli nije validna! Možete davati ocjene samo od 1 do 5");
             }
+
             predmet.Ocjene.Add(ocjena);
-            predmet.ZakljucnaOcjena = await CalculateZakljucnaOcjena(predmetID);
+            predmet.ZakljucnaOcjena = await CalculateZakljucnaOcjena(predmetID, request.KorisnikID);
 
             await _context.SaveChangesAsync();
 
             return true;
         }
-        
-        public async Task<decimal?> CalculateZakljucnaOcjena(int predmetID)
+        public async Task<decimal?> CalculateZakljucnaOcjena(int predmetID, int korisnikID)
         {
             var predmet = await _context.Predmeti
                 .Include(p => p.Ocjene)
@@ -130,16 +130,22 @@ namespace eDnevnik.Services.Service
                 return null;
             }
 
-            var vrijednostiOcjena = predmet.Ocjene.Select(o => o.VrijednostOcjene).ToList();
+            var relevantOcjene = predmet.Ocjene
+                .Where(o => o.KorisnikID == korisnikID)
+                .Select(o => o.VrijednostOcjene)
+                .ToList();
 
-            decimal sum = vrijednostiOcjena.Sum();
-            int count = vrijednostiOcjena.Count;
+            if (!relevantOcjene.Any())
+            {
+                return null;
+            }
+
+            decimal sum = relevantOcjene.Sum();
+            int count = relevantOcjene.Count;
 
             decimal average = count > 0 ? sum / count : 0;
 
             return Math.Round(average, 2);
         }
-
-
     }
 }

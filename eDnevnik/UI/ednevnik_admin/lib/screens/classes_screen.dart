@@ -143,7 +143,7 @@ Widget _buildScreenName() {
             ),
           ),
           ElevatedButton(
-            onPressed: () async { await _fetchClasses;},
+            onPressed: () async { await _fetchClasses();},
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white, backgroundColor: Colors.blue,
             ),

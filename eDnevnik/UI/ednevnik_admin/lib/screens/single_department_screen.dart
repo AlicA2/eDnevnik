@@ -283,7 +283,7 @@ class _SingleDepartmentListScreenState
     } on DepartmentDeleteException catch (e) {
       _showErrorDialog(e.message);
     } catch (e) {
-      _showErrorDialog('Ne možete obrisati odjeljenje koje ima predmete!');
+      _showErrorDialog('Ne možete obrisati odjeljenje koje ima predmete ili učenike!');
     }
   }
 }

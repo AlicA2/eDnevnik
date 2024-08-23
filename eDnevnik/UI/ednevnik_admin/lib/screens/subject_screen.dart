@@ -179,7 +179,7 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
               ),
               SizedBox(width: 20),
               ElevatedButton(
-                onPressed: () async { await _fetchSubjects;},
+                onPressed: () async { await _fetchSubjects();},
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white, backgroundColor: Colors.blue,
                 ),

@@ -43,27 +43,26 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
   }
 
   Future<void> _fetchSchools() async {
-  try {
-    var schools = await _schoolProvider.get();
-    if (mounted) {
-      setState(() {
-        _schools = schools.result;
+    try {
+      var schools = await _schoolProvider.get();
+      if (mounted) {
+        setState(() {
+          _schools = schools.result;
 
-        if (_schools.isNotEmpty) {
-          _selectedSchool = _schools.first;
-          _fetchDepartmentsAndInitialize(schoolID: _selectedSchool!.skolaID);
-        } else {
-          _isLoading = false; 
-        }
+          if (_schools.isNotEmpty) {
+            _selectedSchool = _schools.first;
+            _fetchDepartmentsAndInitialize(schoolID: _selectedSchool!.skolaID);
+          } else {
+            _isLoading = false;
+          }
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
       });
     }
-  } catch (e) {
-    setState(() {
-      _isLoading = false;
-    });
   }
-}
-
 
   Future<void> _fetchDepartmentsAndInitialize({int? schoolID}) async {
     try {
@@ -101,6 +100,61 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         _isLoading = false;
       });
     }
+  }
+
+  Future<void> _confirmDelete(User student) async {
+    bool? confirmDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Potvrda brisanja'),
+        content: Text('Da li ste sigurni da želite da uklonite ovog učenika iz odjeljenja?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Odustani'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('Obriši'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmDelete == true) {
+      try {
+        if (_selectedDepartment != null && student.korisnikId != null) {
+          await _departmentProvider.removeStudentFromDepartment(
+            _selectedDepartment!.odjeljenjeID!,
+            student.korisnikId!,
+          );
+          setState(() {
+            _students.remove(student);
+          });
+          await _fetchDepartmentsAndInitialize(schoolID: _selectedSchool?.skolaID);
+        }
+      } on Exception catch (e) {
+        _showErrorDialog('Greška pri uklanjanju učenika: ${e.toString()}');
+      } catch (e) {
+        _showErrorDialog('Došlo je do neočekivane greške.');
+      }
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Greška'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -211,67 +265,82 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
   }
 
   Widget _buildDataListView() {
-  return SingleChildScrollView(
-    child: DataTable(
-      columns: const [
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              "Ime i prezime učenika",
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              "Odjeljenje",
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              "Prikaži ocjene za učenika",
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ),
-        ),
-      ],
-      rows: _students.map((student) {
-        var department = _departments.firstWhere(
-          (dept) => dept.ucenici?.contains(student) ?? false,
-          orElse: () => Department(null, 'Unknown', null, null),
-        );
-
-        return DataRow(
-          cells: [
-            DataCell(Text("${student.ime} ${student.prezime}")),
-            DataCell(Text(department.nazivOdjeljenja ?? "N/A")),
-            DataCell(
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => GradeDetailScreen(
-                        userID: student.korisnikId,
-                      ),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue,
-                ),
-                child: Text("Prikaz ocjena"),
+    return SingleChildScrollView(
+      child: DataTable(
+        columns: const [
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Ime i prezime učenika",
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
-          ],
-        );
-      }).toList(),
-    ),
-  );
-}
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Odjeljenje",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Prikaži ocjene za učenika",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Akcije",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
+        ],
+        rows: _students.map((student) {
+          var department = _departments.firstWhere(
+            (dept) => dept.ucenici?.contains(student) ?? false,
+            orElse: () => Department(null, 'Unknown', null, null),
+          );
 
+          return DataRow(
+            cells: [
+              DataCell(Text("${student.ime} ${student.prezime}")),
+              DataCell(Text(department.nazivOdjeljenja ?? "N/A")),
+              DataCell(
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => GradeDetailScreen(
+                          userID: student.korisnikId,
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: Text("Prikaz ocjena"),
+                ),
+              ),
+              DataCell(
+                IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () {
+                    _confirmDelete(student);
+                  },
+                ),
+              ),
+            ],
+          );
+        }).toList(),
+      ),
+    );
+  }
 }

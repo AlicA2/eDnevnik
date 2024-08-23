@@ -159,6 +159,7 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
                 label: const Text('Obriši'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
                 ),
               ),
             ),

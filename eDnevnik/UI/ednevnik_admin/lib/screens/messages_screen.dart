@@ -176,7 +176,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.blue,
                 ),
-                onPressed: () async { await _fetchMessages;},
+                onPressed: () async { await _fetchMessages();},
                 child: Text("Pretraga"),
               ),
             ],

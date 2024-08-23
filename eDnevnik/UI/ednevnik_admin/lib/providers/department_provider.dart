@@ -61,4 +61,23 @@ class DepartmentProvider extends BaseProvider<Department> {
       throw Exception("Failed to fetch departments with students");
     }
   }
+
+  Future<void> removeStudentFromDepartment(
+      int odjeljenjeID, int korisnikID) async {
+    var url =
+        "$_baseUrl$_endpoint/RemoveStudentFromDepartment?odjeljenjeID=$odjeljenjeID&korisnikID=$korisnikID";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http.delete(uri, headers: headers);
+
+    if (response.statusCode == 400) {
+      var errorData = jsonDecode(response.body);
+      throw Exception(errorData['message']);
+    }
+
+    if (!isValidResponse(response)) {
+      throw Exception("Failed to remove student from department");
+    }
+  }
 }

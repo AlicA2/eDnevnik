@@ -275,7 +275,7 @@ class _YearlyPlanAndProgramDetailScreenState
               foregroundColor: Colors.white,
               backgroundColor: Colors.blue,
             ),
-            onPressed: () async { await _fetchAnnualPlanPrograms;},
+            onPressed: () async { await _fetchAnnualPlanPrograms();},
             child: Text("Pretraga"),
           ),
         ],
