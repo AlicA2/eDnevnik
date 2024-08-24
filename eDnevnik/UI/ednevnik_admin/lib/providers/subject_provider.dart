@@ -12,7 +12,7 @@ import 'package:http/http.dart';
 class SubjectProvider extends BaseProvider<Subject> {
   SubjectProvider() : super("Predmet");
   static const String _baseUrl = String.fromEnvironment("baseUrl",
-      defaultValue: "https://localhost:7260/");
+      defaultValue: "http://localhost:7260/");
   static const String _endpoint = "Predmet";
   @override
   Subject fromJson(data) {
