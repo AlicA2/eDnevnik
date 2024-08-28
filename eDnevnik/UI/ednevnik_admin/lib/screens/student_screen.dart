@@ -295,7 +295,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
           DataColumn(
             label: Expanded(
               child: Text(
-                "Akcije",
+                "",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
