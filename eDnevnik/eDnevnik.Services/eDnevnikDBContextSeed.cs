@@ -25,110 +25,202 @@ namespace eDnevnik.Services
                 {
                     GodisnjiPlanProgramID = 1,
                     brojCasova = 5,
-                    Naziv = "Plan 1",
+                    Naziv = "Matematika Plan - 1A",
                     OdjeljenjeID = 1,
                     PredmetID = 1,
-                    SkolaID = 1,
+                    SkolaID = 1
                 },
                 new GodisnjiPlanProgram
                 {
                     GodisnjiPlanProgramID = 2,
-                    brojCasova = 7,
-                    Naziv = "Plan 2",
+                    brojCasova = 5,
+                    Naziv = "Fizika Plan - 1A",
+                    OdjeljenjeID = 1,
+                    PredmetID = 3,
+                    SkolaID = 1
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 3,
+                    brojCasova = 5,
+                    Naziv = "Hemija Plan - 1A",
+                    OdjeljenjeID = 1,
+                    PredmetID = 5,
+                    SkolaID = 1
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 4,
+                    brojCasova = 5,
+                    Naziv = "Informatika Plan - 1A",
+                    OdjeljenjeID = 1,
+                    PredmetID = 7,
+                    SkolaID = 1
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 5,
+                    brojCasova = 5,
+                    Naziv = "Engleski Plan - 1A",
+                    OdjeljenjeID = 1,
+                    PredmetID = 9,
+                    SkolaID = 1
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 6,
+                    brojCasova = 5,
+                    Naziv = "Matematika Plan - 2A",
+                    OdjeljenjeID = 2,
+                    PredmetID = 1,
+                    SkolaID = 1
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 7,
+                    brojCasova = 5,
+                    Naziv = "Fizika Plan - 2A",
+                    OdjeljenjeID = 2,
+                    PredmetID = 3,
+                    SkolaID = 1
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 8,
+                    brojCasova = 5,
+                    Naziv = "Hemija Plan - 2A",
+                    OdjeljenjeID = 2,
+                    PredmetID = 5,
+                    SkolaID = 1
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 9,
+                    brojCasova = 5,
+                    Naziv = "Informatika Plan - 2A",
+                    OdjeljenjeID = 2,
+                    PredmetID = 7,
+                    SkolaID = 1
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 10,
+                    brojCasova = 5,
+                    Naziv = "Engleski Plan - 2A",
+                    OdjeljenjeID = 2,
+                    PredmetID = 9,
+                    SkolaID = 1
+                },
+
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 11,
+                    brojCasova = 5,
+                    Naziv = "Biologija Plan - 1A",
                     OdjeljenjeID = 3,
                     PredmetID = 2,
+                    SkolaID = 2
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 12,
+                    brojCasova = 5,
+                    Naziv = "Fizika Plan - 1A",
+                    OdjeljenjeID = 3,
+                    PredmetID = 4,
+                    SkolaID = 2
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 13,
+                    brojCasova = 5,
+                    Naziv = "Hemija Plan - 1A",
+                    OdjeljenjeID = 3,
+                    PredmetID = 6,
+                    SkolaID = 2
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 14,
+                    brojCasova = 5,
+                    Naziv = "Informatika Plan - 1A",
+                    OdjeljenjeID = 3,
+                    PredmetID = 8,
+                    SkolaID = 2
+                },
+                new GodisnjiPlanProgram
+                {
+                    GodisnjiPlanProgramID = 15,
+                    brojCasova = 5,
+                    Naziv = "Elektrotehnika Plan - 1A",
+                    OdjeljenjeID = 3,
+                    PredmetID = 10,
                     SkolaID = 2
                 }
             );
         }
-
         private void SeedCasovi(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Casovi>().HasData(
-                new Casovi
-                {
-                    CasoviID = 1,
-                    NazivCasa = "Cas 1",
-                    Opis = "Opis Casa 1",
-                    GodisnjiPlanProgramID = 1
-                },
-                new Casovi
-                {
-                    CasoviID = 2,
-                    NazivCasa = "Cas 2",
-                    Opis = "Opis Casa 2",
-                    GodisnjiPlanProgramID = 1
-                },
-                new Casovi
-                {
-                    CasoviID = 3,
-                    NazivCasa = "Cas 3",
-                    Opis = "Opis Casa 3",
-                    GodisnjiPlanProgramID = 1
-                },
-                new Casovi
-                {
-                    CasoviID = 4,
-                    NazivCasa = "Cas 4",
-                    Opis = "Opis Casa 4",
-                    GodisnjiPlanProgramID = 1
-                },
-                new Casovi
-                {
-                    CasoviID = 5,
-                    NazivCasa = "Cas 5",
-                    Opis = "Opis Casa 5",
-                    GodisnjiPlanProgramID = 1
-                },
-                new Casovi
-                {
-                    CasoviID = 6,
-                    NazivCasa = "Cas 1",
-                    Opis = "Opis Casa 6",
-                    GodisnjiPlanProgramID = 2
-                },
-                new Casovi
-                {
-                    CasoviID = 7,
-                    NazivCasa = "Cas 2",
-                    Opis = "Opis Casa 7",
-                    GodisnjiPlanProgramID = 2
-                },
-                new Casovi
-                {
-                    CasoviID = 8,
-                    NazivCasa = "Cas 3",
-                    Opis = "Opis Casa 8",
-                    GodisnjiPlanProgramID = 2
-                },
-                new Casovi
-                {
-                    CasoviID = 9,
-                    NazivCasa = "Cas 4",
-                    Opis = "Opis Casa 9",
-                    GodisnjiPlanProgramID = 2
-                },
-                new Casovi
-                {
-                    CasoviID = 10,
-                    NazivCasa = "Cas 5",
-                    Opis = "Opis Casa 10",
-                    GodisnjiPlanProgramID = 2
-                },
-                new Casovi
-                {
-                    CasoviID = 11,
-                    NazivCasa = "Cas 6",
-                    Opis = "Opis Casa 11",
-                    GodisnjiPlanProgramID = 2
-                },
-                new Casovi
-                {
-                    CasoviID = 12,
-                    NazivCasa = "Cas 7",
-                    Opis = "Opis Casa 12",
-                    GodisnjiPlanProgramID = 2
-                }
+                new Casovi { CasoviID = 1, NazivCasa = "Algebra", Opis = "Osnove algebre", GodisnjiPlanProgramID = 1 },
+                new Casovi { CasoviID = 2, NazivCasa = "Geometrija", Opis = "Osnove geometrije", GodisnjiPlanProgramID = 1 },
+                new Casovi { CasoviID = 3, NazivCasa = "Trigonometrija", Opis = "Osnove trigonometrije", GodisnjiPlanProgramID = 1 },
+                new Casovi { CasoviID = 4, NazivCasa = "Kalkulus", Opis = "Osnove kalkulusa", GodisnjiPlanProgramID = 1 },
+                new Casovi { CasoviID = 5, NazivCasa = "Statistika", Opis = "Osnove statistike", GodisnjiPlanProgramID = 1 },
+
+                new Casovi { CasoviID = 6, NazivCasa = "Mehanika", Opis = "Osnove mehanike", GodisnjiPlanProgramID = 2 },
+                new Casovi { CasoviID = 7, NazivCasa = "Termodinamika", Opis = "Osnove termodinamike", GodisnjiPlanProgramID = 2 },
+                new Casovi { CasoviID = 8, NazivCasa = "Optika", Opis = "Osnove optike", GodisnjiPlanProgramID = 2 },
+                new Casovi { CasoviID = 9, NazivCasa = "Elektricitet", Opis = "Osnove elektriciteta", GodisnjiPlanProgramID = 2 },
+                new Casovi { CasoviID = 10, NazivCasa = "Magnetizam", Opis = "Osnove magnetizma", GodisnjiPlanProgramID = 2 },
+
+                new Casovi { CasoviID = 11, NazivCasa = "Organska hemija", Opis = "Osnove organske hemije", GodisnjiPlanProgramID = 3 },
+                new Casovi { CasoviID = 12, NazivCasa = "Neorganska hemija", Opis = "Osnove neorganske hemije", GodisnjiPlanProgramID = 3 },
+                new Casovi { CasoviID = 13, NazivCasa = "Fizička hemija", Opis = "Osnove fizičke hemije", GodisnjiPlanProgramID = 3 },
+                new Casovi { CasoviID = 14, NazivCasa = "Analitička hemija", Opis = "Osnove analitičke hemije", GodisnjiPlanProgramID = 3 },
+                new Casovi { CasoviID = 15, NazivCasa = "Biohemija", Opis = "Osnove biohemije", GodisnjiPlanProgramID = 3 },
+
+                new Casovi { CasoviID = 16, NazivCasa = "Osnove programiranja", Opis = "Osnove programiranja", GodisnjiPlanProgramID = 4 },
+                new Casovi { CasoviID = 17, NazivCasa = "Strukture podataka", Opis = "Osnove struktura podataka", GodisnjiPlanProgramID = 4 },
+                new Casovi { CasoviID = 18, NazivCasa = "Algoritmi", Opis = "Osnove algoritama", GodisnjiPlanProgramID = 4 },
+                new Casovi { CasoviID = 19, NazivCasa = "Baze podataka", Opis = "Osnove baza podataka", GodisnjiPlanProgramID = 4 },
+                new Casovi { CasoviID = 20, NazivCasa = "Softverski inženjering", Opis = "Osnove softverskog inženjeringa", GodisnjiPlanProgramID = 4 },
+
+                new Casovi { CasoviID = 21, NazivCasa = "Gramatika", Opis = "Osnove engleske gramatike", GodisnjiPlanProgramID = 5 },
+                new Casovi { CasoviID = 22, NazivCasa = "Vokabular", Opis = "Osnove engleskog vokabulara", GodisnjiPlanProgramID = 5 },
+                new Casovi { CasoviID = 23, NazivCasa = "Razumijevanje pročitanog", Opis = "Razumijevanje pročitanog", GodisnjiPlanProgramID = 5 },
+                new Casovi { CasoviID = 24, NazivCasa = "Pisanje", Opis = "Pisanje na engleskom", GodisnjiPlanProgramID = 5 },
+                new Casovi { CasoviID = 25, NazivCasa = "Govorne vještine", Opis = "Govorne vještine na engleskom", GodisnjiPlanProgramID = 5 },
+
+                new Casovi { CasoviID = 26, NazivCasa = "Algebra", Opis = "Osnove algebre", GodisnjiPlanProgramID = 6 },
+                new Casovi { CasoviID = 27, NazivCasa = "Geometrija", Opis = "Osnove geometrije", GodisnjiPlanProgramID = 6 },
+                new Casovi { CasoviID = 28, NazivCasa = "Trigonometrija", Opis = "Osnove trigonometrije", GodisnjiPlanProgramID = 6 },
+                new Casovi { CasoviID = 29, NazivCasa = "Kalkulus", Opis = "Osnove kalkulusa", GodisnjiPlanProgramID = 6 },
+                new Casovi { CasoviID = 30, NazivCasa = "Statistika", Opis = "Osnove statistike", GodisnjiPlanProgramID = 6 },
+
+                new Casovi { CasoviID = 31, NazivCasa = "Mehanika", Opis = "Osnove mehanike", GodisnjiPlanProgramID = 7 },
+                new Casovi { CasoviID = 32, NazivCasa = "Termodinamika", Opis = "Osnove termodinamike", GodisnjiPlanProgramID = 7 },
+                new Casovi { CasoviID = 33, NazivCasa = "Optika", Opis = "Osnove optike", GodisnjiPlanProgramID = 7 },
+                new Casovi { CasoviID = 34, NazivCasa = "Elektricitet", Opis = "Osnove elektriciteta", GodisnjiPlanProgramID = 7 },
+                new Casovi { CasoviID = 35, NazivCasa = "Magnetizam", Opis = "Osnove magnetizma", GodisnjiPlanProgramID = 7 },
+
+                new Casovi { CasoviID = 36, NazivCasa = "Organska hemija", Opis = "Osnove organske hemije", GodisnjiPlanProgramID = 8 },
+                new Casovi { CasoviID = 37, NazivCasa = "Neorganska hemija", Opis = "Osnove neorganske hemije", GodisnjiPlanProgramID = 8 },
+                new Casovi { CasoviID = 38, NazivCasa = "Fizička hemija", Opis = "Osnove fizičke hemije", GodisnjiPlanProgramID = 8 },
+                new Casovi { CasoviID = 39, NazivCasa = "Analitička hemija", Opis = "Osnove analitičke hemije", GodisnjiPlanProgramID = 8 },
+                new Casovi { CasoviID = 40, NazivCasa = "Biohemija", Opis = "Osnove biohemije", GodisnjiPlanProgramID = 8 },
+
+                new Casovi { CasoviID = 41, NazivCasa = "Osnove programiranja", Opis = "Osnove programiranja", GodisnjiPlanProgramID = 9 },
+                new Casovi { CasoviID = 42, NazivCasa = "Strukture podataka", Opis = "Osnove struktura podataka", GodisnjiPlanProgramID = 9 },
+                new Casovi { CasoviID = 43, NazivCasa = "Algoritmi", Opis = "Osnove algoritama", GodisnjiPlanProgramID = 9 },
+                new Casovi { CasoviID = 44, NazivCasa = "Baze podataka", Opis = "Osnove baza podataka", GodisnjiPlanProgramID = 9 },
+                new Casovi { CasoviID = 45, NazivCasa = "Softverski inženjering", Opis = "Osnove softverskog inženjeringa", GodisnjiPlanProgramID = 9 },
+
+                new Casovi { CasoviID = 46, NazivCasa = "Gramatika", Opis = "Osnove engleske gramatike", GodisnjiPlanProgramID = 10 },
+                new Casovi { CasoviID = 47, NazivCasa = "Vokabular", Opis = "Osnove engleskog vokabulara", GodisnjiPlanProgramID = 10 },
+                new Casovi { CasoviID = 48, NazivCasa = "Razumijevanje pročitanog", Opis = "Razumijevanje pročitanog", GodisnjiPlanProgramID = 10 },
+                new Casovi { CasoviID = 49, NazivCasa = "Pisanje", Opis = "Pisanje na engleskom", GodisnjiPlanProgramID = 10 },
+                new Casovi { CasoviID = 50, NazivCasa = "Govorne vještine", Opis = "Govorne vještine na engleskom", GodisnjiPlanProgramID = 10 }
             );
         }
 
@@ -189,14 +281,80 @@ namespace eDnevnik.Services
                 },
                 new Predmet
                 {
+                    PredmetID = 3,
+                    Naziv = "Fizika",
+                    Opis = "Osnovne fizikalne pojave i zakoni",
+                    SkolaID = 1,
+                    StateMachine = "draft"
+                },
+                new Predmet
+                {
+                    PredmetID = 5,
+                    Naziv = "Hemija",
+                    Opis = "Osnovni hemijski spojevi i reakcije",
+                    SkolaID = 1,
+                    StateMachine = "draft"
+                },
+                new Predmet
+                {
+                    PredmetID = 7,
+                    Naziv = "Informatika",
+                    Opis = "Osnove programiranja i računarskih sistema",
+                    SkolaID = 1,
+                    StateMachine = "draft"
+                },
+                new Predmet
+                {
+                    PredmetID = 9,
+                    Naziv = "Engleski",
+                    Opis = "Osnove engleskog jezika i komunikacije",
+                    SkolaID = 1,
+                    StateMachine = "draft"
+                },
+
+                new Predmet
+                {
                     PredmetID = 2,
                     Naziv = "Biologija",
-                    Opis = "Biljke",
+                    Opis = "Biljke i životne procese",
+                    SkolaID = 2,
+                    StateMachine = "draft"
+                },
+                new Predmet
+                {
+                    PredmetID = 4,
+                    Naziv = "Fizika",
+                    Opis = "Tehnička primjena fizikalnih zakona",
+                    SkolaID = 2,
+                    StateMachine = "draft"
+                },
+                new Predmet
+                {
+                    PredmetID = 6,
+                    Naziv = "Hemija",
+                    Opis = "Hemijski procesi u tehnologiji",
+                    SkolaID = 2,
+                    StateMachine = "draft"
+                },
+                new Predmet
+                {
+                    PredmetID = 8,
+                    Naziv = "Informatika",
+                    Opis = "Napredno programiranje i sistemi",
+                    SkolaID = 2,
+                    StateMachine = "draft"
+                },
+                new Predmet
+                {
+                    PredmetID = 10,
+                    Naziv = "Elektrotehnika",
+                    Opis = "Osnove elektrotehnike i elektronike",
                     SkolaID = 2,
                     StateMachine = "draft"
                 }
             );
         }
+
 
 
         private void SeedOdjeljenje(ModelBuilder modelBuilder)

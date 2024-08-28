@@ -315,7 +315,15 @@ namespace eDnevnik.Services.Migrations
                 values: new object[,]
                 {
                     { 1, "Matematika", "Sabiranje, oduzimanje, množenje, dijeljenje", 1, "draft", null },
-                    { 2, "Biologija", "Biljke", 2, "draft", null }
+                    { 2, "Biologija", "Biljke i životne procese", 2, "draft", null },
+                    { 3, "Fizika", "Osnovne fizikalne pojave i zakoni", 1, "draft", null },
+                    { 4, "Fizika", "Tehnička primjena fizikalnih zakona", 2, "draft", null },
+                    { 5, "Hemija", "Osnovni hemijski spojevi i reakcije", 1, "draft", null },
+                    { 6, "Hemija", "Hemijski procesi u tehnologiji", 2, "draft", null },
+                    { 7, "Informatika", "Osnove programiranja i računarskih sistema", 1, "draft", null },
+                    { 8, "Informatika", "Napredno programiranje i sistemi", 2, "draft", null },
+                    { 9, "Engleski", "Osnove engleskog jezika i komunikacije", 1, "draft", null },
+                    { 10, "Elektrotehnika", "Osnove elektrotehnike i elektronike", 2, "draft", null }
                 });
 
             migrationBuilder.InsertData(
@@ -323,16 +331,28 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "KorisnikUlogaID", "DatumIzmjene", "KorisnikID", "UlogaID" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8204), 1, 1 },
-                    { 2, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8255), 2, 2 },
-                    { 3, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8259), 3, 2 },
-                    { 4, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8262), 4, 1 }
+                    { 1, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3381), 1, 1 },
+                    { 2, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3419), 2, 2 },
+                    { 3, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3422), 3, 2 },
+                    { 4, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3424), 4, 1 }
                 });
 
             migrationBuilder.InsertData(
                 table: "GodisnjiPlanProgram",
                 columns: new[] { "GodisnjiPlanProgramID", "Naziv", "OdjeljenjeID", "PredmetID", "SkolaID", "brojCasova" },
-                values: new object[] { 1, "Plan 1", 1, 1, 1, 5 });
+                values: new object[,]
+                {
+                    { 1, "Matematika Plan - 1A", 1, 1, 1, 5 },
+                    { 2, "Fizika Plan - 1A", 1, 3, 1, 5 },
+                    { 3, "Hemija Plan - 1A", 1, 5, 1, 5 },
+                    { 4, "Informatika Plan - 1A", 1, 7, 1, 5 },
+                    { 5, "Engleski Plan - 1A", 1, 9, 1, 5 },
+                    { 6, "Matematika Plan - 2A", 2, 1, 1, 5 },
+                    { 7, "Fizika Plan - 2A", 2, 3, 1, 5 },
+                    { 8, "Hemija Plan - 2A", 2, 5, 1, 5 },
+                    { 9, "Informatika Plan - 2A", 2, 7, 1, 5 },
+                    { 10, "Engleski Plan - 2A", 2, 9, 1, 5 }
+                });
 
             migrationBuilder.InsertData(
                 table: "Korisnici",
@@ -361,8 +381,8 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "OcjenaID", "Datum", "KorisnikID", "PredmetID", "VrijednostOcjene" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8438), 2, 1, 5 },
-                    { 2, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8444), 2, 2, 4 }
+                    { 1, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3548), 2, 1, 5 },
+                    { 2, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3552), 2, 2, 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -370,11 +390,63 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "CasoviID", "GodisnjiPlanProgramID", "NazivCasa", "Opis" },
                 values: new object[,]
                 {
-                    { 1, 1, "Cas 1", "Opis Casa 1" },
-                    { 2, 1, "Cas 2", "Opis Casa 2" },
-                    { 3, 1, "Cas 3", "Opis Casa 3" },
-                    { 4, 1, "Cas 4", "Opis Casa 4" },
-                    { 5, 1, "Cas 5", "Opis Casa 5" }
+                    { 1, 1, "Algebra", "Osnove algebre" },
+                    { 2, 1, "Geometrija", "Osnove geometrije" },
+                    { 3, 1, "Trigonometrija", "Osnove trigonometrije" },
+                    { 4, 1, "Kalkulus", "Osnove kalkulusa" },
+                    { 5, 1, "Statistika", "Osnove statistike" },
+                    { 6, 2, "Mehanika", "Osnove mehanike" },
+                    { 7, 2, "Termodinamika", "Osnove termodinamike" },
+                    { 8, 2, "Optika", "Osnove optike" },
+                    { 9, 2, "Elektricitet", "Osnove elektriciteta" },
+                    { 10, 2, "Magnetizam", "Osnove magnetizma" },
+                    { 11, 3, "Organska hemija", "Osnove organske hemije" },
+                    { 12, 3, "Neorganska hemija", "Osnove neorganske hemije" },
+                    { 13, 3, "Fizička hemija", "Osnove fizičke hemije" },
+                    { 14, 3, "Analitička hemija", "Osnove analitičke hemije" },
+                    { 15, 3, "Biohemija", "Osnove biohemije" },
+                    { 16, 4, "Osnove programiranja", "Osnove programiranja" },
+                    { 17, 4, "Strukture podataka", "Osnove struktura podataka" },
+                    { 18, 4, "Algoritmi", "Osnove algoritama" },
+                    { 19, 4, "Baze podataka", "Osnove baza podataka" },
+                    { 20, 4, "Softverski inženjering", "Osnove softverskog inženjeringa" },
+                    { 21, 5, "Gramatika", "Osnove engleske gramatike" },
+                    { 22, 5, "Vokabular", "Osnove engleskog vokabulara" },
+                    { 23, 5, "Razumijevanje pročitanog", "Razumijevanje pročitanog" },
+                    { 24, 5, "Pisanje", "Pisanje na engleskom" },
+                    { 25, 5, "Govorne vještine", "Govorne vještine na engleskom" },
+                    { 26, 6, "Algebra", "Osnove algebre" },
+                    { 27, 6, "Geometrija", "Osnove geometrije" },
+                    { 28, 6, "Trigonometrija", "Osnove trigonometrije" },
+                    { 29, 6, "Kalkulus", "Osnove kalkulusa" },
+                    { 30, 6, "Statistika", "Osnove statistike" },
+                    { 31, 7, "Mehanika", "Osnove mehanike" },
+                    { 32, 7, "Termodinamika", "Osnove termodinamike" },
+                    { 33, 7, "Optika", "Osnove optike" },
+                    { 34, 7, "Elektricitet", "Osnove elektriciteta" },
+                    { 35, 7, "Magnetizam", "Osnove magnetizma" },
+                    { 36, 8, "Organska hemija", "Osnove organske hemije" },
+                    { 37, 8, "Neorganska hemija", "Osnove neorganske hemije" },
+                    { 38, 8, "Fizička hemija", "Osnove fizičke hemije" },
+                    { 39, 8, "Analitička hemija", "Osnove analitičke hemije" },
+                    { 40, 8, "Biohemija", "Osnove biohemije" },
+                    { 41, 9, "Osnove programiranja", "Osnove programiranja" },
+                    { 42, 9, "Strukture podataka", "Osnove struktura podataka" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Casovi",
+                columns: new[] { "CasoviID", "GodisnjiPlanProgramID", "NazivCasa", "Opis" },
+                values: new object[,]
+                {
+                    { 43, 9, "Algoritmi", "Osnove algoritama" },
+                    { 44, 9, "Baze podataka", "Osnove baza podataka" },
+                    { 45, 9, "Softverski inženjering", "Osnove softverskog inženjeringa" },
+                    { 46, 10, "Gramatika", "Osnove engleske gramatike" },
+                    { 47, 10, "Vokabular", "Osnove engleskog vokabulara" },
+                    { 48, 10, "Razumijevanje pročitanog", "Razumijevanje pročitanog" },
+                    { 49, 10, "Pisanje", "Pisanje na engleskom" },
+                    { 50, 10, "Govorne vještine", "Govorne vještine na engleskom" }
                 });
 
             migrationBuilder.InsertData(
@@ -387,40 +459,33 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "KorisnikUlogaID", "DatumIzmjene", "KorisnikID", "UlogaID" },
                 values: new object[,]
                 {
-                    { 5, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8266), 5, 1 },
-                    { 6, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8269), 6, 2 },
-                    { 7, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8273), 7, 2 },
-                    { 8, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8324), 8, 2 },
-                    { 9, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8328), 9, 2 },
-                    { 10, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8332), 10, 2 },
-                    { 11, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8335), 11, 2 },
-                    { 12, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8339), 12, 2 },
-                    { 13, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8342), 13, 2 },
-                    { 14, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8346), 14, 2 },
-                    { 15, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8349), 15, 2 },
-                    { 16, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8353), 16, 2 },
-                    { 17, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8356), 17, 2 },
-                    { 18, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8360), 18, 2 },
-                    { 19, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8363), 19, 2 }
+                    { 5, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3426), 5, 1 },
+                    { 6, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3428), 6, 2 },
+                    { 7, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3430), 7, 2 },
+                    { 8, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3432), 8, 2 },
+                    { 9, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3434), 9, 2 },
+                    { 10, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3436), 10, 2 },
+                    { 11, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3438), 11, 2 },
+                    { 12, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3440), 12, 2 },
+                    { 13, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3442), 13, 2 },
+                    { 14, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3444), 14, 2 },
+                    { 15, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3446), 15, 2 },
+                    { 16, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3448), 16, 2 },
+                    { 17, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3450), 17, 2 },
+                    { 18, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3452), 18, 2 },
+                    { 19, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3454), 19, 2 }
                 });
 
             migrationBuilder.InsertData(
                 table: "GodisnjiPlanProgram",
                 columns: new[] { "GodisnjiPlanProgramID", "Naziv", "OdjeljenjeID", "PredmetID", "SkolaID", "brojCasova" },
-                values: new object[] { 2, "Plan 2", 3, 2, 2, 7 });
-
-            migrationBuilder.InsertData(
-                table: "Casovi",
-                columns: new[] { "CasoviID", "GodisnjiPlanProgramID", "NazivCasa", "Opis" },
                 values: new object[,]
                 {
-                    { 6, 2, "Cas 1", "Opis Casa 6" },
-                    { 7, 2, "Cas 2", "Opis Casa 7" },
-                    { 8, 2, "Cas 3", "Opis Casa 8" },
-                    { 9, 2, "Cas 4", "Opis Casa 9" },
-                    { 10, 2, "Cas 5", "Opis Casa 10" },
-                    { 11, 2, "Cas 6", "Opis Casa 11" },
-                    { 12, 2, "Cas 7", "Opis Casa 12" }
+                    { 11, "Biologija Plan - 1A", 3, 2, 2, 5 },
+                    { 12, "Fizika Plan - 1A", 3, 4, 2, 5 },
+                    { 13, "Hemija Plan - 1A", 3, 6, 2, 5 },
+                    { 14, "Informatika Plan - 1A", 3, 8, 2, 5 },
+                    { 15, "Elektrotehnika Plan - 1A", 3, 10, 2, 5 }
                 });
 
             migrationBuilder.CreateIndex(

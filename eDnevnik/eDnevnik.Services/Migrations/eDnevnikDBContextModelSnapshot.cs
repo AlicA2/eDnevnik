@@ -52,85 +52,351 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 1,
                             GodisnjiPlanProgramID = 1,
-                            NazivCasa = "Cas 1",
-                            Opis = "Opis Casa 1"
+                            NazivCasa = "Algebra",
+                            Opis = "Osnove algebre"
                         },
                         new
                         {
                             CasoviID = 2,
                             GodisnjiPlanProgramID = 1,
-                            NazivCasa = "Cas 2",
-                            Opis = "Opis Casa 2"
+                            NazivCasa = "Geometrija",
+                            Opis = "Osnove geometrije"
                         },
                         new
                         {
                             CasoviID = 3,
                             GodisnjiPlanProgramID = 1,
-                            NazivCasa = "Cas 3",
-                            Opis = "Opis Casa 3"
+                            NazivCasa = "Trigonometrija",
+                            Opis = "Osnove trigonometrije"
                         },
                         new
                         {
                             CasoviID = 4,
                             GodisnjiPlanProgramID = 1,
-                            NazivCasa = "Cas 4",
-                            Opis = "Opis Casa 4"
+                            NazivCasa = "Kalkulus",
+                            Opis = "Osnove kalkulusa"
                         },
                         new
                         {
                             CasoviID = 5,
                             GodisnjiPlanProgramID = 1,
-                            NazivCasa = "Cas 5",
-                            Opis = "Opis Casa 5"
+                            NazivCasa = "Statistika",
+                            Opis = "Osnove statistike"
                         },
                         new
                         {
                             CasoviID = 6,
                             GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 1",
-                            Opis = "Opis Casa 6"
+                            NazivCasa = "Mehanika",
+                            Opis = "Osnove mehanike"
                         },
                         new
                         {
                             CasoviID = 7,
                             GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 2",
-                            Opis = "Opis Casa 7"
+                            NazivCasa = "Termodinamika",
+                            Opis = "Osnove termodinamike"
                         },
                         new
                         {
                             CasoviID = 8,
                             GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 3",
-                            Opis = "Opis Casa 8"
+                            NazivCasa = "Optika",
+                            Opis = "Osnove optike"
                         },
                         new
                         {
                             CasoviID = 9,
                             GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 4",
-                            Opis = "Opis Casa 9"
+                            NazivCasa = "Elektricitet",
+                            Opis = "Osnove elektriciteta"
                         },
                         new
                         {
                             CasoviID = 10,
                             GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 5",
-                            Opis = "Opis Casa 10"
+                            NazivCasa = "Magnetizam",
+                            Opis = "Osnove magnetizma"
                         },
                         new
                         {
                             CasoviID = 11,
-                            GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 6",
-                            Opis = "Opis Casa 11"
+                            GodisnjiPlanProgramID = 3,
+                            NazivCasa = "Organska hemija",
+                            Opis = "Osnove organske hemije"
                         },
                         new
                         {
                             CasoviID = 12,
-                            GodisnjiPlanProgramID = 2,
-                            NazivCasa = "Cas 7",
-                            Opis = "Opis Casa 12"
+                            GodisnjiPlanProgramID = 3,
+                            NazivCasa = "Neorganska hemija",
+                            Opis = "Osnove neorganske hemije"
+                        },
+                        new
+                        {
+                            CasoviID = 13,
+                            GodisnjiPlanProgramID = 3,
+                            NazivCasa = "Fizička hemija",
+                            Opis = "Osnove fizičke hemije"
+                        },
+                        new
+                        {
+                            CasoviID = 14,
+                            GodisnjiPlanProgramID = 3,
+                            NazivCasa = "Analitička hemija",
+                            Opis = "Osnove analitičke hemije"
+                        },
+                        new
+                        {
+                            CasoviID = 15,
+                            GodisnjiPlanProgramID = 3,
+                            NazivCasa = "Biohemija",
+                            Opis = "Osnove biohemije"
+                        },
+                        new
+                        {
+                            CasoviID = 16,
+                            GodisnjiPlanProgramID = 4,
+                            NazivCasa = "Osnove programiranja",
+                            Opis = "Osnove programiranja"
+                        },
+                        new
+                        {
+                            CasoviID = 17,
+                            GodisnjiPlanProgramID = 4,
+                            NazivCasa = "Strukture podataka",
+                            Opis = "Osnove struktura podataka"
+                        },
+                        new
+                        {
+                            CasoviID = 18,
+                            GodisnjiPlanProgramID = 4,
+                            NazivCasa = "Algoritmi",
+                            Opis = "Osnove algoritama"
+                        },
+                        new
+                        {
+                            CasoviID = 19,
+                            GodisnjiPlanProgramID = 4,
+                            NazivCasa = "Baze podataka",
+                            Opis = "Osnove baza podataka"
+                        },
+                        new
+                        {
+                            CasoviID = 20,
+                            GodisnjiPlanProgramID = 4,
+                            NazivCasa = "Softverski inženjering",
+                            Opis = "Osnove softverskog inženjeringa"
+                        },
+                        new
+                        {
+                            CasoviID = 21,
+                            GodisnjiPlanProgramID = 5,
+                            NazivCasa = "Gramatika",
+                            Opis = "Osnove engleske gramatike"
+                        },
+                        new
+                        {
+                            CasoviID = 22,
+                            GodisnjiPlanProgramID = 5,
+                            NazivCasa = "Vokabular",
+                            Opis = "Osnove engleskog vokabulara"
+                        },
+                        new
+                        {
+                            CasoviID = 23,
+                            GodisnjiPlanProgramID = 5,
+                            NazivCasa = "Razumijevanje pročitanog",
+                            Opis = "Razumijevanje pročitanog"
+                        },
+                        new
+                        {
+                            CasoviID = 24,
+                            GodisnjiPlanProgramID = 5,
+                            NazivCasa = "Pisanje",
+                            Opis = "Pisanje na engleskom"
+                        },
+                        new
+                        {
+                            CasoviID = 25,
+                            GodisnjiPlanProgramID = 5,
+                            NazivCasa = "Govorne vještine",
+                            Opis = "Govorne vještine na engleskom"
+                        },
+                        new
+                        {
+                            CasoviID = 26,
+                            GodisnjiPlanProgramID = 6,
+                            NazivCasa = "Algebra",
+                            Opis = "Osnove algebre"
+                        },
+                        new
+                        {
+                            CasoviID = 27,
+                            GodisnjiPlanProgramID = 6,
+                            NazivCasa = "Geometrija",
+                            Opis = "Osnove geometrije"
+                        },
+                        new
+                        {
+                            CasoviID = 28,
+                            GodisnjiPlanProgramID = 6,
+                            NazivCasa = "Trigonometrija",
+                            Opis = "Osnove trigonometrije"
+                        },
+                        new
+                        {
+                            CasoviID = 29,
+                            GodisnjiPlanProgramID = 6,
+                            NazivCasa = "Kalkulus",
+                            Opis = "Osnove kalkulusa"
+                        },
+                        new
+                        {
+                            CasoviID = 30,
+                            GodisnjiPlanProgramID = 6,
+                            NazivCasa = "Statistika",
+                            Opis = "Osnove statistike"
+                        },
+                        new
+                        {
+                            CasoviID = 31,
+                            GodisnjiPlanProgramID = 7,
+                            NazivCasa = "Mehanika",
+                            Opis = "Osnove mehanike"
+                        },
+                        new
+                        {
+                            CasoviID = 32,
+                            GodisnjiPlanProgramID = 7,
+                            NazivCasa = "Termodinamika",
+                            Opis = "Osnove termodinamike"
+                        },
+                        new
+                        {
+                            CasoviID = 33,
+                            GodisnjiPlanProgramID = 7,
+                            NazivCasa = "Optika",
+                            Opis = "Osnove optike"
+                        },
+                        new
+                        {
+                            CasoviID = 34,
+                            GodisnjiPlanProgramID = 7,
+                            NazivCasa = "Elektricitet",
+                            Opis = "Osnove elektriciteta"
+                        },
+                        new
+                        {
+                            CasoviID = 35,
+                            GodisnjiPlanProgramID = 7,
+                            NazivCasa = "Magnetizam",
+                            Opis = "Osnove magnetizma"
+                        },
+                        new
+                        {
+                            CasoviID = 36,
+                            GodisnjiPlanProgramID = 8,
+                            NazivCasa = "Organska hemija",
+                            Opis = "Osnove organske hemije"
+                        },
+                        new
+                        {
+                            CasoviID = 37,
+                            GodisnjiPlanProgramID = 8,
+                            NazivCasa = "Neorganska hemija",
+                            Opis = "Osnove neorganske hemije"
+                        },
+                        new
+                        {
+                            CasoviID = 38,
+                            GodisnjiPlanProgramID = 8,
+                            NazivCasa = "Fizička hemija",
+                            Opis = "Osnove fizičke hemije"
+                        },
+                        new
+                        {
+                            CasoviID = 39,
+                            GodisnjiPlanProgramID = 8,
+                            NazivCasa = "Analitička hemija",
+                            Opis = "Osnove analitičke hemije"
+                        },
+                        new
+                        {
+                            CasoviID = 40,
+                            GodisnjiPlanProgramID = 8,
+                            NazivCasa = "Biohemija",
+                            Opis = "Osnove biohemije"
+                        },
+                        new
+                        {
+                            CasoviID = 41,
+                            GodisnjiPlanProgramID = 9,
+                            NazivCasa = "Osnove programiranja",
+                            Opis = "Osnove programiranja"
+                        },
+                        new
+                        {
+                            CasoviID = 42,
+                            GodisnjiPlanProgramID = 9,
+                            NazivCasa = "Strukture podataka",
+                            Opis = "Osnove struktura podataka"
+                        },
+                        new
+                        {
+                            CasoviID = 43,
+                            GodisnjiPlanProgramID = 9,
+                            NazivCasa = "Algoritmi",
+                            Opis = "Osnove algoritama"
+                        },
+                        new
+                        {
+                            CasoviID = 44,
+                            GodisnjiPlanProgramID = 9,
+                            NazivCasa = "Baze podataka",
+                            Opis = "Osnove baza podataka"
+                        },
+                        new
+                        {
+                            CasoviID = 45,
+                            GodisnjiPlanProgramID = 9,
+                            NazivCasa = "Softverski inženjering",
+                            Opis = "Osnove softverskog inženjeringa"
+                        },
+                        new
+                        {
+                            CasoviID = 46,
+                            GodisnjiPlanProgramID = 10,
+                            NazivCasa = "Gramatika",
+                            Opis = "Osnove engleske gramatike"
+                        },
+                        new
+                        {
+                            CasoviID = 47,
+                            GodisnjiPlanProgramID = 10,
+                            NazivCasa = "Vokabular",
+                            Opis = "Osnove engleskog vokabulara"
+                        },
+                        new
+                        {
+                            CasoviID = 48,
+                            GodisnjiPlanProgramID = 10,
+                            NazivCasa = "Razumijevanje pročitanog",
+                            Opis = "Razumijevanje pročitanog"
+                        },
+                        new
+                        {
+                            CasoviID = 49,
+                            GodisnjiPlanProgramID = 10,
+                            NazivCasa = "Pisanje",
+                            Opis = "Pisanje na engleskom"
+                        },
+                        new
+                        {
+                            CasoviID = 50,
+                            GodisnjiPlanProgramID = 10,
+                            NazivCasa = "Govorne vještine",
+                            Opis = "Govorne vještine na engleskom"
                         });
                 });
 
@@ -173,7 +439,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             GodisnjiPlanProgramID = 1,
-                            Naziv = "Plan 1",
+                            Naziv = "Matematika Plan - 1A",
                             OdjeljenjeID = 1,
                             PredmetID = 1,
                             SkolaID = 1,
@@ -182,11 +448,128 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             GodisnjiPlanProgramID = 2,
-                            Naziv = "Plan 2",
+                            Naziv = "Fizika Plan - 1A",
+                            OdjeljenjeID = 1,
+                            PredmetID = 3,
+                            SkolaID = 1,
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 3,
+                            Naziv = "Hemija Plan - 1A",
+                            OdjeljenjeID = 1,
+                            PredmetID = 5,
+                            SkolaID = 1,
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 4,
+                            Naziv = "Informatika Plan - 1A",
+                            OdjeljenjeID = 1,
+                            PredmetID = 7,
+                            SkolaID = 1,
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 5,
+                            Naziv = "Engleski Plan - 1A",
+                            OdjeljenjeID = 1,
+                            PredmetID = 9,
+                            SkolaID = 1,
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 6,
+                            Naziv = "Matematika Plan - 2A",
+                            OdjeljenjeID = 2,
+                            PredmetID = 1,
+                            SkolaID = 1,
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 7,
+                            Naziv = "Fizika Plan - 2A",
+                            OdjeljenjeID = 2,
+                            PredmetID = 3,
+                            SkolaID = 1,
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 8,
+                            Naziv = "Hemija Plan - 2A",
+                            OdjeljenjeID = 2,
+                            PredmetID = 5,
+                            SkolaID = 1,
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 9,
+                            Naziv = "Informatika Plan - 2A",
+                            OdjeljenjeID = 2,
+                            PredmetID = 7,
+                            SkolaID = 1,
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 10,
+                            Naziv = "Engleski Plan - 2A",
+                            OdjeljenjeID = 2,
+                            PredmetID = 9,
+                            SkolaID = 1,
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 11,
+                            Naziv = "Biologija Plan - 1A",
                             OdjeljenjeID = 3,
                             PredmetID = 2,
                             SkolaID = 2,
-                            brojCasova = 7
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 12,
+                            Naziv = "Fizika Plan - 1A",
+                            OdjeljenjeID = 3,
+                            PredmetID = 4,
+                            SkolaID = 2,
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 13,
+                            Naziv = "Hemija Plan - 1A",
+                            OdjeljenjeID = 3,
+                            PredmetID = 6,
+                            SkolaID = 2,
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 14,
+                            Naziv = "Informatika Plan - 1A",
+                            OdjeljenjeID = 3,
+                            PredmetID = 8,
+                            SkolaID = 2,
+                            brojCasova = 5
+                        },
+                        new
+                        {
+                            GodisnjiPlanProgramID = 15,
+                            Naziv = "Elektrotehnika Plan - 1A",
+                            OdjeljenjeID = 3,
+                            PredmetID = 10,
+                            SkolaID = 2,
+                            brojCasova = 5
                         });
                 });
 
@@ -219,133 +602,133 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             KorisnikUlogaID = 1,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8204),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3381),
                             KorisnikID = 1,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 2,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8255),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3419),
                             KorisnikID = 2,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 3,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8259),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3422),
                             KorisnikID = 3,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 4,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8262),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3424),
                             KorisnikID = 4,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 5,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8266),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3426),
                             KorisnikID = 5,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 6,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8269),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3428),
                             KorisnikID = 6,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 7,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8273),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3430),
                             KorisnikID = 7,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 8,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8324),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3432),
                             KorisnikID = 8,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 9,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8328),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3434),
                             KorisnikID = 9,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 10,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8332),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3436),
                             KorisnikID = 10,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 11,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8335),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3438),
                             KorisnikID = 11,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 12,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8339),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3440),
                             KorisnikID = 12,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 13,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8342),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3442),
                             KorisnikID = 13,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 14,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8346),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3444),
                             KorisnikID = 14,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 15,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8349),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3446),
                             KorisnikID = 15,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 16,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8353),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3448),
                             KorisnikID = 16,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 17,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8356),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3450),
                             KorisnikID = 17,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 18,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8360),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3452),
                             KorisnikID = 18,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 19,
-                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8363),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3454),
                             KorisnikID = 19,
                             UlogaID = 2
                         });
@@ -659,7 +1042,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 1,
-                            Datum = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8438),
+                            Datum = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3548),
                             KorisnikID = 2,
                             PredmetID = 1,
                             VrijednostOcjene = 5
@@ -667,7 +1050,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 2,
-                            Datum = new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8444),
+                            Datum = new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3552),
                             KorisnikID = 2,
                             PredmetID = 2,
                             VrijednostOcjene = 4
@@ -831,9 +1214,73 @@ namespace eDnevnik.Services.Migrations
                         },
                         new
                         {
+                            PredmetID = 3,
+                            Naziv = "Fizika",
+                            Opis = "Osnovne fizikalne pojave i zakoni",
+                            SkolaID = 1,
+                            StateMachine = "draft"
+                        },
+                        new
+                        {
+                            PredmetID = 5,
+                            Naziv = "Hemija",
+                            Opis = "Osnovni hemijski spojevi i reakcije",
+                            SkolaID = 1,
+                            StateMachine = "draft"
+                        },
+                        new
+                        {
+                            PredmetID = 7,
+                            Naziv = "Informatika",
+                            Opis = "Osnove programiranja i računarskih sistema",
+                            SkolaID = 1,
+                            StateMachine = "draft"
+                        },
+                        new
+                        {
+                            PredmetID = 9,
+                            Naziv = "Engleski",
+                            Opis = "Osnove engleskog jezika i komunikacije",
+                            SkolaID = 1,
+                            StateMachine = "draft"
+                        },
+                        new
+                        {
                             PredmetID = 2,
                             Naziv = "Biologija",
-                            Opis = "Biljke",
+                            Opis = "Biljke i životne procese",
+                            SkolaID = 2,
+                            StateMachine = "draft"
+                        },
+                        new
+                        {
+                            PredmetID = 4,
+                            Naziv = "Fizika",
+                            Opis = "Tehnička primjena fizikalnih zakona",
+                            SkolaID = 2,
+                            StateMachine = "draft"
+                        },
+                        new
+                        {
+                            PredmetID = 6,
+                            Naziv = "Hemija",
+                            Opis = "Hemijski procesi u tehnologiji",
+                            SkolaID = 2,
+                            StateMachine = "draft"
+                        },
+                        new
+                        {
+                            PredmetID = 8,
+                            Naziv = "Informatika",
+                            Opis = "Napredno programiranje i sistemi",
+                            SkolaID = 2,
+                            StateMachine = "draft"
+                        },
+                        new
+                        {
+                            PredmetID = 10,
+                            Naziv = "Elektrotehnika",
+                            Opis = "Osnove elektrotehnike i elektronike",
                             SkolaID = 2,
                             StateMachine = "draft"
                         });
