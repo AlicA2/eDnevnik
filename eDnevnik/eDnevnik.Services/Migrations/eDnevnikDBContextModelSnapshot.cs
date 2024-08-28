@@ -219,133 +219,133 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             KorisnikUlogaID = 1,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4906),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3315),
                             KorisnikID = 1,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 2,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4958),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3364),
                             KorisnikID = 2,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 3,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4961),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3367),
                             KorisnikID = 3,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 4,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4963),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3371),
                             KorisnikID = 4,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 5,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4965),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3374),
                             KorisnikID = 5,
-                            UlogaID = 2
+                            UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 6,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4967),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3377),
                             KorisnikID = 6,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 7,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4969),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3380),
                             KorisnikID = 7,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 8,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4971),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3384),
                             KorisnikID = 8,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 9,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4973),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3387),
                             KorisnikID = 9,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 10,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4975),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3390),
                             KorisnikID = 10,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 11,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4977),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3394),
                             KorisnikID = 11,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 12,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4979),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3397),
                             KorisnikID = 12,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 13,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4981),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3400),
                             KorisnikID = 13,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 14,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4983),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3404),
                             KorisnikID = 14,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 15,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4985),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3407),
                             KorisnikID = 15,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 16,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4987),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3410),
                             KorisnikID = 16,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 17,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4989),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3413),
                             KorisnikID = 17,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 18,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4991),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3417),
                             KorisnikID = 18,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 19,
-                            DatumIzmjene = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(4993),
+                            DatumIzmjene = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3420),
                             KorisnikID = 19,
                             UlogaID = 2
                         });
@@ -449,180 +449,180 @@ namespace eDnevnik.Services.Migrations
                         {
                             KorisnikID = 5,
                             Email = "student1@gmail.com",
-                            Ime = "Student1",
+                            Ime = "Amar",
                             KorisnickoIme = "student1",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 1,
-                            Prezime = "Prezime1",
+                            Prezime = "Alić",
                             Telefon = "+38700000001"
                         },
                         new
                         {
                             KorisnikID = 6,
                             Email = "student2@gmail.com",
-                            Ime = "Student2",
+                            Ime = "Almir",
                             KorisnickoIme = "student2",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 1,
-                            Prezime = "Prezime2",
+                            Prezime = "Gogolo",
                             Telefon = "+38700000002"
                         },
                         new
                         {
                             KorisnikID = 7,
                             Email = "student3@gmail.com",
-                            Ime = "Student3",
+                            Ime = "Sefer",
                             KorisnickoIme = "student3",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 1,
-                            Prezime = "Prezime3",
+                            Prezime = "Seferović",
                             Telefon = "+38700000003"
                         },
                         new
                         {
                             KorisnikID = 8,
                             Email = "student4@gmail.com",
-                            Ime = "Student4",
+                            Ime = "Sinan",
                             KorisnickoIme = "student4",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 1,
-                            Prezime = "Prezime4",
+                            Prezime = "Ahmedovski",
                             Telefon = "+38700000004"
                         },
                         new
                         {
                             KorisnikID = 9,
                             Email = "student5@gmail.com",
-                            Ime = "Student5",
+                            Ime = "Iman",
                             KorisnickoIme = "student5",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 1,
-                            Prezime = "Prezime5",
+                            Prezime = "Gosto",
                             Telefon = "+38700000005"
                         },
                         new
                         {
                             KorisnikID = 10,
                             Email = "student6@gmail.com",
-                            Ime = "Student6",
+                            Ime = "Imad",
                             KorisnickoIme = "student6",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 1,
-                            Prezime = "Prezime6",
+                            Prezime = "Alić",
                             Telefon = "+38700000006"
                         },
                         new
                         {
                             KorisnikID = 11,
                             Email = "student7@gmail.com",
-                            Ime = "Student7",
+                            Ime = "Benaid",
                             KorisnickoIme = "student7",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 1,
-                            Prezime = "Prezime7",
+                            Prezime = "Ahmetović",
                             Telefon = "+38700000007"
                         },
                         new
                         {
                             KorisnikID = 12,
                             Email = "student8@gmail.com",
-                            Ime = "Student8",
+                            Ime = "Azer",
                             KorisnickoIme = "student8",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 1,
-                            Prezime = "Prezime8",
+                            Prezime = "Sultanović",
                             Telefon = "+38700000008"
                         },
                         new
                         {
                             KorisnikID = 13,
                             Email = "student9@gmail.com",
-                            Ime = "Student9",
+                            Ime = "Goran",
                             KorisnickoIme = "student9",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 1,
-                            Prezime = "Prezime9",
+                            Prezime = "Škondrić",
                             Telefon = "+38700000009"
                         },
                         new
                         {
                             KorisnikID = 14,
                             Email = "student10@gmail.com",
-                            Ime = "Student10",
+                            Ime = "Emina",
                             KorisnickoIme = "student10",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 2,
-                            Prezime = "Prezime10",
+                            Prezime = "Junuz",
                             Telefon = "+38700000010"
                         },
                         new
                         {
                             KorisnikID = 15,
                             Email = "student11@gmail.com",
-                            Ime = "Student11",
+                            Ime = "Amel",
                             KorisnickoIme = "student11",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 2,
-                            Prezime = "Prezime11",
+                            Prezime = "Musić",
                             Telefon = "+38700000011"
                         },
                         new
                         {
                             KorisnikID = 16,
                             Email = "student12@gmail.com",
-                            Ime = "Student12",
+                            Ime = "Dragi",
                             KorisnickoIme = "student12",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 2,
-                            Prezime = "Prezime12",
+                            Prezime = "Tiro",
                             Telefon = "+38700000012"
                         },
                         new
                         {
                             KorisnikID = 17,
                             Email = "student13@gmail.com",
-                            Ime = "Student13",
+                            Ime = "Adil",
                             KorisnickoIme = "student13",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 2,
-                            Prezime = "Prezime13",
+                            Prezime = "Joldić",
                             Telefon = "+38700000013"
                         },
                         new
                         {
                             KorisnikID = 18,
                             Email = "student14@gmail.com",
-                            Ime = "Student14",
+                            Ime = "Lejla",
                             KorisnickoIme = "student14",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 2,
-                            Prezime = "Prezime14",
+                            Prezime = "Jazvin",
                             Telefon = "+38700000014"
                         },
                         new
                         {
                             KorisnikID = 19,
                             Email = "student15@gmail.com",
-                            Ime = "Student15",
+                            Ime = "Elmir",
                             KorisnickoIme = "student15",
                             LozinkaHash = "",
                             LozinkaSalt = "",
                             OdjeljenjeID = 2,
-                            Prezime = "Prezime15",
+                            Prezime = "Babović",
                             Telefon = "+38700000015"
                         });
                 });
@@ -659,7 +659,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 1,
-                            Datum = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(5049),
+                            Datum = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3486),
                             KorisnikID = 2,
                             PredmetID = 1,
                             VrijednostOcjene = 5
@@ -667,7 +667,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 2,
-                            Datum = new DateTime(2024, 8, 19, 14, 7, 1, 648, DateTimeKind.Local).AddTicks(5052),
+                            Datum = new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3491),
                             KorisnikID = 2,
                             PredmetID = 2,
                             VrijednostOcjene = 4
@@ -717,6 +717,13 @@ namespace eDnevnik.Services.Migrations
                             NazivOdjeljenja = "2A",
                             RazrednikID = 4,
                             SkolaID = 1
+                        },
+                        new
+                        {
+                            OdjeljenjeID = 3,
+                            NazivOdjeljenja = "1A",
+                            RazrednikID = 5,
+                            SkolaID = 2
                         });
                 });
 
@@ -867,7 +874,7 @@ namespace eDnevnik.Services.Migrations
                             Adresa = "Sjeverni logor bb",
                             Drzava = "BiH",
                             Grad = "Mostar",
-                            Naziv = "Fakultet Informacijskih Tehnologija"
+                            Naziv = "Gimnazija"
                         },
                         new
                         {

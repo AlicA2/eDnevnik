@@ -138,7 +138,7 @@ namespace eDnevnik.Services
                 new Skola
                 {
                     SkolaID = 1,
-                    Naziv = "Fakultet Informacijskih Tehnologija",
+                    Naziv = "Gimnazija",
                     Grad = "Mostar",
                     Drzava = "BiH",
                     Adresa = "Sjeverni logor bb",
@@ -215,6 +215,13 @@ namespace eDnevnik.Services
                     NazivOdjeljenja = "2A",
                     SkolaID = 1,
                     RazrednikID = 4
+                },
+                new Odjeljenje
+                {
+                    OdjeljenjeID = 3,
+                    NazivOdjeljenja = "1A",
+                    SkolaID = 2,
+                    RazrednikID = 5
                 }
             );
         }
@@ -250,7 +257,7 @@ namespace eDnevnik.Services
                     UlogaID = 1,
                     DatumIzmjene = DateTime.Now
                 },
-                new KorisniciUloge { KorisnikUlogaID = 5, KorisnikID = 5, UlogaID = 2, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 5, KorisnikID = 5, UlogaID = 1, DatumIzmjene = DateTime.Now },
                 new KorisniciUloge { KorisnikUlogaID = 6, KorisnikID = 6, UlogaID = 2, DatumIzmjene = DateTime.Now },
                 new KorisniciUloge { KorisnikUlogaID = 7, KorisnikID = 7, UlogaID = 2, DatumIzmjene = DateTime.Now },
                 new KorisniciUloge { KorisnikUlogaID = 8, KorisnikID = 8, UlogaID = 2, DatumIzmjene = DateTime.Now },
@@ -333,21 +340,21 @@ namespace eDnevnik.Services
                     LozinkaHash = "JfJzsL3ngGWki+Dn67C+8WLy73I=",
                     LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg=="
                 },
-                new Korisnik { KorisnikID = 5, Ime = "Student1", Prezime = "Prezime1", Email = "student1@gmail.com", Telefon = "+38700000001", KorisnickoIme = "student1", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 6, Ime = "Student2", Prezime = "Prezime2", Email = "student2@gmail.com", Telefon = "+38700000002", KorisnickoIme = "student2", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 7, Ime = "Student3", Prezime = "Prezime3", Email = "student3@gmail.com", Telefon = "+38700000003", KorisnickoIme = "student3", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 8, Ime = "Student4", Prezime = "Prezime4", Email = "student4@gmail.com", Telefon = "+38700000004", KorisnickoIme = "student4", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 9, Ime = "Student5", Prezime = "Prezime5", Email = "student5@gmail.com", Telefon = "+38700000005", KorisnickoIme = "student5", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 10, Ime = "Student6", Prezime = "Prezime6", Email = "student6@gmail.com", Telefon = "+38700000006", KorisnickoIme = "student6", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 11, Ime = "Student7", Prezime = "Prezime7", Email = "student7@gmail.com", Telefon = "+38700000007", KorisnickoIme = "student7", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 12, Ime = "Student8", Prezime = "Prezime8", Email = "student8@gmail.com", Telefon = "+38700000008", KorisnickoIme = "student8", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 13, Ime = "Student9", Prezime = "Prezime9", Email = "student9@gmail.com", Telefon = "+38700000009", KorisnickoIme = "student9", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 14, Ime = "Student10", Prezime = "Prezime10", Email = "student10@gmail.com", Telefon = "+38700000010", KorisnickoIme = "student10", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 15, Ime = "Student11", Prezime = "Prezime11", Email = "student11@gmail.com", Telefon = "+38700000011", KorisnickoIme = "student11", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 16, Ime = "Student12", Prezime = "Prezime12", Email = "student12@gmail.com", Telefon = "+38700000012", KorisnickoIme = "student12", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 17, Ime = "Student13", Prezime = "Prezime13", Email = "student13@gmail.com", Telefon = "+38700000013", KorisnickoIme = "student13", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 18, Ime = "Student14", Prezime = "Prezime14", Email = "student14@gmail.com", Telefon = "+38700000014", KorisnickoIme = "student14", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 19, Ime = "Student15", Prezime = "Prezime15", Email = "student15@gmail.com", Telefon = "+38700000015", KorisnickoIme = "student15", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 2 }
+                new Korisnik { KorisnikID = 5, Ime = "Amar", Prezime = "Alić", Email = "student1@gmail.com", Telefon = "+38700000001", KorisnickoIme = "student1", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 6, Ime = "Almir", Prezime = "Gogolo", Email = "student2@gmail.com", Telefon = "+38700000002", KorisnickoIme = "student2", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 7, Ime = "Sefer", Prezime = "Seferović", Email = "student3@gmail.com", Telefon = "+38700000003", KorisnickoIme = "student3", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 8, Ime = "Sinan", Prezime = "Ahmedovski", Email = "student4@gmail.com", Telefon = "+38700000004", KorisnickoIme = "student4", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 9, Ime = "Iman", Prezime = "Gosto", Email = "student5@gmail.com", Telefon = "+38700000005", KorisnickoIme = "student5", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 10, Ime = "Imad", Prezime = "Alić", Email = "student6@gmail.com", Telefon = "+38700000006", KorisnickoIme = "student6", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 11, Ime = "Benaid", Prezime = "Ahmetović", Email = "student7@gmail.com", Telefon = "+38700000007", KorisnickoIme = "student7", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 12, Ime = "Azer", Prezime = "Sultanović", Email = "student8@gmail.com", Telefon = "+38700000008", KorisnickoIme = "student8", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 13, Ime = "Goran", Prezime = "Škondrić", Email = "student9@gmail.com", Telefon = "+38700000009", KorisnickoIme = "student9", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 14, Ime = "Emina", Prezime = "Junuz", Email = "student10@gmail.com", Telefon = "+38700000010", KorisnickoIme = "student10", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 2 },
+                new Korisnik { KorisnikID = 15, Ime = "Amel", Prezime = "Musić", Email = "student11@gmail.com", Telefon = "+38700000011", KorisnickoIme = "student11", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 2 },
+                new Korisnik { KorisnikID = 16, Ime = "Dragi", Prezime = "Tiro", Email = "student12@gmail.com", Telefon = "+38700000012", KorisnickoIme = "student12", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 2 },
+                new Korisnik { KorisnikID = 17, Ime = "Adil", Prezime = "Joldić", Email = "student13@gmail.com", Telefon = "+38700000013", KorisnickoIme = "student13", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 2 },
+                new Korisnik { KorisnikID = 18, Ime = "Lejla", Prezime = "Jazvin", Email = "student14@gmail.com", Telefon = "+38700000014", KorisnickoIme = "student14", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 2 },
+                new Korisnik { KorisnikID = 19, Ime = "Elmir", Prezime = "Babović", Email = "student15@gmail.com", Telefon = "+38700000015", KorisnickoIme = "student15", LozinkaHash = "", LozinkaSalt = "", OdjeljenjeID = 2 }
             );
         }
     }
