@@ -22,20 +22,10 @@ builder.Services.AddTransient<ISkolaService, SkolaService>();
 builder.Services.AddTransient<IOdjeljenjePredmetService, OdjeljenjePredmetService>();
 builder.Services.AddTransient<IOcjeneService, OcjeneService>();
 
-
 builder.Services.AddTransient<BaseState>();
 builder.Services.AddTransient<InitialPredmetState>();
 builder.Services.AddTransient<ActivePredmetState>();
 builder.Services.AddTransient<DraftPredmetState>();
-
-
-//builder.Services.AddTransient<InitialKorisnikState>();
-//builder.Services.AddTransient<ActiveKorisnikState>();
-//builder.Services.AddTransient<DraftKorisnikState>();
-
-
-
-
 
 builder.Services.AddControllers(x =>
 {
@@ -60,10 +50,8 @@ builder.Services.AddSwaggerGen(c =>
                 Reference= new OpenApiReference{Type= ReferenceType.SecurityScheme, Id = "basicAuth"}
             },
             new string[]{}
-
-    }
+        }
     });
-
 });
 
 builder.Services.AddAutoMapper(typeof(IKorisnikService));
@@ -71,10 +59,9 @@ builder.Services.AddAuthentication("BasicAuthentication")
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<eDnevnikDBContext>(options=>options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<eDnevnikDBContext>(options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -82,6 +69,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Redirect root URL to Swagger UI
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        context.Response.Redirect("/swagger/index.html");
+        return;
+    }
+
+    await next();
+});
 
 app.UseHttpsRedirection();
 
