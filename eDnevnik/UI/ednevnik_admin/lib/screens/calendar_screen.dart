@@ -35,13 +35,11 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
 
     for (var classes in result.result) {
       while (true) {
-        // Skip weekends
         if (currentDay.weekday == DateTime.saturday || currentDay.weekday == DateTime.sunday) {
           currentDay = currentDay.add(const Duration(days: 1));
           continue;
         }
 
-        // Schedule classes from 08:00 to 14:00
         DateTime startTime = DateTime(currentDay.year, currentDay.month, currentDay.day, 8);
         while (startTime.hour < 14) {
           if (classIndex >= result.result.length) break;
@@ -49,11 +47,10 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
           events.putIfAbsent(currentDay, () => []).add(
               '${_formatTime(startTime)} $className');
           
-          startTime = startTime.add(const Duration(minutes: 60)); // 45 mins class + 15 mins break
+          startTime = startTime.add(const Duration(minutes: 60));
           classIndex++;
         }
 
-        // Move to the next day
         currentDay = currentDay.add(const Duration(days: 1));
         break;
       }
