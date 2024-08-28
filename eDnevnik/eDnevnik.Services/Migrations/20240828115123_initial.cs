@@ -323,20 +323,16 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "KorisnikUlogaID", "DatumIzmjene", "KorisnikID", "UlogaID" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3315), 1, 1 },
-                    { 2, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3364), 2, 2 },
-                    { 3, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3367), 3, 2 },
-                    { 4, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3371), 4, 1 }
+                    { 1, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8204), 1, 1 },
+                    { 2, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8255), 2, 2 },
+                    { 3, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8259), 3, 2 },
+                    { 4, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8262), 4, 1 }
                 });
 
             migrationBuilder.InsertData(
                 table: "GodisnjiPlanProgram",
                 columns: new[] { "GodisnjiPlanProgramID", "Naziv", "OdjeljenjeID", "PredmetID", "SkolaID", "brojCasova" },
-                values: new object[,]
-                {
-                    { 1, "Plan 1", 1, 1, 1, 5 },
-                    { 2, "Plan 2", 2, 2, 2, 7 }
-                });
+                values: new object[] { 1, "Plan 1", 1, 1, 1, 5 });
 
             migrationBuilder.InsertData(
                 table: "Korisnici",
@@ -365,8 +361,8 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "OcjenaID", "Datum", "KorisnikID", "PredmetID", "VrijednostOcjene" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3486), 2, 1, 5 },
-                    { 2, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3491), 2, 2, 4 }
+                    { 1, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8438), 2, 1, 5 },
+                    { 2, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8444), 2, 2, 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -378,14 +374,7 @@ namespace eDnevnik.Services.Migrations
                     { 2, 1, "Cas 2", "Opis Casa 2" },
                     { 3, 1, "Cas 3", "Opis Casa 3" },
                     { 4, 1, "Cas 4", "Opis Casa 4" },
-                    { 5, 1, "Cas 5", "Opis Casa 5" },
-                    { 6, 2, "Cas 1", "Opis Casa 6" },
-                    { 7, 2, "Cas 2", "Opis Casa 7" },
-                    { 8, 2, "Cas 3", "Opis Casa 8" },
-                    { 9, 2, "Cas 4", "Opis Casa 9" },
-                    { 10, 2, "Cas 5", "Opis Casa 10" },
-                    { 11, 2, "Cas 6", "Opis Casa 11" },
-                    { 12, 2, "Cas 7", "Opis Casa 12" }
+                    { 5, 1, "Cas 5", "Opis Casa 5" }
                 });
 
             migrationBuilder.InsertData(
@@ -398,21 +387,40 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "KorisnikUlogaID", "DatumIzmjene", "KorisnikID", "UlogaID" },
                 values: new object[,]
                 {
-                    { 5, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3374), 5, 1 },
-                    { 6, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3377), 6, 2 },
-                    { 7, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3380), 7, 2 },
-                    { 8, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3384), 8, 2 },
-                    { 9, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3387), 9, 2 },
-                    { 10, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3390), 10, 2 },
-                    { 11, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3394), 11, 2 },
-                    { 12, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3397), 12, 2 },
-                    { 13, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3400), 13, 2 },
-                    { 14, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3404), 14, 2 },
-                    { 15, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3407), 15, 2 },
-                    { 16, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3410), 16, 2 },
-                    { 17, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3413), 17, 2 },
-                    { 18, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3417), 18, 2 },
-                    { 19, new DateTime(2024, 8, 28, 13, 29, 28, 685, DateTimeKind.Local).AddTicks(3420), 19, 2 }
+                    { 5, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8266), 5, 1 },
+                    { 6, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8269), 6, 2 },
+                    { 7, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8273), 7, 2 },
+                    { 8, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8324), 8, 2 },
+                    { 9, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8328), 9, 2 },
+                    { 10, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8332), 10, 2 },
+                    { 11, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8335), 11, 2 },
+                    { 12, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8339), 12, 2 },
+                    { 13, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8342), 13, 2 },
+                    { 14, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8346), 14, 2 },
+                    { 15, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8349), 15, 2 },
+                    { 16, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8353), 16, 2 },
+                    { 17, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8356), 17, 2 },
+                    { 18, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8360), 18, 2 },
+                    { 19, new DateTime(2024, 8, 28, 13, 51, 23, 324, DateTimeKind.Local).AddTicks(8363), 19, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "GodisnjiPlanProgram",
+                columns: new[] { "GodisnjiPlanProgramID", "Naziv", "OdjeljenjeID", "PredmetID", "SkolaID", "brojCasova" },
+                values: new object[] { 2, "Plan 2", 3, 2, 2, 7 });
+
+            migrationBuilder.InsertData(
+                table: "Casovi",
+                columns: new[] { "CasoviID", "GodisnjiPlanProgramID", "NazivCasa", "Opis" },
+                values: new object[,]
+                {
+                    { 6, 2, "Cas 1", "Opis Casa 6" },
+                    { 7, 2, "Cas 2", "Opis Casa 7" },
+                    { 8, 2, "Cas 3", "Opis Casa 8" },
+                    { 9, 2, "Cas 4", "Opis Casa 9" },
+                    { 10, 2, "Cas 5", "Opis Casa 10" },
+                    { 11, 2, "Cas 6", "Opis Casa 11" },
+                    { 12, 2, "Cas 7", "Opis Casa 12" }
                 });
 
             migrationBuilder.CreateIndex(

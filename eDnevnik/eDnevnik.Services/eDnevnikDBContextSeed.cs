@@ -35,7 +35,7 @@ namespace eDnevnik.Services
                     GodisnjiPlanProgramID = 2,
                     brojCasova = 7,
                     Naziv = "Plan 2",
-                    OdjeljenjeID = 2,
+                    OdjeljenjeID = 3,
                     PredmetID = 2,
                     SkolaID = 2
                 }
