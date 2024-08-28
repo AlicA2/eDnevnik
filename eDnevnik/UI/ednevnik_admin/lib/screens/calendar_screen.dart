@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
+import 'package:ednevnik_admin/models/classes.dart';
+import 'package:ednevnik_admin/providers/classes_provider.dart';
 
 class CalendarDetailScreen extends StatefulWidget {
   const CalendarDetailScreen({super.key});
@@ -14,27 +16,65 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   late List<String> _selectedEvents;
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
+  final ClassesProvider _classesProvider = ClassesProvider();
 
   @override
   void initState() {
     super.initState();
-    _events = {
-      _normalizeDate(DateTime(2024, 4, 1)): ['10:30 Math Class', '12:00 Biology Class', '14:00 Physics Class'],
-      _normalizeDate(DateTime(2024, 4, 2)): ['10:30 History Class', '12:00 Math Class'],
-      _normalizeDate(DateTime(2024, 4, 3)): ['10:30 Math Class', '14:00 Physics Class'],
-      _normalizeDate(DateTime(2024, 4, 4)): ['12:00 Biology Class', '14:00 Physics Class'],
-      _normalizeDate(DateTime(2024, 4, 5)): ['07:30 Gym Class', '10:30 Math Class'],
-      _normalizeDate(DateTime(2024, 4, 10)): ['Day Off'],
-    };
-    _selectedEvents = _getEventsForDay(_selectedDay);
+    _events = {};
+    _selectedEvents = [];
+    _loadEvents();
   }
 
-  DateTime _normalizeDate(DateTime date) {
-    return DateTime(date.year, date.month, date.day);
+  Future<void> _loadEvents() async {
+    var result = await _classesProvider.get();
+    Map<DateTime, List<String>> events = {};
+
+    DateTime currentDay = DateTime(_selectedDay.year, 2, 1);
+    int classIndex = 0;
+
+    for (var classes in result.result) {
+      while (true) {
+        // Skip weekends
+        if (currentDay.weekday == DateTime.saturday || currentDay.weekday == DateTime.sunday) {
+          currentDay = currentDay.add(const Duration(days: 1));
+          continue;
+        }
+
+        // Schedule classes from 08:00 to 14:00
+        DateTime startTime = DateTime(currentDay.year, currentDay.month, currentDay.day, 8);
+        while (startTime.hour < 14) {
+          if (classIndex >= result.result.length) break;
+          String className = result.result[classIndex].nazivCasa ?? 'Class';
+          events.putIfAbsent(currentDay, () => []).add(
+              '${_formatTime(startTime)} $className');
+          
+          startTime = startTime.add(const Duration(minutes: 60)); // 45 mins class + 15 mins break
+          classIndex++;
+        }
+
+        // Move to the next day
+        currentDay = currentDay.add(const Duration(days: 1));
+        break;
+      }
+    }
+
+    setState(() {
+      _events = events;
+      _selectedEvents = _getEventsForDay(_selectedDay);
+    });
+  }
+
+  String _formatTime(DateTime time) {
+    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
   }
 
   List<String> _getEventsForDay(DateTime day) {
     return _events[_normalizeDate(day)] ?? [];
+  }
+
+  DateTime _normalizeDate(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
   }
 
   @override

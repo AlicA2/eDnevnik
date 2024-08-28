@@ -223,14 +223,6 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
           DataColumn(
             label: Expanded(
               child: Text(
-                "State Machine",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
                 "",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
@@ -248,7 +240,6 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                       DataCell(Text(index.toString())),
                       DataCell(Text(e.naziv ?? "")),
                       DataCell(Text(e.opis ?? "")),
-                      DataCell(Text(e.stateMachine ?? "")),
                       DataCell(IconButton(
                         icon: Icon(Icons.edit),
                         onPressed: () async {
