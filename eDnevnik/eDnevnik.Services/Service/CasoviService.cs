@@ -41,9 +41,36 @@ namespace eDnevnik.Services.Service
                 {
                     query = query.Where(x => x.GodisnjiPlanProgramID == search.GodisnjiPlanProgramID.Value);
                 }
+                if (search.SkolaID.HasValue)
+                {
+                    query = query.Where(x => x.GodisnjiPlanProgram.SkolaID == search.SkolaID.Value);
+                }
             }
 
             return base.AddFilter(query, search);
+        }
+        public override async Task<PagedResult<Model.Models.Casovi>> Get(CasoviSearchObject search = null)
+        {
+            var query = _context.Casovi
+                .Include(x => x.GodisnjiPlanProgram)
+                .AsQueryable();
+
+            query = AddFilter(query, search);
+
+            var totalCount = await query.CountAsync();
+            if (search.Page.HasValue && search.PageSize.HasValue)
+            {
+                query = query.Skip((search.Page.Value - 1) * search.PageSize.Value)
+                             .Take(search.PageSize.Value);
+            }
+
+            var list = await query.ToListAsync();
+
+            return new PagedResult<Model.Models.Casovi>
+            {
+                Result = _mapper.Map<List<Model.Models.Casovi>>(list),
+                Count = totalCount
+            };
         }
 
         public override async Task<Model.Models.Casovi> Insert(CasoviInsertRequest request)

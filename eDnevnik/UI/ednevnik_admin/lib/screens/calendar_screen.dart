@@ -3,6 +3,9 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:ednevnik_admin/models/classes.dart';
 import 'package:ednevnik_admin/providers/classes_provider.dart';
+import 'package:ednevnik_admin/providers/school_provider.dart';
+import 'package:ednevnik_admin/models/school.dart';
+import 'package:provider/provider.dart';
 
 class CalendarDetailScreen extends StatefulWidget {
   const CalendarDetailScreen({super.key});
@@ -17,17 +20,40 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   final ClassesProvider _classesProvider = ClassesProvider();
+  late SchoolProvider _schoolProvider;
+  School? _selectedSchool;
+  List<School> _schools = [];
 
   @override
   void initState() {
     super.initState();
+    _schoolProvider = context.read<SchoolProvider>();
+
     _events = {};
     _selectedEvents = [];
-    _loadEvents();
+    _fetchSchools();
+  }
+
+  Future<void> _fetchSchools() async {
+    try {
+      var schools = await _schoolProvider.get();
+      if (mounted) {
+        setState(() {
+          _schools = schools.result;
+          if (_schools.isNotEmpty) {
+            _selectedSchool = _schools.first;
+            _loadEvents();
+          }
+        });
+      }
+    } catch (e) {}
   }
 
   Future<void> _loadEvents() async {
-    var result = await _classesProvider.get();
+    if (_selectedSchool == null) return;
+
+    var result = await _classesProvider
+        .get(filter: {'SkolaID': _selectedSchool!.skolaID});
     Map<DateTime, List<String>> events = {};
 
     DateTime currentDay = DateTime(_selectedDay.year, 2, 1);
@@ -35,18 +61,21 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
 
     for (var classes in result.result) {
       while (true) {
-        if (currentDay.weekday == DateTime.saturday || currentDay.weekday == DateTime.sunday) {
+        if (currentDay.weekday == DateTime.saturday ||
+            currentDay.weekday == DateTime.sunday) {
           currentDay = currentDay.add(const Duration(days: 1));
           continue;
         }
 
-        DateTime startTime = DateTime(currentDay.year, currentDay.month, currentDay.day, 8);
+        DateTime startTime =
+            DateTime(currentDay.year, currentDay.month, currentDay.day, 8);
         while (startTime.hour < 14) {
           if (classIndex >= result.result.length) break;
           String className = result.result[classIndex].nazivCasa ?? 'Class';
-          events.putIfAbsent(currentDay, () => []).add(
-              '${_formatTime(startTime)} $className');
-          
+          events
+              .putIfAbsent(currentDay, () => [])
+              .add('${_formatTime(startTime)} $className');
+
           startTime = startTime.add(const Duration(minutes: 60));
           classIndex++;
         }
@@ -104,26 +133,59 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   Widget _buildScreenName() {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(5),
-            topLeft: Radius.circular(20),
-            topRight: Radius.elliptical(5, 5),
-            bottomRight: Radius.circular(30.0),
+      child: Row(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(5),
+                topLeft: Radius.circular(20),
+                topRight: Radius.elliptical(5, 5),
+                bottomRight: Radius.circular(30.0),
+              ),
+            ),
+            padding: const EdgeInsets.all(16.0),
+            child: const Text(
+              "Kalendar",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-        ),
-        padding: const EdgeInsets.all(16.0),
-        child: const Text(
-          "Kalendar",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+          Expanded(
+            child: _buildSchoolDropdown(),
           ),
-        ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildSchoolDropdown() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          width: 300,
+          child: DropdownButton<School>(
+            value: _selectedSchool,
+            items: _schools.map((school) {
+              return DropdownMenuItem<School>(
+                value: school,
+                child: Text(school.naziv ?? "N/A"),
+              );
+            }).toList(),
+            onChanged: (School? newValue) {
+              setState(() {
+                _selectedSchool = newValue;
+              });
+              _loadEvents();
+            },
+          ),
+        ),
+      ],
     );
   }
 
