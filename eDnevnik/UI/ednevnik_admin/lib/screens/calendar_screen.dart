@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
@@ -6,6 +8,16 @@ import 'package:ednevnik_admin/providers/classes_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/models/school.dart';
 import 'package:provider/provider.dart';
+
+int _getWeekOfYear(DateTime date) {
+  final firstDayOfYear = DateTime(date.year, 1, 1);
+  final firstThursday = firstDayOfYear
+      .add(Duration(days: (DateTime.thursday - firstDayOfYear.weekday) % 7));
+  final thisThursday =
+      date.add(Duration(days: (DateTime.thursday - date.weekday) % 7));
+
+  return ((thisThursday.difference(firstThursday).inDays) / 7).ceil() + 1;
+}
 
 class CalendarDetailScreen extends StatefulWidget {
   const CalendarDetailScreen({super.key});
@@ -54,34 +66,76 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
 
     var result = await _classesProvider
         .get(filter: {'SkolaID': _selectedSchool!.skolaID});
+
     Map<DateTime, List<String>> events = {};
 
     DateTime currentDay = DateTime(_selectedDay.year, 2, 1);
-    int classIndex = 0;
+    while (currentDay.weekday != DateTime.monday) {
+      currentDay = currentDay.add(const Duration(days: 1));
+    }
 
-    for (var classes in result.result) {
-      while (true) {
-        if (currentDay.weekday == DateTime.saturday ||
-            currentDay.weekday == DateTime.sunday) {
-          currentDay = currentDay.add(const Duration(days: 1));
-          continue;
-        }
+    Map<int, Queue<Classes>> groupedClasses = {};
+    for (var cas in result.result) {
+      if (!groupedClasses.containsKey(cas.godisnjiPlanProgramID)) {
+        groupedClasses[cas.godisnjiPlanProgramID!] = Queue<Classes>();
+      }
+      groupedClasses[cas.godisnjiPlanProgramID!]!.add(cas);
+    }
 
-        DateTime startTime =
+    Set<int> usedProgramsInWeek = {};
+
+    while (groupedClasses.values.any((queue) => queue.isNotEmpty)) {
+      if (currentDay.weekday >= DateTime.monday &&
+          currentDay.weekday <= DateTime.friday) {
+        DateTime classTime =
             DateTime(currentDay.year, currentDay.month, currentDay.day, 8);
-        while (startTime.hour < 14) {
-          if (classIndex >= result.result.length) break;
-          String className = result.result[classIndex].nazivCasa ?? 'Class';
-          events
-              .putIfAbsent(currentDay, () => [])
-              .add('${_formatTime(startTime)} $className');
 
-          startTime = startTime.add(const Duration(minutes: 60));
-          classIndex++;
+        while (classTime.hour < 13 &&
+            groupedClasses.values.any((queue) => queue.isNotEmpty)) {
+          bool classScheduled = false;
+
+          for (var entry in groupedClasses.entries.toList()) {
+            int programID = entry.key;
+
+            if (usedProgramsInWeek.contains(programID)) continue;
+
+            if (entry.value.isNotEmpty) {
+              var classItem = entry.value.removeFirst();
+              String className = classItem.nazivCasa ?? 'Class';
+              events
+                  .putIfAbsent(currentDay, () => [])
+                  .add('${_formatTime(classTime)} $className');
+
+              usedProgramsInWeek.add(programID);
+
+              classTime = classTime.add(const Duration(minutes: 60));
+
+              classScheduled = true;
+              break;
+            }
+          }
+
+          if (!classScheduled) break;
         }
 
         currentDay = currentDay.add(const Duration(days: 1));
-        break;
+
+        if (currentDay.weekday == DateTime.monday) {
+          usedProgramsInWeek.clear();
+        }
+
+        while (currentDay.weekday == DateTime.saturday ||
+            currentDay.weekday == DateTime.sunday) {
+          currentDay = currentDay.add(const Duration(days: 1));
+          usedProgramsInWeek.clear();
+        }
+      } else {
+        currentDay = currentDay.add(const Duration(days: 1));
+        while (currentDay.weekday == DateTime.saturday ||
+            currentDay.weekday == DateTime.sunday) {
+          currentDay = currentDay.add(const Duration(days: 1));
+          usedProgramsInWeek.clear();
+        }
       }
     }
 
