@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class UserProvider extends BaseProvider<User> {
-  static const String _baseUrl = String.fromEnvironment("baseUrl",
-      defaultValue: "http://localhost:7260/");
+  static const String _baseUrl =
+      String.fromEnvironment("baseUrl", defaultValue: "http://localhost:7260/");
   static const String _endpoint = "Korisnik";
 
   UserProvider() : super("Korisnik");
@@ -88,20 +88,23 @@ class UserProvider extends BaseProvider<User> {
     }
   }
 
-  Future<Map<String, dynamic>> getLogedWithRole(String username, String password) async {
-  var url = "$_baseUrl$_endpoint/GetLogedWithRole?username=$username&password=$password";
-  var uri = Uri.parse(url);
-  var headers = createHeaders();
+  Future<Map<String, dynamic>> getLogedWithRole(
+      String username, String password) async {
+    var url =
+        "$_baseUrl$_endpoint/GetLogedWithRole?username=$username&password=$password";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
 
-  var response = await http.get(uri, headers: headers);
+    var response = await http.get(uri, headers: headers);
 
-  if (isValidResponse(response)) {
-    var data = jsonDecode(response.body);
-    return data;
-  } else {
-    throw Exception("Unexpected error occurred while logging in");
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      int korisnikId = data['korisnikId'];
+
+      _loggedInUser = await getById(korisnikId);
+      return data;
+    } else {
+      throw Exception("Unexpected error occurred while logging in");
+    }
   }
-}
-
-
 }

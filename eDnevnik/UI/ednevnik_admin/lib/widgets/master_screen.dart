@@ -6,6 +6,7 @@ import 'package:ednevnik_admin/screens/calendar_screen.dart';
 import 'package:ednevnik_admin/screens/department_screen.dart';
 import 'package:ednevnik_admin/screens/help_support_screen.dart';
 import 'package:ednevnik_admin/screens/messages_screen.dart';
+import 'package:ednevnik_admin/screens/report_screen.dart';
 import 'package:ednevnik_admin/screens/student_screen.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
@@ -263,6 +264,15 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
                               YearlyPlanAndProgramDetailScreen(),
+                        ));
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.bar_chart),
+                      title: Text("Izvještaj"),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ReportDetailScreen(),
                         ));
                       },
                     ),
