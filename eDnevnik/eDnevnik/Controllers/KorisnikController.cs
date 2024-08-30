@@ -54,5 +54,19 @@ namespace eDnevnik.Controllers
                 return StatusCode(500, $"Greška prilikom ažuriranja: {ex.Message}");
             }
         }
+
+        [HttpGet("GetLogedWithRole")]
+        public virtual async Task<IActionResult> GetLogedWithRole(string username, string password)
+        {
+            var (korisnikId, uloga) = await _korisnikService.GetLogedWithRole(username, password);
+            if (korisnikId != null && uloga != null)
+            {
+                return Ok(new { korisnikId, uloga });
+            }
+            else
+            {
+                return NotFound("Korisnik nije pronađen ili pogrešna lozinka.");
+            }
+        }
     } 
 }

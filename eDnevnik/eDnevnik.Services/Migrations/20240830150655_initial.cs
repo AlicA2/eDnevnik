@@ -277,8 +277,8 @@ namespace eDnevnik.Services.Migrations
                 values: new object[,]
                 {
                     { 1, "adminadmin@gmail.com", "admin", "admin", "JfJzsL3ngGWki+Dn67C+8WLy73I=", "7TUJfmgkkDvcY3PB/M4fhg==", null, "admin", null, null, "060000000" },
-                    { 2, "ucenik@gmail.com", "ucenik", "ucenik", "", "", null, "ucenik", null, null, "+38700000000" },
-                    { 3, "roditelj@gmail.com", "roditelj", "roditelj", "", "", null, "roditelj", null, null, "+38700000000" },
+                    { 2, "ucenik@gmail.com", "ucenik", "ucenik", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", null, "ucenik", null, null, "+38700000000" },
+                    { 3, "roditelj@gmail.com", "roditelj", "roditelj", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", null, "roditelj", null, null, "+38700000000" },
                     { 4, "denismusic@gmail.com", "Denis", "denis", "JfJzsL3ngGWki+Dn67C+8WLy73I=", "7TUJfmgkkDvcY3PB/M4fhg==", null, "Music", null, null, "060300400" }
                 });
 
@@ -331,10 +331,10 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "KorisnikUlogaID", "DatumIzmjene", "KorisnikID", "UlogaID" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3381), 1, 1 },
-                    { 2, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3419), 2, 2 },
-                    { 3, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3422), 3, 2 },
-                    { 4, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3424), 4, 1 }
+                    { 1, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3045), 1, 1 },
+                    { 2, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3087), 2, 2 },
+                    { 3, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3091), 3, 2 },
+                    { 4, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3094), 4, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -359,21 +359,21 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "KorisnikID", "Email", "Ime", "KorisnickoIme", "LozinkaHash", "LozinkaSalt", "OdjeljenjeID", "Prezime", "StateMachine", "Status", "Telefon" },
                 values: new object[,]
                 {
-                    { 5, "student1@gmail.com", "Amar", "student1", "", "", 1, "Alić", null, null, "+38700000001" },
-                    { 6, "student2@gmail.com", "Almir", "student2", "", "", 1, "Gogolo", null, null, "+38700000002" },
-                    { 7, "student3@gmail.com", "Sefer", "student3", "", "", 1, "Seferović", null, null, "+38700000003" },
-                    { 8, "student4@gmail.com", "Sinan", "student4", "", "", 1, "Ahmedovski", null, null, "+38700000004" },
-                    { 9, "student5@gmail.com", "Iman", "student5", "", "", 1, "Gosto", null, null, "+38700000005" },
-                    { 10, "student6@gmail.com", "Imad", "student6", "", "", 1, "Alić", null, null, "+38700000006" },
-                    { 11, "student7@gmail.com", "Benaid", "student7", "", "", 1, "Ahmetović", null, null, "+38700000007" },
-                    { 12, "student8@gmail.com", "Azer", "student8", "", "", 1, "Sultanović", null, null, "+38700000008" },
-                    { 13, "student9@gmail.com", "Goran", "student9", "", "", 1, "Škondrić", null, null, "+38700000009" },
-                    { 14, "student10@gmail.com", "Emina", "student10", "", "", 2, "Junuz", null, null, "+38700000010" },
-                    { 15, "student11@gmail.com", "Amel", "student11", "", "", 2, "Musić", null, null, "+38700000011" },
-                    { 16, "student12@gmail.com", "Dragi", "student12", "", "", 2, "Tiro", null, null, "+38700000012" },
-                    { 17, "student13@gmail.com", "Adil", "student13", "", "", 2, "Joldić", null, null, "+38700000013" },
-                    { 18, "student14@gmail.com", "Lejla", "student14", "", "", 2, "Jazvin", null, null, "+38700000014" },
-                    { 19, "student15@gmail.com", "Elmir", "student15", "", "", 2, "Babović", null, null, "+38700000015" }
+                    { 5, "student1@gmail.com", "Amar", "student1", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 1, "Alić", null, null, "+38700000001" },
+                    { 6, "student2@gmail.com", "Almir", "student2", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 1, "Gogolo", null, null, "+38700000002" },
+                    { 7, "student3@gmail.com", "Sefer", "student3", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 1, "Seferović", null, null, "+38700000003" },
+                    { 8, "student4@gmail.com", "Sinan", "student4", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 1, "Ahmedovski", null, null, "+38700000004" },
+                    { 9, "student5@gmail.com", "Iman", "student5", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 1, "Gosto", null, null, "+38700000005" },
+                    { 10, "student6@gmail.com", "Imad", "student6", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 1, "Alić", null, null, "+38700000006" },
+                    { 11, "student7@gmail.com", "Benaid", "student7", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 1, "Ahmetović", null, null, "+38700000007" },
+                    { 12, "student8@gmail.com", "Azer", "student8", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 1, "Sultanović", null, null, "+38700000008" },
+                    { 13, "student9@gmail.com", "Goran", "student9", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 1, "Škondrić", null, null, "+38700000009" },
+                    { 14, "student10@gmail.com", "Emina", "student10", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 2, "Junuz", null, null, "+38700000010" },
+                    { 15, "student11@gmail.com", "Amel", "student11", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 2, "Musić", null, null, "+38700000011" },
+                    { 16, "student12@gmail.com", "Dragi", "student12", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 2, "Tiro", null, null, "+38700000012" },
+                    { 17, "student13@gmail.com", "Adil", "student13", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 2, "Joldić", null, null, "+38700000013" },
+                    { 18, "student14@gmail.com", "Lejla", "student14", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 2, "Jazvin", null, null, "+38700000014" },
+                    { 19, "student15@gmail.com", "Elmir", "student15", "Tyitt2sn+I+DQuydy0SzIv8Olio=", "iM34ef0JCEUAzA7lkWld9w==", 2, "Babović", null, null, "+38700000015" }
                 });
 
             migrationBuilder.InsertData(
@@ -381,8 +381,8 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "OcjenaID", "Datum", "KorisnikID", "PredmetID", "VrijednostOcjene" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3548), 2, 1, 5 },
-                    { 2, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3552), 2, 2, 4 }
+                    { 1, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3283), 2, 1, 5 },
+                    { 2, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3289), 2, 2, 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -459,21 +459,21 @@ namespace eDnevnik.Services.Migrations
                 columns: new[] { "KorisnikUlogaID", "DatumIzmjene", "KorisnikID", "UlogaID" },
                 values: new object[,]
                 {
-                    { 5, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3426), 5, 1 },
-                    { 6, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3428), 6, 2 },
-                    { 7, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3430), 7, 2 },
-                    { 8, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3432), 8, 2 },
-                    { 9, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3434), 9, 2 },
-                    { 10, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3436), 10, 2 },
-                    { 11, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3438), 11, 2 },
-                    { 12, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3440), 12, 2 },
-                    { 13, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3442), 13, 2 },
-                    { 14, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3444), 14, 2 },
-                    { 15, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3446), 15, 2 },
-                    { 16, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3448), 16, 2 },
-                    { 17, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3450), 17, 2 },
-                    { 18, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3452), 18, 2 },
-                    { 19, new DateTime(2024, 8, 28, 19, 5, 41, 26, DateTimeKind.Local).AddTicks(3454), 19, 2 }
+                    { 5, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3098), 5, 1 },
+                    { 6, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3101), 6, 2 },
+                    { 7, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3104), 7, 2 },
+                    { 8, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3108), 8, 2 },
+                    { 9, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3111), 9, 2 },
+                    { 10, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3115), 10, 2 },
+                    { 11, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3118), 11, 2 },
+                    { 12, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3122), 12, 2 },
+                    { 13, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3125), 13, 2 },
+                    { 14, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3128), 14, 2 },
+                    { 15, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3132), 15, 2 },
+                    { 16, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3135), 16, 2 },
+                    { 17, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3139), 17, 2 },
+                    { 18, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3142), 18, 2 },
+                    { 19, new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3145), 19, 2 }
                 });
 
             migrationBuilder.InsertData(

@@ -152,10 +152,10 @@ namespace eDnevnik.Services.Service
             {
                 return (null, null);
             }
-
             var uloga = entity.KorisniciUloge.FirstOrDefault()?.Uloga.Naziv;
 
             return (entity.KorisnikID, uloga);
+
         }
 
         public async Task UpdatePasswordAndUsername(int id, KorisniciUpdateRequestLimited request)

@@ -175,7 +175,8 @@ class LoginPage extends StatelessWidget {
                     ),
                     TextField(
                       decoration: InputDecoration(
-                          labelText: "Korisničko ime", prefixIcon: Icon(Icons.email)),
+                          labelText: "Korisničko ime",
+                          prefixIcon: Icon(Icons.email)),
                       controller: _usernameController,
                     ),
                     SizedBox(height: 10),
@@ -192,19 +193,39 @@ class LoginPage extends StatelessWidget {
                         var username = _usernameController.text;
                         var password = _passwordController.text;
 
+                        Authorization.username = username;
+                        Authorization.password = password;
                         try {
-                          await _userProvider.login(username, password);
+                          var loginData = await _userProvider.getLogedWithRole(
+                              username, password);
 
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => SubjectDetailScreen(),
-                            ),
-                          );
+                          if (loginData != null &&
+                              loginData['uloga'] == 'admin') {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => SubjectDetailScreen(),
+                              ),
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: Text("Greška"),
+                                content: Text("Nemate dozvolu za pristup."),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text("OK"),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
                         } on Exception catch (e) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
-                              title: Text("Error"),
+                              title: Text("Greška"),
                               content: Text(e.toString()),
                               actions: [
                                 TextButton(
