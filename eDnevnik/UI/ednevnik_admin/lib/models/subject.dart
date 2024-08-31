@@ -29,11 +29,3 @@ class Subject{
   Map<String, dynamic> toJson() => _$SubjectToJson(this);
 
 }
-
-
-    // {
-    //   "predmetID": 0,
-    //   "naziv": "string",
-    //   "opis": "string",
-    //   "stateMachine": "string"
-    // }
