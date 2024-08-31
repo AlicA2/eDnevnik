@@ -48,67 +48,82 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
   }
 
   Future<void> _initializeData() async {
+  if (mounted) {
+    setState(() {
+      _isLoading = true;
+    });
+  }
+  try {
+    SearchResult<Department> departmentResult =
+        await _departmentProvider.get(filter: {'KorisnikID': widget.userID});
+    Department department = departmentResult.result.first;
+    int? skolaID = department.skolaID;
+
+    await _fetchSubjectDepartment(department.odjeljenjeID ?? 0);
+
+    var data = await _gradesProvider.get(filter: {
+      'KorisnikID': widget.userID,
+    });
     if (mounted) {
       setState(() {
-        _isLoading = true;
+        _grades = data.result;
+        _isLoading = false;
       });
     }
-    try {
-      SearchResult<Department> departmentResult =
-          await _departmentProvider.get(filter: {'KorisnikID': widget.userID});
-      Department department = departmentResult.result.first;
-      int? skolaID = department.skolaID;
 
-      await _fetchSubjectDepartment(department.odjeljenjeID ?? 0);
-
-      SearchResult<Subject> subjectsResult =
-          await _subjectProvider.get(filter: {'SkolaID': skolaID});
-      _availableSubjects = subjectsResult.result;
-
-      if (_availableSubjects.isNotEmpty) {
-        _selectedSubject = null;
-      }
-
-      var data = await _gradesProvider.get(filter: {
-        'KorisnikID': widget.userID,
+    var userDetails = await _userProvider.getById(widget.userID ?? 0);
+    if (mounted) {
+      setState(() {
+        _userFullName = "${userDetails.ime} ${userDetails.prezime}";
       });
-      if (mounted) {
-        setState(() {
-          _grades = data.result;
-          _isLoading = false;
-        });
-      }
-
-      var userDetails = await _userProvider.getById(widget.userID ?? 0);
-      if (mounted) {
-        setState(() {
-          _userFullName = "${userDetails.ime} ${userDetails.prezime}";
-        });
-      }
-      await _fetchSubjects();
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-      print("Error initializing data: $e");
     }
+  } catch (e) {
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    print("Error initializing data: $e");
   }
+}
+
 
   Future<void> _fetchSubjectDepartment(int departmentID) async {
-    try {
-        SearchResult<DepartmentSubject> result = await _departmentSubjectProvider.get(filter: {
-            'OdjeljenjeID': departmentID,
+  try {
+    SearchResult<DepartmentSubject> result = await _departmentSubjectProvider.get(filter: {
+      'OdjeljenjeID': departmentID,
+    });
+
+    List<DepartmentSubject> departmentSubjects = result.result;
+    List<Subject> subjects = [];
+    for (var departmentSubject in departmentSubjects) {
+      if (departmentSubject.predmetID != null) {
+        var subjectResult = await _subjectProvider.get(filter: {
+          'PredmetID': departmentSubject.predmetID!,
+          'isOcjeneIncluded': true,
         });
 
-        List<DepartmentSubject> departmentSubjects = result.result;
-        print(departmentSubjects);
+        Subject? subject = subjectResult.result.isNotEmpty
+            ? subjectResult.result.first
+            : null;
 
-    } catch (e) {
-        print("Error fetching department subjects: $e");
+        if (subject != null) {
+          subjects.add(subject);
+        }
+      }
     }
+
+    if (mounted) {
+      setState(() {
+        _availableSubjects = subjects;
+        _selectedSubject = _availableSubjects.isNotEmpty ? _availableSubjects.first : null;
+      });
+    }
+  } catch (e) {
+    print("Error fetching department subjects: $e");
+  }
 }
+
 
 
   Future<void> _fetchSubjects() async {
@@ -356,33 +371,34 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
   }
 
   Widget _buildSubjectDropdown() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Container(
-          width: 200,
-          child: DropdownButton<Subject?>(
-            hint: Text("Filtriraj po predmetu"),
-            value: _selectedSubject,
-            items: [null, ..._availableSubjects].map((subject) {
-              return DropdownMenuItem<Subject?>(
-                value: subject,
-                child: Text(subject?.naziv ?? "Svi Predmeti"),
-              );
-            }).toList(),
-            onChanged: (Subject? newValue) {
-              if (mounted) {
-                setState(() {
-                  _selectedSubject = newValue;
-                });
-              }
-              _filterGradesBySubject(newValue);
-            },
-          ),
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      Container(
+        width: 200,
+        child: DropdownButton<Subject?>(
+          hint: Text("Filtriraj po predmetu"),
+          value: _selectedSubject,
+          items: [null, ..._availableSubjects].map((subject) {
+            return DropdownMenuItem<Subject?>(
+              value: subject,
+              child: Text(subject?.naziv ?? "Svi Predmeti"),
+            );
+          }).toList(),
+          onChanged: (Subject? newValue) {
+            if (mounted) {
+              setState(() {
+                _selectedSubject = newValue;
+              });
+            }
+            _filterGradesBySubject(newValue);
+          },
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
+
 
   Widget _buildLoading() {
     return Center(
