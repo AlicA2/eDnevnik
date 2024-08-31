@@ -75,9 +75,6 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
         }
       }
 
-      print("Found odjeljenjeID: $odjeljenjeID");
-      print("User ID searched: ${widget.userID}");
-
       if (odjeljenjeID != null) {
         await _fetchSubjectDepartment(odjeljenjeID);
       } else {
@@ -93,6 +90,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
           _grades = data.result;
           _isLoading = false;
         });
+        await _fetchSubjects();
       }
 
       var userDetails = await _userProvider.getById(widget.userID ?? 0);
@@ -113,38 +111,40 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
 
   Future<void> _fetchSubjectDepartment(int departmentID) async {
     try {
-      SearchResult<DepartmentSubject> result =
+      SearchResult<Subject> allSubjectsResult =
+          await _subjectProvider.get(filter: {});
+
+      SearchResult<DepartmentSubject> departmentSubjectsResult =
           await _departmentSubjectProvider.get(filter: {
         'OdjeljenjeID': departmentID,
       });
 
-      List<DepartmentSubject> departmentSubjects = result.result;
-      List<Subject> subjects = [];
+      List<DepartmentSubject> departmentSubjects =
+          departmentSubjectsResult.result;
+      List<Subject> filteredSubjects = [];
+
       for (var departmentSubject in departmentSubjects) {
         if (departmentSubject.predmetID != null) {
-          var subjectResult = await _subjectProvider.get(filter: {
-            'PredmetID': departmentSubject.predmetID!,
-          });
-
-          Subject? subject = subjectResult.result.isNotEmpty
-              ? subjectResult.result.first
-              : null;
-
+          var subject = allSubjectsResult.result.firstWhere(
+            (s) => s.predmetID == departmentSubject.predmetID,
+            orElse: () => Subject(0, '', '', '', 0, 0, null),
+          );
           if (subject != null) {
-            subjects.add(subject);
+            filteredSubjects.add(subject);
           }
         }
       }
 
       if (mounted) {
         setState(() {
-          _availableSubjects = subjects;
+          _availableSubjects = filteredSubjects;
           _selectedSubject =
               _availableSubjects.isNotEmpty ? _availableSubjects.first : null;
         });
       }
+
     } catch (e) {
-      print("Error fetching department subjects: $e");
+      print("Error fetching subjects: $e");
     }
   }
 
