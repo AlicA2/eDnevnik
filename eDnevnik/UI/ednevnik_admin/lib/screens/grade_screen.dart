@@ -1,3 +1,5 @@
+import 'package:ednevnik_admin/models/department_subject.dart';
+import 'package:ednevnik_admin/providers/department_subject_provider.dart';
 import 'package:ednevnik_admin/screens/grade_edit_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +34,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
   late GradeProvider _gradesProvider;
   late SubjectProvider _subjectProvider;
   late DepartmentProvider _departmentProvider;
+  late DepartmentSubjectProvider _departmentSubjectProvider;
 
   @override
   void initState() {
@@ -40,6 +43,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
     _subjectProvider = context.read<SubjectProvider>();
     _departmentProvider = context.read<DepartmentProvider>();
     _userProvider = context.read<UserProvider>();
+    _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
     _initializeData();
   }
 
@@ -54,6 +58,8 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
           await _departmentProvider.get(filter: {'KorisnikID': widget.userID});
       Department department = departmentResult.result.first;
       int? skolaID = department.skolaID;
+
+      await _fetchSubjectDepartment(department.odjeljenjeID ?? 0);
 
       SearchResult<Subject> subjectsResult =
           await _subjectProvider.get(filter: {'SkolaID': skolaID});
@@ -89,6 +95,21 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
       print("Error initializing data: $e");
     }
   }
+
+  Future<void> _fetchSubjectDepartment(int departmentID) async {
+    try {
+        SearchResult<DepartmentSubject> result = await _departmentSubjectProvider.get(filter: {
+            'OdjeljenjeID': departmentID,
+        });
+
+        List<DepartmentSubject> departmentSubjects = result.result;
+        print(departmentSubjects);
+
+    } catch (e) {
+        print("Error fetching department subjects: $e");
+    }
+}
+
 
   Future<void> _fetchSubjects() async {
     for (var grade in _grades) {
