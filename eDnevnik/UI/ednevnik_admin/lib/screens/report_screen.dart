@@ -41,6 +41,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   Map<int, User> _users = {};
   List<DepartmentSubject> _departmentSubjects = [];
   List<int> _filteredOdjeljenjeIDs = [];
+  List<int> _filteredPredmetIDs = [];
 
   @override
   void initState() {
@@ -65,8 +66,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       });
 
       await _fetchUsers();
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> _fetchUsers() async {
@@ -92,8 +92,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           }
         });
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> _fetchDepartmentSubjects() async {
@@ -101,42 +100,54 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       var data = await _departmentSubjectProvider.get();
       setState(() {
         _departmentSubjects = data.result;
-        _filteredOdjeljenjeIDs = _departmentSubjects.map((ds) => ds.odjeljenjeID ?? 0).toSet().toList();
+        _filteredOdjeljenjeIDs = _departmentSubjects
+            .map((ds) => ds.odjeljenjeID ?? 0)
+            .toSet()
+            .toList();
+        _filteredPredmetIDs =
+            _departmentSubjects.map((ds) => ds.predmetID ?? 0).toSet().toList();
         print(_filteredOdjeljenjeIDs);
       });
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> _fetchDepartments() async {
-  try {
-    var data = await _departmentProvider.get(filter: {
-      'SkolaID': _selectedSchool?.skolaID,
-    });
+    try {
+      var data = await _departmentProvider.get(filter: {
+        'SkolaID': _selectedSchool?.skolaID,
+      });
 
-    List<Department> filteredDepartments = data.result.where((department) {
-      return _filteredOdjeljenjeIDs.contains(department.odjeljenjeID);
-    }).toList();
+      List<Department> filteredDepartments = data.result.where((department) {
+        return _filteredOdjeljenjeIDs.contains(department.odjeljenjeID);
+      }).toList();
 
-    setState(() {
-      _departments = filteredDepartments;
-    });
-  } catch (e) {
-    print(e);
+      setState(() {
+        _departments = filteredDepartments;
+      });
+      _fetchSubjects();
+    } catch (e) {
+      print(e);
+    }
   }
-}
-
-
 
   Future<void> _fetchSubjects() async {
-    var subjectIds = _departmentSubjects.map((ds) => ds.predmetID).toSet();
-    var data = await _subjectProvider.get(filter: {
-      'SkolaID': _selectedSchool?.skolaID,
-      'PredmetID': subjectIds.toList(),
-    });
-    setState(() {
-      _subjects = data.result;
-    });
+    try {
+      var data = await _subjectProvider.get(filter: {
+        'SkolaID': _selectedSchool?.skolaID,
+      });
+
+      List<Subject> filteredSubjects = data.result.where((subject) {
+        return _filteredPredmetIDs.contains(subject.predmetID);
+      }).toList();
+
+      print(filteredSubjects);
+
+      setState(() {
+        _subjects = filteredSubjects;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -292,7 +303,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                getTitlesWidget: (value, meta) => Text(value.toInt().toString()),
+                getTitlesWidget: (value, meta) =>
+                    Text(value.toInt().toString()),
               ),
             ),
           ),
