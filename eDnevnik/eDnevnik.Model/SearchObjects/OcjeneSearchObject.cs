@@ -11,6 +11,5 @@ namespace eDnevnik.Model.SearchObjects
         public int? OcjenaID { get; set; }
         public int? KorisnikID { get; set; }
         public int? PredmetID { get; set; }
-        public int? ProfesorID { get; set; }
     }
 }

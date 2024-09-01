@@ -4,11 +4,13 @@ import 'package:ednevnik_admin/models/grade.dart';
 import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/subject.dart';
 import 'package:ednevnik_admin/models/user.dart';
+import 'package:ednevnik_admin/models/department_subject.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/grade_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
+import 'package:ednevnik_admin/providers/department_subject_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +28,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   late SchoolProvider _schoolProvider;
   late GradeProvider _gradeProvider;
   late UserProvider _userProvider;
+  late DepartmentSubjectProvider _departmentSubjectProvider;
 
   Department? _selectedDepartment;
   Subject? _selectedSubject;
@@ -36,6 +39,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   List<School> _schools = [];
   List<Grade> _grades = [];
   Map<int, User> _users = {};
+  List<DepartmentSubject> _departmentSubjects = [];
+  List<int> _filteredOdjeljenjeIDs = [];
 
   @override
   void initState() {
@@ -45,6 +50,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     _schoolProvider = context.read<SchoolProvider>();
     _gradeProvider = context.read<GradeProvider>();
     _userProvider = context.read<UserProvider>();
+    _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
 
     _fetchSchools();
   }
@@ -52,9 +58,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   Future<void> _fetchGrades() async {
     try {
       var grades = await _gradeProvider.get(filter: {
-        'DepartmentID': _selectedDepartment?.odjeljenjeID,
-        'SubjectID': _selectedSubject?.predmetID,
-        'SchoolID': _selectedSchool?.skolaID,
+        'PredmetID': _selectedSubject?.predmetID,
       });
       setState(() {
         _grades = grades.result;
@@ -83,27 +87,52 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         setState(() {
           _schools = schools.result;
           if (_schools.isNotEmpty) {
-            _selectedSchool = _schools.first;
+            _fetchDepartmentSubjects();
             _fetchDepartments();
-            _fetchSubjects();
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+    }
+  }
+
+  Future<void> _fetchDepartmentSubjects() async {
+    try {
+      var data = await _departmentSubjectProvider.get();
+      setState(() {
+        _departmentSubjects = data.result;
+        _filteredOdjeljenjeIDs = _departmentSubjects.map((ds) => ds.odjeljenjeID ?? 0).toSet().toList();
+        print(_filteredOdjeljenjeIDs);
+      });
+    } catch (e) {
+    }
   }
 
   Future<void> _fetchDepartments() async {
+  try {
     var data = await _departmentProvider.get(filter: {
       'SkolaID': _selectedSchool?.skolaID,
     });
+
+    List<Department> filteredDepartments = data.result.where((department) {
+      return _filteredOdjeljenjeIDs.contains(department.odjeljenjeID);
+    }).toList();
+
     setState(() {
-      _departments = data.result;
+      _departments = filteredDepartments;
     });
+  } catch (e) {
+    print(e);
   }
+}
+
+
 
   Future<void> _fetchSubjects() async {
+    var subjectIds = _departmentSubjects.map((ds) => ds.predmetID).toSet();
     var data = await _subjectProvider.get(filter: {
       'SkolaID': _selectedSchool?.skolaID,
+      'PredmetID': subjectIds.toList(),
     });
     setState(() {
       _subjects = data.result;
@@ -170,6 +199,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         children: [
           Expanded(
             child: DropdownButton<School>(
+              hint: Text("Izaberite školu"),
               value: _selectedSchool,
               items: _schools.map((school) {
                 return DropdownMenuItem<School>(
@@ -183,14 +213,14 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   _selectedDepartment = null;
                   _selectedSubject = null;
                 });
-                _fetchSubjects();
-                _fetchDepartments();
+                _fetchDepartmentSubjects().then((_) => _fetchDepartments());
               },
             ),
           ),
+          SizedBox(width: 10),
           Expanded(
             child: DropdownButton<Department>(
-              hint: Text("Odjeljenje"),
+              hint: Text("Izaberite odjeljenje"),
               value: _selectedDepartment,
               onChanged: (Department? newValue) {
                 setState(() {
@@ -208,7 +238,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           SizedBox(width: 10),
           Expanded(
             child: DropdownButton<Subject>(
-              hint: Text("Predmet"),
+              hint: Text("Izaberite predmet"),
               value: _selectedSubject,
               onChanged: (Subject? newValue) {
                 setState(() {
