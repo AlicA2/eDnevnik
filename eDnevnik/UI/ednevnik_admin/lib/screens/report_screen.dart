@@ -54,8 +54,18 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     _userProvider = context.read<UserProvider>();
     _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
 
-    _fetchSchools();
+    _initializeData();
   }
+
+  Future<void> _initializeData() async {
+  await _fetchSchools();
+  if (_selectedSchool != null) {
+    await _fetchDepartmentSubjects();
+    await _fetchDepartments();
+    await _fetchSubjects();
+    await _fetchGrades();
+  }
+}
 
   Future<void> _fetchGrades() async {
     try {
@@ -74,14 +84,6 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   Future<void> _fetchUsers() async {
-    if (_selectedUser == null) {
-      var users = await _userProvider.get();
-      setState(() {
-        for (var user in users.result) {
-          _users[user.korisnikId!] = user;
-        }
-      });
-    } else {
       for (Grade grade in _grades) {
         if (grade.korisnikID != null &&
             !_users.containsKey(grade.korisnikID!)) {
@@ -91,7 +93,6 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           });
         }
       }
-    }
   }
 
   Future<void> _fetchSchools() async {
@@ -373,6 +374,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   List<BarChartGroupData> _buildBarGroups() {
+    if(_grades == null || _grades.isEmpty){
+      return [];
+    }
   Map<int, List<Grade>> groupedGrades = {};
   for (var grade in _grades) {
     if (groupedGrades.containsKey(grade.korisnikID)) {
