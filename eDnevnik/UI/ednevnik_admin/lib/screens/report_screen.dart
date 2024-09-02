@@ -162,8 +162,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         }).toList();
 
         setState(() {
-          _selectedSubject = _subjects.isNotEmpty ? _subjects.first : null;
           _subjects = filteredSubjects;
+          _selectedSubject = _subjects.first;
         });
     } catch (e) {
       print(e);
@@ -348,7 +348,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                getTitlesWidget: (value, meta) => _buildBottomTitles(value),
+                getTitlesWidget: (value, meta) => _buildBottomTitles(value,meta),
               ),
             ),
             leftTitles: AxisTitles(
@@ -382,8 +382,13 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     }
   }
 
+  Map<int, String> userNames = {};
+  for (var user in _users.values) {
+    userNames[user.korisnikId!] = '${user.ime ?? ''} ${user.prezime ?? ''}';
+  }
+
   return groupedGrades.entries.map((entry) {
-    int index = entry.key;
+    int userId = entry.key;
     List<Grade> grades = entry.value;
 
     List<BarChartRodData> barRods = [];
@@ -405,19 +410,33 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     }
 
     return BarChartGroupData(
-      x: index,
+      x: userId,
       barRods: barRods,
       showingTooltipIndicators: [0],
     );
   }).toList();
 }
 
+Widget _buildBottomTitles(double value, TitleMeta meta) {
+  final userId = value.toInt();
+  final userName = _users[userId]?.ime ?? 'N/A';
+
+  return SideTitleWidget(
+    axisSide: meta.axisSide,
+    child: Container(
+      height: 40,
+      alignment: Alignment.center,
+      child: Text(
+        userName,
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.black,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    ),
+  );
+}
 
 
-  Widget _buildBottomTitles(double value) {
-    final index = value.toInt();
-    if (index < 0 || index >= _grades.length) return const Text('');
-    final user = _users[_grades[index].korisnikID];
-    return Text(user?.ime ?? 'N/A');
-  }
 }
