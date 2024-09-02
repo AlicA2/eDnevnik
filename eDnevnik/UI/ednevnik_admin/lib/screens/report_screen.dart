@@ -33,6 +33,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   Department? _selectedDepartment;
   Subject? _selectedSubject;
   School? _selectedSchool;
+  User? _selectedUser;
 
   List<Department> _departments = [];
   List<Subject> _subjects = [];
@@ -60,22 +61,35 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     try {
       var grades = await _gradeProvider.get(filter: {
         'PredmetID': _selectedSubject?.predmetID,
+        'KorisnikID': _selectedUser?.korisnikId,
       });
       setState(() {
         _grades = grades.result;
       });
 
       await _fetchUsers();
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> _fetchUsers() async {
-    for (Grade grade in _grades) {
-      if (grade.korisnikID != null && !_users.containsKey(grade.korisnikID!)) {
-        User user = await _userProvider.getById(grade.korisnikID!);
-        setState(() {
-          _users[grade.korisnikID!] = user;
-        });
+    if (_selectedUser == null) {
+      var users = await _userProvider.get();
+      setState(() {
+        for (var user in users.result) {
+          _users[user.korisnikId!] = user;
+        }
+      });
+    } else {
+      for (Grade grade in _grades) {
+        if (grade.korisnikID != null &&
+            !_users.containsKey(grade.korisnikID!)) {
+          User user = await _userProvider.getById(grade.korisnikID!);
+          setState(() {
+            _users[grade.korisnikID!] = user;
+          });
+        }
       }
     }
   }
@@ -86,6 +100,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       if (mounted) {
         setState(() {
           _schools = schools.result;
+          _selectedSchool = _schools.isNotEmpty ? schools.result.first : null;
           if (_schools.isNotEmpty) {
             _fetchDepartmentSubjects();
             _fetchDepartments();
@@ -106,7 +121,6 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             .toList();
         _filteredPredmetIDs =
             _departmentSubjects.map((ds) => ds.predmetID ?? 0).toSet().toList();
-        print(_filteredOdjeljenjeIDs);
       });
     } catch (e) {}
   }
@@ -115,6 +129,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     try {
       var data = await _departmentProvider.get(filter: {
         'SkolaID': _selectedSchool?.skolaID,
+        'isUceniciIncluded': true,
       });
 
       List<Department> filteredDepartments = data.result.where((department) {
@@ -123,8 +138,14 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
 
       setState(() {
         _departments = filteredDepartments;
+        _selectedDepartment =
+            filteredDepartments.isNotEmpty ? filteredDepartments.first : null;
+        _selectedUser = null;
       });
-      _fetchSubjects();
+
+      if (_selectedDepartment != null) {
+        _fetchSubjects();
+      }
     } catch (e) {
       print(e);
     }
@@ -132,19 +153,18 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
 
   Future<void> _fetchSubjects() async {
     try {
-      var data = await _subjectProvider.get(filter: {
-        'SkolaID': _selectedSchool?.skolaID,
-      });
+        var data = await _subjectProvider.get(filter: {
+          'SkolaID': _selectedSchool?.skolaID,
+        });
 
-      List<Subject> filteredSubjects = data.result.where((subject) {
-        return _filteredPredmetIDs.contains(subject.predmetID);
-      }).toList();
+        List<Subject> filteredSubjects = data.result.where((subject) {
+          return _filteredPredmetIDs.contains(subject.predmetID);
+        }).toList();
 
-      print(filteredSubjects);
-
-      setState(() {
-        _subjects = filteredSubjects;
-      });
+        setState(() {
+          _selectedSubject = _subjects.isNotEmpty ? _subjects.first : null;
+          _subjects = filteredSubjects;
+        });
     } catch (e) {
       print(e);
     }
@@ -223,6 +243,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   _selectedSchool = newValue;
                   _selectedDepartment = null;
                   _selectedSubject = null;
+                  _selectedUser = null;
                 });
                 _fetchDepartmentSubjects().then((_) => _fetchDepartments());
               },
@@ -236,6 +257,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
               onChanged: (Department? newValue) {
                 setState(() {
                   _selectedDepartment = newValue;
+                  _selectedUser = null;
                 });
               },
               items: _departments.map((Department department) {
@@ -265,6 +287,33 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             ),
           ),
           SizedBox(width: 10),
+          Expanded(
+            child: DropdownButton<User>(
+              hint: Text("Izaberite učenika"),
+              value: _selectedUser,
+              onChanged: (User? newValue) {
+                setState(() {
+                  _selectedUser = newValue;
+                });
+                if (newValue == null) {
+                  _fetchUsers();
+                }
+              },
+              items: [
+                DropdownMenuItem<User>(
+                  value: null,
+                  child: Text("Svi učenici"),
+                ),
+                ...?_selectedDepartment?.ucenici?.map((User user) {
+                  return DropdownMenuItem<User>(
+                    value: user,
+                    child: Text('${user.ime ?? ''} ${user.prezime ?? ''}'),
+                  );
+                }).toList(),
+              ],
+            ),
+          ),
+          SizedBox(width: 10),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
@@ -281,8 +330,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   Widget _buildChart() {
-    if (_grades.isEmpty) {
-      return Center(child: Text("No grades available"));
+    if (_subjects.isEmpty) {
+      return Center(child: Text("Nema dostupnih ocjena na pregled"));
     }
 
     return Container(
@@ -291,6 +340,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       child: BarChart(
         BarChartData(
           alignment: BarChartAlignment.spaceAround,
+          minY: 1,
+          maxY: 5,
           barGroups: _buildBarGroups(),
           borderData: FlBorderData(show: false),
           titlesData: FlTitlesData(
@@ -303,8 +354,16 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                getTitlesWidget: (value, meta) =>
-                    Text(value.toInt().toString()),
+                interval: 1,
+                getTitlesWidget: (value, meta) {
+                  return Text(
+                    value.toInt().toString(),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -314,29 +373,46 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   List<BarChartGroupData> _buildBarGroups() {
-    return _grades.asMap().entries.map((entry) {
-      int index = entry.key;
-      Grade grade = entry.value;
-      return BarChartGroupData(
-        x: index,
-        barRods: [
-          BarChartRodData(
-            toY: grade.vrijednostOcjene?.toDouble() ?? 0.0,
-            rodStackItems: [
-              BarChartRodStackItem(
-                0,
-                grade.vrijednostOcjene?.toDouble() ?? 0.0,
-                Colors.blue,
-              ),
-            ],
-            borderSide: BorderSide(
-              color: Colors.blue,
-            ),
-          ),
-        ],
-      );
-    }).toList();
+  Map<int, List<Grade>> groupedGrades = {};
+  for (var grade in _grades) {
+    if (groupedGrades.containsKey(grade.korisnikID)) {
+      groupedGrades[grade.korisnikID]!.add(grade);
+    } else {
+      groupedGrades[grade.korisnikID!] = [grade];
+    }
   }
+
+  return groupedGrades.entries.map((entry) {
+    int index = entry.key;
+    List<Grade> grades = entry.value;
+
+    List<BarChartRodData> barRods = [];
+    double barWidth = 20.0;
+    double barSpacing = 4.0;
+
+    for (int i = 0; i < grades.length; i++) {
+      var grade = grades[i];
+      double gradeValue = (grade.vrijednostOcjene?.toDouble() ?? 0.0).clamp(1.0, 5.0);
+
+      barRods.add(BarChartRodData(
+        toY: gradeValue,
+        color: Colors.blue,
+        width: barWidth,
+        borderSide: BorderSide(
+          color: Colors.blue,
+        ),
+      ));
+    }
+
+    return BarChartGroupData(
+      x: index,
+      barRods: barRods,
+      showingTooltipIndicators: [0],
+    );
+  }).toList();
+}
+
+
 
   Widget _buildBottomTitles(double value) {
     final index = value.toInt();
