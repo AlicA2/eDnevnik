@@ -34,6 +34,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   Subject? _selectedSubject;
   School? _selectedSchool;
   User? _selectedUser;
+  bool _isLoading = false;
 
   List<Department> _departments = [];
   List<Subject> _subjects = [];
@@ -58,16 +59,19 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   Future<void> _initializeData() async {
-  await _fetchSchools();
-  if (_selectedSchool != null) {
-    await _fetchDepartmentSubjects();
-    await _fetchDepartments();
-    await _fetchSubjects();
-    await _fetchGrades();
+    await _fetchSchools();
+    if (_selectedSchool != null) {
+      await _fetchDepartmentSubjects();
+      await _fetchDepartments();
+      await _fetchSubjects();
+      await _fetchGrades();
+    }
   }
-}
 
   Future<void> _fetchGrades() async {
+    setState(() {
+      _isLoading=true;
+    });
     try {
       var grades = await _gradeProvider.get(filter: {
         'PredmetID': _selectedSubject?.predmetID,
@@ -80,20 +84,44 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       await _fetchUsers();
     } catch (e) {
       print(e);
+    } finally {
+      setState(() {
+        _isLoading=false;
+      });
     }
   }
 
   Future<void> _fetchUsers() async {
-      for (Grade grade in _grades) {
-        if (grade.korisnikID != null &&
-            !_users.containsKey(grade.korisnikID!)) {
+  setState(() {
+    _isLoading = true;
+  });
+  if (_selectedUser == null) {
+    int count = 0;
+    Map<int, User> fetchedUsers = {};
+    for (Grade grade in _grades) {
+      if (grade.korisnikID != null && !_users.containsKey(grade.korisnikID!)) {
+        try {
           User user = await _userProvider.getById(grade.korisnikID!);
-          setState(() {
-            _users[grade.korisnikID!] = user;
-          });
+          count++;
+          fetchedUsers[grade.korisnikID!] = user;
+          print('Fetched User: ${user.ime} ${user.prezime}');
+          print('User Count: $count');
+          print('User ID: ${grade.korisnikID}');
+          print('-----------------------------------------------------------------');
+        } catch (e) {
+          print('Error fetching user with ID ${grade.korisnikID}: $e');
         }
       }
+    }
+    setState(() {
+      _users = fetchedUsers;
+    });
+  } else {
   }
+  setState(() {
+    _isLoading = false;
+  });
+}
 
   Future<void> _fetchSchools() async {
     try {
@@ -154,49 +182,52 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
 
   Future<void> _fetchSubjects() async {
     try {
-        var data = await _subjectProvider.get(filter: {
-          'SkolaID': _selectedSchool?.skolaID,
-        });
+      var data = await _subjectProvider.get(filter: {
+        'SkolaID': _selectedSchool?.skolaID,
+      });
 
-        List<Subject> filteredSubjects = data.result.where((subject) {
-          return _filteredPredmetIDs.contains(subject.predmetID);
-        }).toList();
+      List<Subject> filteredSubjects = data.result.where((subject) {
+        return _filteredPredmetIDs.contains(subject.predmetID);
+      }).toList();
 
-        setState(() {
-          _subjects = filteredSubjects;
-          _selectedSubject = _subjects.first;
-        });
+      setState(() {
+        _subjects = filteredSubjects;
+        _selectedSubject = _subjects.first;
+      });
     } catch (e) {
       print(e);
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MasterScreenWidget(
-      child: Container(
-        color: const Color(0xFFF7F2FA),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Column(
-              children: [
-                _buildScreenName(),
-                SizedBox(height: 16.0),
-                _buildSearch(),
-                SizedBox(height: 20),
-                _buildChart(),
-              ],
-            ),
+ @override
+Widget build(BuildContext context) {
+  return MasterScreenWidget(
+    child: Container(
+      color: const Color(0xFFF7F2FA),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Column(
+            children: [
+              _buildScreenName(),
+              SizedBox(height: 16.0),
+              _buildSearch(),
+              SizedBox(height: 20),
+              _isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : _buildChart(),
+            ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildScreenName() {
     return Align(
@@ -297,7 +328,13 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   _selectedUser = newValue;
                 });
                 if (newValue == null) {
-                  _fetchUsers();
+                  _fetchUsers().then((_) {
+                    setState(() {
+                      _buildBarGroups();
+                    });
+                  });
+                } else {
+                  print('Selected User: ${newValue.ime}');
                 }
               },
               items: [
@@ -322,6 +359,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             ),
             onPressed: () async {
               await _fetchGrades();
+              setState(() {
+                _buildBarGroups();
+              });
             },
             child: Text("Pretraga"),
           ),
@@ -331,56 +371,64 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   Widget _buildChart() {
-    if (_subjects.isEmpty) {
-      return Center(child: Text("Nema dostupnih ocjena na pregled"));
-    }
+    try {
+      if (_subjects.isEmpty) {
+        return Center(child: Text("Nema dostupnih ocjena na pregled"));
+      }
 
-    return Container(
-      height: 300,
-      padding: EdgeInsets.all(16.0),
-      child: BarChart(
-        BarChartData(
-          alignment: BarChartAlignment.spaceAround,
-          minY: 1,
-          maxY: 5,
-          barGroups: _buildBarGroups(),
-          borderData: FlBorderData(show: false),
-          titlesData: FlTitlesData(
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (value, meta) => _buildBottomTitles(value,meta),
+      return Container(
+        height: 300,
+        padding: EdgeInsets.all(16.0),
+        child: BarChart(
+          BarChartData(
+            alignment: BarChartAlignment.spaceAround,
+            minY: 1,
+            maxY: 5,
+            barGroups: _buildBarGroups(),
+            borderData: FlBorderData(show: false),
+            titlesData: FlTitlesData(
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  getTitlesWidget: (value, meta) =>
+                      _buildBottomTitles(value, meta),
+                ),
               ),
-            ),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                interval: 1,
-                getTitlesWidget: (value, meta) {
-                  return Text(
-                    value.toInt().toString(),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
-                  );
-                },
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  interval: 1,
+                  getTitlesWidget: (value, meta) {
+                    return Text(
+                      value.toInt().toString(),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      print('Error in _buildChart: $e');
+      return Center(
+          child: Text("Došlo je do greške prilikom učitavanja podataka"));
+    }
   }
 
   List<BarChartGroupData> _buildBarGroups() {
-    if(_grades == null || _grades.isEmpty){
-      return [];
-    }
+  if (_grades == null || _grades.isEmpty || _users.isEmpty) {
+    return [];
+  }
+
   Map<int, List<Grade>> groupedGrades = {};
   for (var grade in _grades) {
     if (groupedGrades.containsKey(grade.korisnikID)) {
-      groupedGrades[grade.korisnikID]!.add(grade);
+      groupedGrades[grade.korisnikID!]!.add(grade);
     } else {
       groupedGrades[grade.korisnikID!] = [grade];
     }
@@ -413,12 +461,16 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       ));
     }
 
+    if (barRods.isEmpty) {
+      return null;
+    }
+
     return BarChartGroupData(
       x: userId,
       barRods: barRods,
       showingTooltipIndicators: [0],
     );
-  }).toList();
+  }).whereType<BarChartGroupData>().toList();
 }
 
 Widget _buildBottomTitles(double value, TitleMeta meta) {
@@ -441,6 +493,5 @@ Widget _buildBottomTitles(double value, TitleMeta meta) {
     ),
   );
 }
-
 
 }
