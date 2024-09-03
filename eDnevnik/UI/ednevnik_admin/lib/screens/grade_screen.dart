@@ -99,6 +99,8 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
           _userFullName = "${userDetails.ime} ${userDetails.prezime}";
         });
       }
+
+      _resetSelectedSubject();
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -138,11 +140,9 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
       if (mounted) {
         setState(() {
           _availableSubjects = filteredSubjects;
-          _selectedSubject =
-              _availableSubjects.isNotEmpty ? _availableSubjects.first : null;
+          _selectedSubject = null;
         });
       }
-
     } catch (e) {
       print("Error fetching subjects: $e");
     }
@@ -171,6 +171,12 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
         }
       }
     }
+  }
+
+  void _resetSelectedSubject() {
+    setState(() {
+      _selectedSubject = null;
+    });
   }
 
   void _filterGradesBySubject(Subject? subject) {
@@ -294,7 +300,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
           ],
         );
       },
-    );
+    ).then((_) => _resetSelectedSubject());
   }
 
   @override

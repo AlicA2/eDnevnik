@@ -1,19 +1,21 @@
+import 'dart:async';
+
+import 'package:ednevnik_admin/models/department_subject.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/grade.dart';
 import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/subject.dart';
 import 'package:ednevnik_admin/models/user.dart';
-import 'package:ednevnik_admin/models/department_subject.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/grade_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/providers/department_subject_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
-import 'package:provider/provider.dart';
 
 class ReportDetailScreen extends StatefulWidget {
   const ReportDetailScreen({Key? key}) : super(key: key);
@@ -45,6 +47,15 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   List<int> _filteredOdjeljenjeIDs = [];
   List<int> _filteredPredmetIDs = [];
 
+  Timer? _debounce;
+
+  void _onDropdownChanged(VoidCallback fetchFunction) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      fetchFunction();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -59,69 +70,71 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   Future<void> _initializeData() async {
-    await _fetchSchools();
-    if (_selectedSchool != null) {
-      await _fetchDepartmentSubjects();
-      await _fetchDepartments();
-      await _fetchSubjects();
-      await _fetchGrades();
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await _fetchSchools();
+    } catch (e) {
+      print(e);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
   Future<void> _fetchGrades() async {
     setState(() {
-      _isLoading=true;
+      _isLoading = true;
     });
     try {
-      var grades = await _gradeProvider.get(filter: {
-        'PredmetID': _selectedSubject?.predmetID,
-        'KorisnikID': _selectedUser?.korisnikId,
-      });
-      setState(() {
-        _grades = grades.result;
-      });
+      if (_selectedSubject != null) {
+        var grades = await _gradeProvider.get(filter: {
+          'PredmetID': _selectedSubject!.predmetID,
+          'KorisnikID': _selectedUser?.korisnikId,
+        });
+        setState(() {
+          _grades = grades.result;
+        });
 
-      await _fetchUsers();
+        await _fetchUsers();
+      }
     } catch (e) {
       print(e);
     } finally {
       setState(() {
-        _isLoading=false;
+        _isLoading = false;
       });
     }
   }
 
   Future<void> _fetchUsers() async {
-  setState(() {
-    _isLoading = true;
-  });
-  if (_selectedUser == null) {
-    int count = 0;
-    Map<int, User> fetchedUsers = {};
-    for (Grade grade in _grades) {
-      if (grade.korisnikID != null && !_users.containsKey(grade.korisnikID!)) {
-        try {
-          User user = await _userProvider.getById(grade.korisnikID!);
-          count++;
-          fetchedUsers[grade.korisnikID!] = user;
-          print('Fetched User: ${user.ime} ${user.prezime}');
-          print('User Count: $count');
-          print('User ID: ${grade.korisnikID}');
-          print('-----------------------------------------------------------------');
-        } catch (e) {
-          print('Error fetching user with ID ${grade.korisnikID}: $e');
-        }
-      }
-    }
     setState(() {
-      _users = fetchedUsers;
+      _isLoading = true;
     });
-  } else {
+    try {
+      if (_selectedUser == null) {
+        Map<int, User> fetchedUsers = {};
+        for (Grade grade in _grades) {
+          if (grade.korisnikID != null &&
+              !_users.containsKey(grade.korisnikID!)) {
+            User user = await _userProvider.getById(grade.korisnikID!);
+            fetchedUsers[grade.korisnikID!] = user;
+          }
+        }
+        setState(() {
+          _users.addAll(fetchedUsers);
+        });
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
-  setState(() {
-    _isLoading = false;
-  });
-}
 
   Future<void> _fetchSchools() async {
     try {
@@ -129,14 +142,21 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       if (mounted) {
         setState(() {
           _schools = schools.result;
-          _selectedSchool = _schools.isNotEmpty ? schools.result.first : null;
-          if (_schools.isNotEmpty) {
-            _fetchDepartmentSubjects();
-            _fetchDepartments();
-          }
+          _selectedSchool = _schools.isNotEmpty ? _schools.first : null;
         });
+
+        if (_selectedSchool != null) {
+          await Future.wait([
+            _fetchDepartmentSubjects(),
+            _fetchDepartments(),
+            _fetchSubjects(),
+            _fetchGrades(),
+          ]);
+        }
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> _fetchDepartmentSubjects() async {
@@ -151,7 +171,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         _filteredPredmetIDs =
             _departmentSubjects.map((ds) => ds.predmetID ?? 0).toSet().toList();
       });
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> _fetchDepartments() async {
@@ -173,7 +195,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       });
 
       if (_selectedDepartment != null) {
-        _fetchSubjects();
+        await _fetchSubjects();
       }
     } catch (e) {
       print(e);
@@ -192,42 +214,64 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
 
       setState(() {
         _subjects = filteredSubjects;
-        _selectedSubject = _subjects.first;
+        _selectedSubject = _subjects.isNotEmpty ? _subjects.first : null;
+        _selectedUser = null;
       });
+
+      if (_selectedSubject != null) {
+        await _fetchGrades();
+      }
     } catch (e) {
       print(e);
     }
   }
 
- @override
-Widget build(BuildContext context) {
-  return MasterScreenWidget(
-    child: Container(
-      color: const Color(0xFFF7F2FA),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Column(
-            children: [
-              _buildScreenName(),
-              SizedBox(height: 16.0),
-              _buildSearch(),
-              SizedBox(height: 20),
-              _isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : _buildChart(),
-            ],
+  Future<double> _calculateZakljucnaOcjena(
+      int korisnikID, int predmetID) async {
+    var grades = await _gradeProvider.get(filter: {
+      'PredmetID': predmetID,
+      'KorisnikID': korisnikID,
+    });
+
+    if (grades.result.isEmpty) return 0.0;
+
+    double sum = grades.result.fold(
+        0.0,
+        (prev, element) =>
+            prev + (element.vrijednostOcjene?.toDouble() ?? 0.0));
+    double average = sum / grades.result.length;
+
+    return average;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MasterScreenWidget(
+      child: Container(
+        color: const Color(0xFFF7F2FA),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Column(
+              children: [
+                _buildScreenName(),
+                SizedBox(height: 16.0),
+                _buildSearch(),
+                SizedBox(height: 20),
+                _isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : _buildContent(),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildScreenName() {
     return Align(
@@ -277,7 +321,12 @@ Widget build(BuildContext context) {
                   _selectedSubject = null;
                   _selectedUser = null;
                 });
-                _fetchDepartmentSubjects().then((_) => _fetchDepartments());
+                _onDropdownChanged(() async {
+                  await _fetchDepartmentSubjects();
+                  await _fetchDepartments();
+                  await _fetchSubjects();
+                  await _fetchGrades();
+                });
               },
             ),
           ),
@@ -286,11 +335,13 @@ Widget build(BuildContext context) {
             child: DropdownButton<Department>(
               hint: Text("Izaberite odjeljenje"),
               value: _selectedDepartment,
-              onChanged: (Department? newValue) {
+              onChanged: (Department? newValue) async {
                 setState(() {
                   _selectedDepartment = newValue;
                   _selectedUser = null;
                 });
+                await _fetchSubjects();
+                await _fetchGrades();
               },
               items: _departments.map((Department department) {
                 return DropdownMenuItem<Department>(
@@ -305,10 +356,12 @@ Widget build(BuildContext context) {
             child: DropdownButton<Subject>(
               hint: Text("Izaberite predmet"),
               value: _selectedSubject,
-              onChanged: (Subject? newValue) {
+              onChanged: (Subject? newValue) async {
                 setState(() {
                   _selectedSubject = newValue;
+                  _selectedUser = null;
                 });
+                await _fetchGrades();
               },
               items: _subjects.map((Subject subject) {
                 return DropdownMenuItem<Subject>(
@@ -323,19 +376,15 @@ Widget build(BuildContext context) {
             child: DropdownButton<User>(
               hint: Text("Izaberite učenika"),
               value: _selectedUser,
-              onChanged: (User? newValue) {
+              onChanged: (User? newValue) async {
                 setState(() {
                   _selectedUser = newValue;
+                  _isLoading = true;
                 });
-                if (newValue == null) {
-                  _fetchUsers().then((_) {
-                    setState(() {
-                      _buildBarGroups();
-                    });
-                  });
-                } else {
-                  print('Selected User: ${newValue.ime}');
-                }
+                await _fetchGrades();
+                setState(() {
+                  _isLoading = false;
+                });
               },
               items: [
                 DropdownMenuItem<User>(
@@ -351,22 +400,59 @@ Widget build(BuildContext context) {
               ],
             ),
           ),
-          SizedBox(width: 10),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.blue,
-            ),
-            onPressed: () async {
-              await _fetchGrades();
-              setState(() {
-                _buildBarGroups();
-              });
-            },
-            child: Text("Pretraga"),
-          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildContent() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 2,
+          child: _buildChart(),
+        ),
+        SizedBox(width: 20),
+        Expanded(
+          flex: 1,
+          child: _buildUserDetails(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUserDetails() {
+    List<User> filteredUsers =
+        _selectedUser == null ? _users.values.toList() : [_selectedUser!];
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: filteredUsers.length,
+      itemBuilder: (context, index) {
+        final user = filteredUsers[index];
+
+        return FutureBuilder<double>(
+          future: _calculateZakljucnaOcjena(
+              user.korisnikId!, _selectedSubject!.predmetID!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              final finalGrade = snapshot.data ?? 0.0;
+              return Card(
+                child: ListTile(
+                  title: Text('${user.ime} ${user.prezime}'),
+                  subtitle: Text(
+                      'Zaključna ocjena: ${finalGrade.toStringAsFixed(2)}'),
+                ),
+              );
+            }
+          },
+        );
+      },
     );
   }
 
@@ -421,77 +507,73 @@ Widget build(BuildContext context) {
   }
 
   List<BarChartGroupData> _buildBarGroups() {
-  if (_grades == null || _grades.isEmpty || _users.isEmpty) {
-    return [];
-  }
-
-  Map<int, List<Grade>> groupedGrades = {};
-  for (var grade in _grades) {
-    if (groupedGrades.containsKey(grade.korisnikID)) {
-      groupedGrades[grade.korisnikID!]!.add(grade);
-    } else {
-      groupedGrades[grade.korisnikID!] = [grade];
+    if (_grades.isEmpty || _users.isEmpty) {
+      return [];
     }
+
+    Map<int, List<Grade>> groupedGrades = {};
+    for (var grade in _grades) {
+      if (groupedGrades.containsKey(grade.korisnikID)) {
+        groupedGrades[grade.korisnikID!]!.add(grade);
+      } else {
+        groupedGrades[grade.korisnikID!] = [grade];
+      }
+    }
+
+    return groupedGrades.entries
+        .map((entry) {
+          int userId = entry.key;
+          List<Grade> grades = entry.value;
+
+          List<BarChartRodData> barRods = [];
+
+          for (int i = 0; i < grades.length; i++) {
+            var grade = grades[i];
+            double gradeValue =
+                (grade.vrijednostOcjene?.toDouble() ?? 0.0).clamp(1.0, 5.0);
+
+            barRods.add(BarChartRodData(
+              toY: gradeValue,
+              color: Colors.blue,
+              width: 20.0,
+              borderSide: BorderSide(
+                color: Colors.blue,
+              ),
+            ));
+          }
+
+          if (barRods.isEmpty) {
+            return null;
+          }
+
+          return BarChartGroupData(
+            x: userId,
+            barRods: barRods,
+            showingTooltipIndicators: [0],
+          );
+        })
+        .whereType<BarChartGroupData>()
+        .toList();
   }
 
-  Map<int, String> userNames = {};
-  for (var user in _users.values) {
-    userNames[user.korisnikId!] = '${user.ime ?? ''} ${user.prezime ?? ''}';
-  }
+  Widget _buildBottomTitles(double value, TitleMeta meta) {
+    final userId = value.toInt();
+    final userName = _users[userId]?.ime ?? 'N/A';
 
-  return groupedGrades.entries.map((entry) {
-    int userId = entry.key;
-    List<Grade> grades = entry.value;
-
-    List<BarChartRodData> barRods = [];
-    double barWidth = 20.0;
-    double barSpacing = 4.0;
-
-    for (int i = 0; i < grades.length; i++) {
-      var grade = grades[i];
-      double gradeValue = (grade.vrijednostOcjene?.toDouble() ?? 0.0).clamp(1.0, 5.0);
-
-      barRods.add(BarChartRodData(
-        toY: gradeValue,
-        color: Colors.blue,
-        width: barWidth,
-        borderSide: BorderSide(
-          color: Colors.blue,
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: Container(
+        height: 40,
+        alignment: Alignment.center,
+        child: Text(
+          userName,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.black,
+          ),
+          textAlign: TextAlign.center,
         ),
-      ));
-    }
-
-    if (barRods.isEmpty) {
-      return null;
-    }
-
-    return BarChartGroupData(
-      x: userId,
-      barRods: barRods,
-      showingTooltipIndicators: [0],
-    );
-  }).whereType<BarChartGroupData>().toList();
-}
-
-Widget _buildBottomTitles(double value, TitleMeta meta) {
-  final userId = value.toInt();
-  final userName = _users[userId]?.ime ?? 'N/A';
-
-  return SideTitleWidget(
-    axisSide: meta.axisSide,
-    child: Container(
-      height: 40,
-      alignment: Alignment.center,
-      child: Text(
-        userName,
-        style: TextStyle(
-          fontSize: 12,
-          color: Colors.black,
-        ),
-        textAlign: TextAlign.center,
       ),
-    ),
-  );
-}
-
+    );
+  }
 }
