@@ -107,7 +107,8 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Potvrda brisanja'),
-        content: Text('Da li ste sigurni da želite da uklonite ovog učenika iz odjeljenja?'),
+        content: Text(
+            'Da li ste sigurni da želite da uklonite ovog učenika iz odjeljenja?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -131,10 +132,19 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
           setState(() {
             _students.remove(student);
           });
-          await _fetchDepartmentsAndInitialize(schoolID: _selectedSchool?.skolaID);
+          await _fetchDepartmentsAndInitialize(
+              schoolID: _selectedSchool?.skolaID);
         }
+      } on FormatException catch (e) {
+        if (e.source.contains("Ne možete obrisati učenika koji ima ocjene.")) {
+          _showErrorDialog('Ne možete obrisati učenika koji ima ocjene.');
+        } else {
+          _showErrorDialog('Došlo je do greške u formatu odgovora.');
+        }
+        print(e.toString());
       } on Exception catch (e) {
-        _showErrorDialog('Greška pri uklanjanju učenika: ${e.toString()}');
+        _showErrorDialog('${e.toString()}');
+        print(e.toString());
       } catch (e) {
         _showErrorDialog('Došlo je do neočekivane greške.');
       }

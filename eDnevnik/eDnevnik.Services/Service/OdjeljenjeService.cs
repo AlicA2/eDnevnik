@@ -94,18 +94,29 @@ namespace eDnevnik.Services.Service
         {
             var odjeljenje = await _context.Odjeljenje
                 .Include(o => o.Ucenici)
+                .Include(o => o.OdjeljenjePredmeti)
+                .ThenInclude(op => op.Predmet)
+                .ThenInclude(p => p.Ocjene)
                 .FirstOrDefaultAsync(o => o.OdjeljenjeID == odjeljenjeID);
 
             if (odjeljenje == null)
             {
-                throw new ArgumentException("Odjeljenje not found.");
+                throw new ArgumentException("Odjeljenje nije pronađeno.");
             }
 
             var student = odjeljenje.Ucenici.FirstOrDefault(u => u.KorisnikID == korisnikID);
 
             if (student == null)
             {
-                throw new ArgumentException("Student not found in this department.");
+                throw new ArgumentException("Učenik nije pronađen u odjeljenju");
+            }
+
+            var hasGrades = odjeljenje.OdjeljenjePredmeti
+                .Any(op => op.Predmet.Ocjene.Any(o => o.KorisnikID == korisnikID));
+
+            if (hasGrades)
+            {
+                throw new UserException("Ne možete obrisati učenika koji ima ocjene.");
             }
 
             odjeljenje.Ucenici.Remove(student);
