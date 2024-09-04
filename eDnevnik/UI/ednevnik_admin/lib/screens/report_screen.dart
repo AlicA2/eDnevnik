@@ -1,8 +1,12 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:ednevnik_admin/models/department_subject.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/grade.dart';
@@ -274,28 +278,47 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   Widget _buildScreenName() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.only(
-            bottomLeft: const Radius.circular(5),
-            topLeft: const Radius.circular(20),
-            topRight: const Radius.elliptical(5, 5),
-            bottomRight: const Radius.circular(30.0),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.only(
+                bottomLeft: const Radius.circular(5),
+                topLeft: const Radius.circular(20),
+                topRight: const Radius.elliptical(5, 5),
+                bottomRight: const Radius.circular(30.0),
+              ),
+            ),
+            padding: const EdgeInsets.all(16.0),
+            child: const Text(
+              "Izvještaj",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ),
-        padding: const EdgeInsets.all(16.0),
-        child: const Text(
-          "Izvještaj",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+        ElevatedButton.icon(
+          onPressed: _generatePDFReport,
+          icon: Icon(Icons.print),
+          label: Text("Printaj izvještaj"),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.blue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           ),
         ),
-      ),
+      ],
     );
   }
 
@@ -575,5 +598,132 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         ),
       ),
     );
+  }
+
+  void _generatePDFReport() async {
+    final pdf = pw.Document();
+    final dateFormat = DateFormat('dd.MM.yyyy');
+    final now = DateTime.now();
+    final timestamp = DateFormat('yyyyMMdd_HHmmss').format(now);
+
+    final schoolName = replaceSpecialChars(_selectedSchool?.naziv ?? "N/A");
+    final departmentName =
+        replaceSpecialChars(_selectedDepartment?.nazivOdjeljenja ?? "N/A");
+    final subjectName = replaceSpecialChars(_selectedSubject?.naziv ?? "N/A");
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Center(
+            child: pw.Column(
+              mainAxisSize: pw.MainAxisSize.min,
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  replaceSpecialChars('Izvještaj o ocjenama'),
+                  style: pw.TextStyle(
+                    fontSize: 24,
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColors.blue800,
+                  ),
+                ),
+                pw.SizedBox(height: 20),
+                pw.Text(
+                  'kola: $schoolName',
+                  style: pw.TextStyle(fontSize: 16, color: PdfColors.black),
+                ),
+                pw.Text(
+                  'Odjeljenje: $departmentName',
+                  style: pw.TextStyle(fontSize: 16, color: PdfColors.black),
+                ),
+                pw.Text(
+                  'Predmet: $subjectName',
+                  style: pw.TextStyle(fontSize: 16, color: PdfColors.black),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Text(
+                  'Izvjestaj generisan na datum: ${dateFormat.format(now)}',
+                  style: pw.TextStyle(
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                    color: PdfColors.grey900,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                replaceSpecialChars('Ocjene učenika'),
+                style: pw.TextStyle(
+                  fontSize: 18,
+                  fontWeight: pw.FontWeight.bold,
+                  color: PdfColors.black,
+                ),
+              ),
+              pw.SizedBox(height: 10),
+              pw.Table.fromTextArray(
+                headers: [
+                  replaceSpecialChars('Učenik'),
+                  replaceSpecialChars('Datum'),
+                  replaceSpecialChars('Ocjena')
+                ],
+                data: _grades.map((grade) {
+                  final user = _users[grade.korisnikID];
+                  final userName =
+                      '${replaceSpecialChars(user?.ime ?? '')} ${replaceSpecialChars(user?.prezime ?? '')}';
+                  final gradeDate =
+                      dateFormat.format(grade.datum ?? DateTime.now());
+                  final gradeValue = grade.vrijednostOcjene?.toString() ?? '';
+
+                  return [userName, gradeDate, gradeValue];
+                }).toList(),
+                border: pw.TableBorder.all(),
+                cellStyle: pw.TextStyle(fontSize: 12),
+                headerStyle: pw.TextStyle(
+                  fontSize: 14,
+                  fontWeight: pw.FontWeight.bold,
+                  color: PdfColors.blue900,
+                ),
+                headerDecoration: pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    final result = await FilePicker.platform.saveFile(
+      dialogTitle: 'Odaberite mjesto za spremanje PDF-a',
+      fileName: 'izvještaj_$timestamp.pdf',
+    );
+
+    if (result != null) {
+      final outputFile = File(result);
+      await outputFile.writeAsBytes(await pdf.save());
+      print('PDF preuzet: ${outputFile.path}');
+    } else {
+      print('Nema odabranog mjesta za spremanje.');
+    }
+  }
+
+  String replaceSpecialChars(String input) {
+    return input
+        .replaceAll('š', 's')
+        .replaceAll('č', 'c')
+        .replaceAll('ć', 'c')
+        .replaceAll('đ', 'd')
+        .replaceAll('ž', 'z');
   }
 }
