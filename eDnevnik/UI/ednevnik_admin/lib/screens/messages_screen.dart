@@ -201,14 +201,6 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
           DataColumn(
             label: Expanded(
               child: Text(
-                "Roditelj",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
                 "Učenik",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
@@ -253,21 +245,6 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
               return DataRow(
                 cells: [
                   DataCell(Text((index + 1).toString())),
-                  DataCell(
-                    FutureBuilder<String>(
-                      future: getUserName(e.roditeljID ?? 0),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Text("Loading...");
-                        } else if (snapshot.hasError) {
-                          return const Text("Error");
-                        } else {
-                          return Text(snapshot.data ?? "Unknown");
-                        }
-                      },
-                    ),
-                  ),
                   DataCell(
                     FutureBuilder<String>(
                       future: getUserName(e.ucenikID ?? 0),

@@ -55,7 +55,7 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
   Future<void> _fetchSubjects() async {
     var data = await _predmetProvider.get(filter: {
       'fts': _ftsController.text,
-      'sifra': _nazivSifraController.text,
+      'Naziv': _nazivSifraController.text,
       'SkolaID': _selectedSchool?.skolaID
     });
 
@@ -129,7 +129,7 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          width: 300,
+          width: 210,
           child: DropdownButton<School>(
             value: _selectedSchool,
             items: _schools.map((school) {
@@ -158,20 +158,20 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
         children: [
           Row(
             children: [
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: "Naziv ili šifra",
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  controller: _ftsController,
-                ),
-              ),
+              // Expanded(
+              //   child: TextField(
+              //     decoration: InputDecoration(
+              //       labelText: "Naziv ili šifra",
+              //       prefixIcon: Icon(Icons.search),
+              //     ),
+              //     controller: _ftsController,
+              //   ),
+              // ),
               SizedBox(width: 20),
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "Šifra",
+                    labelText: "Naziv predmeta",
                     prefixIcon: Icon(Icons.search),
                   ),
                   controller: _nazivSifraController,

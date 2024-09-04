@@ -12,7 +12,7 @@ using eDnevnik.Services;
 namespace eDnevnik.Services.Migrations
 {
     [DbContext(typeof(eDnevnikDBContext))]
-    [Migration("20240830150655_initial")]
+    [Migration("20240904195956_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -604,133 +604,133 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             KorisnikUlogaID = 1,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3045),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4811),
                             KorisnikID = 1,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 2,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3087),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4859),
                             KorisnikID = 2,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 3,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3091),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4862),
                             KorisnikID = 3,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 4,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3094),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4866),
                             KorisnikID = 4,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 5,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3098),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4868),
                             KorisnikID = 5,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 6,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3101),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4871),
                             KorisnikID = 6,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 7,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3104),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4874),
                             KorisnikID = 7,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 8,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3108),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4921),
                             KorisnikID = 8,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 9,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3111),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4924),
                             KorisnikID = 9,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 10,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3115),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4927),
                             KorisnikID = 10,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 11,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3118),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4930),
                             KorisnikID = 11,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 12,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3122),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4933),
                             KorisnikID = 12,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 13,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3125),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4936),
                             KorisnikID = 13,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 14,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3128),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4939),
                             KorisnikID = 14,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 15,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3132),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4942),
                             KorisnikID = 15,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 16,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3135),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4945),
                             KorisnikID = 16,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 17,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3139),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4948),
                             KorisnikID = 17,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 18,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3142),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4951),
                             KorisnikID = 18,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 19,
-                            DatumIzmjene = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3145),
+                            DatumIzmjene = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(4954),
                             KorisnikID = 19,
                             UlogaID = 2
                         });
@@ -1044,7 +1044,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 1,
-                            Datum = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3283),
+                            Datum = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(5037),
                             KorisnikID = 2,
                             PredmetID = 1,
                             VrijednostOcjene = 5
@@ -1052,7 +1052,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 2,
-                            Datum = new DateTime(2024, 8, 30, 17, 6, 54, 745, DateTimeKind.Local).AddTicks(3289),
+                            Datum = new DateTime(2024, 9, 4, 21, 59, 56, 195, DateTimeKind.Local).AddTicks(5041),
                             KorisnikID = 2,
                             PredmetID = 2,
                             VrijednostOcjene = 4
@@ -1147,13 +1147,9 @@ namespace eDnevnik.Services.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Odgovor")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProfesorID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoditeljID")
                         .HasColumnType("int");
 
                     b.Property<string>("SadrzajPoruke")
@@ -1166,8 +1162,6 @@ namespace eDnevnik.Services.Migrations
                     b.HasKey("PorukaID");
 
                     b.HasIndex("ProfesorID");
-
-                    b.HasIndex("RoditeljID");
 
                     b.HasIndex("UcenikID");
 
@@ -1323,7 +1317,7 @@ namespace eDnevnik.Services.Migrations
                             Adresa = "Sjeverni logor bb",
                             Drzava = "BiH",
                             Grad = "Mostar",
-                            Naziv = "Gimnazija"
+                            Naziv = "Srednja Stručna Škola"
                         },
                         new
                         {
@@ -1497,12 +1491,6 @@ namespace eDnevnik.Services.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("eDnevnik.Services.Database.Korisnik", "Roditelj")
-                        .WithMany()
-                        .HasForeignKey("RoditeljID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("eDnevnik.Services.Database.Korisnik", "Ucenik")
                         .WithMany()
                         .HasForeignKey("UcenikID")
@@ -1510,8 +1498,6 @@ namespace eDnevnik.Services.Migrations
                         .IsRequired();
 
                     b.Navigation("Profesor");
-
-                    b.Navigation("Roditelj");
 
                     b.Navigation("Ucenik");
                 });

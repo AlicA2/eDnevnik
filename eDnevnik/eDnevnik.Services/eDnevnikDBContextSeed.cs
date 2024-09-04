@@ -230,7 +230,7 @@ namespace eDnevnik.Services
                 new Skola
                 {
                     SkolaID = 1,
-                    Naziv = "Gimnazija",
+                    Naziv = "Srednja Stručna Škola",
                     Grad = "Mostar",
                     Drzava = "BiH",
                     Adresa = "Sjeverni logor bb",

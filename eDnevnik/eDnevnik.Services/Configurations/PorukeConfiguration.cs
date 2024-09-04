@@ -16,11 +16,6 @@ namespace eDnevnik.Services.Database
                 .HasForeignKey(p => p.ProfesorID)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(p => p.Roditelj)
-                .WithMany()
-                .HasForeignKey(p => p.RoditeljID)
-                .OnDelete(DeleteBehavior.Restrict);
-
             builder.HasOne(p => p.Ucenik)
                 .WithMany()
                 .HasForeignKey(p => p.UcenikID)
