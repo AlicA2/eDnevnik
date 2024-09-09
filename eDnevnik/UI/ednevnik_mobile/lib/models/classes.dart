@@ -1,26 +1,24 @@
-import 'package:ednevnik_admin/models/user.dart';
 import 'package:json_annotation/json_annotation.dart';
-part "department.g.dart";
+part "classes.g.dart";
 
 
 @JsonSerializable()
-class Department{
-  int? odjeljenjeID;
-  String? nazivOdjeljenja;
-  int? razrednikID;
-  int? skolaID;
-  List<User>? ucenici;
+class Classes{
+  int? casoviID;
+  String? nazivCasa;
+  String? opis;
+  int? godisnjiPlanProgramID;
 
-  Department(this.odjeljenjeID,this.nazivOdjeljenja,this.razrednikID,this.skolaID,[this.ucenici]);
+  Classes(this.casoviID,this.nazivCasa,this.opis,this.godisnjiPlanProgramID);
 
     /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
   /// The constructor is named after the source class, in this case, User.
-  factory Department.fromJson(Map<String, dynamic> json) => _$DepartmentFromJson(json);
+  factory Classes.fromJson(Map<String, dynamic> json) => _$ClassesFromJson(json);
 
   /// `toJson` is the convention for a class to declare support for serialization
   /// to JSON. The implementation simply calls the private, generated
   /// helper method `_$UserToJson`.
-  Map<String, dynamic> toJson() => _$DepartmentToJson(this);
+  Map<String, dynamic> toJson() => _$ClassesToJson(this);
 
 }

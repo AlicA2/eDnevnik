@@ -1,20 +1,33 @@
-import 'dart:io';
-
+import 'package:ednevnik_admin/models/annual_plan_program.dart';
+import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
+import 'package:ednevnik_admin/providers/classes_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
+import 'package:ednevnik_admin/providers/department_subject_provider.dart';
+import 'package:ednevnik_admin/providers/grade_provider.dart';
+import 'package:ednevnik_admin/providers/message_provider.dart';
+import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/utils/util.dart';
+import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  HttpOverrides.global = MyHttpOverrides();
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => SubjectProvider()),
-    ChangeNotifierProvider(create: (_) => DepartmentProvider()),
-    ChangeNotifierProvider(create: (_) => UserProvider())],
+    providers: [
+      ChangeNotifierProvider(create: (_) => SubjectProvider()),
+      ChangeNotifierProvider(create: (_) => DepartmentProvider()),
+      ChangeNotifierProvider(create: (_) => MessageProvider()),
+      ChangeNotifierProvider(create: (_) => UserProvider()),
+      ChangeNotifierProvider(create: (_) => AnnualPlanProgramProvider()),
+      ChangeNotifierProvider(create: (_) => ClassesProvider()),
+      ChangeNotifierProvider(create: (_) => SchoolProvider()),
+      ChangeNotifierProvider(create: (_) => DepartmentSubjectProvider()),
+      ChangeNotifierProvider(create: (_) => GradeProvider()),
+    ],
     child: const MyMaterialApp(),
   ));
 }
@@ -137,93 +150,102 @@ class LoginPage extends StatelessWidget {
 
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
-  
-  late SubjectProvider _predmetProvider;
 
   @override
   Widget build(BuildContext context) {
-    _predmetProvider = context.read<SubjectProvider>();
+    UserProvider _userProvider = context.read<UserProvider>();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: Text("Prijava"),
         backgroundColor: Colors.blue,
       ),
       body: Center(
-          child: SingleChildScrollView(
-            child: Container(
-                    constraints: BoxConstraints(maxWidth: 400, maxHeight: 500),
-                    child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  //Image.network("https://www.fit.ba/content/public/images/og-image.jpg", height: 100, width: 100,),
-                  Image.asset(
-                    "assets/images/eDnevnik.png",
-                    height: 200,
-                    width: 300,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                        labelText: "Username", prefixIcon: Icon(Icons.email)),
-                    controller: _usernameController,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                        labelText: "Password", prefixIcon: Icon(Icons.password)),
-                    controller: _passwordController,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      var username = _usernameController.text;
-                      var password = _passwordController.text;
-                      print("Login proceeded $username $password");
-            
-                      Authorization.username = username;
-                      Authorization.password = password;
-            
-                      try {
-                        await _predmetProvider.get();
-            
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SubjectDetailScreen(),
-                        ),
-                      );
-                      } on Exception catch (e) {
-                        // TODO
-                        showDialog(context: context, builder: (BuildContext context)=>AlertDialog(
-                          title:Text("Error"),
-                          content: Text(e.toString()),
-                          actions: [
-                            TextButton(onPressed: ()=>Navigator.pop(context), child: Text("OK"),)
-                          ]
-                        ));
-                      }
-                    },
-                    child: Text("Login"),
-                  )
-                ],
+        child: SingleChildScrollView(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 400, maxHeight: 500),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/images/eDnevnik.png",
+                      height: 200,
+                      width: 300,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(
+                          labelText: "Korisničko ime",
+                          prefixIcon: Icon(Icons.email)),
+                      controller: _usernameController,
+                    ),
+                    SizedBox(height: 10),
+                    TextField(
+                      decoration: InputDecoration(
+                          labelText: "Lozinka",
+                          prefixIcon: Icon(Icons.password)),
+                      controller: _passwordController,
+                      obscureText: true,
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () async {
+                        var username = _usernameController.text;
+                        var password = _passwordController.text;
+
+                        Authorization.username = username;
+                        Authorization.password = password;
+                        try {
+                          var loginData = await _userProvider.getLogedWithRole(
+                              username, password);
+
+                          if (loginData != null &&
+                              loginData['uloga'] == 'admin') {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => SubjectDetailScreen(),
+                              ),
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: Text("Greška"),
+                                content: Text("Nemate dozvolu za pristup."),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text("OK"),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        } on Exception catch (e) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: Text("Greška"),
+                              content: Text(e.toString()),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text("OK"),
+                                )
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                      child: Text("Prijava"),
+                    )
+                  ],
+                ),
               ),
             ),
-                    ),
-                  ),
-          )),
+          ),
+        ),
+      ),
     );
-  }
-}
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port) {
-        return true;
-      };
   }
 }
