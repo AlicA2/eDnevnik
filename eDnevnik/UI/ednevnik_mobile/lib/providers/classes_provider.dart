@@ -12,7 +12,7 @@ import 'package:http/http.dart';
 class ClassesProvider extends BaseProvider<Classes> {
   ClassesProvider(): super("Casovi");
     static const String _baseUrl = String.fromEnvironment("baseUrl",
-      defaultValue: "https://localhost:7260/");
+      defaultValue: "https://10.0.2.2:7260/");
   static const String _endPoint = "Casovi";
 
   @override

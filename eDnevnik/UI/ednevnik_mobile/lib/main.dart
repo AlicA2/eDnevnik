@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ednevnik_admin/models/annual_plan_program.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/classes_provider.dart';
@@ -16,6 +18,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+
+  HttpOverrides.global = MyHttpOverrides();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => SubjectProvider()),
@@ -200,7 +205,7 @@ class LoginPage extends StatelessWidget {
                               username, password);
 
                           if (loginData != null &&
-                              loginData['uloga'] == 'admin') {
+                              loginData['uloga'] == 'učenik') {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => SubjectDetailScreen(),
@@ -247,5 +252,14 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) {
+        return true;
+      };
   }
 }
