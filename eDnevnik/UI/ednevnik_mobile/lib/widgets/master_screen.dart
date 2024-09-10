@@ -122,7 +122,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             ),
             ListTile(
               leading: Icon(Icons.library_books),
-              title: Text("Predmeti"),
+              title: Text("Početna"),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const SubjectDetailScreen(),
