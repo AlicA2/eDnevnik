@@ -109,6 +109,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
+            SizedBox(height:16),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
