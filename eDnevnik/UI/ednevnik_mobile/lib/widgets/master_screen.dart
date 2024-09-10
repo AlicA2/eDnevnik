@@ -1,20 +1,17 @@
 import 'package:ednevnik_admin/main.dart';
-import 'package:ednevnik_admin/models/result.dart';
-import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
-import 'package:ednevnik_admin/providers/department_provider.dart';
-import 'package:ednevnik_admin/screens/calendar_screen.dart';
-import 'package:ednevnik_admin/screens/department_screen.dart';
-import 'package:ednevnik_admin/screens/help_support_screen.dart';
-import 'package:ednevnik_admin/screens/messages_screen.dart';
-import 'package:ednevnik_admin/screens/report_screen.dart';
-import 'package:ednevnik_admin/screens/student_screen.dart';
-import 'package:ednevnik_admin/screens/subject_screen.dart';
-import 'package:ednevnik_admin/screens/single_subject_screen.dart';
-import 'package:ednevnik_admin/screens/user_profile_screen.dart';
-import 'package:ednevnik_admin/screens/yearly_plan_and_program_screen.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../screens/calendar_screen.dart';
+import '../screens/department_screen.dart';
+import '../screens/help_support_screen.dart';
+import '../screens/messages_screen.dart';
+import '../screens/report_screen.dart';
+import '../screens/student_screen.dart';
+import '../screens/subject_screen.dart';
+import '../screens/user_profile_screen.dart';
+import '../screens/yearly_plan_and_program_screen.dart';
 
 class MasterScreenWidget extends StatefulWidget {
   final Widget? child;
@@ -31,15 +28,6 @@ class MasterScreenWidget extends StatefulWidget {
 }
 
 class _MasterScreenWidgetState extends State<MasterScreenWidget> {
-  bool _isHoveringLogoff = false;
-  bool _isHoveringHelp = false;
-  bool _isDrawerOpen = true;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   void _showLogoffDialog() {
     showDialog(
       context: context,
@@ -69,12 +57,6 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
     );
   }
 
-  void _toggleDrawer() {
-    setState(() {
-      _isDrawerOpen = !_isDrawerOpen;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = context.watch<UserProvider>();
@@ -84,15 +66,19 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: null,
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
         automaticallyImplyLeading: false,
         title: Row(
           children: [
-            IconButton(
-              icon: Icon(_isDrawerOpen ? Icons.close : Icons.menu),
-              onPressed: _toggleDrawer,
-            ),
-            SizedBox(width: 16),
             RichText(
               text: TextSpan(
                 children: [
@@ -117,212 +103,136 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             widget.title_widget ?? Container(),
           ],
         ),
-        actions: [
-          PopupMenuButton(
-            offset: Offset(0, 40),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'profile',
-                child: Text('Prikaži profil'),
+        backgroundColor: Colors.white,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Općenito",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ],
-            onSelected: (value) {
-              if (value == 'profile') {
+            ),
+            ListTile(
+              leading: Icon(Icons.library_books),
+              title: Text("Predmeti"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const SubjectDetailScreen(),
+                ));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.message),
+              title: Text("Poruke"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => MessageDetailScreen(),
+                ));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.insert_chart),
+              title: Text("Plan i program"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => YearlyPlanAndProgramDetailScreen(),
+                ));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.bar_chart),
+              title: Text("Izvještaj"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ReportDetailScreen(),
+                ));
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Nastava",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.group),
+              title: Text("Odjeljenja"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DepartmentDetailScreen(),
+                ));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text("Učenici"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => StudentDetailScreen(),
+                ));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.calendar_today),
+              title: Text("Kalendar"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CalendarDetailScreen(),
+                ));
+              },
+            ),
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Korisničke postavke",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: CircleAvatar(
+                radius: 12,
+                child: Icon(Icons.person, size: 16),
+              ),
+              title: Text(imePrezime),
+              onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ProfilScreen(),
                 ));
-              }
-            },
-            child: Row(
-              children: [
-                Text(
-                  imePrezime,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black.withOpacity(0.7),
-                  ),
-                ),
-                SizedBox(width: 8),
-                CircleAvatar(
-                  radius: 12,
-                  child: Icon(
-                    Icons.person,
-                    size: 16,
-                  ),
-                ),
-              ],
+              },
             ),
-          ),
-          SizedBox(width: 30),
-          MouseRegion(
-            onEnter: (_) => setState(() => _isHoveringHelp = true),
-            onExit: (_) => setState(() => _isHoveringHelp = false),
-            child: AnimatedOpacity(
-              opacity: _isHoveringHelp ? 0.6 : 1.0,
-              duration: Duration(milliseconds: 300),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => HelpPage(),
-                  ));
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.help_outline,
-                      color: Colors.black,
-                      size: 16,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      "Pomoć i podrška",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            ListTile(
+              leading: Icon(Icons.help_outline),
+              title: Text("Pomoć i podrška"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => HelpPage(),
+                ));
+              },
             ),
-          ),
-          SizedBox(
-            width: 30,
-          ),
-          MouseRegion(
-            onEnter: (_) => setState(() => _isHoveringLogoff = true),
-            onExit: (_) => setState(() => _isHoveringLogoff = false),
-            child: AnimatedOpacity(
-              opacity: _isHoveringLogoff ? 0.6 : 1.0,
-              duration: Duration(milliseconds: 300),
-              child: GestureDetector(
-                onTap: _showLogoffDialog,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.logout,
-                      color: Colors.black,
-                      size: 16,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      "Odjavi se",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text("Odjavi se"),
+              onTap: _showLogoffDialog,
             ),
-          ),
-          SizedBox(width: 40),
-        ],
-        backgroundColor: Colors.white,
+          ],
+        ),
       ),
-      body: Row(
-        children: [
-          if (_isDrawerOpen)
-            Container(
-              width: 250,
-              child: Drawer(
-                child: ListView(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Općenito",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.library_books),
-                      title: Text("Predmeti"),
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const SubjectDetailScreen(),
-                        ));
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.message),
-                      title: Text("Poruke"),
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => MessageDetailScreen(),
-                        ));
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.insert_chart),
-                      title: Text("Plan i program"),
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              YearlyPlanAndProgramDetailScreen(),
-                        ));
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.bar_chart),
-                      title: Text("Izvještaj"),
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ReportDetailScreen(),
-                        ));
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Nastava",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.group),
-                      title: Text("Odjeljenja"),
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => DepartmentDetailScreen(),
-                        ));
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.person),
-                      title: Text("Učenici"),
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => StudentDetailScreen(),
-                        ));
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.calendar_today),
-                      title: Text("Kalendar"),
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CalendarDetailScreen(),
-                        ));
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          Expanded(
-            flex: 5,
-            child: widget.child!,
-          ),
-        ],
-      ),
+      body: widget.child!,
     );
   }
 }
