@@ -12,6 +12,7 @@ Subject _$SubjectFromJson(Map<String, dynamic> json) => Subject(
       json['opis'] as String?,
       json['stateMachine'] as String?,
       (json['skolaID'] as num?)?.toInt(),
+      json['isExpanded'] as bool?,
       (json['zakljucnaOcjena'] as num?)?.toDouble(),
       (json['ocjene'] as List<dynamic>?)
           ?.map((e) => Grade.fromJson(e as Map<String, dynamic>))
@@ -25,5 +26,6 @@ Map<String, dynamic> _$SubjectToJson(Subject instance) => <String, dynamic>{
       'opis': instance.opis,
       'stateMachine': instance.stateMachine,
       'zakljucnaOcjena': instance.zakljucnaOcjena,
+      'isExpanded': instance.isExpanded,
       'ocjene': instance.ocjene,
     };

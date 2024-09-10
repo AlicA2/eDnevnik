@@ -129,7 +129,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
         if (departmentSubject.predmetID != null) {
           var subject = allSubjectsResult.result.firstWhere(
             (s) => s.predmetID == departmentSubject.predmetID,
-            orElse: () => Subject(0, '', '', '', 0, 0, null),
+            orElse: () => Subject(0, '', '', '', 0, null, null),
           );
           if (subject != null) {
             filteredSubjects.add(subject);

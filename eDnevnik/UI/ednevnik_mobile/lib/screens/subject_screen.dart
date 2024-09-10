@@ -135,6 +135,10 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
         if (mounted) {
           var filteredSubjects = data.result
               .where((subject) => predmetIDs.contains(subject.predmetID))
+              .map((subject) {
+            subject.isExpanded ??= false;
+            return subject;
+          })
               .toList();
 
           setState(() {
@@ -180,35 +184,70 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
   Widget _buildScreenName() {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(5),
-                topLeft: Radius.circular(20),
-                topRight: Radius.elliptical(5, 5),
-                bottomRight: Radius.circular(30.0),
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(5),
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.elliptical(5, 5),
+                    bottomRight: Radius.circular(30.0),
+                  ),
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "Predmeti",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "Predmeti",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+              Expanded(
+                child: _buildSchoolDropdown(),
+              ),
+            ],
+          ),
+          SizedBox(height: 32.0),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: 'Dobrodošli ',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    color: Colors.black87,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: '${loggedInUser?.ime ?? ''} ${loggedInUser?.prezime ?? ''}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    TextSpan(
+                      text: ' u eDnevnik. Ovdje možete vidjeti vaše predmete za ovu akademsku godinu.',
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-          Expanded(
-            child: _buildSchoolDropdown(),
-          ),
+          SizedBox(height: 16,)
         ],
       ),
     );
   }
+
 
   Widget _buildSchoolDropdown() {
     return Row(
@@ -240,53 +279,40 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
 
   Widget _buildDataListView() {
     return SingleChildScrollView(
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Redni broj",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Naziv",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Opis",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-        ],
-        rows: result?.result
+      child: ExpansionPanelList(
+        elevation: 1,
+        expandedHeaderPadding: EdgeInsets.symmetric(vertical: 5),
+        expansionCallback: (int index, bool isExpanded) {
+          setState(() {
+            if (index >= 0 && index < result!.result.length) {
+              result!.result[index].isExpanded = !(result!.result[index].isExpanded ?? false);
+              print('Expanding index: $index, new expanded state: ${result!.result[index].isExpanded}');
+            } else {
+              print('Index out of bounds: $index');
+            }
+          });
+        },
+        children: result?.result
             .asMap()
             .entries
             .map((entry) {
-          int index = entry.key + 1;
+          int index = entry.key;
           Subject subject = entry.value;
-          return DataRow(
-            cells: [
-              DataCell(Text(index.toString())),
-              DataCell(Text(subject.naziv ?? "")),
-              DataCell(Text(subject.opis ?? "")),
-              DataCell(IconButton(
+
+          bool expanded = subject.isExpanded ?? false;
+
+          print('Index: $index, Subject: ${subject.naziv}, IsExpanded: $expanded');
+
+          return ExpansionPanel(
+            headerBuilder: (BuildContext context, bool isExpanded) {
+              return ListTile(
+                title: Text(subject.naziv ?? "No Name"),
+              );
+            },
+            body: ListTile(
+              title: Text(subject.opis ?? "No description available"),
+              trailing: subject.isExpanded == false
+                  ? IconButton(
                 icon: Icon(Icons.edit),
                 onPressed: () async {
                   final result = await Navigator.of(context).push(
@@ -298,12 +324,18 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                     _fetchSubjectsForDepartment();
                   }
                 },
-              )),
-            ],
+              )
+                  : null,
+            ),
+
+            isExpanded: expanded,
           );
         }).toList() ?? [],
       ),
     );
   }
+
+
+
 
 }

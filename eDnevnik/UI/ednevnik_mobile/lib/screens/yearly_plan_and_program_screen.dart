@@ -132,7 +132,7 @@ class _YearlyPlanAndProgramDetailScreenState
     return _subjects
             .firstWhere(
               (sub) => sub.predmetID == id,
-              orElse: () => Subject(0, '', '', "", 0,0),
+              orElse: () => Subject(0, '', '', "", 0,null,null),
             )
             .naziv ??
         "";
