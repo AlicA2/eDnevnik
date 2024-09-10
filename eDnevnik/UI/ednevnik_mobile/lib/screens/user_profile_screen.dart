@@ -304,24 +304,24 @@ Widget build(BuildContext context) {
         ),
       ] else if (widget.korisnik != null) ...[
         Padding(
-          padding: const EdgeInsets.only(left: 150, right: 150),
+          padding: const EdgeInsets.only(left: 10, right: 20),
           child:
               _buildInfoRow(Icons.verified_user, 'Ime:', widget.korisnik!.ime),
         ),
         const SizedBox(height: 10),
         Padding(
-          padding: const EdgeInsets.only(left: 150, right: 150),
+          padding: const EdgeInsets.only(left: 10, right: 20),
           child: _buildInfoRow(
               Icons.verified_user, 'Prezime:', widget.korisnik!.prezime),
         ),
         const SizedBox(height: 10),
         Padding(
-          padding: const EdgeInsets.only(left: 150, right: 150),
+          padding: const EdgeInsets.only(left: 10, right: 20),
           child: _buildInfoRow(Icons.email, 'Email:', widget.korisnik!.email),
         ),
         const SizedBox(height: 10),
         Padding(
-          padding: const EdgeInsets.only(left: 150, right: 150),
+          padding: const EdgeInsets.only(left: 10, right: 20),
           child:
               _buildInfoRow(Icons.phone, 'Telefon:', widget.korisnik!.telefon),
         ),
