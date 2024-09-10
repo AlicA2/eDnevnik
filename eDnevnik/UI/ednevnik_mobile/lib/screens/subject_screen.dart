@@ -8,6 +8,12 @@ import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/department_subject.dart';
+import '../models/user.dart';
+import '../providers/department_provider.dart';
+import '../providers/department_subject_provider.dart';
+import '../providers/user_provider.dart';
+
 class SubjectDetailScreen extends StatefulWidget {
   const SubjectDetailScreen({Key? key}) : super(key: key);
 
@@ -17,52 +23,134 @@ class SubjectDetailScreen extends StatefulWidget {
 
 class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
   SearchResult<Subject>? result;
-  late SubjectProvider _predmetProvider;
+  late SubjectProvider _subjectProvider;
   late SchoolProvider _schoolProvider;
+  late DepartmentProvider _departmentProvider;
+  late DepartmentSubjectProvider _departmentSubjectProvider;
   School? _selectedSchool;
   List<School> _schools = [];
-
+  User? loggedInUser;
   TextEditingController _ftsController = TextEditingController();
-  TextEditingController _nazivSifraController = TextEditingController();
+  late int? userDepartment;
+  List<DepartmentSubject> _departmentSubjects = [];
+  int? _schoolIDFromDepartment;
 
   @override
   void initState() {
     super.initState();
-    _predmetProvider = context.read<SubjectProvider>();
+    _subjectProvider = context.read<SubjectProvider>();
     _schoolProvider = context.read<SchoolProvider>();
+    _departmentProvider = context.read<DepartmentProvider>();
+    _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
 
-    _fetchSchools();
-    // _fetchSubjects();
-
+    _fetchDepartments();
   }
 
-  Future<void> _fetchSchools() async {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loggedInUser = context.watch<UserProvider>().loggedInUser;
+    print("Logged-in user: ${loggedInUser?.ime}");
+  }
+
+  Future<void> _fetchDepartments() async {
     try {
-      var schools = await _schoolProvider.get();
-      if (mounted) {
-        setState(() {
-          _schools = schools.result;
-          if (_schools.isNotEmpty) {
-            _selectedSchool = _schools.first;
-            _fetchSubjects(); 
+      var departments = await _departmentProvider.get(filter: {'isUceniciIncluded': true});
+
+      if (departments != null) {
+        for (var department in departments.result) {
+          if (department.ucenici != null &&
+              department.ucenici!.any((user) => user.korisnikId == loggedInUser?.korisnikId)) {
+            print('User is in department with odjeljenjeID: ${department.odjeljenjeID}');
+
+            _schoolIDFromDepartment = department.skolaID;
+            userDepartment = department.odjeljenjeID;
+
+            await _fetchSchools();
+            break;
+          } else {
+            print('User not found in department with odjeljenjeID: ${department.odjeljenjeID}');
           }
-        });
+        }
+      } else {
+        print("No departments found.");
       }
     } catch (e) {
+      print('Error fetching departments: $e');
     }
   }
 
-  Future<void> _fetchSubjects() async {
-    var data = await _predmetProvider.get(filter: {
-      'fts': _ftsController.text,
-      'Naziv': _nazivSifraController.text,
-      'SkolaID': _selectedSchool?.skolaID
-    });
-
-    setState(() {
-      result = data;
-    });
+  Future<void> _fetchSchools() async {
+    if (_schoolIDFromDepartment != null) {
+      try {
+        var schools = await _schoolProvider.get(filter: {
+          'SkolaID': _schoolIDFromDepartment,
+        });
+        if (mounted) {
+          setState(() {
+            _schools = schools.result;
+            if (_schools.isNotEmpty) {
+              _selectedSchool = _schools.first;
+              _fetchDepartmentSubjects();
+            }
+          });
+        }
+      } catch (e) {
+        print('Error fetching schools: $e');
+      }
+    } else {
+      print("No skolaID available for fetching schools.");
+    }
   }
+
+  Future<void> _fetchDepartmentSubjects() async {
+    try {
+      var data = await _departmentSubjectProvider.get(filter: {
+        'OdjeljenjeID': userDepartment,
+      });
+      if (mounted) {
+        setState(() {
+          _departmentSubjects = data.result;
+        });
+        _fetchSubjectsForDepartment();
+      }
+    } catch (e) {
+      print('Error fetching department subjects: $e');
+    }
+  }
+
+  Future<void> _fetchSubjectsForDepartment() async {
+    List<int> predmetIDs = _departmentSubjects
+        .map((ds) => ds.predmetID)
+        .whereType<int>()
+        .toList();
+    print("Predmeti u predmetIDs su : $predmetIDs");
+
+    if (predmetIDs.isNotEmpty) {
+      try {
+        var data = await _subjectProvider.get(filter: {
+          'SkolaID': _schoolIDFromDepartment,
+        });
+
+        if (mounted) {
+          var filteredSubjects = data.result
+              .where((subject) => predmetIDs.contains(subject.predmetID))
+              .toList();
+
+          setState(() {
+            result = SearchResult<Subject>()
+              ..count = filteredSubjects.length
+              ..result = filteredSubjects;
+          });
+        }
+      } catch (e) {
+        print("Error fetching subjects: $e");
+      }
+    } else {
+      print("No PredmetIDs available for fetching subjects.");
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +168,7 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
               children: [
                 _buildScreenName(),
                 SizedBox(height: 16.0),
-                _buildSearch(),
                 Expanded(child: _buildDataListView()),
-                _buildAddButton(),
               ],
             ),
           ),
@@ -117,8 +203,8 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
             ),
           ),
           Expanded(
-          child: _buildSchoolDropdown(),
-        ),
+            child: _buildSchoolDropdown(),
+          ),
         ],
       ),
     );
@@ -138,57 +224,17 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                 child: Text(school.naziv ?? "N/A"),
               );
             }).toList(),
-            onChanged: (School? newValue) {
+            onChanged: _schoolIDFromDepartment != null
+                ? null
+                : (School? newValue) {
               setState(() {
                 _selectedSchool = newValue;
               });
-              _fetchSubjects();
+              _fetchSubjectsForDepartment();
             },
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildSearch() {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              // Expanded(
-              //   child: TextField(
-              //     decoration: InputDecoration(
-              //       labelText: "Naziv ili šifra",
-              //       prefixIcon: Icon(Icons.search),
-              //     ),
-              //     controller: _ftsController,
-              //   ),
-              // ),
-              SizedBox(width: 20),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: "Naziv predmeta",
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  controller: _nazivSifraController,
-                ),
-              ),
-              SizedBox(width: 20),
-              ElevatedButton(
-                onPressed: () async { await _fetchSubjects();},
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, backgroundColor: Colors.blue,
-                ),
-                child: Text("Pretraga"),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 
@@ -230,60 +276,34 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
           ),
         ],
         rows: result?.result
-                .asMap()
-                .entries
-                .map((entry) {
-                  int index = entry.key + 1;
-                  Subject e = entry.value;
-                  return DataRow(
-                    cells: [
-                      DataCell(Text(index.toString())),
-                      DataCell(Text(e.naziv ?? "")),
-                      DataCell(Text(e.opis ?? "")),
-                      DataCell(IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () async {
-                          final result = await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => SingleSubjectListScreen(subject: e),
-                            ),
-                          );
-                          if (result == 'updated' || result == 'deleted') {
-                            _fetchSubjects();
-                          }
-                        },
-                      )),
-                    ],
+            .asMap()
+            .entries
+            .map((entry) {
+          int index = entry.key + 1;
+          Subject subject = entry.value;
+          return DataRow(
+            cells: [
+              DataCell(Text(index.toString())),
+              DataCell(Text(subject.naziv ?? "")),
+              DataCell(Text(subject.opis ?? "")),
+              DataCell(IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () async {
+                  final result = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SingleSubjectListScreen(subject: subject),
+                    ),
                   );
-                })
-                .toList() ??
-            [],
+                  if (result == 'updated' || result == 'deleted') {
+                    _fetchSubjectsForDepartment();
+                  }
+                },
+              )),
+            ],
+          );
+        }).toList() ?? [],
       ),
     );
   }
 
-  Widget _buildAddButton() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
-      child: Align(
-        alignment: Alignment.center,
-        child: ElevatedButton(
-          onPressed: () async {
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => SingleSubjectListScreen(subject: null),
-              ),
-            );
-            if (result == 'added' || result == 'updated' || result == 'deleted') {
-              _fetchSubjects();
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Colors.blue,
-          ),
-          child: Text("Dodaj predmet"),
-        ),
-      ),
-    );
-  }
 }

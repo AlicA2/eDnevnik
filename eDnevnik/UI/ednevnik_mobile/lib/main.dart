@@ -203,7 +203,6 @@ class LoginPage extends StatelessWidget {
                         try {
                           var loginData = await _userProvider.getLogedWithRole(
                               username, password);
-
                           if (loginData != null &&
                               loginData['uloga'] == 'učenik') {
                             Navigator.of(context).push(
