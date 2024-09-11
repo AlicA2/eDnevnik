@@ -20,16 +20,27 @@ namespace eDnevnik.Services.Service
         }
         public override IQueryable<Poruke> AddFilter(IQueryable<Poruke> query, PorukeSearchObject? search = null)
         {
-            if (!string.IsNullOrWhiteSpace(search.Naziv))
+            if (search != null)
             {
-                query = query.Where(x => x.SadrzajPoruke.StartsWith(search.Naziv));
+                if (!string.IsNullOrWhiteSpace(search.Naziv))
+                {
+                    query = query.Where(x => x.SadrzajPoruke.StartsWith(search.Naziv));
+                }
+                if (!string.IsNullOrWhiteSpace(search.FTS))
+                {
+                    query = query.Where(x => x.SadrzajPoruke.Contains(search.Naziv));
+                }
+                if (search.ProfesorID.HasValue)
+                {
+                    query = query.Where(x => x.ProfesorID == search.ProfesorID.Value);
+                }
+                if (search.UcenikID.HasValue)
+                {
+                    query = query.Where(x => x.UcenikID == search.UcenikID.Value);
+                }
             }
-            if (!string.IsNullOrWhiteSpace(search.FTS))
-            {
-                query = query.Where(x => x.SadrzajPoruke.Contains(search.Naziv));
-            }
-
             return base.AddFilter(query, search);
         }
+
     }
 }

@@ -1,3 +1,4 @@
+import 'package:ednevnik_admin/screens/received_message_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -115,28 +116,44 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   }
 
   Widget _buildScreenName() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(5),
-            topLeft: Radius.circular(20),
-            topRight: Radius.elliptical(5, 5),
-            bottomRight: Radius.circular(30.0),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(5),
+              topLeft: Radius.circular(20),
+              topRight: Radius.elliptical(5, 5),
+              bottomRight: Radius.circular(30.0),
+            ),
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            "Slanje poruke",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          "Slanje poruke",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+        Padding(
+          padding: const EdgeInsets.only(right:16),
+          child: IconButton(
+            icon: Icon(Icons.mail_outline, color: Colors.blue),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ReceivedMessagesScreen(),
+                ),
+              );
+            },
           ),
         ),
-      ),
+      ],
     );
   }
 
@@ -144,7 +161,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     return FormBuilder(
       key: _formKey,
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(50.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

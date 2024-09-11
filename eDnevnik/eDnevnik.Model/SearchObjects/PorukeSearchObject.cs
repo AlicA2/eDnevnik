@@ -10,5 +10,7 @@ namespace eDnevnik.Model.SearchObjects
     {
         public string? Naziv { get; set; }
         public string? FTS { get; set; }
+        public int? ProfesorID { get; set; }
+        public int? UcenikID { get; set; }
     }
 }

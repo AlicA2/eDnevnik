@@ -1,3 +1,4 @@
+import 'package:ednevnik_admin/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -23,22 +24,60 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   final TextEditingController _nazivSifraController = TextEditingController();
   final TextEditingController _replyController = TextEditingController();
 
+  User? loggedInUser;
+  List<User>? students;
+  int? selectedUcenikID;
+
   @override
   void initState() {
     super.initState();
     _messageProvider = context.read<MessageProvider>();
     _userProvider = context.read<UserProvider>();
-    _fetchMessages();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchMessages();
+      _fetchStudents();
+    });
+    selectedUcenikID = null;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loggedInUser = context.watch<UserProvider>().loggedInUser;
   }
 
   Future<void> _fetchMessages() async {
-    var data = await _messageProvider.get(filter: {
-      'fts': _ftsController.text,
-      'naziv': _nazivSifraController.text,
-    });
+    var filters = {
+      'Naziv': _nazivSifraController.text,
+      'FTS': _ftsController.text,
+      'ProfesorID': loggedInUser?.korisnikId,
+    };
+
+    if (selectedUcenikID != null) {
+      filters['UcenikID'] = selectedUcenikID;
+    }
+
+    var data = await _messageProvider.get(filter: filters);
 
     setState(() {
       result = data;
+    });
+  }
+
+  Future<void> _fetchStudents() async {
+    var data = await _messageProvider.get();
+    var distinctStudents = <int, User>{};
+
+    for (var message in data.result) {
+      if (message.ucenikID != null &&
+          !distinctStudents.containsKey(message.ucenikID)) {
+        var user = await _userProvider.getById(message.ucenikID!);
+        distinctStudents[message.ucenikID!] = user;
+      }
+    }
+
+    setState(() {
+      students = distinctStudents.values.toList();
     });
   }
 
@@ -154,21 +193,15 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: "Naziv ili šifra",
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  controller: _ftsController,
-                ),
-              ),
-              SizedBox(width: 20),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: "Šifra",
+                    labelText: "Unesite sadržaj poruke",
                     prefixIcon: Icon(Icons.search),
                   ),
                   controller: _nazivSifraController,
                 ),
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: _buildUcenikDropdown(),
               ),
               SizedBox(width: 20),
               ElevatedButton(
@@ -176,13 +209,46 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.blue,
                 ),
-                onPressed: () async { await _fetchMessages();},
+                onPressed: () async {
+                  await _fetchMessages();
+                },
                 child: Text("Pretraga"),
               ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildUcenikDropdown() {
+    return DropdownButtonFormField<User?>(
+      decoration: const InputDecoration(
+        labelText: "Filtriraj po učeniku",
+      ),
+      value: selectedUcenikID == null
+          ? null
+          : students?.firstWhere((user) => user.korisnikId == selectedUcenikID,
+              orElse: () =>
+                  User(0, "", "", "", "", "", "", "", null, null, null)),
+      onChanged: (User? newValue) {
+        setState(() {
+          selectedUcenikID = newValue?.korisnikId;
+        });
+      },
+      items: [
+        DropdownMenuItem<User?>(
+          value: null,
+          child: Text("Svi učenici"),
+        ),
+        ...?students?.map((User user) {
+          return DropdownMenuItem<User>(
+            value: user,
+            child: Text("${user.ime} ${user.prezime}"),
+          );
+        }).toList(),
+      ],
+      isExpanded: true,
     );
   }
 
@@ -242,6 +308,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         rows: result?.result.asMap().entries.map((entry) {
               int index = entry.key;
               Message e = entry.value;
+
               return DataRow(
                 cells: [
                   DataCell(Text((index + 1).toString())),
@@ -269,7 +336,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                       children: [
                         IconButton(
                           icon: Icon(Icons.reply),
-                          onPressed: () async{
+                          onPressed: () async {
                             _replyToMessage(e);
                           },
                         ),
