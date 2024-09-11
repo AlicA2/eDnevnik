@@ -201,7 +201,7 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                 ),
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  "Predmeti",
+                  "Početna",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
