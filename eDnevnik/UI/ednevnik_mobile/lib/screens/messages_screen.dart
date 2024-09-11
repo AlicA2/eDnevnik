@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:ednevnik_admin/models/result.dart';
 import 'package:ednevnik_admin/models/message.dart';
 import 'package:ednevnik_admin/providers/message_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+
+import '../models/result.dart';
+import '../models/user.dart';
 
 class MessageDetailScreen extends StatefulWidget {
   const MessageDetailScreen({Key? key}) : super(key: key);
@@ -15,80 +19,71 @@ class MessageDetailScreen extends StatefulWidget {
 }
 
 class _MessageDetailScreenState extends State<MessageDetailScreen> {
-  SearchResult<Message>? result;
   late MessageProvider _messageProvider;
   late UserProvider _userProvider;
 
-  final TextEditingController _ftsController = TextEditingController();
-  final TextEditingController _nazivSifraController = TextEditingController();
-  final TextEditingController _replyController = TextEditingController();
+  final _formKey = GlobalKey<FormBuilderState>();
+  SearchResult<User>? userResult;
+  String? _selectedRecipientID;
+  User? loggedInUser;
 
   @override
   void initState() {
     super.initState();
     _messageProvider = context.read<MessageProvider>();
     _userProvider = context.read<UserProvider>();
-    _fetchMessages();
+    _loadUsers();
   }
 
-  Future<void> _fetchMessages() async {
-    var data = await _messageProvider.get(filter: {
-      'fts': _ftsController.text,
-      'naziv': _nazivSifraController.text,
-    });
-
-    setState(() {
-      result = data;
-    });
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loggedInUser = context.watch<UserProvider>().loggedInUser;
   }
 
-  Future<String> getUserName(int userId) async {
-    try {
-      var user = await _userProvider.getById(userId);
-      return "${user.ime} ${user.prezime}";
-    } catch (e) {
-      return "Unknown";
+  Future<void> _loadUsers() async {
+    userResult = await _userProvider.get();
+    setState(() {});
+  }
+
+  Future<void> _saveMessage() async {
+    if (_formKey.currentState?.saveAndValidate() ?? false) {
+      final formValues = _formKey.currentState?.value;
+      final selectedProfessorID = _selectedRecipientID;
+      final message = Message(
+        ucenikID: loggedInUser?.korisnikId,
+        profesorID: selectedProfessorID != null ? int.parse(selectedProfessorID) : null,
+        sadrzajPoruke: formValues?['poruka'],
+        datumSlanja: DateTime.now(),
+      );
+
+      await _messageProvider.Insert(message);
+
+      setState(() {
+        _selectedRecipientID = null;
+        _formKey.currentState?.reset();
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Poruka poslana uspješno!')),
+      );
     }
   }
 
-  void _replyToMessage(Message message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Odgovor na poruku'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(message.sadrzajPoruke ?? 'N/A'),
-              TextField(
-                controller: _replyController,
-                decoration: const InputDecoration(labelText: 'Vaš odgovor'),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Zatvori'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Pošalji poruku'),
-              onPressed: () async {
-                message.odgovor = _replyController.text;
-                await _messageProvider.Update(message.porukaID!, message);
-                Navigator.of(context).pop();
-                setState(() {
-                  _replyController.clear();
-                });
-              },
-            ),
-          ],
-        );
-      },
-    );
+  List<DropdownMenuItem<String>> _buildProfessorDropdownItems() {
+    if (userResult == null || userResult!.result == null) {
+      return [];
+    }
+
+    var filteredUsers = userResult!.result!
+        .where((user) => user.uloge!.any((role) => role.ulogaID == 1));
+
+    return filteredUsers.map((user) {
+      return DropdownMenuItem<String>(
+        value: user.korisnikId.toString(),
+        child: Text('${user.ime} ${user.prezime}'),
+      );
+    }).toList();
   }
 
   @override
@@ -103,13 +98,15 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: Column(
-              children: [
-                _buildScreenName(),
-                SizedBox(height: 16.0),
-                _buildSearch(),
-                Expanded(child: _buildDataListView()),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildScreenName(),
+                  SizedBox(height: 16.0),
+                  _buildFormFields(loggedInUser),
+                  _buildSaveButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -132,7 +129,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         ),
         padding: const EdgeInsets.all(16.0),
         child: Text(
-          "Poruke",
+          "Slanje poruke",
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -143,144 +140,65 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
     );
   }
 
-  Widget _buildSearch() {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: "Naziv ili šifra",
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  controller: _ftsController,
-                ),
+  Widget _buildFormFields(User? loggedInUser) {
+    return FormBuilder(
+      key: _formKey,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            FormBuilderTextField(
+              name: 'ucenik',
+              initialValue: loggedInUser != null
+                  ? "${loggedInUser.ime} ${loggedInUser.prezime}"
+                  : "Unknown",
+              decoration: InputDecoration(labelText: "Učenik:"),
+              enabled: false,
+            ),
+            SizedBox(height: 20),
+            FormBuilderDropdown<String>(
+              name: 'profesor',
+              decoration: InputDecoration(labelText: "Profesor:"),
+              items: _buildProfessorDropdownItems(),
+              initialValue: _selectedRecipientID,
+              onChanged: (value) {
+                setState(() {
+                  _selectedRecipientID = value;
+                });
+              },
+              validator: FormBuilderValidators.required(
+                errorText: 'Profesor ne može biti prazan!',
               ),
-              SizedBox(width: 20),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: "Šifra",
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  controller: _nazivSifraController,
-                ),
+            ),
+            SizedBox(height: 20),
+            FormBuilderTextField(
+              name: 'poruka',
+              maxLines: 4,
+              decoration: InputDecoration(
+                labelText: "Poruka",
+                alignLabelWithHint: true,
               ),
-              SizedBox(width: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue,
-                ),
-                onPressed: () async { await _fetchMessages();},
-                child: Text("Pretraga"),
+              validator: FormBuilderValidators.required(
+                errorText: 'Poruka ne može biti prazna!',
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildDataListView() {
-    return SingleChildScrollView(
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Redni broj",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Učenik",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Sadržaj poruke",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Datum slanja",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Odgovor",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-        ],
-        rows: result?.result.asMap().entries.map((entry) {
-              int index = entry.key;
-              Message e = entry.value;
-              return DataRow(
-                cells: [
-                  DataCell(Text((index + 1).toString())),
-                  DataCell(
-                    FutureBuilder<String>(
-                      future: getUserName(e.ucenikID ?? 0),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Text("Loading...");
-                        } else if (snapshot.hasError) {
-                          return const Text("Error");
-                        } else {
-                          return Text(snapshot.data ?? "Unknown");
-                        }
-                      },
-                    ),
-                  ),
-                  DataCell(Text(e.sadrzajPoruke ?? "")),
-                  DataCell(Text(DateFormat('dd/MM/yyyy')
-                      .format(e.datumSlanja ?? DateTime.now()))),
-                  DataCell(Text(e.odgovor ?? "")),
-                  DataCell(
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.reply),
-                          onPressed: () async{
-                            _replyToMessage(e);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-                onSelectChanged: null,
-              );
-            }).toList() ??
-            [],
+  Widget _buildSaveButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+        ),
+        onPressed: _saveMessage,
+        child: const Text("Pošalji poruku"),
       ),
     );
   }

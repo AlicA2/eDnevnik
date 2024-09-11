@@ -8,7 +8,7 @@ part of 'message.dart';
 
 Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       porukaID: (json['porukaID'] as num?)?.toInt(),
-      roditeljID: (json['roditeljID'] as num?)?.toInt(),
+      profesorID: (json['profesorID'] as num?)?.toInt(),
       ucenikID: (json['ucenikID'] as num?)?.toInt(),
       sadrzajPoruke: json['sadrzajPoruke'] as String?,
       datumSlanja: json['datumSlanja'] == null
@@ -19,7 +19,7 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
 
 Map<String, dynamic> _$MessageToJson(Message instance) => <String, dynamic>{
       'porukaID': instance.porukaID,
-      'roditeljID': instance.roditeljID,
+      'profesorID': instance.profesorID,
       'ucenikID': instance.ucenikID,
       'sadrzajPoruke': instance.sadrzajPoruke,
       'odgovor': instance.odgovor,

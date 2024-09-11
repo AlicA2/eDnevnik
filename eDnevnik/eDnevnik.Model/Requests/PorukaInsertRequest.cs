@@ -8,7 +8,6 @@ namespace eDnevnik.Model.Requests
 {
     public class PorukaInsertRequest
     {
-        public int PorukaID { get; set; }
         public int ProfesorID { get; set; }
         public int UcenikID { get; set; }
         public string SadrzajPoruke { get; set; }
