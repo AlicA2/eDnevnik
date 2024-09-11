@@ -58,30 +58,33 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
                 ),
               ),
             ),
-            floatingActionButton: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(width: 16),
-                FloatingActionButton(
-                  heroTag: 'backButton',
-                  onPressed: () {
-                    Navigator.pop(context, _isDataChanged);
-                  },
-                  backgroundColor: Colors.blue,
-                  child: const Icon(Icons.arrow_back),
-                ),
-                const Spacer(),
-                FloatingActionButton(
-                  heroTag: 'saveButton',
-                  child: const Icon(Icons.save),
-                  onPressed: () async {
-                    await _saveEditedGrades();
-                    Navigator.pop(context, true);
-                  },
-                  backgroundColor: Colors.blue,
-                ),
-                const SizedBox(width: 16),
-              ],
+            floatingActionButton: Padding(
+              padding: const EdgeInsets.only(left:32,right:32,bottom:16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(width: 16),
+                  FloatingActionButton(
+                    heroTag: 'backButton',
+                    onPressed: () {
+                      Navigator.pop(context, _isDataChanged);
+                    },
+                    backgroundColor: Colors.blue,
+                    child: const Icon(Icons.arrow_back),
+                  ),
+                  const Spacer(),
+                  FloatingActionButton(
+                    heroTag: 'saveButton',
+                    child: const Icon(Icons.save),
+                    onPressed: () async {
+                      await _saveEditedGrades();
+                      Navigator.pop(context, true);
+                    },
+                    backgroundColor: Colors.blue,
+                  ),
+                  const SizedBox(width: 16),
+                ],
+              ),
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           ),
@@ -118,52 +121,55 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
   }
 
   Widget _buildGradeEditRow(Grade grade) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Datum: ${grade.datum?.toLocal().toString().split(' ')[0] ?? 'N/A'}',
-              style: const TextStyle(color: Colors.black),
-            ),
-            const SizedBox(height: 8),
-            DropdownButtonFormField<int>(
-              value: _editedGrades[grade.ocjenaID] ?? grade.vrijednostOcjene,
-              items: [1, 2, 3, 4, 5].map((int value) {
-                return DropdownMenuItem<int>(
-                  value: value,
-                  child: Text(value.toString()),
-                );
-              }).toList(),
-              onChanged: (int? newValue) {
-                if (mounted) {
-                  setState(() {
-                    _editedGrades[grade.ocjenaID!] = newValue;
-                    _isDataChanged = true;
-                  });
-                }
-              },
-              decoration: const InputDecoration(
-                labelText: 'Ocjena:',
+    return Padding(
+      padding: const EdgeInsets.only(right:32,left:32,top:16),
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Datum: ${grade.datum?.toLocal().toString().split(' ')[0] ?? 'N/A'}',
+                style: const TextStyle(color: Colors.black),
               ),
-            ),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton.icon(
-                onPressed: () => _confirmDelete(grade),
-                icon: const Icon(Icons.delete, color: Colors.white),
-                label: const Text('Obriši'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
+              const SizedBox(height: 8),
+              DropdownButtonFormField<int>(
+                value: _editedGrades[grade.ocjenaID] ?? grade.vrijednostOcjene,
+                items: [1, 2, 3, 4, 5].map((int value) {
+                  return DropdownMenuItem<int>(
+                    value: value,
+                    child: Text(value.toString()),
+                  );
+                }).toList(),
+                onChanged: (int? newValue) {
+                  if (mounted) {
+                    setState(() {
+                      _editedGrades[grade.ocjenaID!] = newValue;
+                      _isDataChanged = true;
+                    });
+                  }
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Ocjena:',
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton.icon(
+                  onPressed: () => _confirmDelete(grade),
+                  icon: const Icon(Icons.delete, color: Colors.white),
+                  label: const Text('Obriši'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
