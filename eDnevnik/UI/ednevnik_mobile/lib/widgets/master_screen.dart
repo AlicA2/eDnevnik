@@ -139,23 +139,32 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.insert_chart),
-              title: Text("Plan i program"),
+              leading: Icon(Icons.calendar_today),
+              title: Text("Kalendar"),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => YearlyPlanAndProgramDetailScreen(),
+                  builder: (context) => CalendarDetailScreen(),
                 ));
               },
             ),
-            ListTile(
-              leading: Icon(Icons.bar_chart),
-              title: Text("Izvještaj"),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ReportDetailScreen(),
-                ));
-              },
-            ),
+            //ListTile(
+              //leading: Icon(Icons.insert_chart),
+              //title: Text("Plan i program"),
+              //onTap: () {
+                //Navigator.of(context).push(MaterialPageRoute(
+                  //builder: (context) => YearlyPlanAndProgramDetailScreen(),
+                //));
+              //},
+            //),
+            //ListTile(
+              //leading: Icon(Icons.bar_chart),
+              //title: Text("Izvještaj"),
+              //onTap: () {
+                //Navigator.of(context).push(MaterialPageRoute(
+                 // builder: (context) => ReportDetailScreen(),
+               // ));
+             // },
+            //),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -181,15 +190,6 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => StudentDetailScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.calendar_today),
-              title: Text("Kalendar"),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => CalendarDetailScreen(),
                 ));
               },
             ),
