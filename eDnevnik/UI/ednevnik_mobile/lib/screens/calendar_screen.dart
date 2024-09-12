@@ -187,61 +187,29 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   Widget _buildScreenName() {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Row(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(5),
-                topLeft: Radius.circular(20),
-                topRight: Radius.elliptical(5, 5),
-                bottomRight: Radius.circular(30.0),
-              ),
-            ),
-            padding: const EdgeInsets.all(16.0),
-            child: const Text(
-              "Kalendar",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(5),
+            topLeft: Radius.circular(20),
+            topRight: Radius.elliptical(5, 5),
+            bottomRight: Radius.circular(30.0),
           ),
-          Expanded(
-            child: _buildSchoolDropdown(),
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: const Text(
+          "Kalendar",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildSchoolDropdown() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Container(
-          width: 300,
-          child: DropdownButton<School>(
-            value: _selectedSchool,
-            items: _schools.map((school) {
-              return DropdownMenuItem<School>(
-                value: school,
-                child: Text(school.naziv ?? "N/A"),
-              );
-            }).toList(),
-            onChanged: (School? newValue) {
-              setState(() {
-                _selectedSchool = newValue;
-              });
-              _loadEvents();
-            },
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildCalendar() {
     return TableCalendar(

@@ -11,9 +11,10 @@ class AnnualPlanProgram{
   int? predmetID;
   int? odjeljenjeID;
   int? skolaID;
+  int? profesorID;
   // List<Classes> casovi = [];
 
-  AnnualPlanProgram(this.godisnjiPlanProgramID,this.brojCasova,this.naziv,this.predmetID, this.odjeljenjeID,this.skolaID);
+  AnnualPlanProgram(this.godisnjiPlanProgramID,this.brojCasova,this.naziv,this.predmetID, this.odjeljenjeID,this.skolaID,this.profesorID);
 
     /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
@@ -26,14 +27,3 @@ class AnnualPlanProgram{
   Map<String, dynamic> toJson() => _$AnnualPlanProgramToJson(this);
 
 }
-
-// "result": [
-//     {
-//       "godisnjiPlanProgramID": 1,
-//       "brojCasova": 5,
-//       "naziv": "Uvod",
-//       "odjeljenjeID": 1,
-//       "predmetID": 1,
-//       "casovi": []
-//     }
-//   ],

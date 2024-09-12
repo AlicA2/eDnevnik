@@ -14,6 +14,7 @@ namespace eDnevnik.Services.Database
         public int OdjeljenjeID { get; set; }
         public int PredmetID { get; set; }
         public int? SkolaID { get; set; }
+        public int? ProfesorID { get; set; }
         public virtual Skola Skola { get; set; } = null!;
         public virtual Predmet Predmet { get; set; }
         public virtual Odjeljenje Odjeljenje { get; set; }

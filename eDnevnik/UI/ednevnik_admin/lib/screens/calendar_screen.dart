@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:collection';
-
+import 'package:ednevnik_admin/models/user.dart';
+import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
@@ -8,6 +10,7 @@ import 'package:ednevnik_admin/providers/classes_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/models/school.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 int _getWeekOfYear(DateTime date) {
   final firstDayOfYear = DateTime(date.year, 1, 1);
@@ -35,15 +38,23 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   late SchoolProvider _schoolProvider;
   School? _selectedSchool;
   List<School> _schools = [];
+  User? loggedInUser;
 
   @override
   void initState() {
     super.initState();
     _schoolProvider = context.read<SchoolProvider>();
-
     _events = {};
     _selectedEvents = [];
+    _loadSavedEvents();
     _fetchSchools();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loggedInUser = context.watch<UserProvider>().loggedInUser;
+    print("Logged-in user: ${loggedInUser?.ime}");
   }
 
   Future<void> _fetchSchools() async {
@@ -59,6 +70,27 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
         });
       }
     } catch (e) {}
+  }
+
+  Future<void> _saveEvents() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map<String, List<String>> stringEvents = _events.map((key, value) =>
+        MapEntry(key.toIso8601String(), value));
+
+    await prefs.setString('events', jsonEncode(stringEvents));
+  }
+
+  Future<void> _loadSavedEvents() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedEvents = prefs.getString('events');
+
+    if (savedEvents != null) {
+      Map<String, dynamic> decodedEvents = jsonDecode(savedEvents);
+      setState(() {
+        _events = decodedEvents.map((key, value) => MapEntry(
+            DateTime.parse(key), List<String>.from(value)));
+      });
+    }
   }
 
   Future<void> _loadEvents() async {
@@ -143,6 +175,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
       _events = events;
       _selectedEvents = _getEventsForDay(_selectedDay);
     });
+    _saveEvents();
   }
 
   String _formatTime(DateTime time) {

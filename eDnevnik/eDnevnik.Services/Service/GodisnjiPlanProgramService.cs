@@ -51,6 +51,10 @@ namespace eDnevnik.Services.Service
                 {
                     query = query.Where(x => x.PredmetID == search.PredmetID.Value);
                 }
+                if (search.ProfesorID.HasValue)
+                {
+                    query = query.Where(x => x.PredmetID == search.ProfesorID.Value);
+                }
             }
             return base.AddFilter(query, search);
         }

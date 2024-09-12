@@ -13,6 +13,7 @@ namespace eDnevnik.Model.SearchObjects
         public int? OdjeljenjeID { get; set; }
         public int? PredmetID { get; set; }
         public int? SkolaID { get; set; }
+        public int? ProfesorID { get; set; }
         public bool? isCasoviIncluded { get; set; }
     }
 }
