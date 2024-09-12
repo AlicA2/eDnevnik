@@ -12,5 +12,6 @@ namespace eDnevnik.Model.SearchObjects
         public string? FTS { get; set; }
         public int? GodisnjiPlanProgramID { get; set; }
         public int? SkolaID { get; set; }
+        public int? ProfesorID { get; set; }
     }
 }

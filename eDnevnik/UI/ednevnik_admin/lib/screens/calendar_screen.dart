@@ -97,7 +97,8 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     if (_selectedSchool == null) return;
 
     var result = await _classesProvider
-        .get(filter: {'SkolaID': _selectedSchool!.skolaID});
+        .get(filter: {'SkolaID': _selectedSchool!.skolaID,
+        'ProfesorID':loggedInUser?.korisnikId});
 
     Map<DateTime, List<String>> events = {};
 
