@@ -8,8 +8,9 @@ namespace eDnevnik.Model.Requests
 {
     public class CasoviUpdateRequest
     {
-        public string NazivCasa { get; set; }
-        public string Opis { get; set; }
-        public int GodisnjiPlanProgramID { get; set; }
+        public string? NazivCasa { get; set; }
+        public string? Opis { get; set; }
+        public int? GodisnjiPlanProgramID { get; set; }
+        public DateTime? DatumOdrzavanjaCasa { get; set; }
     }
 }

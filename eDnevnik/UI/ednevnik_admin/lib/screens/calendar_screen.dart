@@ -1,26 +1,14 @@
-import 'dart:convert';
-import 'dart:collection';
-import 'package:ednevnik_admin/models/user.dart';
-import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:ednevnik_admin/models/classes.dart';
+import 'package:ednevnik_admin/models/school.dart';
+import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/classes_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
-import 'package:ednevnik_admin/models/school.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-int _getWeekOfYear(DateTime date) {
-  final firstDayOfYear = DateTime(date.year, 1, 1);
-  final firstThursday = firstDayOfYear
-      .add(Duration(days: (DateTime.thursday - firstDayOfYear.weekday) % 7));
-  final thisThursday =
-      date.add(Duration(days: (DateTime.thursday - date.weekday) % 7));
-
-  return ((thisThursday.difference(firstThursday).inDays) / 7).ceil() + 1;
-}
+import 'package:ednevnik_admin/providers/user_provider.dart';
+import 'package:ednevnik_admin/widgets/master_screen.dart';
+import 'dart:collection';
 
 class CalendarDetailScreen extends StatefulWidget {
   const CalendarDetailScreen({super.key});
@@ -30,23 +18,23 @@ class CalendarDetailScreen extends StatefulWidget {
 }
 
 class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
-  late Map<DateTime, List<String>> _events;
-  late List<String> _selectedEvents;
-  DateTime _selectedDay = DateTime.now();
-  DateTime _focusedDay = DateTime.now();
-  final ClassesProvider _classesProvider = ClassesProvider();
-  late SchoolProvider _schoolProvider;
   School? _selectedSchool;
   List<School> _schools = [];
+  List<Classes> _classes = [];
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
   User? loggedInUser;
+
+  late ClassesProvider _classesProvider;
+  late SchoolProvider _schoolProvider;
+
+  Map<DateTime, List<Classes>> _groupedClasses = {}; // Classes grouped by date
 
   @override
   void initState() {
     super.initState();
     _schoolProvider = context.read<SchoolProvider>();
-    _events = {};
-    _selectedEvents = [];
-    _loadSavedEvents();
+    _classesProvider = context.read<ClassesProvider>();
     _fetchSchools();
   }
 
@@ -54,7 +42,6 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     loggedInUser = context.watch<UserProvider>().loggedInUser;
-    print("Logged-in user: ${loggedInUser?.ime}");
   }
 
   Future<void> _fetchSchools() async {
@@ -65,137 +52,74 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
           _schools = schools.result;
           if (_schools.isNotEmpty) {
             _selectedSchool = _schools.first;
-            _loadEvents();
+            _fetchClasses();
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      print("Failed to fetch schools: $e");
+    }
   }
 
-  Future<void> _saveEvents() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    Map<String, List<String>> stringEvents = _events.map((key, value) =>
-        MapEntry(key.toIso8601String(), value));
+  Future<void> _fetchClasses() async {
+  if (_selectedSchool == null) return;
 
-    await prefs.setString('events', jsonEncode(stringEvents));
-  }
+  try {
+    var classesResponse = await _classesProvider.get(filter: {
+      'SkolaID': _selectedSchool?.skolaID,
+      'ProfesorID': loggedInUser?.korisnikId,
+    });
 
-  Future<void> _loadSavedEvents() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedEvents = prefs.getString('events');
-
-    if (savedEvents != null) {
-      Map<String, dynamic> decodedEvents = jsonDecode(savedEvents);
+    if (mounted) {
       setState(() {
-        _events = decodedEvents.map((key, value) => MapEntry(
-            DateTime.parse(key), List<String>.from(value)));
+        // Filter out classes with null DatumOdrzavanjaCasa
+        _classes = classesResponse.result
+            .where((classItem) => classItem.datumOdrzavanjaCasa != null)
+            .toList();
+
+        _groupClassesByDate();
       });
     }
+  } catch (e) {
+    print("Failed to fetch classes: $e");
   }
+}
 
-  Future<void> _loadEvents() async {
-    if (_selectedSchool == null) return;
 
-    var result = await _classesProvider
-        .get(filter: {'SkolaID': _selectedSchool!.skolaID,
-        'ProfesorID':loggedInUser?.korisnikId});
+  // Group classes by the date of 'DatumOdrzavanjaCasa'
+  void _groupClassesByDate() {
+  _groupedClasses.clear();
+  for (var classItem in _classes) {
+    if (classItem.datumOdrzavanjaCasa != null) {
+      // Normalize the date to ignore time
+      DateTime eventDate = DateTime(
+        classItem.datumOdrzavanjaCasa!.year,
+        classItem.datumOdrzavanjaCasa!.month,
+        classItem.datumOdrzavanjaCasa!.day,
+      );
 
-    Map<DateTime, List<String>> events = {};
-
-    DateTime currentDay = DateTime(_selectedDay.year, 2, 1);
-    while (currentDay.weekday != DateTime.monday) {
-      currentDay = currentDay.add(const Duration(days: 1));
-    }
-
-    Map<int, Queue<Classes>> groupedClasses = {};
-    for (var cas in result.result) {
-      if (!groupedClasses.containsKey(cas.godisnjiPlanProgramID)) {
-        groupedClasses[cas.godisnjiPlanProgramID!] = Queue<Classes>();
+      // Initialize the date in the map if it's not already present
+      if (_groupedClasses[eventDate] == null) {
+        _groupedClasses[eventDate] = [];
       }
-      groupedClasses[cas.godisnjiPlanProgramID!]!.add(cas);
+      _groupedClasses[eventDate]?.add(classItem);
     }
-
-    Set<int> usedProgramsInWeek = {};
-
-    while (groupedClasses.values.any((queue) => queue.isNotEmpty)) {
-      if (currentDay.weekday >= DateTime.monday &&
-          currentDay.weekday <= DateTime.friday) {
-        DateTime classTime =
-            DateTime(currentDay.year, currentDay.month, currentDay.day, 8);
-
-        while (classTime.hour < 13 &&
-            groupedClasses.values.any((queue) => queue.isNotEmpty)) {
-          bool classScheduled = false;
-
-          for (var entry in groupedClasses.entries.toList()) {
-            int programID = entry.key;
-
-            if (usedProgramsInWeek.contains(programID)) continue;
-
-            if (entry.value.isNotEmpty) {
-              var classItem = entry.value.removeFirst();
-              String className = classItem.nazivCasa ?? 'Class';
-              events
-                  .putIfAbsent(currentDay, () => [])
-                  .add('${_formatTime(classTime)} $className');
-
-              usedProgramsInWeek.add(programID);
-
-              classTime = classTime.add(const Duration(minutes: 60));
-
-              classScheduled = true;
-              break;
-            }
-          }
-
-          if (!classScheduled) break;
-        }
-
-        currentDay = currentDay.add(const Duration(days: 1));
-
-        if (currentDay.weekday == DateTime.monday) {
-          usedProgramsInWeek.clear();
-        }
-
-        while (currentDay.weekday == DateTime.saturday ||
-            currentDay.weekday == DateTime.sunday) {
-          currentDay = currentDay.add(const Duration(days: 1));
-          usedProgramsInWeek.clear();
-        }
-      } else {
-        currentDay = currentDay.add(const Duration(days: 1));
-        while (currentDay.weekday == DateTime.saturday ||
-            currentDay.weekday == DateTime.sunday) {
-          currentDay = currentDay.add(const Duration(days: 1));
-          usedProgramsInWeek.clear();
-        }
-      }
-    }
-
-    setState(() {
-      _events = events;
-      _selectedEvents = _getEventsForDay(_selectedDay);
-    });
-    _saveEvents();
   }
+}
 
-  String _formatTime(DateTime time) {
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
-  }
 
-  List<String> _getEventsForDay(DateTime day) {
-    return _events[_normalizeDate(day)] ?? [];
-  }
+List<Classes> _getClassesForDay(DateTime day) {
+  DateTime normalizedDay = DateTime(day.year, day.month, day.day);
 
-  DateTime _normalizeDate(DateTime date) {
-    return DateTime(date.year, date.month, date.day);
-  }
+  return _groupedClasses[normalizedDay] ?? [];
+}
+
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       child: Container(
-        color: const Color(0xFFF7F2FA),
+        color: Color(0xFFF7F2FA),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
@@ -206,10 +130,12 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
             child: Column(
               children: [
                 _buildScreenName(),
-                const SizedBox(height: 16.0),
+                SizedBox(height: 16.0),
                 _buildCalendar(),
-                const SizedBox(height: 8.0),
-                Expanded(child: _buildEventList()),
+                SizedBox(height: 20),
+                if (_selectedDay != null) _buildSelectedClasses(),
+                SizedBox(height: 20),
+                _buildAddClassesButton(),
               ],
             ),
           ),
@@ -224,7 +150,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
       child: Row(
         children: [
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.blue,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(5),
@@ -234,7 +160,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
               ),
             ),
             padding: const EdgeInsets.all(16.0),
-            child: const Text(
+            child: Text(
               "Kalendar",
               style: TextStyle(
                 color: Colors.white,
@@ -243,9 +169,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
               ),
             ),
           ),
-          Expanded(
-            child: _buildSchoolDropdown(),
-          ),
+          Expanded(child: _buildSchoolDropdown()),
         ],
       ),
     );
@@ -256,7 +180,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          width: 300,
+          width: 210,
           child: DropdownButton<School>(
             value: _selectedSchool,
             items: _schools.map((school) {
@@ -268,8 +192,8 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
             onChanged: (School? newValue) {
               setState(() {
                 _selectedSchool = newValue;
+                _fetchClasses();
               });
-              _loadEvents();
             },
           ),
         ),
@@ -277,51 +201,57 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     );
   }
 
-  Widget _buildCalendar() {
-    return TableCalendar(
-      firstDay: DateTime(2020),
-      lastDay: DateTime(2030),
-      focusedDay: _focusedDay,
-      selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-      eventLoader: _getEventsForDay,
-      onDaySelected: (selectedDay, focusedDay) {
-        setState(() {
-          _selectedDay = selectedDay;
-          _focusedDay = focusedDay;
-          _selectedEvents = _getEventsForDay(selectedDay);
-        });
-      },
-      calendarStyle: const CalendarStyle(
-        todayDecoration: BoxDecoration(
-          color: Colors.blueAccent,
-          shape: BoxShape.circle,
-        ),
-        selectedDecoration: BoxDecoration(
-          color: Colors.lightBlue,
-          shape: BoxShape.circle,
-        ),
-        markerDecoration: BoxDecoration(
-          color: Colors.blue,
-          shape: BoxShape.circle,
-        ),
-      ),
-      headerStyle: const HeaderStyle(
-        formatButtonVisible: false,
-        titleCentered: true,
-      ),
-    );
+ Widget _buildCalendar() {
+  return TableCalendar(
+    firstDay: DateTime.utc(2020, 1, 1),
+    lastDay: DateTime.utc(2030, 12, 31),
+    focusedDay: _focusedDay,
+    selectedDayPredicate: (day) {
+      return isSameDay(_selectedDay, day);
+    },
+    onDaySelected: (selectedDay, focusedDay) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+      });
+    },
+    calendarFormat: CalendarFormat.month,
+    availableCalendarFormats: const {
+      CalendarFormat.month: 'Month',
+    },
+    eventLoader: _getClassesForDay,
+  );
+}
+
+  Widget _buildSelectedClasses() {
+  List<Classes> selectedDayClasses = _getClassesForDay(_selectedDay!);
+
+  if (selectedDayClasses.isEmpty) {
+    return Text("No classes for selected day.");
   }
 
-  Widget _buildEventList() {
-    return ListView.builder(
-      itemCount: _selectedEvents.length,
-      itemBuilder: (context, index) {
-        return Card(
-          child: ListTile(
-            title: Text(_selectedEvents[index]),
-          ),
-        );
-      },
+  return Column(
+    children: selectedDayClasses.map((classItem) {
+      return ListTile(
+        title: Text(classItem.nazivCasa ?? "N/A"),
+      );
+    }).toList(),
+  );
+}
+
+  Widget _buildAddClassesButton() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: ElevatedButton(
+        onPressed: () {
+          print('Dodaj časove za kalendar pressed');
+        },
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.blue,
+        ),
+        child: Text("Dodaj časove za kalendar"),
+      ),
     );
   }
 }

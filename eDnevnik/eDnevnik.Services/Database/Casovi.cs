@@ -12,6 +12,7 @@ namespace eDnevnik.Services.Database
         public string NazivCasa { get; set; }
         public string Opis { get; set; }
         public int GodisnjiPlanProgramID { get; set; }
+        public DateTime? DatumOdrzavanjaCasa { get; set; }
         public virtual GodisnjiPlanProgram GodisnjiPlanProgram { get; set; }
     }
 }
