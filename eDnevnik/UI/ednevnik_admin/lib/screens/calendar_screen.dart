@@ -28,7 +28,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   late ClassesProvider _classesProvider;
   late SchoolProvider _schoolProvider;
 
-  Map<DateTime, List<Classes>> _groupedClasses = {}; // Classes grouped by date
+  Map<DateTime, List<Classes>> _groupedClasses = {};
 
   @override
   void initState() {
@@ -72,7 +72,6 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
 
     if (mounted) {
       setState(() {
-        // Filter out classes with null DatumOdrzavanjaCasa
         _classes = classesResponse.result
             .where((classItem) => classItem.datumOdrzavanjaCasa != null)
             .toList();
@@ -85,20 +84,16 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   }
 }
 
-
-  // Group classes by the date of 'DatumOdrzavanjaCasa'
   void _groupClassesByDate() {
   _groupedClasses.clear();
   for (var classItem in _classes) {
     if (classItem.datumOdrzavanjaCasa != null) {
-      // Normalize the date to ignore time
       DateTime eventDate = DateTime(
         classItem.datumOdrzavanjaCasa!.year,
         classItem.datumOdrzavanjaCasa!.month,
         classItem.datumOdrzavanjaCasa!.day,
       );
 
-      // Initialize the date in the map if it's not already present
       if (_groupedClasses[eventDate] == null) {
         _groupedClasses[eventDate] = [];
       }
@@ -106,7 +101,6 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     }
   }
 }
-
 
 List<Classes> _getClassesForDay(DateTime day) {
   DateTime normalizedDay = DateTime(day.year, day.month, day.day);
@@ -227,17 +221,22 @@ List<Classes> _getClassesForDay(DateTime day) {
   List<Classes> selectedDayClasses = _getClassesForDay(_selectedDay!);
 
   if (selectedDayClasses.isEmpty) {
-    return Text("No classes for selected day.");
+    return Text("Nema časova za selektirani dan.");
   }
 
   return Column(
     children: selectedDayClasses.map((classItem) {
+      String time = classItem.datumOdrzavanjaCasa != null
+          ? "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}"
+          : "N/A";
+      
       return ListTile(
-        title: Text(classItem.nazivCasa ?? "N/A"),
+        title: Text("$time ${classItem.nazivCasa ?? "N/A"}"),
       );
     }).toList(),
   );
 }
+
 
   Widget _buildAddClassesButton() {
     return Align(
