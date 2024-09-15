@@ -72,27 +72,27 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   }
 
   Future<void> _fetchClassess() async {
-  if (_selectedSchool == null) return;
+    if (_selectedSchool == null) return;
 
-  try {
-    var classesResponse = await _classesProvider.get(filter: {
-      'SkolaID': _selectedSchool?.skolaID,
-      'ProfesorID': loggedInUser?.korisnikId,
-    });
-
-    if (mounted) {
-      setState(() {
-        _classes = classesResponse.result
-            .where((classItem) => classItem.datumOdrzavanjaCasa != null)
-            .toList();
-
-        _groupClassesByDate();
+    try {
+      var classesResponse = await _classesProvider.get(filter: {
+        'SkolaID': _selectedSchool?.skolaID,
+        'ProfesorID': loggedInUser?.korisnikId,
       });
+
+      if (mounted) {
+        setState(() {
+          _classes = classesResponse.result
+              .where((classItem) => classItem.datumOdrzavanjaCasa != null)
+              .toList();
+
+          _groupClassesByDate();
+        });
+      }
+    } catch (e) {
+      print("Failed to fetch classes: $e");
     }
-  } catch (e) {
-    print("Failed to fetch classes: $e");
   }
-}
 
   Future<void> _fetchAnnualPlanPrograms() async {
     if (_selectedSchool == null || loggedInUser == null) return;
@@ -103,7 +103,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
         'ProfesorID': loggedInUser!.korisnikId,
       });
 
-    print("GodisnjiPlanProgram : ${annualPlanResponse.result}");
+      print("GodisnjiPlanProgram : ${annualPlanResponse.result}");
 
       setState(() {
         _annualPlanPrograms = annualPlanResponse.result;
@@ -118,13 +118,14 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
 
     try {
       var classesResponse = await _classesProvider.get(filter: {
-        'GodisnjiPlanProgramID': _selectedAnnualPlanProgram!.godisnjiPlanProgramID,
+        'GodisnjiPlanProgramID':
+            _selectedAnnualPlanProgram!.godisnjiPlanProgramID,
       });
 
       setState(() {
         _filteredClasses = classesResponse.result.where((classItem) {
-          return !_groupedClasses.values.any((classList) =>
-              classList.any((existingClass) => existingClass.casoviID == classItem.casoviID));
+          return !_groupedClasses.values.any((classList) => classList.any(
+              (existingClass) => existingClass.casoviID == classItem.casoviID));
         }).toList();
 
         _selectedClass = null;
@@ -134,7 +135,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     } catch (e) {
       print("Failed to fetch classes: $e");
     }
-}
+  }
 
   void _groupClassesByDate() {
     _groupedClasses.clear();
@@ -160,189 +161,196 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     return _groupedClasses[normalizedDay] ?? [];
   }
 
-Future<void> _showAddClassDialog() async {
-  DateTime? selectedDate;
-  String? selectedTime;
+  Future<void> _showAddClassDialog() async {
+    DateTime? selectedDate;
+    String? selectedTime;
 
-  List<String> availableTimes = ['08:00', '09:00', '10:00', '11:00', '12:00'];
-  List<String> filteredTimes = List.from(availableTimes);
+    List<String> availableTimes = ['08:00', '09:00', '10:00', '11:00', '12:00'];
+    List<String> filteredTimes = List.from(availableTimes);
 
-  DateTime initialDate = DateTime.now();
-  if (initialDate.weekday == DateTime.saturday) {
-    initialDate = initialDate.add(Duration(days: 2));
-  } else if (initialDate.weekday == DateTime.sunday) {
-    initialDate = initialDate.add(Duration(days: 1));
-  }
+    DateTime initialDate = DateTime.now();
+    if (initialDate.weekday == DateTime.saturday) {
+      initialDate = initialDate.add(Duration(days: 2));
+    } else if (initialDate.weekday == DateTime.sunday) {
+      initialDate = initialDate.add(Duration(days: 1));
+    }
 
-  await showDialog(
-    context: context,
-    builder: (dialogContext) {
-      return StatefulBuilder(builder: (context, setState) {
-        return AlertDialog(
-          title: Text('Dodaj časove za kalendar'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: initialDate,
-                    firstDate: DateTime(2020),
-                    lastDate: DateTime(2030),
-                    selectableDayPredicate: (DateTime day) {
-                      return day.weekday != DateTime.saturday && day.weekday != DateTime.sunday;
-                    },
-                  );
-                  if (pickedDate != null) {
-                    setState(() {
-                      selectedDate = pickedDate;
+    if (initialDate.month < 9) {
+      initialDate = DateTime(initialDate.year, 9, 1);
+    }
 
-                      List<Classes> classesForSelectedDate = _getClassesForDay(pickedDate);
-                      List<String> occupiedTimes = classesForSelectedDate.map((classItem) {
-                        return "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}";
-                      }).toList();
+    await showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: Text('Dodaj časove za kalendar'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: initialDate,
+                      firstDate: DateTime(initialDate.year, 9, 1),
+                      lastDate: DateTime(initialDate.year, 12, 31),
+                      selectableDayPredicate: (DateTime day) {
+                        return (day.month >= 9 && day.month <= 12) &&
+                            (day.weekday != DateTime.saturday &&
+                                day.weekday != DateTime.sunday);
+                      },
+                    );
+                    if (pickedDate != null) {
+                      setState(() {
+                        selectedDate = pickedDate;
 
-                      filteredTimes = availableTimes.where((time) => !occupiedTimes.contains(time)).toList();
-                    });
-                  }
-                },
-                child: Text(selectedDate == null
-                    ? 'Odaberite datum'
-                    : 'Datum: ${selectedDate!.toLocal()}'),
-              ),
+                        List<Classes> classesForSelectedDate =
+                            _getClassesForDay(pickedDate);
+                        List<String> occupiedTimes =
+                            classesForSelectedDate.map((classItem) {
+                          return "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}";
+                        }).toList();
 
-              DropdownButton<String>(
-                value: selectedTime,
-                hint: Text('Odaberite vrijeme'),
-                items: filteredTimes.map((String time) {
-                  return DropdownMenuItem<String>(
-                    value: time,
-                    child: Text(time),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedTime = newValue;
-                  });
-                },
-              ),
-
-              DropdownButton<AnnualPlanProgram>(
-                value: _selectedAnnualPlanProgram,
-                hint: Text('Odaberite Godišnji plan program'),
-                items: _annualPlanPrograms.map((AnnualPlanProgram program) {
-                  return DropdownMenuItem<AnnualPlanProgram>(
-                    value: program,
-                    child: Text(program.naziv ?? 'N/A'),
-                  );
-                }).toList(),
-                onChanged: (AnnualPlanProgram? newValue) {
-                  setState(() {
-                    _selectedAnnualPlanProgram = newValue;
-                    _selectedClass = null;
-                    _fetchClasses(dialogContext);
-                  });
-                },
-              ),
-              
-              if (_filteredClasses.isNotEmpty)
-                DropdownButton<Classes>(
-                  value: _filteredClasses.contains(_selectedClass) ? _selectedClass : null,
-                  hint: Text('Odaberite Čas'),
-                  items: _filteredClasses.map((Classes classItem) {
-                    return DropdownMenuItem<Classes>(
-                      value: classItem,
-                      child: Text(classItem.nazivCasa ?? 'N/A'),
+                        filteredTimes = availableTimes
+                            .where((time) => !occupiedTimes.contains(time))
+                            .toList();
+                      });
+                    }
+                  },
+                  child: Text(selectedDate == null
+                      ? 'Odaberite datum'
+                      : 'Datum: ${selectedDate!.toLocal()}'),
+                ),
+                DropdownButton<String>(
+                  value: selectedTime,
+                  hint: Text('Odaberite vrijeme'),
+                  items: filteredTimes.map((String time) {
+                    return DropdownMenuItem<String>(
+                      value: time,
+                      child: Text(time),
                     );
                   }).toList(),
-                  onChanged: (Classes? newValue) {
+                  onChanged: (String? newValue) {
                     setState(() {
-                      _selectedClass = newValue;
+                      selectedTime = newValue;
                     });
                   },
                 ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Otkaži'),
+                DropdownButton<AnnualPlanProgram>(
+                  value: _selectedAnnualPlanProgram,
+                  hint: Text('Odaberite Godišnji plan program'),
+                  items: _annualPlanPrograms.map((AnnualPlanProgram program) {
+                    return DropdownMenuItem<AnnualPlanProgram>(
+                      value: program,
+                      child: Text(program.naziv ?? 'N/A'),
+                    );
+                  }).toList(),
+                  onChanged: (AnnualPlanProgram? newValue) {
+                    setState(() {
+                      _selectedAnnualPlanProgram = newValue;
+                      _selectedClass = null;
+                      _fetchClasses(dialogContext);
+                    });
+                  },
+                ),
+                if (_filteredClasses.isNotEmpty)
+                  DropdownButton<Classes>(
+                    value: _filteredClasses.contains(_selectedClass)
+                        ? _selectedClass
+                        : null,
+                    hint: Text('Odaberite Čas'),
+                    items: _filteredClasses.map((Classes classItem) {
+                      return DropdownMenuItem<Classes>(
+                        value: classItem,
+                        child: Text(classItem.nazivCasa ?? 'N/A'),
+                      );
+                    }).toList(),
+                    onChanged: (Classes? newValue) {
+                      setState(() {
+                        _selectedClass = newValue;
+                      });
+                    },
+                  ),
+              ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                if (selectedDate != null &&
-                    selectedTime != null &&
-                    _selectedClass != null &&
-                    _selectedAnnualPlanProgram != null) {
-                  _addClassForDay(selectedDate!, selectedTime!);
+            actions: [
+              TextButton(
+                onPressed: () {
                   Navigator.of(context).pop();
-                }
-              },
-              child: Text('Dodaj'),
-            ),
-          ],
-        );
-      });
-    },
-  );
-}
-
-
+                },
+                child: Text('Otkaži'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (selectedDate != null &&
+                      selectedTime != null &&
+                      _selectedClass != null &&
+                      _selectedAnnualPlanProgram != null) {
+                    _addClassForDay(selectedDate!, selectedTime!);
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: Text('Dodaj'),
+              ),
+            ],
+          );
+        });
+      },
+    );
+  }
 
   void _addClassForDay(DateTime date, String time) async {
-  List<String> timeParts = time.split(':');
-  int hour = int.parse(timeParts[0]);
-  int minute = int.parse(timeParts[1]);
+    List<String> timeParts = time.split(':');
+    int hour = int.parse(timeParts[0]);
+    int minute = int.parse(timeParts[1]);
 
-  DateTime classDateTime = DateTime(
-    date.year,
-    date.month,
-    date.day,
-    hour,
-    minute,
-  );
+    DateTime classDateTime = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      hour,
+      minute,
+    );
 
-  if (_selectedClass != null && _selectedAnnualPlanProgram != null) {
-    Map<String, dynamic> requestBody = {
-      'NazivCasa': _selectedClass!.nazivCasa,
-      'Opis': _selectedClass!.opis,
-      'GodisnjiPlanProgramID': _selectedAnnualPlanProgram!.godisnjiPlanProgramID,
-      'DatumOdrzavanjaCasa': classDateTime.toIso8601String(),
-    };
+    if (_selectedClass != null && _selectedAnnualPlanProgram != null) {
+      Map<String, dynamic> requestBody = {
+        'NazivCasa': _selectedClass!.nazivCasa,
+        'Opis': _selectedClass!.opis,
+        'GodisnjiPlanProgramID':
+            _selectedAnnualPlanProgram!.godisnjiPlanProgramID,
+        'DatumOdrzavanjaCasa': classDateTime.toIso8601String(),
+      };
 
-    try {
-      print("Updating Class with ID: ${_selectedClass!.casoviID}");
-      print("Request Body: $requestBody");
+      try {
+        print("Updating Class with ID: ${_selectedClass!.casoviID}");
+        print("Request Body: $requestBody");
 
-      await _classesProvider.Update(_selectedClass!.casoviID ?? 0, requestBody);
+        await _classesProvider.Update(
+            _selectedClass!.casoviID ?? 0, requestBody);
 
-      setState(() {
-        if (_groupedClasses[classDateTime] == null) {
-          _groupedClasses[classDateTime] = [];
-        }
+        setState(() {
+          if (_groupedClasses[classDateTime] == null) {
+            _groupedClasses[classDateTime] = [];
+          }
 
-        Classes updatedClass = _selectedClass!;
-        updatedClass.datumOdrzavanjaCasa = classDateTime;
+          Classes updatedClass = _selectedClass!;
+          updatedClass.datumOdrzavanjaCasa = classDateTime;
 
-        _groupedClasses[classDateTime]?.add(updatedClass);
+          _groupedClasses[classDateTime]?.add(updatedClass);
 
-        _selectedDay = classDateTime;
-        _fetchClassess(); 
-      });
+          _selectedDay = classDateTime;
+          _fetchClassess();
+        });
 
-      print('Class updated successfully: $classDateTime');
-    } catch (e) {
-      print("Failed to update class: $e");
+        print('Class updated successfully: $classDateTime');
+      } catch (e) {
+        print("Failed to update class: $e");
+      }
+    } else {
+      print("No class or program selected to update.");
     }
-  } else {
-    print("No class or program selected to update.");
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
