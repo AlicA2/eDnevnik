@@ -167,6 +167,13 @@ Future<void> _showAddClassDialog() async {
   List<String> availableTimes = ['08:00', '09:00', '10:00', '11:00', '12:00'];
   List<String> filteredTimes = List.from(availableTimes);
 
+  DateTime initialDate = DateTime.now();
+  if (initialDate.weekday == DateTime.saturday) {
+    initialDate = initialDate.add(Duration(days: 2));
+  } else if (initialDate.weekday == DateTime.sunday) {
+    initialDate = initialDate.add(Duration(days: 1));
+  }
+
   await showDialog(
     context: context,
     builder: (dialogContext) {
@@ -180,9 +187,12 @@ Future<void> _showAddClassDialog() async {
                 onPressed: () async {
                   DateTime? pickedDate = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now(),
+                    initialDate: initialDate,
                     firstDate: DateTime(2020),
                     lastDate: DateTime(2030),
+                    selectableDayPredicate: (DateTime day) {
+                      return day.weekday != DateTime.saturday && day.weekday != DateTime.sunday;
+                    },
                   );
                   if (pickedDate != null) {
                     setState(() {
@@ -281,6 +291,7 @@ Future<void> _showAddClassDialog() async {
 }
 
 
+
   void _addClassForDay(DateTime date, String time) async {
   List<String> timeParts = time.split(':');
   int hour = int.parse(timeParts[0]);
@@ -345,16 +356,18 @@ Future<void> _showAddClassDialog() async {
               color: Colors.white,
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: Column(
-              children: [
-                _buildScreenName(),
-                SizedBox(height: 16.0),
-                _buildCalendar(),
-                SizedBox(height: 20),
-                if (_selectedDay != null) _buildSelectedClasses(),
-                SizedBox(height: 20),
-                _buildAddClassesButton(),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildScreenName(),
+                  SizedBox(height: 16.0),
+                  _buildCalendar(),
+                  SizedBox(height: 20),
+                  if (_selectedDay != null) _buildSelectedClasses(),
+                  SizedBox(height: 20),
+                  _buildAddClassesButton(),
+                ],
+              ),
             ),
           ),
         ),
