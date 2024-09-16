@@ -103,8 +103,6 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
         'ProfesorID': loggedInUser!.korisnikId,
       });
 
-      print("GodisnjiPlanProgram : ${annualPlanResponse.result}");
-
       setState(() {
         _annualPlanPrograms = annualPlanResponse.result;
       });
@@ -323,9 +321,6 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
       };
 
       try {
-        print("Updating Class with ID: ${_selectedClass!.casoviID}");
-        print("Request Body: $requestBody");
-
         await _classesProvider.Update(
             _selectedClass!.casoviID ?? 0, requestBody);
 
@@ -342,8 +337,6 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
           _selectedDay = classDateTime;
           _fetchClassess();
         });
-
-        print('Class updated successfully: $classDateTime');
       } catch (e) {
         print("Failed to update class: $e");
       }
@@ -469,29 +462,120 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
       return Text("Nema časova za selektirani dan.");
     }
 
-    return Column(
-      children: selectedDayClasses.map((classItem) {
-        String time = classItem.datumOdrzavanjaCasa != null
-            ? "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}"
-            : "N/A";
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16),
+      child: Column(
+        children: selectedDayClasses.map((classItem) {
+          String time = classItem.datumOdrzavanjaCasa != null
+              ? "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}"
+              : "N/A";
 
-        return ListTile(
-          title: Text("$time ${classItem.nazivCasa ?? "N/A"}"),
-        );
-      }).toList(),
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
+            decoration: BoxDecoration(
+              color: Color(0xFFF7F2FA),
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4.0,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ListTile(
+              contentPadding: const EdgeInsets.all(8.0),
+              title: Text(
+                "$time ${classItem.nazivCasa ?? "N/A"}",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.delete, color: Colors.red),
+                onPressed: () {
+                  _confirmDeleteClass(classItem);
+                },
+              ),
+            ),
+          );
+        }).toList(),
+      ),
     );
+  }
+
+  void _confirmDeleteClass(Classes classItem) async {
+    bool? isConfirmed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Potvrda brisanja'),
+          content: Text('Da li ste sigurni da želite obrisati ovaj čas?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
+              child: Text('Ne'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: Text('Da'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (isConfirmed == true) {
+      _deleteClass(classItem);
+    }
+  }
+
+  void _deleteClass(Classes classItem) async {
+    try {
+      Map<String, dynamic> requestBody = {
+        'NazivCasa': classItem.nazivCasa,
+        'Opis': classItem.opis,
+        'GodisnjiPlanProgramID': classItem.godisnjiPlanProgramID,
+        'DatumOdrzavanjaCasa': null,
+      };
+
+      await _classesProvider.Update(classItem.casoviID ?? 0, requestBody);
+
+      setState(() {
+        _classes.removeWhere(
+            (existingClass) => existingClass.casoviID == classItem.casoviID);
+
+        _groupClassesByDate();
+
+        _fetchClassess();
+      });
+
+      print('Class updated successfully');
+    } catch (e) {
+      print("Failed to update class: $e");
+    }
   }
 
   Widget _buildAddClassesButton() {
     return Align(
       alignment: Alignment.centerRight,
-      child: ElevatedButton(
-        onPressed: _showAddClassDialog,
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.blue,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 16, bottom: 16),
+        child: ElevatedButton(
+          onPressed: _showAddClassDialog,
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.blue,
+          ),
+          child: Text("Dodaj časove za kalendar"),
         ),
-        child: Text("Dodaj časove za kalendar"),
       ),
     );
   }
