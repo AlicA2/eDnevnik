@@ -483,17 +483,20 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
                 ),
               ],
             ),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(8.0),
-              title: Text(
-                "$time ${classItem.nazivCasa ?? "N/A"}",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              trailing: IconButton(
-                icon: Icon(Icons.delete, color: Colors.red),
-                onPressed: () {
-                  _confirmDeleteClass(classItem);
-                },
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(8.0),
+                title: Text(
+                  "$time ${classItem.nazivCasa ?? "N/A"}",
+                  //style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () {
+                    _confirmDeleteClass(classItem);
+                  },
+                ),
               ),
             ),
           );
