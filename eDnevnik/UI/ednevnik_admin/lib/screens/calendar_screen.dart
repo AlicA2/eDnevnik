@@ -1,3 +1,5 @@
+import 'package:ednevnik_admin/models/department_subject.dart';
+import 'package:ednevnik_admin/providers/department_subject_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -30,7 +32,9 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   late ClassesProvider _classesProvider;
   late SchoolProvider _schoolProvider;
   late AnnualPlanProgramProvider _annualPlanProgramProvider;
+  late DepartmentSubjectProvider _departmentSubjectProvider;
 
+  List<DepartmentSubject> _departmentSubjects = [];
   List<AnnualPlanProgram> _annualPlanPrograms = [];
   List<Classes> _filteredClasses = [];
   AnnualPlanProgram? _selectedAnnualPlanProgram;
@@ -44,6 +48,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     _schoolProvider = context.read<SchoolProvider>();
     _classesProvider = context.read<ClassesProvider>();
     _annualPlanProgramProvider = context.read<AnnualPlanProgramProvider>();
+    _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
     _fetchSchools();
   }
 
@@ -106,8 +111,29 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
       setState(() {
         _annualPlanPrograms = annualPlanResponse.result;
       });
+
+      await _fetchDepartmentSubjects();
     } catch (e) {
       print("Failed to fetch Annual Plan Programs: $e");
+    }
+  }
+
+  List<AnnualPlanProgram> _getFilteredAnnualPlanPrograms() {
+    return _annualPlanPrograms.where((program) {
+      return _departmentSubjects.any((subject) =>
+          subject.predmetID == program.predmetID &&
+          subject.odjeljenjeID == program.odjeljenjeID);
+    }).toList();
+  }
+
+  Future<void> _fetchDepartmentSubjects() async {
+    try {
+      var departmentSubjectResponse = await _departmentSubjectProvider.get();
+      setState(() {
+        _departmentSubjects = departmentSubjectResponse.result;
+      });
+    } catch (e) {
+      print("Failed to fetch DepartmentSubjects: $e");
     }
   }
 
@@ -238,7 +264,8 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
                 DropdownButton<AnnualPlanProgram>(
                   value: _selectedAnnualPlanProgram,
                   hint: Text('Odaberite Godišnji plan program'),
-                  items: _annualPlanPrograms.map((AnnualPlanProgram program) {
+                  items: _getFilteredAnnualPlanPrograms()
+                      .map((AnnualPlanProgram program) {
                     return DropdownMenuItem<AnnualPlanProgram>(
                       value: program,
                       child: Text(program.naziv ?? 'N/A'),

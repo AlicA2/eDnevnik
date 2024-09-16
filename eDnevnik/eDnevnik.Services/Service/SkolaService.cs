@@ -20,15 +20,21 @@ namespace eDnevnik.Services.Service
         }
         public override IQueryable<Skola> AddFilter(IQueryable<Skola> query, SkolaSearchObject? search = null)
         {
-            if (!string.IsNullOrWhiteSpace(search.nazivSkole))
+            if (search != null)
             {
-                query = query.Where(x => x.Naziv.StartsWith(search.nazivSkole));
+                if (!string.IsNullOrWhiteSpace(search.nazivSkole))
+                {
+                    query = query.Where(x => x.Naziv.StartsWith(search.nazivSkole));
+                }
+                if (!string.IsNullOrWhiteSpace(search.FTS))
+                {
+                    query = query.Where(x => x.Naziv.Contains(search.nazivSkole));
+                }
+                if (search.SkolaID.HasValue)
+                {
+                    query = query.Where(x => x.SkolaID == search.SkolaID.Value);
+                }
             }
-            if (!string.IsNullOrWhiteSpace(search.FTS))
-            {
-                query = query.Where(x => x.Naziv.Contains(search.nazivSkole));
-            }
-
             return base.AddFilter(query, search);
         }
     }

@@ -1,23 +1,19 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:ednevnik_admin/models/classes.dart';
+import 'package:ednevnik_admin/models/annual_plan_program.dart';
+import 'package:ednevnik_admin/models/school.dart';
+import 'package:ednevnik_admin/models/user.dart';
+import 'package:ednevnik_admin/providers/classes_provider.dart';
+import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
+import 'package:ednevnik_admin/providers/school_provider.dart';
+import 'package:ednevnik_admin/providers/user_provider.dart';
+import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'dart:collection';
 
-import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:ednevnik_admin/widgets/master_screen.dart';
-import 'package:ednevnik_admin/models/classes.dart';
-import 'package:ednevnik_admin/providers/classes_provider.dart';
-import 'package:ednevnik_admin/providers/school_provider.dart';
-import 'package:ednevnik_admin/models/school.dart';
-import 'package:provider/provider.dart';
-
-int _getWeekOfYear(DateTime date) {
-  final firstDayOfYear = DateTime(date.year, 1, 1);
-  final firstThursday = firstDayOfYear
-      .add(Duration(days: (DateTime.thursday - firstDayOfYear.weekday) % 7));
-  final thisThursday =
-      date.add(Duration(days: (DateTime.thursday - date.weekday) % 7));
-
-  return ((thisThursday.difference(firstThursday).inDays) / 7).ceil() + 1;
-}
+import '../models/department.dart';
+import '../providers/department_provider.dart';
 
 class CalendarDetailScreen extends StatefulWidget {
   const CalendarDetailScreen({super.key});
@@ -27,141 +23,178 @@ class CalendarDetailScreen extends StatefulWidget {
 }
 
 class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
-  late Map<DateTime, List<String>> _events;
-  late List<String> _selectedEvents;
-  DateTime _selectedDay = DateTime.now();
-  DateTime _focusedDay = DateTime.now();
-  final ClassesProvider _classesProvider = ClassesProvider();
-  late SchoolProvider _schoolProvider;
   School? _selectedSchool;
+  Department? _selectedDepartment;
   List<School> _schools = [];
+  List<Classes> _classes = [];
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  User? loggedInUser;
+
+  late ClassesProvider _classesProvider;
+  late SchoolProvider _schoolProvider;
+  late AnnualPlanProgramProvider _annualPlanProgramProvider;
+  late DepartmentProvider _departmentProvider;
+
+  List<AnnualPlanProgram> _annualPlanPrograms = [];
+  List<Classes> _filteredClasses = [];
+  AnnualPlanProgram? _selectedAnnualPlanProgram;
+  Classes? _selectedClass;
+
+  Map<DateTime, List<Classes>> _groupedClasses = {};
 
   @override
   void initState() {
     super.initState();
     _schoolProvider = context.read<SchoolProvider>();
+    _classesProvider = context.read<ClassesProvider>();
+    _annualPlanProgramProvider = context.read<AnnualPlanProgramProvider>();
+    _departmentProvider = context.read<DepartmentProvider>();
+    _fetchDepartments();
+  }
 
-    _events = {};
-    _selectedEvents = [];
-    _fetchSchools();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loggedInUser = context.watch<UserProvider>().loggedInUser;
   }
 
   Future<void> _fetchSchools() async {
     try {
-      var schools = await _schoolProvider.get();
+      var schools = await _schoolProvider.get(filter: {'SkolaID':  _selectedDepartment?.skolaID});
       if (mounted) {
         setState(() {
           _schools = schools.result;
           if (_schools.isNotEmpty) {
             _selectedSchool = _schools.first;
-            _loadEvents();
+            print(_selectedSchool);
+            _fetchClassess();
+            _fetchAnnualPlanPrograms();
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      print("Failed to fetch schools: $e");
+    }
   }
 
-  Future<void> _loadEvents() async {
-    if (_selectedSchool == null) return;
-
-    var result = await _classesProvider
-        .get(filter: {'SkolaID': _selectedSchool!.skolaID});
-
-    Map<DateTime, List<String>> events = {};
-
-    DateTime currentDay = DateTime(_selectedDay.year, 2, 1);
-    while (currentDay.weekday != DateTime.monday) {
-      currentDay = currentDay.add(const Duration(days: 1));
-    }
-
-    Map<int, Queue<Classes>> groupedClasses = {};
-    for (var cas in result.result) {
-      if (!groupedClasses.containsKey(cas.godisnjiPlanProgramID)) {
-        groupedClasses[cas.godisnjiPlanProgramID!] = Queue<Classes>();
-      }
-      groupedClasses[cas.godisnjiPlanProgramID!]!.add(cas);
-    }
-
-    Set<int> usedProgramsInWeek = {};
-
-    while (groupedClasses.values.any((queue) => queue.isNotEmpty)) {
-      if (currentDay.weekday >= DateTime.monday &&
-          currentDay.weekday <= DateTime.friday) {
-        DateTime classTime =
-            DateTime(currentDay.year, currentDay.month, currentDay.day, 8);
-
-        while (classTime.hour < 13 &&
-            groupedClasses.values.any((queue) => queue.isNotEmpty)) {
-          bool classScheduled = false;
-
-          for (var entry in groupedClasses.entries.toList()) {
-            int programID = entry.key;
-
-            if (usedProgramsInWeek.contains(programID)) continue;
-
-            if (entry.value.isNotEmpty) {
-              var classItem = entry.value.removeFirst();
-              String className = classItem.nazivCasa ?? 'Class';
-              events
-                  .putIfAbsent(currentDay, () => [])
-                  .add('${_formatTime(classTime)} $className');
-
-              usedProgramsInWeek.add(programID);
-
-              classTime = classTime.add(const Duration(minutes: 60));
-
-              classScheduled = true;
-              break;
-            }
+  Future<void> _fetchDepartments() async {
+    print("Uslo u department");
+    try {
+      var departments = await _departmentProvider.get(filter: {'isUceniciIncluded': true});
+      print(departments);
+      if (departments != null) {
+        for (var department in departments.result) {
+          if (department.ucenici != null &&
+              department.ucenici!.any((user) => user.korisnikId == loggedInUser?.korisnikId)) {
+            _selectedDepartment=department;
+            await _fetchSchools();
+            break;
+          } else {
+            print('User not found in department with odjeljenjeID: ${department.odjeljenjeID}');
           }
-
-          if (!classScheduled) break;
-        }
-
-        currentDay = currentDay.add(const Duration(days: 1));
-
-        if (currentDay.weekday == DateTime.monday) {
-          usedProgramsInWeek.clear();
-        }
-
-        while (currentDay.weekday == DateTime.saturday ||
-            currentDay.weekday == DateTime.sunday) {
-          currentDay = currentDay.add(const Duration(days: 1));
-          usedProgramsInWeek.clear();
         }
       } else {
-        currentDay = currentDay.add(const Duration(days: 1));
-        while (currentDay.weekday == DateTime.saturday ||
-            currentDay.weekday == DateTime.sunday) {
-          currentDay = currentDay.add(const Duration(days: 1));
-          usedProgramsInWeek.clear();
+        print("No departments found.");
+      }
+    } catch (e) {
+      print('Error fetching departments: $e');
+    }
+  }
+
+  Future<void> _fetchClassess() async {
+    if (_selectedSchool == null) return;
+
+    try {
+      var classesResponse = await _classesProvider.get(filter: {
+        'SkolaID': _selectedSchool?.skolaID,
+        'ProfesorID': loggedInUser?.korisnikId,
+      });
+
+      if (mounted) {
+        setState(() {
+          _classes = classesResponse.result
+              .where((classItem) => classItem.datumOdrzavanjaCasa != null)
+              .toList();
+
+          _groupClassesByDate();
+        });
+      }
+    } catch (e) {
+      print("Failed to fetch classes: $e");
+    }
+  }
+
+  Future<void> _fetchAnnualPlanPrograms() async {
+    if (_selectedSchool == null || loggedInUser == null) return;
+
+    try {
+      var annualPlanResponse = await _annualPlanProgramProvider.get(filter: {
+        'SkolaID': _selectedSchool!.skolaID,
+        'ProfesorID': loggedInUser!.korisnikId,
+      });
+
+      setState(() {
+        _annualPlanPrograms = annualPlanResponse.result;
+      });
+    } catch (e) {
+      print("Failed to fetch Annual Plan Programs: $e");
+    }
+  }
+
+  Future<void> _fetchClasses(BuildContext dialogContext) async {
+    if (_selectedAnnualPlanProgram == null) return;
+
+    try {
+      var classesResponse = await _classesProvider.get(filter: {
+        'GodisnjiPlanProgramID':
+        _selectedAnnualPlanProgram!.godisnjiPlanProgramID,
+      });
+
+      setState(() {
+        _filteredClasses = classesResponse.result.where((classItem) {
+          return !_groupedClasses.values.any((classList) => classList.any(
+                  (existingClass) => existingClass.casoviID == classItem.casoviID));
+        }).toList();
+
+        _selectedClass = null;
+
+        (dialogContext as Element).markNeedsBuild();
+      });
+    } catch (e) {
+      print("Failed to fetch classes: $e");
+    }
+  }
+
+  void _groupClassesByDate() {
+    _groupedClasses.clear();
+    for (var classItem in _classes) {
+      if (classItem.datumOdrzavanjaCasa != null) {
+        DateTime eventDate = DateTime(
+          classItem.datumOdrzavanjaCasa!.year,
+          classItem.datumOdrzavanjaCasa!.month,
+          classItem.datumOdrzavanjaCasa!.day,
+        );
+
+        if (_groupedClasses[eventDate] == null) {
+          _groupedClasses[eventDate] = [];
         }
+        _groupedClasses[eventDate]?.add(classItem);
       }
     }
-
-    setState(() {
-      _events = events;
-      _selectedEvents = _getEventsForDay(_selectedDay);
-    });
   }
 
-  String _formatTime(DateTime time) {
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
-  }
+  List<Classes> _getClassesForDay(DateTime day) {
+    DateTime normalizedDay = DateTime(day.year, day.month, day.day);
 
-  List<String> _getEventsForDay(DateTime day) {
-    return _events[_normalizeDate(day)] ?? [];
-  }
-
-  DateTime _normalizeDate(DateTime date) {
-    return DateTime(date.year, date.month, date.day);
+    return _groupedClasses[normalizedDay] ?? [];
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       child: Container(
-        color: const Color(0xFFF7F2FA),
+        color: Color(0xFFF7F2FA),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
@@ -169,14 +202,17 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: Column(
-              children: [
-                _buildScreenName(),
-                const SizedBox(height: 16.0),
-                _buildCalendar(),
-                const SizedBox(height: 8.0),
-                Expanded(child: _buildEventList()),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildScreenName(),
+                  SizedBox(height: 16.0),
+                  _buildCalendar(),
+                  SizedBox(height: 20),
+                  if (_selectedDay != null) _buildSelectedClasses(),
+                  SizedBox(height:20),
+                ],
+              ),
             ),
           ),
         ),
@@ -187,75 +223,185 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   Widget _buildScreenName() {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(5),
-            topLeft: Radius.circular(20),
-            topRight: Radius.elliptical(5, 5),
-            bottomRight: Radius.circular(30.0),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(5),
+                topLeft: Radius.circular(20),
+                topRight: Radius.elliptical(5, 5),
+                bottomRight: Radius.circular(30.0),
+              ),
+            ),
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              "Kalendar",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-        ),
-        padding: const EdgeInsets.all(16.0),
-        child: const Text(
-          "Kalendar",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+          Expanded(child: _buildSchoolDropdown()),
+        ],
       ),
     );
   }
 
+  Widget _buildSchoolDropdown() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          width: 210,
+          child: DropdownButton<School>(
+            value: _selectedSchool,
+            items: _schools.map((school) {
+              return DropdownMenuItem<School>(
+                value: school,
+                child: Text(school.naziv ?? "N/A"),
+              );
+            }).toList(),
+            onChanged: null,
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _buildCalendar() {
     return TableCalendar(
-      firstDay: DateTime(2020),
-      lastDay: DateTime(2030),
+      firstDay: DateTime.utc(2020, 1, 1),
+      lastDay: DateTime.utc(2030, 12, 31),
       focusedDay: _focusedDay,
-      selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-      eventLoader: _getEventsForDay,
+      selectedDayPredicate: (day) {
+        return isSameDay(_selectedDay, day);
+      },
       onDaySelected: (selectedDay, focusedDay) {
         setState(() {
           _selectedDay = selectedDay;
           _focusedDay = focusedDay;
-          _selectedEvents = _getEventsForDay(selectedDay);
         });
       },
-      calendarStyle: const CalendarStyle(
-        todayDecoration: BoxDecoration(
-          color: Colors.blueAccent,
-          shape: BoxShape.circle,
-        ),
-        selectedDecoration: BoxDecoration(
-          color: Colors.lightBlue,
-          shape: BoxShape.circle,
-        ),
-        markerDecoration: BoxDecoration(
-          color: Colors.blue,
-          shape: BoxShape.circle,
-        ),
-      ),
-      headerStyle: const HeaderStyle(
-        formatButtonVisible: false,
-        titleCentered: true,
+      calendarFormat: CalendarFormat.month,
+      availableCalendarFormats: const {
+        CalendarFormat.month: 'Month',
+      },
+      eventLoader: _getClassesForDay,
+    );
+  }
+
+  Widget _buildSelectedClasses() {
+    List<Classes> selectedDayClasses = _getClassesForDay(_selectedDay!);
+
+    if (selectedDayClasses.isEmpty) {
+      return Text("Nema časova za selektirani dan.");
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16),
+      child: Column(
+        children: selectedDayClasses.map((classItem) {
+          String time = classItem.datumOdrzavanjaCasa != null
+              ? "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}"
+              : "N/A";
+
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
+            decoration: BoxDecoration(
+              color: Color(0xFFF7F2FA),
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4.0,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(8.0),
+                title: Text(
+                  "$time ${classItem.nazivCasa ?? "N/A"}",
+                  //style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () {
+                    _confirmDeleteClass(classItem);
+                  },
+                ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
 
-  Widget _buildEventList() {
-    return ListView.builder(
-      itemCount: _selectedEvents.length,
-      itemBuilder: (context, index) {
-        return Card(
-          child: ListTile(
-            title: Text(_selectedEvents[index]),
-          ),
+  void _confirmDeleteClass(Classes classItem) async {
+    bool? isConfirmed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Potvrda brisanja'),
+          content: Text('Da li ste sigurni da želite obrisati ovaj čas?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
+              child: Text('Ne'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: Text('Da'),
+            ),
+          ],
         );
       },
     );
+
+    if (isConfirmed == true) {
+      _deleteClass(classItem);
+    }
+  }
+
+  void _deleteClass(Classes classItem) async {
+    try {
+      Map<String, dynamic> requestBody = {
+        'NazivCasa': classItem.nazivCasa,
+        'Opis': classItem.opis,
+        'GodisnjiPlanProgramID': classItem.godisnjiPlanProgramID,
+        'DatumOdrzavanjaCasa': null,
+      };
+
+      await _classesProvider.Update(classItem.casoviID ?? 0, requestBody);
+
+      setState(() {
+        _classes.removeWhere(
+                (existingClass) => existingClass.casoviID == classItem.casoviID);
+
+        _groupClassesByDate();
+
+        _fetchClassess();
+      });
+
+      print('Class updated successfully');
+    } catch (e) {
+      print("Failed to update class: $e");
+    }
   }
 }
