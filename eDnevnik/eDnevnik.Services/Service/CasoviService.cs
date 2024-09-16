@@ -49,6 +49,10 @@ namespace eDnevnik.Services.Service
                 {
                     query = query.Where(x => x.GodisnjiPlanProgram.ProfesorID == search.ProfesorID.Value);
                 }
+                if (search.OdjeljenjeID.HasValue)
+                {
+                    query = query.Where(x => x.GodisnjiPlanProgram.OdjeljenjeID == search.OdjeljenjeID.Value);
+                }
             }
 
             return base.AddFilter(query, search);

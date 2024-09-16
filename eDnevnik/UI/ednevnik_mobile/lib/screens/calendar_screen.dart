@@ -13,7 +13,9 @@ import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'dart:collection';
 
 import '../models/department.dart';
+import '../models/department_subject.dart';
 import '../providers/department_provider.dart';
+import '../providers/department_subject_provider.dart';
 
 class CalendarDetailScreen extends StatefulWidget {
   const CalendarDetailScreen({super.key});
@@ -27,6 +29,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   Department? _selectedDepartment;
   List<School> _schools = [];
   List<Classes> _classes = [];
+  List<DepartmentSubject> _departmentSubjects = [];
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   User? loggedInUser;
@@ -35,6 +38,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   late SchoolProvider _schoolProvider;
   late AnnualPlanProgramProvider _annualPlanProgramProvider;
   late DepartmentProvider _departmentProvider;
+  late DepartmentSubjectProvider _departmentSubjectProvider;
 
   List<AnnualPlanProgram> _annualPlanPrograms = [];
   List<Classes> _filteredClasses = [];
@@ -50,6 +54,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     _classesProvider = context.read<ClassesProvider>();
     _annualPlanProgramProvider = context.read<AnnualPlanProgramProvider>();
     _departmentProvider = context.read<DepartmentProvider>();
+    _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
     _fetchDepartments();
   }
 
@@ -67,7 +72,6 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
           _schools = schools.result;
           if (_schools.isNotEmpty) {
             _selectedSchool = _schools.first;
-            print(_selectedSchool);
             _fetchClassess();
             _fetchAnnualPlanPrograms();
           }
@@ -79,16 +83,15 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   }
 
   Future<void> _fetchDepartments() async {
-    print("Uslo u department");
     try {
       var departments = await _departmentProvider.get(filter: {'isUceniciIncluded': true});
-      print(departments);
       if (departments != null) {
         for (var department in departments.result) {
           if (department.ucenici != null &&
               department.ucenici!.any((user) => user.korisnikId == loggedInUser?.korisnikId)) {
             _selectedDepartment=department;
             await _fetchSchools();
+            await _fetchDepartmentSubjects();
             break;
           } else {
             print('User not found in department with odjeljenjeID: ${department.odjeljenjeID}');
@@ -102,13 +105,29 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     }
   }
 
+  Future<void> _fetchDepartmentSubjects() async {
+    try {
+      var subjectsResponse = await _departmentSubjectProvider.get(filter: {
+        'OdjeljenjeID': _selectedDepartment?.odjeljenjeID,
+      });
+
+      if (mounted) {
+        setState(() {
+          _departmentSubjects = subjectsResponse.result;
+        });
+      }
+    } catch (e) {
+      print('Failed to fetch department subjects: $e');
+    }
+  }
+
   Future<void> _fetchClassess() async {
     if (_selectedSchool == null) return;
 
     try {
       var classesResponse = await _classesProvider.get(filter: {
         'SkolaID': _selectedSchool?.skolaID,
-        'ProfesorID': loggedInUser?.korisnikId,
+        'OdjeljenjeID': _selectedDepartment?.odjeljenjeID
       });
 
       if (mounted) {
@@ -131,38 +150,18 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     try {
       var annualPlanResponse = await _annualPlanProgramProvider.get(filter: {
         'SkolaID': _selectedSchool!.skolaID,
-        'ProfesorID': loggedInUser!.korisnikId,
+        'OdjeljenjeID': _selectedDepartment?.odjeljenjeID,
       });
 
       setState(() {
-        _annualPlanPrograms = annualPlanResponse.result;
+        _annualPlanPrograms = annualPlanResponse.result.where((program) {
+          return _departmentSubjects.any((subject) =>
+          subject.odjeljenjeID == program.odjeljenjeID &&
+              subject.predmetID == program.predmetID);
+        }).toList();
       });
     } catch (e) {
       print("Failed to fetch Annual Plan Programs: $e");
-    }
-  }
-
-  Future<void> _fetchClasses(BuildContext dialogContext) async {
-    if (_selectedAnnualPlanProgram == null) return;
-
-    try {
-      var classesResponse = await _classesProvider.get(filter: {
-        'GodisnjiPlanProgramID':
-        _selectedAnnualPlanProgram!.godisnjiPlanProgramID,
-      });
-
-      setState(() {
-        _filteredClasses = classesResponse.result.where((classItem) {
-          return !_groupedClasses.values.any((classList) => classList.any(
-                  (existingClass) => existingClass.casoviID == classItem.casoviID));
-        }).toList();
-
-        _selectedClass = null;
-
-        (dialogContext as Element).markNeedsBuild();
-      });
-    } catch (e) {
-      print("Failed to fetch classes: $e");
     }
   }
 
@@ -186,7 +185,6 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
 
   List<Classes> _getClassesForDay(DateTime day) {
     DateTime normalizedDay = DateTime(day.year, day.month, day.day);
-
     return _groupedClasses[normalizedDay] ?? [];
   }
 
@@ -330,78 +328,11 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
                   "$time ${classItem.nazivCasa ?? "N/A"}",
                   //style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () {
-                    _confirmDeleteClass(classItem);
-                  },
-                ),
               ),
             ),
           );
         }).toList(),
       ),
     );
-  }
-
-  void _confirmDeleteClass(Classes classItem) async {
-    bool? isConfirmed = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Potvrda brisanja'),
-          content: Text('Da li ste sigurni da želite obrisati ovaj čas?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
-              child: Text('Ne'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
-              child: Text('Da'),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (isConfirmed == true) {
-      _deleteClass(classItem);
-    }
-  }
-
-  void _deleteClass(Classes classItem) async {
-    try {
-      Map<String, dynamic> requestBody = {
-        'NazivCasa': classItem.nazivCasa,
-        'Opis': classItem.opis,
-        'GodisnjiPlanProgramID': classItem.godisnjiPlanProgramID,
-        'DatumOdrzavanjaCasa': null,
-      };
-
-      await _classesProvider.Update(classItem.casoviID ?? 0, requestBody);
-
-      setState(() {
-        _classes.removeWhere(
-                (existingClass) => existingClass.casoviID == classItem.casoviID);
-
-        _groupClassesByDate();
-
-        _fetchClassess();
-      });
-
-      print('Class updated successfully');
-    } catch (e) {
-      print("Failed to update class: $e");
-    }
   }
 }
