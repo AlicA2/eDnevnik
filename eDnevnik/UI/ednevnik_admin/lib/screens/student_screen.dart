@@ -20,6 +20,7 @@ class StudentDetailScreen extends StatefulWidget {
 
 class _StudentDetailScreenState extends State<StudentDetailScreen> {
   List<User> _students = [];
+  List<User> _studentss = [];
   bool _isLoading = true;
 
   List<School> _schools = [];
@@ -38,9 +39,25 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
     _userProvider = context.read<UserProvider>();
     _schoolProvider = context.read<SchoolProvider>();
     _departmentProvider = context.read<DepartmentProvider>();
+    _fetchUsers();
 
     _fetchSchools();
   }
+
+  Future<void> _fetchUsers() async {
+  try {
+    var usersResponse = await _userProvider.get(filter: {'UlogaID': 2});
+    if (mounted) {
+      setState(() {
+        _studentss = usersResponse.result;
+
+      });
+    }
+  } catch (e) {
+    print('Error fetching users: $e');
+  }
+}
+
 
   Future<void> _fetchSchools() async {
     try {
@@ -186,6 +203,8 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                 Expanded(
                   child: _isLoading ? _buildLoading() : _buildDataListView(),
                 ),
+                SizedBox(height:16),
+                _buildActionButton(),
               ],
             ),
           ),
@@ -193,6 +212,152 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
       ),
     );
   }
+
+  Widget _buildActionButton() {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: ElevatedButton(
+      onPressed: () {
+        _openDialog();
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue,
+        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+      ),
+      child: Text("Dodaj učenika u odjeljenje", style: TextStyle(color: Colors.white)),
+    ),
+  );
+}
+
+void _openDialog() {
+  Department? selectedDepartment;
+  User? selectedStudent;
+  List<User> availableStudents = [];
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          List<Object?> assignedStudentIds = _departments
+              .expand((department) => department.ucenici?.map((student) => student.korisnikId) ?? [])
+              .toList();
+
+           availableStudents = _studentss.where((student) => !assignedStudentIds.contains(student.korisnikId)).toList();
+
+          return AlertDialog(
+            title: Text('Dodaj učenika u odjeljenje'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButton<Department>(
+                  value: selectedDepartment,
+                  hint: Text('Odaberite odjeljenje'),
+                  items: _departments.map((department) {
+                    return DropdownMenuItem<Department>(
+                      value: department,
+                      child: Text(department.nazivOdjeljenja ?? "N/A"),
+                    );
+                  }).toList(),
+                  onChanged: (Department? newValue) {
+                    setState(() {
+                      selectedDepartment = newValue;
+                    });
+                  },
+                ),
+                SizedBox(height: 16.0),
+                DropdownButton<User>(
+                  value: selectedStudent,
+                  hint: Text('Odaberite učenika'),
+                  items: availableStudents.map((student) {
+                    return DropdownMenuItem<User>(
+                      value: student,
+                      child: Text('${student.ime} ${student.prezime}'),
+                    );
+                  }).toList(),
+                  onChanged: (User? newValue) {
+                    setState(() {
+                      selectedStudent = newValue;
+                    });
+                  },
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Odustani'),
+              ),
+              TextButton(
+  onPressed: () async {
+    if (selectedDepartment != null && selectedStudent != null) {
+      try {
+        await _departmentProvider.addStudentToDepartment(
+          selectedDepartment!.odjeljenjeID!,
+          selectedStudent!.korisnikId!,
+        );
+
+        _fetchDepartmentsAndInitialize(schoolID: _selectedSchool?.skolaID);
+
+        Navigator.of(context).pop();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${selectedStudent?.ime} ${selectedStudent?.prezime} je dodan u ${selectedDepartment?.nazivOdjeljenja}'))
+        );
+      } catch (e) {
+        print('Error adding student to department: $e');
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Greška'),
+            content: Text('Dodavanje učenika nije uspjelo.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      if (selectedDepartment == null) {
+        print('No department selected');
+      }
+      if (selectedStudent == null) {
+        print('No student selected');
+      }
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Greška'),
+          content: Text('Morate odabrati odjeljenje i učenika.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  },
+  child: Text('Dodaj'),
+),
+
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+
+
 
   Widget _buildScreenHeader() {
     return Row(

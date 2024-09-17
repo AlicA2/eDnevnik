@@ -21,25 +21,28 @@ class DepartmentProvider extends BaseProvider<Department> {
     return Department.fromJson(data);
   }
 
-  Future<Department> addStudentToDepartment(
-      int odjeljenjeID, int korisnikID) async {
-    var url = "$_baseUrl$_endpoint/$odjeljenjeID/addStudent";
-    var uri = Uri.parse(url);
-    var headers = createHeaders();
+  Future<Department?> addStudentToDepartment(int odjeljenjeID, int korisnikID) async {
+  var url = "$_baseUrl$_endpoint/AddStudentToDepartment?odjeljenjeID=$odjeljenjeID&korisnikID=$korisnikID";
+  var uri = Uri.parse(url);
+  var headers = createHeaders();
 
-    var body = jsonEncode({
-      'korisnikID': korisnikID,
-    });
+  print("POST Request to $url");
 
-    var response = await http.post(uri, headers: headers, body: body);
+  var response = await http.post(uri, headers: headers);
 
-    if (isValidResponse(response)) {
-      var data = jsonDecode(response.body);
-      return fromJson(data);
-    } else {
-      throw Exception("Failed to add student to department");
-    }
+  print("Response status: ${response.statusCode}");
+  print("Response body: ${response.body}");
+
+  if (response.statusCode == 200) {
+    print("Student added successfully: ${response.body}");
+    return null;
+  } else {
+    print("Failed response: ${response.body}");
+    throw Exception("Failed to add student to department: ${response.body}");
   }
+}
+
+
 
   Future<List<Department>> getDepartmentsWithStudents({int? schoolID}) async {
     var url = "$_baseUrl$_endpoint/WithStudents";
