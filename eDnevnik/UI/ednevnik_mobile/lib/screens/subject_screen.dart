@@ -3,7 +3,6 @@ import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/subject.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
-import 'package:ednevnik_admin/screens/single_subject_screen.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +49,6 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     loggedInUser = context.watch<UserProvider>().loggedInUser;
-    print("Logged-in user: ${loggedInUser?.ime}");
   }
 
   Future<void> _fetchDepartments() async {
@@ -61,8 +59,6 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
         for (var department in departments.result) {
           if (department.ucenici != null &&
               department.ucenici!.any((user) => user.korisnikId == loggedInUser?.korisnikId)) {
-            print('User is in department with odjeljenjeID: ${department.odjeljenjeID}');
-
             _schoolIDFromDepartment = department.skolaID;
             userDepartment = department.odjeljenjeID;
 
@@ -124,7 +120,6 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
         .map((ds) => ds.predmetID)
         .whereType<int>()
         .toList();
-    print("Predmeti u predmetIDs su : $predmetIDs");
 
     if (predmetIDs.isNotEmpty) {
       try {
@@ -279,58 +274,52 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
 
   Widget _buildDataListView() {
     return SingleChildScrollView(
-      child: ExpansionPanelList(
-        elevation: 1,
-        expandedHeaderPadding: EdgeInsets.symmetric(vertical: 5),
-        expansionCallback: (int index, bool isExpanded) {
-          setState(() {
-            if (index >= 0 && index < result!.result.length) {
-              result!.result[index].isExpanded = !(result!.result[index].isExpanded ?? false);
-              print('Expanding index: $index, new expanded state: ${result!.result[index].isExpanded}');
-            } else {
-              print('Index out of bounds: $index');
-            }
-          });
-        },
-        children: result?.result
-            .asMap()
-            .entries
-            .map((entry) {
-          int index = entry.key;
-          Subject subject = entry.value;
+      child: Padding(
+        padding: const EdgeInsets.only(left:16, right: 16),
+        child: ExpansionPanelList(
+          elevation: 1,
+          expandedHeaderPadding: EdgeInsets.symmetric(vertical: 5),
+          expansionCallback: (int index, bool isExpanded) {
+            setState(() {
+              if (index >= 0 && index < result!.result.length) {
+                result!.result[index].isExpanded = !(result!.result[index].isExpanded ?? false);
+              } else {
+                print('Index out of bounds: $index');
+              }
+            });
+          },
+          children: result?.result
+              .asMap()
+              .entries
+              .map((entry) {
+            int index = entry.key;
+            Subject subject = entry.value;
 
-          bool expanded = subject.isExpanded ?? false;
+            bool expanded = subject.isExpanded ?? false;
 
-          print('Index: $index, Subject: ${subject.naziv}, IsExpanded: $expanded');
+            return ExpansionPanel(
+              headerBuilder: (BuildContext context, bool isExpanded) {
+                return ListTile(
+                  title: Text(subject.naziv ?? "No Name"),
+                );
+              },
+              body: ListTile(
+                title: Text(subject.opis ?? "No description available"),
+                trailing: subject.isExpanded == false
+                    ? IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () async {
 
-          return ExpansionPanel(
-            headerBuilder: (BuildContext context, bool isExpanded) {
-              return ListTile(
-                title: Text(subject.naziv ?? "No Name"),
-              );
-            },
-            body: ListTile(
-              title: Text(subject.opis ?? "No description available"),
-              trailing: subject.isExpanded == false
-                  ? IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () async {
-                  final result = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SingleSubjectListScreen(subject: subject),
-                    ),
-                  );
-                  if (result == 'updated' || result == 'deleted') {
-                    _fetchSubjectsForDepartment();
-                  }
-                },
-              )
-                  : null,
-            ),
 
-            isExpanded: expanded,
-          );
-        }).toList() ?? [],
+                  },
+                )
+                    : null,
+              ),
+
+              isExpanded: expanded,
+            );
+          }).toList() ?? [],
+        ),
       ),
     );
   }

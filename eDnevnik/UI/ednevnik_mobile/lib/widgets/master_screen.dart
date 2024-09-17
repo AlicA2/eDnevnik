@@ -4,15 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/calendar_screen.dart';
-import '../screens/department_screen.dart';
 import '../screens/help_support_screen.dart';
 import '../screens/info_student_screen.dart';
 import '../screens/messages_screen.dart';
 import '../screens/report_screen.dart';
-import '../screens/student_screen.dart';
 import '../screens/subject_screen.dart';
 import '../screens/user_profile_screen.dart';
-import '../screens/yearly_plan_and_program_screen.dart';
 
 class MasterScreenWidget extends StatefulWidget {
   final Widget? child;

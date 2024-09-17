@@ -12,6 +12,7 @@ Grade _$GradeFromJson(Map<String, dynamic> json) => Grade(
       json['datum'] == null ? null : DateTime.parse(json['datum'] as String),
       (json['korisnikID'] as num?)?.toInt(),
       (json['predmetID'] as num?)?.toInt(),
+      json['isExpanded'] as bool?,
     );
 
 Map<String, dynamic> _$GradeToJson(Grade instance) => <String, dynamic>{
@@ -20,4 +21,5 @@ Map<String, dynamic> _$GradeToJson(Grade instance) => <String, dynamic>{
       'datum': instance.datum?.toIso8601String(),
       'korisnikID': instance.korisnikID,
       'predmetID': instance.predmetID,
+      'isExpanded': instance.isExpanded,
     };
