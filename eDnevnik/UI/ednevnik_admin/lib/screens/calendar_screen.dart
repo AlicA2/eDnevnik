@@ -186,68 +186,74 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   }
 
   Future<void> _showAddClassDialog() async {
-    DateTime? selectedDate;
-    String? selectedTime;
+  DateTime? selectedDate;
+  String? selectedTime;
 
-    List<String> availableTimes = ['08:00', '09:00', '10:00', '11:00', '12:00'];
-    List<String> filteredTimes = List.from(availableTimes);
+  List<String> availableTimes = ['08:00', '09:00', '10:00', '11:00', '12:00'];
+  List<String> filteredTimes = List.from(availableTimes);
 
-    DateTime initialDate = DateTime.now();
-    if (initialDate.weekday == DateTime.saturday) {
-      initialDate = initialDate.add(Duration(days: 2));
-    } else if (initialDate.weekday == DateTime.sunday) {
-      initialDate = initialDate.add(Duration(days: 1));
-    }
+  DateTime initialDate = DateTime.now();
+  if (initialDate.weekday == DateTime.saturday) {
+    initialDate = initialDate.add(Duration(days: 2));
+  } else if (initialDate.weekday == DateTime.sunday) {
+    initialDate = initialDate.add(Duration(days: 1));
+  }
 
-    if (initialDate.month < 9) {
-      initialDate = DateTime(initialDate.year, 9, 1);
-    }
+  if (initialDate.month < 9) {
+    initialDate = DateTime(initialDate.year, 9, 1);
+  }
 
-    await showDialog(
-      context: context,
-      builder: (dialogContext) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            title: Text('Dodaj časove za kalendar'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: initialDate,
-                      firstDate: DateTime(initialDate.year, 9, 1),
-                      lastDate: DateTime(initialDate.year, 12, 31),
-                      selectableDayPredicate: (DateTime day) {
-                        return (day.month >= 9 && day.month <= 12) &&
-                            (day.weekday != DateTime.saturday &&
-                                day.weekday != DateTime.sunday);
-                      },
-                    );
-                    if (pickedDate != null) {
-                      setState(() {
-                        selectedDate = pickedDate;
+  await showDialog(
+    context: context,
+    builder: (dialogContext) {
+      return StatefulBuilder(builder: (context, setState) {
+        return AlertDialog(
+          title: Text('Dodaj časove za kalendar'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: initialDate,
+                    firstDate: DateTime(initialDate.year, 9, 1),
+                    lastDate: DateTime(initialDate.year, 12, 31),
+                    selectableDayPredicate: (DateTime day) {
+                      return (day.month >= 9 && day.month <= 12) &&
+                          (day.weekday != DateTime.saturday &&
+                              day.weekday != DateTime.sunday);
+                    },
+                  );
+                  if (pickedDate != null) {
+                    setState(() {
+                      selectedDate = pickedDate;
 
-                        List<Classes> classesForSelectedDate =
-                            _getClassesForDay(pickedDate);
-                        List<String> occupiedTimes =
-                            classesForSelectedDate.map((classItem) {
-                          return "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}";
-                        }).toList();
+                      List<Classes> classesForSelectedDate =
+                          _getClassesForDay(pickedDate);
+                      List<String> occupiedTimes =
+                          classesForSelectedDate.map((classItem) {
+                        return "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}";
+                      }).toList();
 
-                        filteredTimes = availableTimes
-                            .where((time) => !occupiedTimes.contains(time))
-                            .toList();
-                      });
-                    }
-                  },
-                  child: Text(selectedDate == null
-                      ? 'Odaberite datum'
-                      : 'Datum: ${selectedDate!.toLocal()}'),
-                ),
-                DropdownButton<String>(
+                      filteredTimes = availableTimes
+                          .where((time) => !occupiedTimes.contains(time))
+                          .toList();
+                    });
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white, backgroundColor: Colors.blue),
+                child: Text(selectedDate == null
+                    ? 'Odaberite datum'
+                    : 'Datum: ${selectedDate!.toLocal()}'),
+              ),
+              SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: DropdownButton<String>(
                   value: selectedTime,
+                  isExpanded: true,
                   hint: Text('Odaberite vrijeme'),
                   items: filteredTimes.map((String time) {
                     return DropdownMenuItem<String>(
@@ -261,8 +267,13 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
                     });
                   },
                 ),
-                DropdownButton<AnnualPlanProgram>(
+              ),
+              SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: DropdownButton<AnnualPlanProgram>(
                   value: _selectedAnnualPlanProgram,
+                  isExpanded: true,
                   hint: Text('Odaberite Godišnji plan program'),
                   items: _getFilteredAnnualPlanPrograms()
                       .map((AnnualPlanProgram program) {
@@ -279,11 +290,16 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
                     });
                   },
                 ),
-                if (_filteredClasses.isNotEmpty)
-                  DropdownButton<Classes>(
+              ),
+              if (_filteredClasses.isNotEmpty) ...[
+                SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: DropdownButton<Classes>(
                     value: _filteredClasses.contains(_selectedClass)
                         ? _selectedClass
                         : null,
+                    isExpanded: true,
                     hint: Text('Odaberite Čas'),
                     items: _filteredClasses.map((Classes classItem) {
                       return DropdownMenuItem<Classes>(
@@ -297,33 +313,38 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
                       });
                     },
                   ),
+                ),
               ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Otkaži'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (selectedDate != null &&
-                      selectedTime != null &&
-                      _selectedClass != null &&
-                      _selectedAnnualPlanProgram != null) {
-                    _addClassForDay(selectedDate!, selectedTime!);
-                    Navigator.of(context).pop();
-                  }
-                },
-                child: Text('Dodaj'),
-              ),
             ],
-          );
-        });
-      },
-    );
-  }
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
+              child: Text('Otkaži'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedDate != null &&
+                    selectedTime != null &&
+                    _selectedClass != null &&
+                    _selectedAnnualPlanProgram != null) {
+                  _addClassForDay(selectedDate!, selectedTime!);
+                  Navigator.of(context).pop();
+                }
+              },
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.white,backgroundColor: Colors.green),
+              child: Text('Dodaj'),
+            ),
+          ],
+        );
+      });
+    },
+  );
+}
+
 
   void _addClassForDay(DateTime date, String time) async {
     List<String> timeParts = time.split(':');

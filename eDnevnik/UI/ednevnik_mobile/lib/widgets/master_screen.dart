@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../screens/calendar_screen.dart';
 import '../screens/department_screen.dart';
 import '../screens/help_support_screen.dart';
+import '../screens/info_student_screen.dart';
 import '../screens/messages_screen.dart';
 import '../screens/report_screen.dart';
 import '../screens/student_screen.dart';
@@ -176,20 +177,11 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.group),
-              title: Text("Odjeljenja"),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DepartmentDetailScreen(),
-                ));
-              },
-            ),
-            ListTile(
               leading: Icon(Icons.person),
-              title: Text("Učenici"),
+              title: Text("Ocjene"),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => StudentDetailScreen(),
+                  builder: (context) => InfoStudentDetailScreen(),
                 ));
               },
             ),
@@ -213,15 +205,6 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ProfilScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.help_outline),
-              title: Text("Pomoć i podrška"),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => HelpPage(),
                 ));
               },
             ),

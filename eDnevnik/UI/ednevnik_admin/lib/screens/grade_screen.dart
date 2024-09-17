@@ -265,12 +265,15 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
           ),
           actions: <Widget>[
             TextButton(
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
               child: Text('Odustani'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.green),
               child: Text('Dodaj'),
               onPressed: () async {
                 if (selectedSubject != null) {
@@ -560,6 +563,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
           ),
           actions: <Widget>[
             TextButton(
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
               child: Text('Zatvori'),
               onPressed: () {
                 Navigator.of(context).pop();
