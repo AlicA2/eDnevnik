@@ -16,21 +16,5 @@ namespace eDnevnik.Controllers
         {
             _service = service;
         }
-
-        //[HttpPost("{casoviID}/update-attendance")]
-        //public async Task<IActionResult> UpdateAttendance(int casoviID, [FromBody] List<CasoviUceniciInsertRequest> attendanceList)
-        //{
-        //    try
-        //    {
-        //        await _service.UpdateAttendance(casoviID, attendanceList);
-        //        return Ok("Attendance updated successfully.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-
     }
 }
