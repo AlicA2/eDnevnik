@@ -14,5 +14,7 @@ namespace eDnevnik.Services.Database
         public int GodisnjiPlanProgramID { get; set; }
         public DateTime? DatumOdrzavanjaCasa { get; set; }
         public virtual GodisnjiPlanProgram GodisnjiPlanProgram { get; set; }
+        public bool IsOdrzan { get; set; }
+        public virtual ICollection<CasoviUcenici> CasoviUcenici { get; set; } = new List<CasoviUcenici>();
     }
 }

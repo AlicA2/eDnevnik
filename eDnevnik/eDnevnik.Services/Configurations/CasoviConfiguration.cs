@@ -15,6 +15,11 @@ namespace eDnevnik.Services.Configurations
                 .WithMany(g => g.Casovi)
                 .HasForeignKey(c => c.GodisnjiPlanProgramID)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(c => c.CasoviUcenici)
+                .WithOne(cu => cu.Casovi)
+                .HasForeignKey(cu => cu.CasoviID)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

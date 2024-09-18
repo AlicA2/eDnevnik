@@ -58,6 +58,11 @@ namespace eDnevnik.Services
             CreateMap<Model.Requests.OcjeneInsertRequest, Services.Database.Ocjene>();
             CreateMap<Model.Requests.OcjeneUpdateRequest, Services.Database.Ocjene>();
             CreateMap<Model.Requests.OcjeneDeleteRequest, Services.Database.Ocjene>();
+
+            CreateMap<Database.CasoviUcenici, Model.Models.CasoviUcenici>();
+            CreateMap<Model.Requests.CasoviUceniciInsertRequest, Services.Database.CasoviUcenici>();
+            CreateMap<Model.Requests.CasoviUceniciUpdateRequest, Services.Database.CasoviUcenici>();
+            CreateMap<Model.Requests.CasoviUceniciDeleteRequest, Services.Database.CasoviUcenici>();
         }
     }
 }
