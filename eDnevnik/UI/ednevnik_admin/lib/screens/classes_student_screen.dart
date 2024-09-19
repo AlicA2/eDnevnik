@@ -1,5 +1,10 @@
+import 'package:ednevnik_admin/models/annual_plan_program.dart';
 import 'package:ednevnik_admin/models/classes.dart';
+import 'package:ednevnik_admin/models/department.dart';
+import 'package:ednevnik_admin/models/user.dart';
+import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/classes_provider.dart';
+import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,14 +20,21 @@ class ClassesHeldDetailScreen extends StatefulWidget {
 
 class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
   late ClassesProvider _classesProvider;
+  late AnnualPlanProgramProvider _annualPlanProgramProvider;
+  late DepartmentProvider _departmentProvider;
+
   Classes? _fetchedClass;
   bool _isLoading = true;
   bool? _isOdrzan;
+  Department? _fetchedDepartment;
 
   @override
   void initState() {
     super.initState();
     _classesProvider = context.read<ClassesProvider>();
+    _annualPlanProgramProvider = context.read<AnnualPlanProgramProvider>();
+    _departmentProvider = context.read<DepartmentProvider>();
+
     _fetchClasses();
   }
 
@@ -38,12 +50,60 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
           _isOdrzan = _fetchedClass?.isOdrzan;
           _isLoading = false;
         });
+
+        await _fetchAnnualPlanProgram(_fetchedClass?.godisnjiPlanProgramID);
       }
     } catch (e) {
       print("Failed to fetch classes: $e");
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _fetchAnnualPlanProgram(int? godisnjiPlanProgramID) async {
+    if (godisnjiPlanProgramID == null) {
+      print("Annual Plan Program ID is null");
+      return;
+    }
+
+    try {
+      var annualPlanProgramResponse = await _annualPlanProgramProvider.get(filter: {
+        'GodisnjiPlanProgramID': godisnjiPlanProgramID,
+      });
+
+      if (annualPlanProgramResponse != null && annualPlanProgramResponse.result.isNotEmpty) {
+        AnnualPlanProgram annualPlanProgram = annualPlanProgramResponse.result.first;
+        await _fetchDepartment(annualPlanProgram.odjeljenjeID);
+      } else {
+        print("No Annual Plan Program found for GodisnjiPlanProgramID: $godisnjiPlanProgramID");
+      }
+    } catch (e) {
+      print("Failed to fetch Annual Plan Program: $e");
+    }
+  }
+
+  Future<void> _fetchDepartment(int? odjeljenjeID) async {
+    if (odjeljenjeID == null) {
+      print("Department ID is null");
+      return;
+    }
+
+    try {
+      var departmentResponse = await _departmentProvider.get(filter: {
+        'OdjeljenjeID': odjeljenjeID,
+        'isUceniciIncluded':true,
+      });
+
+      if (departmentResponse != null && departmentResponse.result.isNotEmpty) {
+        setState(() {
+          _fetchedDepartment = departmentResponse.result.first;
+        });
+      } else {
+        print("No Department found for OdjeljenjeID: $odjeljenjeID");
+      }
+    } catch (e) {
+      print("Failed to fetch Department: $e");
     }
   }
 
@@ -94,6 +154,9 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
                         children: [
                           _buildScreenName(),
                           SizedBox(height: 16.0),
+                          _fetchedDepartment != null && _fetchedDepartment!.ucenici != null
+                              ? _buildUsersTable(_fetchedDepartment!.ucenici!)
+                              : SizedBox(),
                         ],
                       ),
                     ),
@@ -181,6 +244,24 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildUsersTable(List<User> ucenici) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DataTable(
+        columns: const [
+          DataColumn(label: Text('Ime')),
+          DataColumn(label: Text('Prezime')),
+        ],
+        rows: ucenici
+            .map((user) => DataRow(cells: [
+                  DataCell(Text(user.ime ?? '')),
+                  DataCell(Text(user.prezime ?? '')),
+                ]))
+            .toList(),
       ),
     );
   }
