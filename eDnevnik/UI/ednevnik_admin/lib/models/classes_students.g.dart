@@ -8,16 +8,18 @@ part of 'classes_students.dart';
 
 ClassesStudents _$ClassesStudentsFromJson(Map<String, dynamic> json) =>
     ClassesStudents(
-      (json['casoviStudentiID'] as num?)?.toInt(),
+      (json['casoviUceniciID'] as num?)?.toInt(),
       (json['casoviID'] as num?)?.toInt(),
       (json['ucenikID'] as num?)?.toInt(),
       json['isPrisutan'] as bool?,
+      json['zakljucan'] as bool?,
     );
 
 Map<String, dynamic> _$ClassesStudentsToJson(ClassesStudents instance) =>
     <String, dynamic>{
-      'casoviStudentiID': instance.casoviStudentiID,
+      'casoviUceniciID': instance.casoviUceniciID,
       'casoviID': instance.casoviID,
       'ucenikID': instance.ucenikID,
       'isPrisutan': instance.isPrisutan,
+      'zakljucan': instance.zakljucan,
     };

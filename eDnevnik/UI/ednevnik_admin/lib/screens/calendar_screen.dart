@@ -539,22 +539,25 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
               title: Text(
                 "$time ${classItem.nazivCasa ?? "N/A"}",
               ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.info_outline, color: Colors.blue),
-                    onPressed: () {
-                      _navigateToClassDetails(classItem.casoviID ?? 0);
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      _confirmDeleteClass(classItem);
-                    },
-                  ),
-                ],
+              trailing: Padding(
+                padding: const EdgeInsets.only(left:8.0,right:8.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.upload_outlined, color: Colors.blue),
+                      onPressed: () {
+                        _navigateToClassDetails(classItem.casoviID ?? 0);
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        _confirmDeleteClass(classItem);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -32,6 +32,7 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
   Department? _fetchedDepartment;
   List<ClassesStudents>? _classesStudentsList;
   bool _allPresent = false;
+  bool _isSubmitted = false;
 
   @override
   void initState() {
@@ -137,6 +138,8 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
         setState(() {
           _classesStudentsList = response.result;
         });
+      } else {
+        print("No ClassesStudents found for CasoviID: ${widget.casoviID}");
       }
     } catch (e) {
       print("Failed to fetch ClassesStudents: $e");
@@ -184,6 +187,43 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
     }
   }
 
+  Future<void> _updateStudentsPresenceAndLock() async {
+    if (_classesStudentsList == null || _classesStudentsList!.isEmpty) {
+      print("No students to update.");
+      return;
+    }
+
+    try {
+      for (var student in _classesStudentsList!) {
+        if (student.casoviUceniciID == null) {
+          print(
+              "Skipping student ${student.ucenikID} as CasoviStudentiID is null.");
+          continue;
+        }
+
+        var updateRequest = {
+          'CasoviID': widget.casoviID,
+          'UcenikID': student.ucenikID,
+          'IsPrisutan': student.isPrisutan,
+          'Zakljucan': true,
+          'CasoviStudentiID': student.casoviUceniciID,
+        };
+
+        await _classesStudentsProvider.Update(
+            student.casoviUceniciID!, updateRequest);
+        student.zakljucan = true;
+      }
+
+      setState(() {
+        _isSubmitted = true;
+      });
+
+      print("All students updated and locked successfully!");
+    } catch (e) {
+      print("Failed to update and lock student presence: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
@@ -211,6 +251,9 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
                               ? _buildClassesStudentsTable(
                                   _classesStudentsList!)
                               : SizedBox(),
+                          SizedBox(height: 16.0),
+                          if (_isOdrzan == true && !_isSubmitted)
+                            _buildAddPresenceButton(),
                         ],
                       ),
                     ),
@@ -273,7 +316,7 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
                 children: [
                   Checkbox(
                     value: _allPresent,
-                    onChanged: _isOdrzan == true
+                    onChanged: (_isOdrzan == true && !_isSubmitted)
                         ? (value) {
                             _toggleAllPresent(value ?? false);
                           }
@@ -283,7 +326,6 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
                     "Svi prisutni",
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
@@ -304,18 +346,18 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
             "Da li je čas održan: ",
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: Row(
               children: [
                 ElevatedButton(
-                  onPressed: () => _updateClassOdrzan(true),
+                  onPressed:
+                      _isSubmitted ? null : () => _updateClassOdrzan(true),
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
-                        _isOdrzan == true ? Colors.green : Colors.grey,
+                        (_isOdrzan == true) ? Colors.green : Colors.grey,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -325,10 +367,11 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
                 ),
                 SizedBox(width: 10),
                 ElevatedButton(
-                  onPressed: () => _updateClassOdrzan(false),
+                  onPressed:
+                      _isSubmitted ? null : () => _updateClassOdrzan(false),
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
-                        _isOdrzan == false ? Colors.red : Colors.grey,
+                        (_isOdrzan == false) ? Colors.red : Colors.grey,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -365,7 +408,9 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
             DataCell(
               Checkbox(
                 value: classStudent.isPrisutan,
-                onChanged: _isOdrzan == true
+                onChanged: (_isOdrzan == true &&
+                        !_isSubmitted &&
+                        classStudent.zakljucan != true)
                     ? (value) {
                         _toggleStudentPresent(
                             classStudent.ucenikID!, value ?? false);
@@ -376,6 +421,20 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
           ]);
         }).toList(),
       ),
+    );
+  }
+
+  Widget _buildAddPresenceButton() {
+    return ElevatedButton(
+      onPressed: _isSubmitted ? null : _updateStudentsPresenceAndLock,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: _isSubmitted ? Colors.grey : Colors.blue,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      child: Text('Dodaj prisustvo'),
     );
   }
 }
