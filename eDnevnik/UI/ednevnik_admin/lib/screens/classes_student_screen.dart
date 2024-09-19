@@ -31,6 +31,7 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
   bool? _isOdrzan;
   Department? _fetchedDepartment;
   List<ClassesStudents>? _classesStudentsList;
+  bool _allPresent = false;
 
   @override
   void initState() {
@@ -220,6 +221,25 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
     );
   }
 
+  Future<void> _toggleAllPresent(bool value) async {
+    setState(() {
+      _allPresent = value;
+      for (var student in _classesStudentsList!) {
+        student.isPrisutan = value;
+      }
+    });
+  }
+
+  Future<void> _toggleStudentPresent(int studentId, bool value) async {
+    setState(() {
+      var student =
+          _classesStudentsList!.firstWhere((s) => s.ucenikID == studentId);
+      student.isPrisutan = value;
+
+      _allPresent = _classesStudentsList!.every((s) => s.isPrisutan == true);
+    });
+  }
+
   Widget _buildScreenName() {
     return Align(
       alignment: Alignment.centerLeft,
@@ -246,7 +266,30 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
             ),
           ),
           Spacer(),
-          _buildConfirmationRow(),
+          Column(
+            children: [
+              _buildConfirmationRow(),
+              Row(
+                children: [
+                  Checkbox(
+                    value: _allPresent,
+                    onChanged: _isOdrzan == true
+                        ? (value) {
+                            _toggleAllPresent(value ?? false);
+                          }
+                        : null,
+                  ),
+                  Text(
+                    "Svi prisutni",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -254,7 +297,7 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
 
   Widget _buildConfirmationRow() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(left: 16.0, right: 16),
       child: Row(
         children: [
           Text(
@@ -319,7 +362,17 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
           return DataRow(cells: [
             DataCell(Text(user?.ime ?? '')),
             DataCell(Text(user?.prezime ?? '')),
-            DataCell(Text(classStudent.isPrisutan == true ? 'Da' : 'Ne')),
+            DataCell(
+              Checkbox(
+                value: classStudent.isPrisutan,
+                onChanged: _isOdrzan == true
+                    ? (value) {
+                        _toggleStudentPresent(
+                            classStudent.ucenikID!, value ?? false);
+                      }
+                    : null,
+              ),
+            ),
           ]);
         }).toList(),
       ),

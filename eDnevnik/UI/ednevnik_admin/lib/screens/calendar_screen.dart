@@ -575,6 +575,26 @@ void _navigateToClassDetails(int casoviID) {
 
 
   void _confirmDeleteClass(Classes classItem) async {
+  if (classItem.isOdrzan == true) {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Brisanje nije moguće'),
+          content: Text('Ne možete obrisati čas koji je već održan.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
+              child: Text('U redu'),
+            ),
+          ],
+        );
+      },
+    );
+  } else {
     bool? isConfirmed = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -608,6 +628,7 @@ void _navigateToClassDetails(int casoviID) {
       _deleteClass(classItem);
     }
   }
+}
 
   void _deleteClass(Classes classItem) async {
     try {
