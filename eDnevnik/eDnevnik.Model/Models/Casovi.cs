@@ -12,6 +12,7 @@ namespace eDnevnik.Model.Models
         public string NazivCasa { get; set; }
         public string Opis { get; set; }
         public int GodisnjiPlanProgramID { get; set; }
+        public bool? IsOdrzan { get; set; }
         public DateTime? DatumOdrzavanjaCasa { get; set; }
     }
 }

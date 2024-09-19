@@ -12,5 +12,6 @@ namespace eDnevnik.Model.Requests
         public string? Opis { get; set; }
         public int? GodisnjiPlanProgramID { get; set; }
         public DateTime? DatumOdrzavanjaCasa { get; set; }
+        public bool? isOdrzan { get; set; }
     }
 }

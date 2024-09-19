@@ -27,8 +27,8 @@ class _ClassesDetailScreenState extends State<ClassesDetailScreen> {
   TextEditingController _nazivController = TextEditingController();
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     _classesProvider = context.read<ClassesProvider>();
     _subjectProvider = context.read<SubjectProvider>();
     _fetchSubject();

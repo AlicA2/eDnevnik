@@ -39,30 +39,5 @@ namespace eDnevnik.Services.Service
 
             return base.AddFilter(query, search);
         }
-
-        //public async Task UpdateAttendance(int casoviID, List<CasoviUceniciInsertRequest> attendanceList)
-        //{
-        //    foreach (var attendance in attendanceList)
-        //    {
-        //        var entity = _context.CasoviUcenici.FirstOrDefault(x => x.CasoviID == casoviID && x.UcenikID == attendance.UcenikID);
-        //        if (entity != null)
-        //        {
-        //            entity.IsPrisutan = attendance.IsPrisutan;
-        //            _context.CasoviUcenici.Update(entity);
-        //        }
-        //        else
-        //        {
-        //            var newEntity = new CasoviUcenici
-        //            {
-        //                CasoviID = casoviID,
-        //                UcenikID = attendance.UcenikID,
-        //                IsPrisutan = attendance.IsPrisutan
-        //            };
-        //            _context.CasoviUcenici.Add(newEntity);
-        //        }
-        //    }
-        //    await _context.SaveChangesAsync();
-        //}
-
     }
 }

@@ -1,5 +1,6 @@
 import 'package:ednevnik_admin/models/department_subject.dart';
 import 'package:ednevnik_admin/providers/department_subject_provider.dart';
+import 'package:ednevnik_admin/screens/classes_student_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -504,54 +505,74 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   }
 
   Widget _buildSelectedClasses() {
-    List<Classes> selectedDayClasses = _getClassesForDay(_selectedDay!);
+  List<Classes> selectedDayClasses = _getClassesForDay(_selectedDay!);
 
-    if (selectedDayClasses.isEmpty) {
-      return Text("Nema časova za selektirani dan.");
-    }
+  if (selectedDayClasses.isEmpty) {
+    return Text("Nema časova za selektirani dan.");
+  }
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 16),
-      child: Column(
-        children: selectedDayClasses.map((classItem) {
-          String time = classItem.datumOdrzavanjaCasa != null
-              ? "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}"
-              : "N/A";
+  return Padding(
+    padding: const EdgeInsets.only(left: 16, right: 16),
+    child: Column(
+      children: selectedDayClasses.map((classItem) {
+        String time = classItem.datumOdrzavanjaCasa != null
+            ? "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}"
+            : "N/A";
 
-          return Container(
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            decoration: BoxDecoration(
-              color: Color(0xFFF7F2FA),
-              borderRadius: BorderRadius.circular(10.0),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4.0,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16),
-              child: ListTile(
-                contentPadding: const EdgeInsets.all(8.0),
-                title: Text(
-                  "$time ${classItem.nazivCasa ?? "N/A"}",
-                  //style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () {
-                    _confirmDeleteClass(classItem);
-                  },
-                ),
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          decoration: BoxDecoration(
+            color: Color(0xFFF7F2FA),
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 4.0,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16),
+            child: ListTile(
+              contentPadding: const EdgeInsets.all(8.0),
+              title: Text(
+                "$time ${classItem.nazivCasa ?? "N/A"}",
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.info_outline, color: Colors.blue),
+                    onPressed: () {
+                      _navigateToClassDetails(classItem.casoviID ?? 0);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      _confirmDeleteClass(classItem);
+                    },
+                  ),
+                ],
               ),
             ),
-          );
-        }).toList(),
-      ),
-    );
-  }
+          ),
+        );
+      }).toList(),
+    ),
+  );
+}
+
+void _navigateToClassDetails(int casoviID) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ClassesHeldDetailScreen(casoviID: casoviID),
+    ),
+  );
+}
+
 
   void _confirmDeleteClass(Classes classItem) async {
     bool? isConfirmed = await showDialog(
