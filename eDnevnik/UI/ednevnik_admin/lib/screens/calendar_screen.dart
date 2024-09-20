@@ -397,26 +397,31 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      child: Container(
-        color: Color(0xFFF7F2FA),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  _buildScreenName(),
-                  SizedBox(height: 16.0),
-                  _buildCalendar(),
-                  SizedBox(height: 20),
-                  if (_selectedDay != null) _buildSelectedClasses(),
-                  SizedBox(height: 20),
-                  _buildAddClassesButton(),
-                ],
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Color(0xFFF7F2FA),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildScreenName(),
+                    SizedBox(height: 16.0),
+                    _buildCalendar(),
+                    SizedBox(height: 20),
+                    if (_selectedDay != null) _buildSelectedClasses(),
+                    SizedBox(height: 20),
+                    _buildAddClassesButton(),
+                  ],
+                ),
               ),
             ),
           ),

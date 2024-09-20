@@ -425,16 +425,21 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
   }
 
   Widget _buildAddPresenceButton() {
-    return ElevatedButton(
-      onPressed: _isSubmitted ? null : _updateStudentsPresenceAndLock,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: _isSubmitted ? Colors.grey : Colors.blue,
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      child: Text('Dodaj prisustvo'),
-    );
-  }
+  bool allStudentsLocked = _classesStudentsList?.every((student) => student.zakljucan == true) ?? true;
+
+  return (allStudentsLocked || !_isOdrzan!)
+      ? SizedBox()
+      : ElevatedButton(
+          onPressed: _isSubmitted ? null : _updateStudentsPresenceAndLock,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _isSubmitted ? Colors.grey : Colors.blue,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          child: Text('Dodaj prisustvo'),
+        );
+}
+
 }
