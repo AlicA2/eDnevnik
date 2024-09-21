@@ -9,8 +9,9 @@ class Classes{
   String? opis;
   int? godisnjiPlanProgramID;
   DateTime? datumOdrzavanjaCasa;
+  bool? isOdrzan;
 
-  Classes(this.casoviID,this.nazivCasa,this.opis,this.godisnjiPlanProgramID,this.datumOdrzavanjaCasa);
+  Classes(this.casoviID,this.nazivCasa,this.opis,this.godisnjiPlanProgramID,this.datumOdrzavanjaCasa,this.isOdrzan);
 
     /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

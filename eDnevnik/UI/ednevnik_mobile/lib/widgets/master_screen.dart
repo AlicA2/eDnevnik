@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../screens/calendar_screen.dart';
 import '../screens/help_support_screen.dart';
+import '../screens/info_attendance_screen.dart';
 import '../screens/info_student_screen.dart';
 import '../screens/messages_screen.dart';
 import '../screens/report_screen.dart';
@@ -179,6 +180,15 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => InfoStudentDetailScreen(),
+                ));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text("Prisustvo"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => InfoAttendanceDetailScreen(),
                 ));
               },
             ),

@@ -14,6 +14,7 @@ Classes _$ClassesFromJson(Map<String, dynamic> json) => Classes(
       json['datumOdrzavanjaCasa'] == null
           ? null
           : DateTime.parse(json['datumOdrzavanjaCasa'] as String),
+      json['isOdrzan'] as bool?,
     );
 
 Map<String, dynamic> _$ClassesToJson(Classes instance) => <String, dynamic>{
@@ -22,4 +23,5 @@ Map<String, dynamic> _$ClassesToJson(Classes instance) => <String, dynamic>{
       'opis': instance.opis,
       'godisnjiPlanProgramID': instance.godisnjiPlanProgramID,
       'datumOdrzavanjaCasa': instance.datumOdrzavanjaCasa?.toIso8601String(),
+      'isOdrzan': instance.isOdrzan,
     };

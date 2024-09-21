@@ -45,6 +45,7 @@ dependencies:
   fl_chart: ^0.69.0
   pdf: ^3.11.1
   printing: ^5.7.2
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   json_serializable: ^6.8.0
