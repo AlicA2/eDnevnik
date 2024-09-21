@@ -42,6 +42,7 @@ class _InfoAttendanceDetailScreenState
   List<ClassesStudents> zakljucaniClassesStudents = [];
 
   Map<int, double> attendancePercentage = {};
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -69,7 +70,7 @@ class _InfoAttendanceDetailScreenState
               user.korisnikId == loggedInUser?.korisnikId)) {
             userDepartment = department.odjeljenjeID;
 
-            _fetchAnnualPlanPrograms();
+            await _fetchAnnualPlanPrograms();
             break;
           }
         }
@@ -142,28 +143,49 @@ class _InfoAttendanceDetailScreenState
   }
 
   Future<void> _fetchClassesStudentsForOdrzaniCasovi() async {
-    int attendedClasses = 0;
     try {
+      Map<int, int> subjectTotalClasses = {};
+      Map<int, int> subjectAttendedClasses = {};
+
       for (var casovi in odrzaniCasovi) {
-        var classesStudentsResponse = await _classesStudentsProvider.get(filter: {
-          'CasoviID': casovi.casoviID,
-          'UcenikID': loggedInUser?.korisnikId
-        });
+        int? subjectID = annualPlanPrograms
+            .firstWhere((program) =>
+        program.godisnjiPlanProgramID == casovi.godisnjiPlanProgramID)
+            .predmetID;
 
-        var classesStudentList = classesStudentsResponse.result;
+        if (subjectID != null) {
+          subjectTotalClasses[subjectID] = (subjectTotalClasses[subjectID] ?? 0) + 1;
 
-        for (var student in classesStudentList) {
-          if (student.isPrisutan == true) {
-            attendedClasses = attendedClasses + 1;
-            print("Casovi na kojima je prisutan : $attendedClasses");
+          var classesStudentsResponse = await _classesStudentsProvider.get(filter: {
+            'CasoviID': casovi.casoviID,
+            'UcenikID': loggedInUser?.korisnikId
+          });
+
+          var classesStudentList = classesStudentsResponse.result;
+
+          for (var student in classesStudentList) {
+            if (student.isPrisutan == true) {
+              subjectAttendedClasses[subjectID] =
+                  (subjectAttendedClasses[subjectID] ?? 0) + 1;
+            }
           }
         }
-
-        double percentage = (attendedClasses / odrzaniCasovi.length) * 100;
-        print("Postotak: $percentage");
-        print("Odrzani casovi duzina: ${odrzaniCasovi.length}");
-        attendancePercentage[casovi.casoviID!] = percentage;
       }
+
+      subjectTotalClasses.forEach((subjectID, totalClasses) {
+        int attendedClasses = subjectAttendedClasses[subjectID] ?? 0;
+        double percentage = (attendedClasses / totalClasses) * 100;
+
+        setState(() {
+          attendancePercentage[subjectID] = percentage;
+        });
+
+        print("Subject ID: $subjectID, Percentage: $percentage%");
+      });
+
+      setState(() {
+        isLoading = false;
+      });
     } catch (e) {
       print('Error fetching ClassesStudents: $e');
     }
@@ -187,7 +209,9 @@ class _InfoAttendanceDetailScreenState
               color: Colors.white,
               borderRadius: BorderRadius.circular(20.0),
             ),
-            child: SingleChildScrollView(
+            child: isLoading
+                ? Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
               child: Column(
                 children: [
                   _buildScreenName(),
@@ -252,9 +276,15 @@ class _InfoAttendanceDetailScreenState
         double percentage = attendancePercentage[subjectID] ?? 0.0;
 
         return ListTile(
-          title: Text(subject.naziv ?? "Unknown Subject"),
-          subtitle: Row(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Text(
+                subject.naziv ?? "Unknown Subject",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 8.0),
               CircularPercentIndicator(
                 radius: 60.0,
                 lineWidth: 5.0,
@@ -262,12 +292,18 @@ class _InfoAttendanceDetailScreenState
                 center: Text("${percentage.toStringAsFixed(1)}%"),
                 progressColor: Colors.green,
               ),
-              SizedBox(width: 16.0),
-              Text("Attendance: ${percentage.toStringAsFixed(1)}%"),
+              SizedBox(height: 8.0),
+              Text(
+                "Prisustvo: ${percentage.toStringAsFixed(1)}%",
+                style: TextStyle(fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
+          contentPadding: EdgeInsets.symmetric(vertical: 10.0),
         );
       },
     );
   }
+
 }
