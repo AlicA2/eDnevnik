@@ -35,6 +35,10 @@ namespace eDnevnik.Services.Service
                 {
                     query = query.Where(x => x.IsPrisutan == search.IsPrisutan.Value);
                 }
+                if (search.zakljucan.HasValue)
+                {
+                    query = query.Where(x => x.zakljucan == search.zakljucan.Value);
+                }
             }
 
             return base.AddFilter(query, search);
