@@ -52,6 +52,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
               child: Text("Odustani"),
             ),
             TextButton(
@@ -61,6 +62,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                   builder: (context) => LoginPage(),
                 ));
               },
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.white,backgroundColor: Colors.red),
               child: Text("Odjava"),
             ),
           ],
