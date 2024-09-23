@@ -29,10 +29,10 @@ class _ProfilScreenState extends State<ProfilScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
   final _changePasswordFormKey = GlobalKey<FormState>();
- bool _isChangePasswordButtonPressed = false;
+  bool _isChangePasswordButtonPressed = false;
   @override
   void initState() {
     super.initState();
@@ -70,6 +70,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
       var result = await _korisniciProvider.getById(korisnikId);
       setState(() {
         widget.korisnik = result;
+        _usernameController.text = widget.korisnik?.korisnickoIme ?? '';
       });
     } catch (e) {
       print('Greška prilikom dobijanja podataka o korisniku: $e');
@@ -84,27 +85,25 @@ class _ProfilScreenState extends State<ProfilScreen> {
     });
   }
 
-@override
-Widget build(BuildContext context) {
-  return MasterScreenWidget(
-    child: Align(
-      alignment: Alignment.topLeft,
-      child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildDataListView(),
-            ],
+  @override
+  Widget build(BuildContext context) {
+    return MasterScreenWidget(
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildDataListView(),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
-
-
+    );
+  }
 
   Widget _buildDataListView() {
     return Column(children: [
@@ -286,6 +285,9 @@ Widget build(BuildContext context) {
                     onPressed: () {
                       _updateUserProfile();
                     },
+                    style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.green),
                     child: const Text('Spasi'),
                   ),
                   const SizedBox(width: 20),
@@ -295,6 +297,8 @@ Widget build(BuildContext context) {
                         isEditing = false;
                       });
                     },
+                    style:
+                    ElevatedButton.styleFrom(foregroundColor: Colors.black),
                     child: const Text('Odustani'),
                   ),
                 ],
@@ -306,7 +310,7 @@ Widget build(BuildContext context) {
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 20),
           child:
-              _buildInfoRow(Icons.verified_user, 'Ime:', widget.korisnik!.ime),
+          _buildInfoRow(Icons.verified_user, 'Ime:', widget.korisnik!.ime),
         ),
         const SizedBox(height: 10),
         Padding(
@@ -323,7 +327,7 @@ Widget build(BuildContext context) {
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 20),
           child:
-              _buildInfoRow(Icons.phone, 'Telefon:', widget.korisnik!.telefon),
+          _buildInfoRow(Icons.phone, 'Telefon:', widget.korisnik!.telefon),
         ),
         const SizedBox(height: 10),
       ] else ...[
@@ -409,162 +413,164 @@ Widget build(BuildContext context) {
     );
   }
 
-Widget _buildUserIcon() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      Padding(
-        padding: const EdgeInsets.only(right: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Column(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    _showSettingsMenu(context);
-                  },
-                  icon: const Icon(Icons.settings, size: 35),
-                ),
-                const Text(
-                  'Postavke',
-                  style: TextStyle(fontSize: 14),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      CircleAvatar(
-        backgroundColor: Colors.blue,
-        radius: 60,
-        child: Container(
-          padding: const EdgeInsets.all(4),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
+  Widget _buildUserIcon() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(right: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Column(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      _showSettingsMenu(context);
+                    },
+                    icon: const Icon(Icons.settings, size: 35),
+                  ),
+                  const Text(
+                    'Postavke',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+            ],
           ),
-          child: const CircleAvatar(
-            radius: 58,
-            backgroundColor: Colors.blue,
-            child: Icon(
-              Icons.person,
-              size: 60,
+        ),
+        CircleAvatar(
+          backgroundColor: Colors.blue,
+          radius: 60,
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: const BoxDecoration(
               color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            child: const CircleAvatar(
+              radius: 58,
+              backgroundColor: Colors.blue,
+              child: Icon(
+                Icons.person,
+                size: 60,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
-      ),
-    ],
-  );
-}
-
-
+      ],
+    );
+  }
 
   void _showChangePasswordDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Promijenite lozinku'),
-        content: Form(
-          key: _changePasswordFormKey,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: _oldPasswordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Trenutna lozinka',
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Promijenite lozinku'),
+          content: Form(
+            key: _changePasswordFormKey,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: _oldPasswordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Trenutna lozinka',
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Polje ne smije biti prazno';
+                      }
+                      if (_isChangePasswordButtonPressed &&
+                          value != Authorization.password) {
+                        return 'Trenutna lozinka nije ispravna';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        _isChangePasswordButtonPressed = false;
+                      });
+                      _changePasswordFormKey.currentState?.validate();
+                    },
                   ),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Polje ne smije biti prazno';
-                    }
-                    if (_isChangePasswordButtonPressed && value != Authorization.password) {
-                      return 'Trenutna lozinka nije ispravna';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    setState(() {
-                      _isChangePasswordButtonPressed = false;
-                    });
-                    _changePasswordFormKey.currentState?.validate();
-                  },
-                ),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Nova lozinka',
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Nova lozinka',
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Polje ne smije biti prazno';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      _changePasswordFormKey.currentState?.validate();
+                    },
                   ),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Polje ne smije biti prazno';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    _changePasswordFormKey.currentState?.validate();
-                  },
-                ),
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Ponovo unesite novu lozinku',
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Ponovo unesite novu lozinku',
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Polje ne smije biti prazno';
+                      }
+                      if (value != _passwordController.text) {
+                        return 'Lozinke se ne podudaraju';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      _changePasswordFormKey.currentState?.validate();
+                    },
                   ),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Polje ne smije biti prazno';
-                    }
-                    if (value != _passwordController.text) {
-                      return 'Lozinke se ne podudaraju';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    _changePasswordFormKey.currentState?.validate();
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              _oldPasswordController.clear();
-              _passwordController.clear();
-              _confirmPasswordController.clear();
-              setState(() {
-                _isChangePasswordButtonPressed = false;
-              });
-              Navigator.of(context).pop();
-            },
-            child: const Text('Odustani'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _isChangePasswordButtonPressed = true;
-              });
-              if (_changePasswordFormKey.currentState?.validate() ?? false) {
-                _changePassword();
-              }
-            },
-            child: const Text('Promijeni lozinku'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                _oldPasswordController.clear();
+                _passwordController.clear();
+                _confirmPasswordController.clear();
+                _usernameController.clear();
+                setState(() {
+                  _isChangePasswordButtonPressed = false;
+                });
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
+              child: const Text('Odustani'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _isChangePasswordButtonPressed = true;
+                });
+                if (_changePasswordFormKey.currentState?.validate() ?? false) {
+                  _changePassword();
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.green),
+              child: const Text('Promijeni lozinku'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> _changePassword() async {
     try {
@@ -592,9 +598,10 @@ Widget _buildUserIcon() {
                   Navigator.of(context).pop();
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => LoginPage()),
-                    (Route<dynamic> route) => false,
+                        (Route<dynamic> route) => false,
                   );
                 },
+                style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
                 child: const Text('Uredu'),
               ),
             ],
@@ -633,7 +640,7 @@ Widget _buildUserIcon() {
                 TextFormField(
                   controller: _usernameController,
                   decoration:
-                      const InputDecoration(labelText: 'Korisničko ime'),
+                  const InputDecoration(labelText: 'Korisničko ime'),
                 ),
                 TextFormField(
                   controller: _passwordController,
@@ -643,7 +650,7 @@ Widget _buildUserIcon() {
                 TextFormField(
                   controller: _confirmPasswordController,
                   decoration:
-                      const InputDecoration(labelText: 'Potvrdite lozinku'),
+                  const InputDecoration(labelText: 'Potvrdite lozinku'),
                   obscureText: true,
                 ),
               ],
@@ -654,6 +661,7 @@ Widget _buildUserIcon() {
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
               child: const Text('Odustani'),
             ),
             ElevatedButton(
@@ -661,6 +669,8 @@ Widget _buildUserIcon() {
                 _changePassword();
                 Navigator.of(context).pop();
               },
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.green),
               child: const Text('Promijeni lozinku'),
             ),
           ],
