@@ -57,6 +57,10 @@ namespace eDnevnik.Services.Service
                 {
                     query = query.Where(x => x.CasoviID == search.CasoviID.Value);
                 }
+                if (search.IsOdrzan.HasValue)
+                {
+                    query = query.Where(x => x.IsOdrzan == search.IsOdrzan.Value);
+                }
             }
 
             return base.AddFilter(query, search);

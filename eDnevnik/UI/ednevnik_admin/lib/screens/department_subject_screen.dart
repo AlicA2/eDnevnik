@@ -147,6 +147,7 @@ class _DepartmentSubjectDetailScreenState extends State<DepartmentSubjectDetailS
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
+                style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
                 child: Text("Odustani"),
               ),
               ElevatedButton(
@@ -169,6 +170,7 @@ class _DepartmentSubjectDetailScreenState extends State<DepartmentSubjectDetailS
                     Navigator.of(context).pop();
                   }
                 },
+                style: ElevatedButton.styleFrom(foregroundColor: Colors.white,backgroundColor: Colors.green),
                 child: Text("Dodaj"),
               ),
             ],
@@ -344,6 +346,7 @@ class _DepartmentSubjectDetailScreenState extends State<DepartmentSubjectDetailS
             onPressed: () {
               Navigator.of(context).pop();
             },
+            style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
             child: Text("Odustani"),
           ),
           ElevatedButton(
@@ -351,6 +354,7 @@ class _DepartmentSubjectDetailScreenState extends State<DepartmentSubjectDetailS
               await _deleteDepartmentSubject(subject);
               Navigator.of(context).pop();
             },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red,foregroundColor: Colors.white),
             child: Text("Obriši"),
           ),
         ],

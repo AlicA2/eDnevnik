@@ -111,6 +111,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
 
       setState(() {
         _annualPlanPrograms = annualPlanResponse.result;
+        print("Moj annualPlanPrograms: $_annualPlanPrograms");
       });
 
       await _fetchDepartmentSubjects();
@@ -120,12 +121,21 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   }
 
   List<AnnualPlanProgram> _getFilteredAnnualPlanPrograms() {
-    return _annualPlanPrograms.where((program) {
-      return _departmentSubjects.any((subject) =>
-          subject.predmetID == program.predmetID &&
-          subject.odjeljenjeID == program.odjeljenjeID);
-    }).toList();
-  }
+  Set<String> seenSubjects = {};
+  
+  return _annualPlanPrograms.where((program) {
+    String combinationKey = "${program.predmetID}-${program.odjeljenjeID}";
+    
+    if (!seenSubjects.contains(combinationKey)) {
+      seenSubjects.add(combinationKey);
+      return true;
+    }
+
+    return false;
+  }).toList();
+}
+
+
 
   Future<void> _fetchDepartmentSubjects() async {
     try {

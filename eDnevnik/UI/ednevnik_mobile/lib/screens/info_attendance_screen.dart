@@ -305,5 +305,4 @@ class _InfoAttendanceDetailScreenState
       },
     );
   }
-
 }
