@@ -13,7 +13,7 @@ namespace eDnevnik.Services.Database
         public string OpisDogadjaja { get; set; }
         public byte[]? Slika { get; set; }
         public DateTime DatumDogadjaja { get; set; }
-        public bool JeAktivan { get; set; }
+        public string? StateMachine { get; set; }
         public int SkolaID { get; set; }
         public virtual Skola Skola { get; set; }
         public virtual ICollection<KorisnikDogadjaj> KorisniciDogadjaji { get; set; } = new List<KorisnikDogadjaj>();

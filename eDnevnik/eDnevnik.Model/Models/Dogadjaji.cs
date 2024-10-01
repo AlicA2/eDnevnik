@@ -13,6 +13,7 @@ namespace eDnevnik.Model.Models
         public string OpisDogadjaja { get; set; }
         public byte[]? Slika { get; set; }
         public DateTime DatumDogadjaja { get; set; }
-        public bool JeAktivan { get; set; }
+        public string? StateMachine { get; set; }
+
     }
 }

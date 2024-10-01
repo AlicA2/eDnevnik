@@ -1,6 +1,7 @@
 using eDnevnik;
 using eDnevnik.Filters;
 using eDnevnik.Services;
+using eDnevnik.Services.DogadjajiStateMachine;
 using eDnevnik.Services.IServices;
 using eDnevnik.Services.KorisnikStateMachine;
 using eDnevnik.Services.Service;
@@ -29,6 +30,12 @@ builder.Services.AddTransient<BaseState>();
 builder.Services.AddTransient<InitialPredmetState>();
 builder.Services.AddTransient<ActivePredmetState>();
 builder.Services.AddTransient<DraftPredmetState>();
+
+builder.Services.AddTransient<BaseStateDogadjaji>();
+builder.Services.AddTransient<InitialDogadjajiState>();
+builder.Services.AddTransient<ActiveDogadjajiState>();
+builder.Services.AddTransient<DraftDogadjajiState>();
+
 
 builder.Services.AddControllers(x =>
 {
