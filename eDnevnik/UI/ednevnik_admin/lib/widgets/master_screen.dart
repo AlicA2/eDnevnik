@@ -4,6 +4,7 @@ import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/screens/calendar_screen.dart';
 import 'package:ednevnik_admin/screens/department_screen.dart';
+import 'package:ednevnik_admin/screens/events_screen.dart';
 import 'package:ednevnik_admin/screens/help_support_screen.dart';
 import 'package:ednevnik_admin/screens/messages_screen.dart';
 import 'package:ednevnik_admin/screens/report_screen.dart';
@@ -275,6 +276,15 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => ReportDetailScreen(),
+                        ));
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.event),
+                      title: Text("Događaji"),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => EventsDetailScreen(),
                         ));
                       },
                     ),
