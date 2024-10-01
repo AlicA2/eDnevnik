@@ -22,6 +22,7 @@ builder.Services.AddTransient<ISkolaService, SkolaService>();
 builder.Services.AddTransient<IOdjeljenjePredmetService, OdjeljenjePredmetService>();
 builder.Services.AddTransient<IOcjeneService, OcjeneService>();
 builder.Services.AddTransient<ICasoviUceniciService, CasoviUceniciService>();
+builder.Services.AddTransient<IDogadjajiService, DogadjajiService>();
 
 builder.Services.AddTransient<BaseState>();
 builder.Services.AddTransient<InitialPredmetState>();

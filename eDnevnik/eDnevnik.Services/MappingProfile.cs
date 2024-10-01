@@ -63,6 +63,11 @@ namespace eDnevnik.Services
             CreateMap<Model.Requests.CasoviUceniciInsertRequest, Services.Database.CasoviUcenici>();
             CreateMap<Model.Requests.CasoviUceniciUpdateRequest, Services.Database.CasoviUcenici>();
             CreateMap<Model.Requests.CasoviUceniciDeleteRequest, Services.Database.CasoviUcenici>();
+
+            CreateMap<Database.Dogadjaji, Model.Models.Dogadjaji>();
+            CreateMap<Model.Requests.DogadjajiInsertRequest, Services.Database.Dogadjaji>();
+            CreateMap<Model.Requests.DogadjajiUpdateRequest, Services.Database.Dogadjaji>();
+            CreateMap<Model.Requests.DogadjajiDeleteRequest, Services.Database.Dogadjaji>();
         }
     }
 }
