@@ -14,8 +14,8 @@ namespace eDnevnik.Services.Database
         public byte[]? Slika { get; set; }
         public DateTime DatumDogadjaja { get; set; }
         public string? StateMachine { get; set; }
-        public int SkolaID { get; set; }
+        public int? SkolaID { get; set; }
         public virtual Skola Skola { get; set; }
-        public virtual ICollection<KorisnikDogadjaj> KorisniciDogadjaji { get; set; } = new List<KorisnikDogadjaj>();
+        public virtual ICollection<KorisnikDogadjaj>? KorisniciDogadjaji { get; set; } = new List<KorisnikDogadjaj>();
     }
 }

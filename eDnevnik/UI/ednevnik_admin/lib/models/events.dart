@@ -10,11 +10,11 @@ class Events{
   String? opisDogadjaja;
   String? slika;
   DateTime? datumDogadjaja;
-  bool? jeAktivan;
+  String? stateMachine;
   int? skolaID;
   List<UserEvents>? korisniciDogadjaji;
 
-  Events(this.dogadjajID,this.nazivDogadjaja,this.opisDogadjaja,this.slika,this.datumDogadjaja,this.jeAktivan,this.skolaID,[this.korisniciDogadjaji]);
+  Events(this.dogadjajID,this.nazivDogadjaja,this.opisDogadjaja,this.slika,this.datumDogadjaja,this.stateMachine,this.skolaID,[this.korisniciDogadjaji]);
 
     /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

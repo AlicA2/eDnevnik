@@ -12,5 +12,6 @@ namespace eDnevnik.Model.Requests
         public string OpisDogadjaja { get; set; }
         public byte[]? Slika { get; set; }
         public DateTime DatumDogadjaja { get; set; }
+        public int? SkolaID { get; set; }
     }
 }

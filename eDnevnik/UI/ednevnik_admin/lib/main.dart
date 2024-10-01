@@ -4,10 +4,12 @@ import 'package:ednevnik_admin/providers/classes_provider.dart';
 import 'package:ednevnik_admin/providers/classes_students_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/department_subject_provider.dart';
+import 'package:ednevnik_admin/providers/events_provider.dart';
 import 'package:ednevnik_admin/providers/grade_provider.dart';
 import 'package:ednevnik_admin/providers/message_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
+import 'package:ednevnik_admin/providers/user_events_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
@@ -29,6 +31,9 @@ void main() {
       ChangeNotifierProvider(create: (_) => DepartmentSubjectProvider()),
       ChangeNotifierProvider(create: (_) => GradeProvider()),
       ChangeNotifierProvider(create: (_) => ClassesStudentsProvider()),
+      ChangeNotifierProvider(create: (_) => EventsProvider()),
+      ChangeNotifierProvider(create: (_) => UserEventsProvider()),
+
     ],
     child: const MyMaterialApp(),
   ));

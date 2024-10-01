@@ -14,7 +14,7 @@ Events _$EventsFromJson(Map<String, dynamic> json) => Events(
       json['datumDogadjaja'] == null
           ? null
           : DateTime.parse(json['datumDogadjaja'] as String),
-      json['jeAktivan'] as bool?,
+      json['stateMachine'] as String?,
       (json['skolaID'] as num?)?.toInt(),
       (json['korisniciDogadjaji'] as List<dynamic>?)
           ?.map((e) => UserEvents.fromJson(e as Map<String, dynamic>))
@@ -27,7 +27,7 @@ Map<String, dynamic> _$EventsToJson(Events instance) => <String, dynamic>{
       'opisDogadjaja': instance.opisDogadjaja,
       'slika': instance.slika,
       'datumDogadjaja': instance.datumDogadjaja?.toIso8601String(),
-      'jeAktivan': instance.jeAktivan,
+      'stateMachine': instance.stateMachine,
       'skolaID': instance.skolaID,
       'korisniciDogadjaji': instance.korisniciDogadjaji,
     };

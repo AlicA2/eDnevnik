@@ -14,6 +14,7 @@ namespace eDnevnik.Model.Models
         public byte[]? Slika { get; set; }
         public DateTime DatumDogadjaja { get; set; }
         public string? StateMachine { get; set; }
+        public int? SkolaID { get; set; }
 
     }
 }
