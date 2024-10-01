@@ -16,5 +16,7 @@ namespace eDnevnik.Services.Database
         public virtual ICollection<Odjeljenje> Odjeljenja { get; set; } = new List<Odjeljenje>();
         public virtual ICollection<Predmet> Predmeti { get; set; } = new List<Predmet>();
         public virtual ICollection<GodisnjiPlanProgram> GodisnjiPlanProgrami { get; set; } = new List<GodisnjiPlanProgram>();
+        public virtual ICollection<Dogadjaji> Dogadjaji { get; set; } = new List<Dogadjaji>();
+
     }
 }

@@ -21,5 +21,6 @@ namespace eDnevnik.Services.Database
         public virtual ICollection<KorisniciUloge> KorisniciUloge { get; } = new List<KorisniciUloge>();
         public int? OdjeljenjeID { get; set; }
         public virtual Odjeljenje Odjeljenje { get; set; }
+        public virtual ICollection<KorisnikDogadjaj> KorisniciDogadjaji { get; set; } = new List<KorisnikDogadjaj>();
     }
 }

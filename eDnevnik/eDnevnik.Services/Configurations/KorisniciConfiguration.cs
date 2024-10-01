@@ -20,6 +20,10 @@ namespace eDnevnik.Services.Configurations
                    .WithOne(ku => ku.Korisnik)
                    .HasForeignKey(ku => ku.KorisnikID)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(k => k.KorisniciDogadjaji)
+                   .WithOne(kd => kd.Korisnik)
+                   .HasForeignKey(kd => kd.KorisnikID);
         }
     }
 }

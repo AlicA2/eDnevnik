@@ -68,6 +68,11 @@ namespace eDnevnik.Services
             CreateMap<Model.Requests.DogadjajiInsertRequest, Services.Database.Dogadjaji>();
             CreateMap<Model.Requests.DogadjajiUpdateRequest, Services.Database.Dogadjaji>();
             CreateMap<Model.Requests.DogadjajiDeleteRequest, Services.Database.Dogadjaji>();
+
+            CreateMap<Database.KorisnikDogadjaj, Model.Models.KorisnikDogadjaj>();
+            CreateMap<Model.Requests.KorisnikDogadjajInsertRequest, Services.Database.KorisnikDogadjaj>();
+            CreateMap<Model.Requests.KorisnikDogadjajUpdateRequest, Services.Database.KorisnikDogadjaj>();
+            CreateMap<Model.Requests.KorisnikDogadjajDeleteRequest, Services.Database.KorisnikDogadjaj>();
         }
     }
 }
