@@ -147,7 +147,8 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
         child: ElevatedButton(
           onPressed: () => _showEventDialog(),
           style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
             backgroundColor: Colors.blue,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30.0),
@@ -167,96 +168,100 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   }
 
   Future<void> _showEventDialog() {
-  String? errorMessage;
+    String? errorMessage;
 
-  return showDialog(
-    context: context,
-    builder: (context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return AlertDialog(
-            title: Text("Dodaj Događaj"),
-            content: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildTextField("Naziv događaja", _nazivController),
-                    SizedBox(height: 16),
-                    _buildTextField("Opis događaja", _opisController),
-                    SizedBox(height: 16),
-                    _buildDateButton(),
-                    SizedBox(height:16),
-                    _buildImageButton(setState),
-                    SizedBox(height: 16),
-                    _buildImagePreview(),
-                    if (_isSlikaSelected) SizedBox(height: 16),
-                    if (errorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0),
-                        child: Text(
-                          errorMessage!,
-                          style: TextStyle(color: Colors.red),
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text("Dodaj Događaj"),
+              content: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildTextField("Naziv događaja", _nazivController),
+                      SizedBox(height: 16),
+                      _buildTextField("Opis događaja", _opisController),
+                      SizedBox(height: 16),
+                      _buildDateButton(),
+                      SizedBox(height: 16),
+                      _buildImageButton(setState),
+                      SizedBox(height: 16),
+                      _buildImagePreview(),
+                      if (_isSlikaSelected) SizedBox(height: 16),
+                      if (errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: Text(
+                            errorMessage!,
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text("Odustani"),
-                style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate() && _selectedDate != null && _base64Image != null) {
-                    setState(() {
-                      errorMessage = null;
-                    });
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Odustani"),
+                  style:
+                      ElevatedButton.styleFrom(foregroundColor: Colors.black),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate() &&
+                        _selectedDate != null &&
+                        _base64Image != null) {
+                      setState(() {
+                        errorMessage = null;
+                      });
 
-                    Events newEvent = Events(
-                      null,
-                      _nazivController.text,
-                      _opisController.text,
-                      _base64Image,
-                      _selectedDate,
-                      "active",
-                      _selectedSchool?.skolaID,
-                    );
+                      Events newEvent = Events(
+                        null,
+                        _nazivController.text,
+                        _opisController.text,
+                        _base64Image,
+                        _selectedDate,
+                        "active",
+                        _selectedSchool?.skolaID,
+                      );
 
-                    try {
-                      await _eventsProvider.Insert(newEvent);
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Događaj uspješno dodan")));
-                      _resetForm();
-                    } catch (e) {
-                      _showErrorDialog();
-                    }
-                  } else {
-                    setState(() {
-                      if (_selectedDate == null) {
-                        errorMessage = "Molimo odaberite datum događaja.";
-                      } else if (_base64Image == null) {
-                        errorMessage = "Molimo odaberite sliku za događaj.";
+                      try {
+                        await _eventsProvider.Insert(newEvent);
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Događaj uspješno dodan")));
+                        _resetForm();
+                      } catch (e) {
+                        _showErrorDialog();
                       }
-                    });
-                  }
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
-                child: Text("Dodaj"),
-              ),
-            ],
-          );
-        },
-      );
-    },
-  );
-}
-
-
+                    } else {
+                      setState(() {
+                        if (_selectedDate == null) {
+                          errorMessage = "Molimo odaberite datum događaja.";
+                        } else if (_base64Image == null) {
+                          errorMessage = "Molimo odaberite sliku za događaj.";
+                        }
+                      });
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white),
+                  child: Text("Dodaj"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
   Widget _buildTextField(String label, TextEditingController controller) {
     return Padding(
@@ -277,19 +282,24 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   Widget _buildImageButton(StateSetter setState) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
-      child: ElevatedButton(
-        onPressed: () async {
-          var result = await FilePicker.platform.pickFiles(type: FileType.image);
-          if (result != null && result.files.single.path != null) {
-            setState(() {
-              _image = File(result.files.single.path!);
-              _base64Image = base64Encode(_image!.readAsBytesSync());
-              _isSlikaSelected = true;
-            });
-          }
-        },
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.blue,foregroundColor: Colors.white),
-        child: Text("Odaberite sliku"),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () async {
+            var result =
+                await FilePicker.platform.pickFiles(type: FileType.image);
+            if (result != null && result.files.single.path != null) {
+              setState(() {
+                _image = File(result.files.single.path!);
+                _base64Image = base64Encode(_image!.readAsBytesSync());
+                _isSlikaSelected = true;
+              });
+            }
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue, foregroundColor: Colors.white),
+          child: Text("Odaberite sliku"),
+        ),
       ),
     );
   }
@@ -313,12 +323,18 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   Widget _buildDateButton() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
-      child: ElevatedButton(
-        onPressed: () => _selectDate(context),
-        child: Text(
-          _selectedDate == null ? "Odaberite datum događaja" : DateFormat('yyyy-MM-dd').format(_selectedDate!),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () => _selectDate(context),
+          child: Text(
+            _selectedDate == null
+                ? "Odaberite datum događaja"
+                : DateFormat('yyyy-MM-dd').format(_selectedDate!),
+          ),
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue, foregroundColor: Colors.white),
         ),
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.blue,foregroundColor: Colors.white),
       ),
     );
   }
@@ -338,35 +354,39 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   }
 
   Future<void> _submitEventForm() async {
-  if (_formKey.currentState!.validate() && _selectedDate != null && _base64Image != null) {
-    Events newEvent = Events(
-      null,
-      _nazivController.text,
-      _opisController.text,
-      _base64Image,
-      _selectedDate,
-      "active",
-      _selectedSchool?.skolaID,
-    );
+    if (_formKey.currentState!.validate() &&
+        _selectedDate != null &&
+        _base64Image != null) {
+      Events newEvent = Events(
+        null,
+        _nazivController.text,
+        _opisController.text,
+        _base64Image,
+        _selectedDate,
+        "active",
+        _selectedSchool?.skolaID,
+      );
 
-    try {
-      await _eventsProvider.Insert(newEvent);
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Događaj uspješno dodan")));
-      _resetForm();
-    } catch (e) {
-      _showErrorDialog();
-    }
-  } else {
-    if (_selectedDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Molimo odaberite datum događaja.")));
-    }
-    if (_base64Image == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Molimo odaberite sliku za događaj.")));
+      try {
+        await _eventsProvider.Insert(newEvent);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Događaj uspješno dodan")));
+        _resetForm();
+      } catch (e) {
+        _showErrorDialog();
+      }
+    } else {
+      if (_selectedDate == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Molimo odaberite datum događaja.")));
+      }
+      if (_base64Image == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Molimo odaberite sliku za događaj.")));
+      }
     }
   }
-}
-
 
   void _resetForm() {
     setState(() {
@@ -386,7 +406,8 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Greška"),
-          content: Text("Greška prilikom dodavanja događaja. Pokušajte ponovo."),
+          content:
+              Text("Greška prilikom dodavanja događaja. Pokušajte ponovo."),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
