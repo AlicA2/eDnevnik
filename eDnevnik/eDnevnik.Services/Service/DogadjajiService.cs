@@ -72,6 +72,10 @@ namespace eDnevnik.Services.Service
                 {
                     query = query.Where(x => x.DogadjajId == search.DogadjajId.Value);
                 }
+                if (search.SkolaID.HasValue)
+                {
+                    query = query.Where(x => x.SkolaID == search.SkolaID.Value);
+                }
             }
 
             return base.AddFilter(query, search);

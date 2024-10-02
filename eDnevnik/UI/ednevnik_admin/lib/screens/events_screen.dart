@@ -21,6 +21,8 @@ class EventsDetailScreen extends StatefulWidget {
 class _EventsDetailScreenState extends State<EventsDetailScreen> {
   List<School> _schools = [];
   School? _selectedSchool;
+  List<Events> _eventsList = [];
+
   late SchoolProvider _schoolProvider;
   late EventsProvider _eventsProvider;
 
@@ -49,11 +51,30 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
           _schools = schools.result;
           if (_schools.isNotEmpty) {
             _selectedSchool = _schools.first;
+            _fetchEvents();
           }
         });
       }
     } catch (e) {
       setState(() {});
+    }
+  }
+
+  Future<void> _fetchEvents() async {
+    if (_selectedSchool != null) {
+      try {
+        var events = await _eventsProvider
+            .get(filter: {'SkolaID': _selectedSchool?.skolaID});
+        if (mounted) {
+          setState(() {
+            _eventsList = events.result;
+          });
+        }
+      } catch (e) {
+        setState(() {
+          _eventsList = [];
+        });
+      }
     }
   }
 
@@ -73,11 +94,92 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
               children: [
                 _buildScreenHeader(),
                 SizedBox(height: 16.0),
-                Expanded(child: Container()),
+                Expanded(child: _buildEventCards()),
+                SizedBox(height: 16),
                 _buildActionButtons(),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEventCards() {
+    if (_eventsList.isEmpty) {
+      return Center(
+        child: Text("Nema događaja za odabranu školu."),
+      );
+    }
+
+    return GridView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemCount: _eventsList.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.75,
+      ),
+      itemBuilder: (context, index) {
+        Events event = _eventsList[index];
+        return _buildEventCard(event);
+      },
+    );
+  }
+
+  Widget _buildEventCard(Events event) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              event.nazivDogadjaja ?? "No Name",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            event.slika != null
+                ? Container(
+                    height: 100,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: MemoryImage(base64Decode(event.slika!)),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                : Container(
+                    height: 100,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(Icons.image, size: 50, color: Colors.grey),
+                  ),
+            SizedBox(height: 8),
+            Text(
+              event.opisDogadjaja ?? "No Description",
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 14),
+            ),
+            SizedBox(height: 8),
+            Text(
+              event.datumDogadjaja != null
+                  ? DateFormat('yyyy-MM-dd').format(event.datumDogadjaja!)
+                  : "No Date",
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
         ),
       ),
     );
@@ -131,6 +233,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
             onChanged: (School? newValue) {
               setState(() {
                 _selectedSchool = newValue;
+                _fetchEvents();
               });
             },
           ),
@@ -237,6 +340,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Događaj uspješno dodan")));
                         _resetForm();
+                        _fetchEvents();
                       } catch (e) {
                         _showErrorDialog();
                       }
@@ -373,6 +477,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Događaj uspješno dodan")));
         _resetForm();
+        _fetchEvents();
       } catch (e) {
         _showErrorDialog();
       }
@@ -396,7 +501,6 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
       _image = null;
       _base64Image = null;
       _isSlikaSelected = false;
-      _selectedSchool = _schools.isNotEmpty ? _schools.first : null;
     });
   }
 
