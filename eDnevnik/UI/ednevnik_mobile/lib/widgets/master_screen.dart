@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/calendar_screen.dart';
+import '../screens/events_screen.dart';
 import '../screens/help_support_screen.dart';
 import '../screens/info_attendance_screen.dart';
 import '../screens/info_student_screen.dart';
@@ -186,11 +187,20 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.person),
+              leading: Icon(Icons.how_to_reg),
               title: Text("Prisustvo"),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => InfoAttendanceDetailScreen(),
+                ));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.event),
+              title: Text("Događaji"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EventsDetailScreen(),
                 ));
               },
             ),
