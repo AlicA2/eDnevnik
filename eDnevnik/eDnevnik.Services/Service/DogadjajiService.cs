@@ -29,18 +29,15 @@ namespace eDnevnik.Services.Service
 
         public async Task<List<Model.Models.KorisnikDogadjaj>> GetKorisniciDogadjaji(int dogadjajId)
         {
-            // Fetch the Dogadjaji entity along with the related KorisniciDogadjaji
             var dogadjaj = await _context.Dogadjaji
                 .Include(x => x.KorisniciDogadjaji)
                 .FirstOrDefaultAsync(x => x.DogadjajId == dogadjajId);
 
-            // Handle case where the event (dogadjaj) is not found
             if (dogadjaj == null)
             {
                 throw new Exception($"Dogadjaj with ID {dogadjajId} not found.");
             }
 
-            // Map the KorisniciDogadjaji collection to the corresponding model
             var korisniciDogadjaji = dogadjaj.KorisniciDogadjaji.ToList();
             return _mapper.Map<List<Model.Models.KorisnikDogadjaj>>(korisniciDogadjaji);
         }
@@ -115,56 +112,41 @@ namespace eDnevnik.Services.Service
                 if (mlContext == null)
                 {
                     mlContext = new MLContext();
-
-                    var tmpData = _context.Dogadjaji.Include("KorisniciDogadjaj").ToList();
+                    var tmpData = _context.Dogadjaji.Include(d => d.KorisniciDogadjaji).ToList();
 
                     var data = new List<ProductEntry>();
 
-                    Console.WriteLine($"Total Dogadjaji: {tmpData.Count}");
-
                     foreach (var x in tmpData)
                     {
-                        Console.WriteLine($"DogadjajId: {x.DogadjajId}, KorisniciDogadjaji Count: {x.KorisniciDogadjaji.Count}");
-
                         if (x.KorisniciDogadjaji.Count > 1)
                         {
-                            var distinctItemId = x.KorisniciDogadjaji.Select(y => y.DogadjajId).ToList();
+                            // Find distinct DogadjajIds and loop through them
+                            var distinctDogadjajIds = x.KorisniciDogadjaji.Select(kd => kd.DogadjajId).Distinct().ToList();
 
-                            distinctItemId.ForEach(y =>
+                            foreach (var distinctId in distinctDogadjajIds)
                             {
-                                var relatedItems = x.KorisniciDogadjaji.Where(z => z.DogadjajId != y);
+                                // Get related Dogadjaji where the DogadjajId is different
+                                var relatedEvents = _context.KorisniciDogadjaji
+                                    .Where(kd => kd.DogadjajId != distinctId && kd.KorisnikID != x.KorisniciDogadjaji.First().KorisnikID)
+                                    .ToList()
+                                    .GroupBy(kd => kd.DogadjajId)
+                                    .Where(g => g.Count() >= 2)
+                                    .SelectMany(g => g)
+                                    .ToList();
 
-                                foreach (var z in relatedItems)
+                                foreach (var related in relatedEvents)
                                 {
                                     data.Add(new ProductEntry()
                                     {
-                                        ProductID = (uint)y,
-                                        CoPurchaseProductID = (uint)z.DogadjajId,
+                                        ProductID = (uint)distinctId,
+                                        CoPurchaseProductID = (uint)related.DogadjajId,
                                     });
                                 }
-                            });
+                            }
                         }
                     }
 
-                    // Debug: Check if data has been populated
-                    Console.WriteLine($"Data Count for training: {data.Count}");
-
-                    if (data == null || !data.Any())
-                    {
-                        throw new InvalidOperationException("No valid instances found for training data.");
-                    }
-
-                    IDataView traindata = null;
-
-                    try
-                    {
-                        traindata = mlContext.Data.LoadFromEnumerable(data);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error loading data: {ex.Message}");
-                        throw;
-                    }
+                    var traindata = mlContext.Data.LoadFromEnumerable(data);
 
                     MatrixFactorizationTrainer.Options options = new MatrixFactorizationTrainer.Options();
                     options.MatrixColumnIndexColumnName = nameof(ProductEntry.ProductID);
@@ -182,26 +164,47 @@ namespace eDnevnik.Services.Service
                 }
             }
 
-            var products = _context.Dogadjaji.Where(x => x.DogadjajId != id);
+            // Now predict based on the user's previous Dogadjaj (event)
+            var korisnikIds = _context.KorisniciDogadjaji
+                .Where(kd => kd.DogadjajId == id)
+                .Select(kd => kd.KorisnikID)
+                .Distinct()
+                .ToList();
 
             var predictionResult = new List<Tuple<Database.Dogadjaji, float>>();
 
-            var predictionEngine = mlContext.Model.CreatePredictionEngine<ProductEntry, Copurchase_prediction>(model);
-            foreach (var product in products)
+            var relatedEventIds = _context.KorisniciDogadjaji
+                 .Where(kd => korisnikIds.Contains(kd.KorisnikID) && kd.DogadjajId != id)
+                 .ToList()
+                 .GroupBy(kd => kd.DogadjajId)
+                 .Where(g => g.Count() >= 2)
+                 .Select(g => g.Key)
+                 .ToList();
+
+            foreach (var relatedDogadjajId in relatedEventIds)
             {
+                var predictionEngine = mlContext.Model.CreatePredictionEngine<ProductEntry, Copurchase_prediction>(model);
                 var prediction = predictionEngine.Predict(
-                                     new ProductEntry()
-                                     {
-                                         ProductID = (uint)id,
-                                         CoPurchaseProductID = (uint)product.DogadjajId
-                                     });
-                predictionResult.Add(new Tuple<Database.Dogadjaji, float>(product, prediction.Score));
+                    new ProductEntry()
+                    {
+                        ProductID = (uint)id,
+                        CoPurchaseProductID = (uint)relatedDogadjajId
+                    });
+
+                var relatedDogadjaj = _context.Dogadjaji.FirstOrDefault(d => d.DogadjajId == relatedDogadjajId);
+
+                predictionResult.Add(new Tuple<Database.Dogadjaji, float>(relatedDogadjaj, prediction.Score));
             }
 
-            var finalResult = predictionResult.OrderByDescending(x => x.Item2).Select(x => x.Item1).ToList();
+            var finalResult = predictionResult
+                .OrderByDescending(x => x.Item2)
+                .Select(x => x.Item1)
+                .Take(3)
+                .ToList();
 
             return _mapper.Map<List<Model.Models.Dogadjaji>>(finalResult);
         }
+
 
     }
     public class Copurchase_prediction
