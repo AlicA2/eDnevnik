@@ -18,6 +18,7 @@ namespace eDnevnik.Services
         public DbSet<OdjeljenjePredmet> OdjeljenjePredmet { get; set; }
         public DbSet<CasoviUcenici> CasoviUcenici { get; set; }
         public DbSet<Dogadjaji> Dogadjaji { get; set; }
+        public DbSet<KorisnikDogadjaj> KorisniciDogadjaji { get; set; }
 
 
         public eDnevnikDBContext(DbContextOptions<eDnevnikDBContext> options):base(options)

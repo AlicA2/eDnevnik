@@ -726,133 +726,133 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             KorisnikUlogaID = 1,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3157),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3507),
                             KorisnikID = 1,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 2,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3205),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3558),
                             KorisnikID = 2,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 3,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3208),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3563),
                             KorisnikID = 3,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 4,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3211),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3568),
                             KorisnikID = 4,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 5,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3213),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3573),
                             KorisnikID = 5,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 6,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3216),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3578),
                             KorisnikID = 6,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 7,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3218),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3583),
                             KorisnikID = 7,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 8,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3221),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3587),
                             KorisnikID = 8,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 9,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3223),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3592),
                             KorisnikID = 9,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 10,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3226),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3597),
                             KorisnikID = 10,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 11,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3228),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3601),
                             KorisnikID = 11,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 12,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3231),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3606),
                             KorisnikID = 12,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 13,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3233),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3611),
                             KorisnikID = 13,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 14,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3236),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3615),
                             KorisnikID = 14,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 15,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3238),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3619),
                             KorisnikID = 15,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 16,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3241),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3624),
                             KorisnikID = 16,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 17,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3243),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3628),
                             KorisnikID = 17,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 18,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3245),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3632),
                             KorisnikID = 18,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 19,
-                            DatumIzmjene = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3248),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3636),
                             KorisnikID = 19,
                             UlogaID = 2
                         });
@@ -1136,17 +1136,25 @@ namespace eDnevnik.Services.Migrations
 
             modelBuilder.Entity("eDnevnik.Services.Database.KorisnikDogadjaj", b =>
                 {
-                    b.Property<int>("KorisnikID")
+                    b.Property<int>("KorisnikDogadjajID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("KorisnikDogadjajID"), 1L, 1);
 
                     b.Property<int>("DogadjajId")
                         .HasColumnType("int");
 
-                    b.HasKey("KorisnikID", "DogadjajId");
+                    b.Property<int>("KorisnikID")
+                        .HasColumnType("int");
+
+                    b.HasKey("KorisnikDogadjajID");
 
                     b.HasIndex("DogadjajId");
 
-                    b.ToTable("KorisnikDogadjaj");
+                    b.HasIndex("KorisnikID");
+
+                    b.ToTable("KorisniciDogadjaji");
                 });
 
             modelBuilder.Entity("eDnevnik.Services.Database.Ocjene", b =>
@@ -1181,7 +1189,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 1,
-                            Datum = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3311),
+                            Datum = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3837),
                             KorisnikID = 2,
                             PredmetID = 1,
                             VrijednostOcjene = 5
@@ -1189,7 +1197,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 2,
-                            Datum = new DateTime(2024, 10, 1, 19, 39, 2, 71, DateTimeKind.Local).AddTicks(3315),
+                            Datum = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3845),
                             KorisnikID = 2,
                             PredmetID = 2,
                             VrijednostOcjene = 4

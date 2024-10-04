@@ -12,8 +12,8 @@ using eDnevnik.Services;
 namespace eDnevnik.Services.Migrations
 {
     [DbContext(typeof(eDnevnikDBContext))]
-    [Migration("20240913101336_CasoviDatumOdrzavanjaAdded")]
-    partial class CasoviDatumOdrzavanjaAdded
+    [Migration("20241003163809_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,6 +38,9 @@ namespace eDnevnik.Services.Migrations
                     b.Property<int>("GodisnjiPlanProgramID")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsOdrzan")
+                        .HasColumnType("bit");
+
                     b.Property<string>("NazivCasa")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -57,6 +60,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 1,
                             GodisnjiPlanProgramID = 1,
+                            IsOdrzan = false,
                             NazivCasa = "Algebra",
                             Opis = "Osnove algebre"
                         },
@@ -64,6 +68,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 2,
                             GodisnjiPlanProgramID = 1,
+                            IsOdrzan = false,
                             NazivCasa = "Geometrija",
                             Opis = "Osnove geometrije"
                         },
@@ -71,6 +76,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 3,
                             GodisnjiPlanProgramID = 1,
+                            IsOdrzan = false,
                             NazivCasa = "Trigonometrija",
                             Opis = "Osnove trigonometrije"
                         },
@@ -78,6 +84,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 4,
                             GodisnjiPlanProgramID = 1,
+                            IsOdrzan = false,
                             NazivCasa = "Kalkulus",
                             Opis = "Osnove kalkulusa"
                         },
@@ -85,6 +92,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 5,
                             GodisnjiPlanProgramID = 1,
+                            IsOdrzan = false,
                             NazivCasa = "Statistika",
                             Opis = "Osnove statistike"
                         },
@@ -92,6 +100,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 6,
                             GodisnjiPlanProgramID = 2,
+                            IsOdrzan = false,
                             NazivCasa = "Mehanika",
                             Opis = "Osnove mehanike"
                         },
@@ -99,6 +108,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 7,
                             GodisnjiPlanProgramID = 2,
+                            IsOdrzan = false,
                             NazivCasa = "Termodinamika",
                             Opis = "Osnove termodinamike"
                         },
@@ -106,6 +116,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 8,
                             GodisnjiPlanProgramID = 2,
+                            IsOdrzan = false,
                             NazivCasa = "Optika",
                             Opis = "Osnove optike"
                         },
@@ -113,6 +124,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 9,
                             GodisnjiPlanProgramID = 2,
+                            IsOdrzan = false,
                             NazivCasa = "Elektricitet",
                             Opis = "Osnove elektriciteta"
                         },
@@ -120,6 +132,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 10,
                             GodisnjiPlanProgramID = 2,
+                            IsOdrzan = false,
                             NazivCasa = "Magnetizam",
                             Opis = "Osnove magnetizma"
                         },
@@ -127,6 +140,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 11,
                             GodisnjiPlanProgramID = 3,
+                            IsOdrzan = false,
                             NazivCasa = "Organska hemija",
                             Opis = "Osnove organske hemije"
                         },
@@ -134,6 +148,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 12,
                             GodisnjiPlanProgramID = 3,
+                            IsOdrzan = false,
                             NazivCasa = "Neorganska hemija",
                             Opis = "Osnove neorganske hemije"
                         },
@@ -141,6 +156,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 13,
                             GodisnjiPlanProgramID = 3,
+                            IsOdrzan = false,
                             NazivCasa = "Fizička hemija",
                             Opis = "Osnove fizičke hemije"
                         },
@@ -148,6 +164,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 14,
                             GodisnjiPlanProgramID = 3,
+                            IsOdrzan = false,
                             NazivCasa = "Analitička hemija",
                             Opis = "Osnove analitičke hemije"
                         },
@@ -155,6 +172,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 15,
                             GodisnjiPlanProgramID = 3,
+                            IsOdrzan = false,
                             NazivCasa = "Biohemija",
                             Opis = "Osnove biohemije"
                         },
@@ -162,6 +180,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 16,
                             GodisnjiPlanProgramID = 4,
+                            IsOdrzan = false,
                             NazivCasa = "Osnove programiranja",
                             Opis = "Osnove programiranja"
                         },
@@ -169,6 +188,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 17,
                             GodisnjiPlanProgramID = 4,
+                            IsOdrzan = false,
                             NazivCasa = "Strukture podataka",
                             Opis = "Osnove struktura podataka"
                         },
@@ -176,6 +196,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 18,
                             GodisnjiPlanProgramID = 4,
+                            IsOdrzan = false,
                             NazivCasa = "Algoritmi",
                             Opis = "Osnove algoritama"
                         },
@@ -183,6 +204,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 19,
                             GodisnjiPlanProgramID = 4,
+                            IsOdrzan = false,
                             NazivCasa = "Baze podataka",
                             Opis = "Osnove baza podataka"
                         },
@@ -190,6 +212,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 20,
                             GodisnjiPlanProgramID = 4,
+                            IsOdrzan = false,
                             NazivCasa = "Softverski inženjering",
                             Opis = "Osnove softverskog inženjeringa"
                         },
@@ -197,6 +220,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 21,
                             GodisnjiPlanProgramID = 5,
+                            IsOdrzan = false,
                             NazivCasa = "Gramatika",
                             Opis = "Osnove engleske gramatike"
                         },
@@ -204,6 +228,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 22,
                             GodisnjiPlanProgramID = 5,
+                            IsOdrzan = false,
                             NazivCasa = "Vokabular",
                             Opis = "Osnove engleskog vokabulara"
                         },
@@ -211,6 +236,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 23,
                             GodisnjiPlanProgramID = 5,
+                            IsOdrzan = false,
                             NazivCasa = "Razumijevanje pročitanog",
                             Opis = "Razumijevanje pročitanog"
                         },
@@ -218,6 +244,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 24,
                             GodisnjiPlanProgramID = 5,
+                            IsOdrzan = false,
                             NazivCasa = "Pisanje",
                             Opis = "Pisanje na engleskom"
                         },
@@ -225,6 +252,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 25,
                             GodisnjiPlanProgramID = 5,
+                            IsOdrzan = false,
                             NazivCasa = "Govorne vještine",
                             Opis = "Govorne vještine na engleskom"
                         },
@@ -232,6 +260,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 26,
                             GodisnjiPlanProgramID = 6,
+                            IsOdrzan = false,
                             NazivCasa = "Algebra",
                             Opis = "Osnove algebre"
                         },
@@ -239,6 +268,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 27,
                             GodisnjiPlanProgramID = 6,
+                            IsOdrzan = false,
                             NazivCasa = "Geometrija",
                             Opis = "Osnove geometrije"
                         },
@@ -246,6 +276,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 28,
                             GodisnjiPlanProgramID = 6,
+                            IsOdrzan = false,
                             NazivCasa = "Trigonometrija",
                             Opis = "Osnove trigonometrije"
                         },
@@ -253,6 +284,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 29,
                             GodisnjiPlanProgramID = 6,
+                            IsOdrzan = false,
                             NazivCasa = "Kalkulus",
                             Opis = "Osnove kalkulusa"
                         },
@@ -260,6 +292,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 30,
                             GodisnjiPlanProgramID = 6,
+                            IsOdrzan = false,
                             NazivCasa = "Statistika",
                             Opis = "Osnove statistike"
                         },
@@ -267,6 +300,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 31,
                             GodisnjiPlanProgramID = 7,
+                            IsOdrzan = false,
                             NazivCasa = "Mehanika",
                             Opis = "Osnove mehanike"
                         },
@@ -274,6 +308,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 32,
                             GodisnjiPlanProgramID = 7,
+                            IsOdrzan = false,
                             NazivCasa = "Termodinamika",
                             Opis = "Osnove termodinamike"
                         },
@@ -281,6 +316,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 33,
                             GodisnjiPlanProgramID = 7,
+                            IsOdrzan = false,
                             NazivCasa = "Optika",
                             Opis = "Osnove optike"
                         },
@@ -288,6 +324,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 34,
                             GodisnjiPlanProgramID = 7,
+                            IsOdrzan = false,
                             NazivCasa = "Elektricitet",
                             Opis = "Osnove elektriciteta"
                         },
@@ -295,6 +332,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 35,
                             GodisnjiPlanProgramID = 7,
+                            IsOdrzan = false,
                             NazivCasa = "Magnetizam",
                             Opis = "Osnove magnetizma"
                         },
@@ -302,6 +340,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 36,
                             GodisnjiPlanProgramID = 8,
+                            IsOdrzan = false,
                             NazivCasa = "Organska hemija",
                             Opis = "Osnove organske hemije"
                         },
@@ -309,6 +348,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 37,
                             GodisnjiPlanProgramID = 8,
+                            IsOdrzan = false,
                             NazivCasa = "Neorganska hemija",
                             Opis = "Osnove neorganske hemije"
                         },
@@ -316,6 +356,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 38,
                             GodisnjiPlanProgramID = 8,
+                            IsOdrzan = false,
                             NazivCasa = "Fizička hemija",
                             Opis = "Osnove fizičke hemije"
                         },
@@ -323,6 +364,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 39,
                             GodisnjiPlanProgramID = 8,
+                            IsOdrzan = false,
                             NazivCasa = "Analitička hemija",
                             Opis = "Osnove analitičke hemije"
                         },
@@ -330,6 +372,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 40,
                             GodisnjiPlanProgramID = 8,
+                            IsOdrzan = false,
                             NazivCasa = "Biohemija",
                             Opis = "Osnove biohemije"
                         },
@@ -337,6 +380,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 41,
                             GodisnjiPlanProgramID = 9,
+                            IsOdrzan = false,
                             NazivCasa = "Osnove programiranja",
                             Opis = "Osnove programiranja"
                         },
@@ -344,6 +388,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 42,
                             GodisnjiPlanProgramID = 9,
+                            IsOdrzan = false,
                             NazivCasa = "Strukture podataka",
                             Opis = "Osnove struktura podataka"
                         },
@@ -351,6 +396,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 43,
                             GodisnjiPlanProgramID = 9,
+                            IsOdrzan = false,
                             NazivCasa = "Algoritmi",
                             Opis = "Osnove algoritama"
                         },
@@ -358,6 +404,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 44,
                             GodisnjiPlanProgramID = 9,
+                            IsOdrzan = false,
                             NazivCasa = "Baze podataka",
                             Opis = "Osnove baza podataka"
                         },
@@ -365,6 +412,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 45,
                             GodisnjiPlanProgramID = 9,
+                            IsOdrzan = false,
                             NazivCasa = "Softverski inženjering",
                             Opis = "Osnove softverskog inženjeringa"
                         },
@@ -372,6 +420,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 46,
                             GodisnjiPlanProgramID = 10,
+                            IsOdrzan = false,
                             NazivCasa = "Gramatika",
                             Opis = "Osnove engleske gramatike"
                         },
@@ -379,6 +428,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 47,
                             GodisnjiPlanProgramID = 10,
+                            IsOdrzan = false,
                             NazivCasa = "Vokabular",
                             Opis = "Osnove engleskog vokabulara"
                         },
@@ -386,6 +436,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 48,
                             GodisnjiPlanProgramID = 10,
+                            IsOdrzan = false,
                             NazivCasa = "Razumijevanje pročitanog",
                             Opis = "Razumijevanje pročitanog"
                         },
@@ -393,6 +444,7 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 49,
                             GodisnjiPlanProgramID = 10,
+                            IsOdrzan = false,
                             NazivCasa = "Pisanje",
                             Opis = "Pisanje na engleskom"
                         },
@@ -400,9 +452,75 @@ namespace eDnevnik.Services.Migrations
                         {
                             CasoviID = 50,
                             GodisnjiPlanProgramID = 10,
+                            IsOdrzan = false,
                             NazivCasa = "Govorne vještine",
                             Opis = "Govorne vještine na engleskom"
                         });
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.CasoviUcenici", b =>
+                {
+                    b.Property<int>("CasoviUceniciID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CasoviUceniciID"), 1L, 1);
+
+                    b.Property<int>("CasoviID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsPrisutan")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UcenikID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("zakljucan")
+                        .HasColumnType("bit");
+
+                    b.HasKey("CasoviUceniciID");
+
+                    b.HasIndex("CasoviID");
+
+                    b.HasIndex("UcenikID");
+
+                    b.ToTable("CasoviUcenici");
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.Dogadjaji", b =>
+                {
+                    b.Property<int>("DogadjajId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DogadjajId"), 1L, 1);
+
+                    b.Property<DateTime>("DatumDogadjaja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NazivDogadjaja")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OpisDogadjaja")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SkolaID")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("Slika")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("StateMachine")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DogadjajId");
+
+                    b.HasIndex("SkolaID");
+
+                    b.ToTable("Dogadjaji");
                 });
 
             modelBuilder.Entity("eDnevnik.Services.Database.GodisnjiPlanProgram", b =>
@@ -610,133 +728,133 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             KorisnikUlogaID = 1,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8265),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3507),
                             KorisnikID = 1,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 2,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8353),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3558),
                             KorisnikID = 2,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 3,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8355),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3563),
                             KorisnikID = 3,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 4,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8357),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3568),
                             KorisnikID = 4,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 5,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8359),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3573),
                             KorisnikID = 5,
                             UlogaID = 1
                         },
                         new
                         {
                             KorisnikUlogaID = 6,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8361),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3578),
                             KorisnikID = 6,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 7,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8363),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3583),
                             KorisnikID = 7,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 8,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8366),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3587),
                             KorisnikID = 8,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 9,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8368),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3592),
                             KorisnikID = 9,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 10,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8370),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3597),
                             KorisnikID = 10,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 11,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8372),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3601),
                             KorisnikID = 11,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 12,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8374),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3606),
                             KorisnikID = 12,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 13,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8376),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3611),
                             KorisnikID = 13,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 14,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8378),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3615),
                             KorisnikID = 14,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 15,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8380),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3619),
                             KorisnikID = 15,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 16,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8382),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3624),
                             KorisnikID = 16,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 17,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8385),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3628),
                             KorisnikID = 17,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 18,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8387),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3632),
                             KorisnikID = 18,
                             UlogaID = 2
                         },
                         new
                         {
                             KorisnikUlogaID = 19,
-                            DatumIzmjene = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8389),
+                            DatumIzmjene = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3636),
                             KorisnikID = 19,
                             UlogaID = 2
                         });
@@ -1018,6 +1136,29 @@ namespace eDnevnik.Services.Migrations
                         });
                 });
 
+            modelBuilder.Entity("eDnevnik.Services.Database.KorisnikDogadjaj", b =>
+                {
+                    b.Property<int>("KorisnikDogadjajID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("KorisnikDogadjajID"), 1L, 1);
+
+                    b.Property<int>("DogadjajId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("KorisnikID")
+                        .HasColumnType("int");
+
+                    b.HasKey("KorisnikDogadjajID");
+
+                    b.HasIndex("DogadjajId");
+
+                    b.HasIndex("KorisnikID");
+
+                    b.ToTable("KorisniciDogadjaji");
+                });
+
             modelBuilder.Entity("eDnevnik.Services.Database.Ocjene", b =>
                 {
                     b.Property<int>("OcjenaID")
@@ -1050,7 +1191,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 1,
-                            Datum = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8466),
+                            Datum = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3837),
                             KorisnikID = 2,
                             PredmetID = 1,
                             VrijednostOcjene = 5
@@ -1058,7 +1199,7 @@ namespace eDnevnik.Services.Migrations
                         new
                         {
                             OcjenaID = 2,
-                            Datum = new DateTime(2024, 9, 13, 12, 13, 35, 910, DateTimeKind.Local).AddTicks(8469),
+                            Datum = new DateTime(2024, 10, 3, 18, 38, 9, 116, DateTimeKind.Local).AddTicks(3845),
                             KorisnikID = 2,
                             PredmetID = 2,
                             VrijednostOcjene = 4
@@ -1380,6 +1521,36 @@ namespace eDnevnik.Services.Migrations
                     b.Navigation("GodisnjiPlanProgram");
                 });
 
+            modelBuilder.Entity("eDnevnik.Services.Database.CasoviUcenici", b =>
+                {
+                    b.HasOne("eDnevnik.Services.Database.Casovi", "Casovi")
+                        .WithMany("CasoviUcenici")
+                        .HasForeignKey("CasoviID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eDnevnik.Services.Database.Korisnik", "Ucenik")
+                        .WithMany()
+                        .HasForeignKey("UcenikID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Casovi");
+
+                    b.Navigation("Ucenik");
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.Dogadjaji", b =>
+                {
+                    b.HasOne("eDnevnik.Services.Database.Skola", "Skola")
+                        .WithMany("Dogadjaji")
+                        .HasForeignKey("SkolaID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Skola");
+                });
+
             modelBuilder.Entity("eDnevnik.Services.Database.GodisnjiPlanProgram", b =>
                 {
                     b.HasOne("eDnevnik.Services.Database.Odjeljenje", "Odjeljenje")
@@ -1432,6 +1603,25 @@ namespace eDnevnik.Services.Migrations
                         .WithMany("Ucenici")
                         .HasForeignKey("OdjeljenjeID")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.KorisnikDogadjaj", b =>
+                {
+                    b.HasOne("eDnevnik.Services.Database.Dogadjaji", "Dogadjaj")
+                        .WithMany("KorisniciDogadjaji")
+                        .HasForeignKey("DogadjajId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("eDnevnik.Services.Database.Korisnik", "Korisnik")
+                        .WithMany("KorisniciDogadjaji")
+                        .HasForeignKey("KorisnikID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dogadjaj");
+
+                    b.Navigation("Korisnik");
                 });
 
             modelBuilder.Entity("eDnevnik.Services.Database.Ocjene", b =>
@@ -1519,6 +1709,16 @@ namespace eDnevnik.Services.Migrations
                     b.Navigation("Skola");
                 });
 
+            modelBuilder.Entity("eDnevnik.Services.Database.Casovi", b =>
+                {
+                    b.Navigation("CasoviUcenici");
+                });
+
+            modelBuilder.Entity("eDnevnik.Services.Database.Dogadjaji", b =>
+                {
+                    b.Navigation("KorisniciDogadjaji");
+                });
+
             modelBuilder.Entity("eDnevnik.Services.Database.GodisnjiPlanProgram", b =>
                 {
                     b.Navigation("Casovi");
@@ -1526,6 +1726,8 @@ namespace eDnevnik.Services.Migrations
 
             modelBuilder.Entity("eDnevnik.Services.Database.Korisnik", b =>
                 {
+                    b.Navigation("KorisniciDogadjaji");
+
                     b.Navigation("KorisniciUloge");
 
                     b.Navigation("Odjeljenje")
@@ -1548,6 +1750,8 @@ namespace eDnevnik.Services.Migrations
 
             modelBuilder.Entity("eDnevnik.Services.Database.Skola", b =>
                 {
+                    b.Navigation("Dogadjaji");
+
                     b.Navigation("GodisnjiPlanProgrami");
 
                     b.Navigation("Odjeljenja");

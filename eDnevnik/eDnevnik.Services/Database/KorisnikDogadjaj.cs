@@ -8,6 +8,7 @@ namespace eDnevnik.Services.Database
 {
     public partial class KorisnikDogadjaj
     {
+        public int KorisnikDogadjajID { get; set; }
         public int KorisnikID { get; set; }
         public virtual Korisnik Korisnik { get; set; }
 

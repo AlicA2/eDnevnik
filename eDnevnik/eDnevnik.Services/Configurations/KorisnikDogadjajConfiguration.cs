@@ -9,7 +9,7 @@ namespace eDnevnik.Services.Configurations
         public override void Configure(EntityTypeBuilder<KorisnikDogadjaj> builder)
         {
             base.Configure(builder);
-            builder.HasKey(kd => new { kd.KorisnikID, kd.DogadjajId });
+            builder.HasKey(p => p.KorisnikDogadjajID);
 
             builder.HasOne(kd => kd.Korisnik)
                    .WithMany(k => k.KorisniciDogadjaji)
