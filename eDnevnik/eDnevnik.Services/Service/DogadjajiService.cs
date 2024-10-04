@@ -120,12 +120,10 @@ namespace eDnevnik.Services.Service
                     {
                         if (x.KorisniciDogadjaji.Count > 1)
                         {
-                            // Find distinct DogadjajIds and loop through them
                             var distinctDogadjajIds = x.KorisniciDogadjaji.Select(kd => kd.DogadjajId).Distinct().ToList();
 
                             foreach (var distinctId in distinctDogadjajIds)
                             {
-                                // Get related Dogadjaji where the DogadjajId is different
                                 var relatedEvents = _context.KorisniciDogadjaji
                                     .Where(kd => kd.DogadjajId != distinctId && kd.KorisnikID != x.KorisniciDogadjaji.First().KorisnikID)
                                     .ToList()
@@ -164,7 +162,6 @@ namespace eDnevnik.Services.Service
                 }
             }
 
-            // Now predict based on the user's previous Dogadjaj (event)
             var korisnikIds = _context.KorisniciDogadjaji
                 .Where(kd => kd.DogadjajId == id)
                 .Select(kd => kd.KorisnikID)
