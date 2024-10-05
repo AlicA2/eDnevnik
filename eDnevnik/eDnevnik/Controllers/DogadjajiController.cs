@@ -36,11 +36,5 @@ namespace eDnevnik.Controllers
             return (_service as IDogadjajiService).Recommend(id);
         }
 
-        [HttpGet("{id}/korisniciDogadjaji")]
-        public async Task<List<Model.Models.KorisnikDogadjaj>> GetKorisniciDogadjaji(int id)
-        {
-            return await (_service as IDogadjajiService).GetKorisniciDogadjaji(id);
-        }
-
     }
 }

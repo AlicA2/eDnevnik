@@ -1,19 +1,16 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/events.dart';
 import 'package:ednevnik_admin/providers/events_provider.dart';
-import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 
 import '../models/user.dart';
 import '../providers/department_provider.dart';
 import '../providers/user_provider.dart';
+import 'event_detail_screen.dart';
 
 class EventsDetailScreen extends StatefulWidget {
   const EventsDetailScreen({super.key});
@@ -23,29 +20,16 @@ class EventsDetailScreen extends StatefulWidget {
 }
 
 class _EventsDetailScreenState extends State<EventsDetailScreen> {
-  List<School> _schools = [];
-  School? _selectedSchool;
   List<Events> _eventsList = [];
   User? loggedInUser;
   late int? userSchool;
 
-  late SchoolProvider _schoolProvider;
   late EventsProvider _eventsProvider;
   late DepartmentProvider _departmentProvider;
-
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nazivController = TextEditingController();
-  final TextEditingController _opisController = TextEditingController();
-
-  DateTime? _selectedDate;
-  File? _image;
-  String? _base64Image;
-  bool _isSlikaSelected = false;
 
   @override
   void initState() {
     super.initState();
-    _schoolProvider = context.read<SchoolProvider>();
     _eventsProvider = context.read<EventsProvider>();
     _departmentProvider = context.read<DepartmentProvider>();
 
@@ -69,7 +53,6 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
           if (department.ucenici != null &&
               department.ucenici!.any((user) => user.korisnikId == loggedInUser?.korisnikId)) {
             userSchool = department.skolaID;
-            print("Skola je : $userSchool");
 
             _fetchEvents();
             break;
@@ -160,27 +143,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 12),
-            event.slika != null
-                ? Container(
-              height: 200,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: MemoryImage(base64Decode(event.slika!)),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            )
-                : Container(
-              height: 200,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(Icons.image, size: 50, color: Colors.grey),
-            ),
+            _buildEventImage(event.slika),
             SizedBox(height: 12),
             Text(
               event.datumDogadjaja != null
@@ -190,17 +153,61 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 12),
-            Text(
-              event.opisDogadjaja ?? "No Description",
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
+            ElevatedButton(
+              onPressed: () {
+                if (event.dogadjajId != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EventDetailsScreen(dogadjajID: event.dogadjajId!),
+                    ),
+                  );
+                } else {
+                  print("Error: dogadjajID is null, cannot navigate.");
+                }
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
+              child: Text("Prikaži detalje"),
             ),
             SizedBox(height: 12),
           ],
         ),
       ),
+    );
+  }
+
+
+  Widget _buildEventImage(String? slika) {
+    try {
+      if (slika != null && slika.isNotEmpty) {
+        return Container(
+          height: 200,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              image: MemoryImage(base64Decode(slika)),
+              fit: BoxFit.cover,
+            ),
+          ),
+        );
+      } else {
+        return _buildPlaceholderImage();
+      }
+    } catch (e) {
+      return _buildPlaceholderImage();
+    }
+  }
+
+  Widget _buildPlaceholderImage() {
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(Icons.image, size: 50, color: Colors.grey),
     );
   }
 

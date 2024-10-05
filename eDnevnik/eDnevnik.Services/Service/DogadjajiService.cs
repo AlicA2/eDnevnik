@@ -26,23 +26,6 @@ namespace eDnevnik.Services.Service
             _baseState = baseState;
 
         }
-
-        public async Task<List<Model.Models.KorisnikDogadjaj>> GetKorisniciDogadjaji(int dogadjajId)
-        {
-            var dogadjaj = await _context.Dogadjaji
-                .Include(x => x.KorisniciDogadjaji)
-                .FirstOrDefaultAsync(x => x.DogadjajId == dogadjajId);
-
-            if (dogadjaj == null)
-            {
-                throw new Exception($"Dogadjaj with ID {dogadjajId} not found.");
-            }
-
-            var korisniciDogadjaji = dogadjaj.KorisniciDogadjaji.ToList();
-            return _mapper.Map<List<Model.Models.KorisnikDogadjaj>>(korisniciDogadjaji);
-        }
-
-
         public override async Task<Model.Models.Dogadjaji> Insert(DogadjajiInsertRequest insert)
         {
             var state = _baseState.CreateState("initial");

@@ -12,6 +12,5 @@ namespace eDnevnik.Services.IServices
         Task<Model.Models.Dogadjaji> Hide(int id);
         Task<List<string>> AllowedActions(int id);
         List<Model.Models.Dogadjaji> Recommend(int id);
-        Task<List<Model.Models.KorisnikDogadjaj>> GetKorisniciDogadjaji(int dogadjajId);
     }
 }
