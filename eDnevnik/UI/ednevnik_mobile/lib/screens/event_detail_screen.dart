@@ -79,6 +79,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   const SizedBox(height: 16.0),
                   _buildEventDetails(),
                   const SizedBox(height: 16.0),
+                  _buildActionButtons(),
+                  const SizedBox(height: 16.0),
                   const Text(
                     "Ovo su preporučeni događaji za tebe:",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -141,6 +143,22 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             ),
         ],
       ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return ElevatedButton(
+      onPressed: () {
+        print("It is payed");
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      child: const Text("Payment"),
     );
   }
 

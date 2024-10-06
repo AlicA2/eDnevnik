@@ -1,4 +1,4 @@
-package com.example.ednevnik_admin
+package com.example.ednevnik_mobile
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 
