@@ -1,2 +1,2 @@
-const String stripePublishableKey = "";
-const String stripeSecretKey = "";
+const String stripePublishableKey = "pk_test_51Q6vfBCNDstEqxgoz7ZTYrszPoD1ruRaN7ZaMkGojFXG9AXB12PajT9B5a0aMD4j9INswb7G65og24HEbMOQ5gHN00X1aWId4E";
+const String stripeSecretKey = "sk_test_51Q6vfBCNDstEqxgoJxQw0CGVZ3HuN9ibEm1zGcvIqXAR5WptmAO2zA8h6BkiUNJv1coiitIZ13nmtzOC0NmShyyW002ECYHmCo";

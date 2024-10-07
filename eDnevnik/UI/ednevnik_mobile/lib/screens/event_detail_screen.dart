@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../providers/events_provider.dart';
+import '../services/stripe_service.dart';
 import '../widgets/master_screen.dart';
 
 class EventDetailsScreen extends StatefulWidget {
@@ -149,7 +150,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   Widget _buildActionButtons() {
     return ElevatedButton(
       onPressed: () {
-        print("It is payed");
+        StripeService.instance.makePayment();
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.green,

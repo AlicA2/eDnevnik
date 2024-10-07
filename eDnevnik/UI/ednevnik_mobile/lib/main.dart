@@ -14,13 +14,16 @@ import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/user_events_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
+import 'package:ednevnik_admin/utils/consts.dart';
 import 'package:ednevnik_admin/utils/util.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
+import 'package:flutter/material.dart' as flutter; // Use alias for Flutter
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-
+void main() async {
+  await _setup();
   HttpOverrides.global = MyHttpOverrides();
 
   runApp(MultiProvider(
@@ -42,31 +45,20 @@ void main() {
   ));
 }
 
+Future<void> _setup() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = stripePublishableKey;
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return flutter.MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      theme: flutter.ThemeData(
+        colorScheme: flutter.ColorScheme.fromSeed(seedColor: flutter.Colors.deepPurple),
         useMaterial3: true,
       ),
       home: LoginPage(),
@@ -80,18 +72,18 @@ class MyAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(title!);
+    return flutter.Text(title!);
   }
 }
 
-class Counter extends StatefulWidget {
+class Counter extends flutter.StatefulWidget {
   const Counter({Key? key}) : super(key: key);
 
   @override
-  State<Counter> createState() => _CounterState();
+  _CounterState createState() => _CounterState();
 }
 
-class _CounterState extends State<Counter> {
+class _CounterState extends flutter.State<Counter> {
   int _count = 0;
 
   void _incrementCounter() {
@@ -102,13 +94,13 @@ class _CounterState extends State<Counter> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return flutter.Column(
       children: [
-        Text('You have pushed button $_count times'),
-        ElevatedButton(
+        flutter.Text('You have pushed button $_count times'),
+        flutter.ElevatedButton(
           onPressed: _incrementCounter,
-          child: Text("Pritisni"),
-        )
+          child: flutter.Text("Pritisni"),
+        ),
       ],
     );
   }
@@ -119,24 +111,24 @@ class LayoutExamples extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return flutter.Column(
       children: [
-        Container(
+        flutter.Container(
           height: 150,
-          color: Colors.red,
-          child: Center(
-            child: Container(
+          color: flutter.Colors.red,
+          child: flutter.Center(
+            child: flutter.Container(
               height: 100,
-              color: Colors.blue,
-              child: Text("eDnevnik"),
-              alignment: Alignment.center,
+              color: flutter.Colors.blue,
+              child: flutter.Text("eDnevnik"),
+              alignment: flutter.Alignment.center,
             ),
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [Text("Item 1"), Text("Item 2"), Text("Item 3")],
-        )
+        flutter.Row(
+          mainAxisAlignment: flutter.MainAxisAlignment.spaceAround,
+          children: [flutter.Text("Item 1"), flutter.Text("Item 2"), flutter.Text("Item 3")],
+        ),
       ],
     );
   }
@@ -147,58 +139,58 @@ class MyMaterialApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return flutter.MaterialApp(
       title: 'Material app',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: flutter.ThemeData(primarySwatch: flutter.Colors.blue),
       home: LoginPage(),
     );
   }
 }
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends flutter.StatelessWidget {
   LoginPage({super.key});
 
-  TextEditingController _usernameController = new TextEditingController();
-  TextEditingController _passwordController = new TextEditingController();
+  flutter.TextEditingController _usernameController = flutter.TextEditingController();
+  flutter.TextEditingController _passwordController = flutter.TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     UserProvider _userProvider = context.read<UserProvider>();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Prijava"),
-        backgroundColor: Colors.blue,
+    return flutter.Scaffold(
+      appBar: flutter.AppBar(
+        title: flutter.Text("Prijava"),
+        backgroundColor: flutter.Colors.blue,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            constraints: BoxConstraints(maxWidth: 400, maxHeight: 500),
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
+      body: flutter.Center(
+        child: flutter.SingleChildScrollView(
+          child: flutter.Container(
+            constraints: flutter.BoxConstraints(maxWidth: 400, maxHeight: 500),
+            child: flutter.Card( // Resolve conflict by using flutter.Card
+              child: flutter.Padding(
+                padding: const flutter.EdgeInsets.all(20.0),
+                child: flutter.Column(
                   children: [
-                    Image.asset(
+                    flutter.Image.asset(
                       "assets/images/eDnevnik.png",
                       height: 200,
                       width: 300,
                     ),
-                    TextField(
-                      decoration: InputDecoration(
+                    flutter.TextField(
+                      decoration: flutter.InputDecoration(
                           labelText: "Korisničko ime",
-                          prefixIcon: Icon(Icons.email)),
+                          prefixIcon: flutter.Icon(flutter.Icons.email)),
                       controller: _usernameController,
                     ),
-                    SizedBox(height: 10),
-                    TextField(
-                      decoration: InputDecoration(
+                    flutter.SizedBox(height: 10),
+                    flutter.TextField(
+                      decoration: flutter.InputDecoration(
                           labelText: "Lozinka",
-                          prefixIcon: Icon(Icons.password)),
+                          prefixIcon: flutter.Icon(flutter.Icons.password)),
                       controller: _passwordController,
                       obscureText: true,
                     ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
+                    flutter.SizedBox(height: 10),
+                    flutter.ElevatedButton(
                       onPressed: () async {
                         var username = _usernameController.text;
                         var password = _passwordController.text;
@@ -206,25 +198,23 @@ class LoginPage extends StatelessWidget {
                         Authorization.username = username;
                         Authorization.password = password;
                         try {
-                          var loginData = await _userProvider.getLogedWithRole(
-                              username, password);
-                          if (loginData != null &&
-                              loginData['uloga'] == 'učenik') {
+                          var loginData = await _userProvider.getLogedWithRole(username, password);
+                          if (loginData != null && loginData['uloga'] == 'učenik') {
                             Navigator.of(context).push(
-                              MaterialPageRoute(
+                              flutter.MaterialPageRoute(
                                 builder: (context) => SubjectDetailScreen(),
                               ),
                             );
                           } else {
                             showDialog(
                               context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: Text("Greška"),
-                                content: Text("Nemate dozvolu za pristup."),
+                              builder: (BuildContext context) => flutter.AlertDialog(
+                                title: flutter.Text("Greška"),
+                                content: flutter.Text("Nemate dozvolu za pristup."),
                                 actions: [
-                                  TextButton(
+                                  flutter.TextButton(
                                     onPressed: () => Navigator.pop(context),
-                                    child: Text("OK"),
+                                    child: flutter.Text("OK"),
                                   ),
                                 ],
                               ),
@@ -233,21 +223,21 @@ class LoginPage extends StatelessWidget {
                         } on Exception catch (e) {
                           showDialog(
                             context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: Text("Greška"),
-                              content: Text(e.toString()),
+                            builder: (BuildContext context) => flutter.AlertDialog(
+                              title: flutter.Text("Greška"),
+                              content: flutter.Text(e.toString()),
                               actions: [
-                                TextButton(
+                                flutter.TextButton(
                                   onPressed: () => Navigator.pop(context),
-                                  child: Text("OK"),
-                                )
+                                  child: flutter.Text("OK"),
+                                ),
                               ],
                             ),
                           );
                         }
                       },
-                      child: Text("Prijava"),
-                    )
+                      child: flutter.Text("Prijava"),
+                    ),
                   ],
                 ),
               ),
@@ -258,6 +248,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
+
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
