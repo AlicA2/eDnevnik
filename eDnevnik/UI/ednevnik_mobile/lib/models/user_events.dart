@@ -4,6 +4,7 @@ part "user_events.g.dart";
 
 @JsonSerializable()
 class UserEvents{
+  int? KorisnikDogadjajID;
   int? dogadjajID;
   int? korisnikID;
 

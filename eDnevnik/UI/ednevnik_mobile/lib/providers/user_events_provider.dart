@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 class UserEventsProvider extends BaseProvider<UserEvents> {
-  UserEventsProvider(): super("Dogadjaji");
+  UserEventsProvider(): super("KorisnikDogadjaj");
 
   @override
   UserEvents fromJson(data) {

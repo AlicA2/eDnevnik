@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../models/user.dart';
 import '../providers/events_provider.dart';
+import '../providers/user_events_provider.dart';
+import '../providers/user_provider.dart';
 import '../services/stripe_service.dart';
 import '../widgets/master_screen.dart';
 
@@ -17,18 +20,45 @@ class EventDetailsScreen extends StatefulWidget {
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   late EventsProvider _eventsProvider;
+  late UserEventsProvider _userEventsProvider;
+
   String? _nazivDogadjaja;
   String? _slika;
   DateTime? _datumDogadjaja;
   String? _opisDogadjaja;
   List<dynamic> _recommendedEvents = [];
+  User? loggedInUser;
+  bool _hasTicket = false;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loggedInUser = context.watch<UserProvider>().loggedInUser;
     _eventsProvider = context.read<EventsProvider>();
+    _userEventsProvider = context.read<UserEventsProvider>();
+
+    _checkUserTicket();
     _fetchEvents();
     _fetchRecommendedEvents();
+  }
+
+  Future<void> _checkUserTicket() async {
+    if (loggedInUser != null && widget.dogadjajID != null) {
+      try {
+        var userEvent = await _userEventsProvider.get(filter: {
+          'DogadjajId': widget.dogadjajID,
+          'KorisnikID': loggedInUser!.korisnikId,
+        });
+
+        if (userEvent.result.isNotEmpty) {
+          setState(() {
+            _hasTicket = true;
+          });
+        }
+      } catch (e) {
+        print("Failed to check for existing user event: $e");
+      }
+    }
   }
 
   Future<void> _fetchEvents() async {
@@ -148,9 +178,62 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   }
 
   Widget _buildActionButtons() {
-    return ElevatedButton(
-      onPressed: () {
-        StripeService.instance.makePayment();
+    return _hasTicket
+        ? Stack(
+      children: [
+        ElevatedButton(
+          onPressed: null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.grey,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: const Text("Karta kupljena"),
+        ),
+        Positioned.fill(
+          child: Opacity(
+            opacity: 0.3,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Center(
+                child: Icon(
+                  Icons.check_circle,
+                  size: 80,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    )
+        : ElevatedButton(
+      onPressed: () async {
+        try {
+          StripeService.instance.makePayment();
+
+          var userEventRequest = {
+            'DogadjajID': widget.dogadjajID,
+            'KorisnikID': loggedInUser?.korisnikId,
+          };
+
+          var userEvent = await _userEventsProvider.Insert(userEventRequest);
+
+          if (userEvent != null) {
+            print("User Event inserted successfully with ID: ${userEvent.KorisnikDogadjajID}");
+            setState(() {
+              _hasTicket = true;
+            });
+          } else {
+            print("Failed to insert User Event.");
+          }
+        } catch (e) {
+          print("An error occurred while inserting the user event: $e");
+        }
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.green,
@@ -159,7 +242,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           borderRadius: BorderRadius.circular(8),
         ),
       ),
-      child: const Text("Payment"),
+      child: const Text("Kupi kartu"),
     );
   }
 
