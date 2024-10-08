@@ -29,6 +29,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   List<dynamic> _recommendedEvents = [];
   User? loggedInUser;
   bool _hasTicket = false;
+  bool _isProcessingPayment = false;
 
   @override
   void didChangeDependencies() {
@@ -212,27 +213,41 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       ],
     )
         : ElevatedButton(
-      onPressed: () async {
+      onPressed: _isProcessingPayment
+          ? null
+          : () async {
+        setState(() {
+          _isProcessingPayment = true;
+        });
+
         try {
-          StripeService.instance.makePayment();
+          var paymentSuccess = await StripeService.instance.makePayment();
 
-          var userEventRequest = {
-            'DogadjajID': widget.dogadjajID,
-            'KorisnikID': loggedInUser?.korisnikId,
-          };
+          if (paymentSuccess) {
+            var userEventRequest = {
+              'DogadjajID': widget.dogadjajID,
+              'KorisnikID': loggedInUser?.korisnikId,
+            };
 
-          var userEvent = await _userEventsProvider.Insert(userEventRequest);
+            var userEvent = await _userEventsProvider.Insert(userEventRequest);
 
-          if (userEvent != null) {
-            print("User Event inserted successfully with ID: ${userEvent.KorisnikDogadjajID}");
-            setState(() {
-              _hasTicket = true;
-            });
+            if (userEvent != null) {
+              print("User Event inserted successfully with ID: ${userEvent.KorisnikDogadjajID}");
+              setState(() {
+                _hasTicket = true;
+              });
+            } else {
+              print("Failed to insert User Event.");
+            }
           } else {
-            print("Failed to insert User Event.");
+            print("Payment failed.");
           }
         } catch (e) {
-          print("An error occurred while inserting the user event: $e");
+          print("An error occurred while processing payment: $e");
+        } finally {
+          setState(() {
+            _isProcessingPayment = false;
+          });
         }
       },
       style: ElevatedButton.styleFrom(

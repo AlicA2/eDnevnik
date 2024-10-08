@@ -14,17 +14,19 @@ import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/user_events_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
-import 'package:ednevnik_admin/utils/consts.dart';
 import 'package:ednevnik_admin/utils/util.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart' as flutter; // Use alias for Flutter
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
+import '.env';
 
 void main() async {
   await _setup();
+
   HttpOverrides.global = MyHttpOverrides();
+
 
   runApp(MultiProvider(
     providers: [
@@ -47,7 +49,8 @@ void main() async {
 
 Future<void> _setup() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey = stripePublishableKey;
+  Stripe.publishableKey=stripePublishableKey;
+  //await Stripe.instance.applySettings();
 }
 
 class MyApp extends StatelessWidget {
