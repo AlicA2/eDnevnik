@@ -8,6 +8,10 @@ using eDnevnik.Services.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -105,5 +109,63 @@ using (var scope = app.Services.CreateScope())
     var conn = dataContext.Database.GetConnectionString();
     dataContext.Database.Migrate();
 }
+
+
+//string hostname = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitMQ";
+//string username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";
+//string password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
+//string virtualHost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
+
+//var factory = new ConnectionFactory
+//{
+//    HostName = hostname,
+//    UserName = username,
+//    Password = password,
+//    VirtualHost = virtualHost,
+//};
+
+//using var connection = factory.CreateConnection();
+//using var channel = connection.CreateModel();
+
+//channel.QueueDeclare(queue: "kontakt_added",
+//                     durable: false,
+//                     exclusive: false,
+//                     autoDelete: false,
+//                     arguments: null);
+
+//Console.WriteLine(" [*] Waiting for messages.");
+
+//var consumer = new EventingBasicConsumer(channel);
+//consumer.Received += async (model, ea) =>
+//{
+//    var body = ea.Body.ToArray();
+//    var message = Encoding.UTF8.GetString(body);
+//    Console.WriteLine(message);
+
+//    var insertRequest = JsonSerializer.Deserialize<KontaktInsertRequest>(message);
+//    using (var scope = app.Services.CreateScope())
+//    {
+//        var kontaktService = scope.ServiceProvider.GetRequiredService<IKontaktService>();
+
+//        if (insertRequest != null)
+//        {
+//            try
+//            {
+//                var result = await kontaktService.Insert(insertRequest);
+//                if (result != null)
+//                {
+//                    Console.WriteLine("Kontakt uspješno dodat.");
+//                }
+//            }
+//            catch (Exception e)
+//            {
+//                Console.WriteLine($"Error handling contact addition: {e.Message}");
+//            }
+//        }
+//    }
+//};
+
+//channel.BasicConsume(queue: "kontakt_added", autoAck: true, consumer: consumer);
+
 
 app.Run();
