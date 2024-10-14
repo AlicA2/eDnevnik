@@ -1,0 +1,72 @@
+services:
+  # mssql docker
+  ednevnik-sql:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=AM@R!rAm@r!
+      - MSSQL_PID=Developer
+    ports:
+      - 1401:1433
+    expose:
+      - 1433
+    networks:
+      - ednevniknet2024
+
+  ednevnik-api:
+    restart: unless-stopped
+    build:
+      context: ./eDnevnik
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=ednevnik-sql,1433;Database=eDnevnikIB200087;User=sa;Password=AM@R!rAm@r!;ConnectRetryCount=0; TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RABBITMQ_HOST=rabbitMQ
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_VIRTUALHOST=/
+    ports:
+      - 7260:7260
+    networks:
+      - ednevniknet2024
+    links:
+      - ednevnik-sql
+      - rabbitmq
+    depends_on:
+      - ednevnik-sql
+      - rabbitmq
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: 'rabbitmq_container'
+    restart: unless-stopped
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - ednevniknet2024 
+
+  dodatni_api:
+    restart: unless-stopped
+    build:
+      context: ./eDnevnikDodatni
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=ednevnik-sql,1433;Database=eDnevnikIB200087;User=sa;Password=AM@R!rAm@r!;ConnectRetryCount=0; TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RABBITMQ_HOST=rabbitMQ
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_VIRTUALHOST=/
+    ports:
+      - 7005:7005
+    networks:
+      - ednevniknet2024
+    depends_on:
+      - ednevnik-sql
+      - rabbitmq
+
+networks:
+  ednevniknet2024:
+    driver: bridge

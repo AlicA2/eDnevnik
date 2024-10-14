@@ -58,7 +58,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         datumSlanja: DateTime.now(),
       );
 
-      await _messageProvider.Insert(message);
+      await _messageProvider.insert(message);
 
       setState(() {
         _selectedRecipientID = null;
