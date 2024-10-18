@@ -116,9 +116,9 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
       padding: const EdgeInsets.all(16.0),
       itemCount: _eventsList.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
+        crossAxisCount: 5,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
         childAspectRatio: 0.75,
       ),
       itemBuilder: (context, index) {
@@ -136,53 +136,191 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              event.nazivDogadjaja ?? "No Name",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            event.slika != null
-                ? Container(
-                    height: 100,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: MemoryImage(base64Decode(event.slika!)),
-                        fit: BoxFit.cover,
-                      ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Text(
+                      event.nazivDogadjaja ?? "No Name",
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                  )
-                : Container(
-                    height: 100,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(Icons.image, size: 50, color: Colors.grey),
                   ),
-            SizedBox(height: 8),
-            Text(
-              event.opisDogadjaja ?? "No Description",
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 14),
-            ),
-            SizedBox(height: 8),
-            Text(
-              event.datumDogadjaja != null
-                  ? DateFormat('yyyy-MM-dd').format(event.datumDogadjaja!)
-                  : "No Date",
-              style: TextStyle(color: Colors.grey),
-            ),
-          ],
+                  IconButton(
+                    icon: Icon(Icons.edit, color: Colors.blue),
+                    onPressed: () {
+                       _showEditEventDialog(event);
+                    }
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              event.slika != null && event.slika!.isNotEmpty
+                  ? Container(
+                      height: 100,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: _buildImageFromBase64(event.slika!),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  : _buildPlaceholderImage(),
+              SizedBox(height: 8),
+              Text(
+                event.opisDogadjaja ?? "No Description",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 14),
+              ),
+              SizedBox(height: 8),
+              Text(
+                event.datumDogadjaja != null
+                    ? DateFormat('yyyy-MM-dd').format(event.datumDogadjaja!)
+                    : "No Date",
+                style: TextStyle(color: Colors.grey),
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Future<void> _showEditEventDialog(Events event) {
+    String? errorMessage;
+
+    _nazivController.text = event.nazivDogadjaja ?? '';
+    _opisController.text = event.opisDogadjaja ?? '';
+    _selectedDate = event.datumDogadjaja;
+    _base64Image = event.slika;
+    _isSlikaSelected = _base64Image != null;
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text("Uredi Događaj"),
+              content: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildTextField("Naziv događaja", _nazivController),
+                      SizedBox(height: 16),
+                      _buildTextField("Opis događaja", _opisController),
+                      SizedBox(height: 16),
+                      _buildDateButton(),
+                      SizedBox(height: 16),
+                      _buildImageButton(setState),
+                      SizedBox(height: 16),
+                      _buildImagePreview(),
+                      if (_isSlikaSelected) SizedBox(height: 16),
+                      if (errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: Text(
+                            errorMessage!,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    _resetForm();
+                    Navigator.pop(context);
+                  },
+                  child: Text("Odustani"),
+                  style:
+                      ElevatedButton.styleFrom(foregroundColor: Colors.black),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate() &&
+                        _selectedDate != null &&
+                        _base64Image != null) {
+                      setState(() {
+                        errorMessage = null;
+                      });
+
+                      var updatedEvent = {
+                        'nazivDogadjaja': _nazivController.text,
+                        'opisDogadjaja': _opisController.text,
+                        'slika': _base64Image,
+                        'datumDogadjaja': _selectedDate?.toIso8601String(),
+                      };
+
+                      try {
+                        await _eventsProvider.Update(
+                            event.dogadjajId!, updatedEvent);
+                        Navigator.pop(context);
+                        _resetForm();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Događaj uspješno uređen")),
+                        );
+                        _resetForm();
+                        _fetchEvents();
+                      } catch (e) {
+                        _showErrorDialog();
+                      }
+                    } else {
+                      setState(() {
+                        if (_selectedDate == null) {
+                          errorMessage = "Molimo odaberite datum događaja.";
+                        } else if (_base64Image == null) {
+                          errorMessage = "Molimo odaberite sliku za događaj.";
+                        }
+                      });
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white),
+                  child: Text("Uredi"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildPlaceholderImage() {
+    return Container(
+      height: 100,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Center(
+        child: Icon(Icons.image, size: 50, color: Colors.grey),
+      ),
+    );
+  }
+
+  ImageProvider _buildImageFromBase64(String base64String) {
+    try {
+      return MemoryImage(base64Decode(base64String));
+    } catch (e) {
+      print("Error decoding base64 image: $e");
+      return const NetworkImage("https://via.placeholder.com/150");
+    }
   }
 
   Widget _buildScreenHeader() {
@@ -221,7 +359,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          width: 300,
+          width: 210,
           child: DropdownButton<School>(
             value: _selectedSchool,
             items: _schools.map((school) {
@@ -310,7 +448,10 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    _resetForm();
+                    Navigator.pop(context);
+                  },
                   child: Text("Odustani"),
                   style:
                       ElevatedButton.styleFrom(foregroundColor: Colors.black),
@@ -367,6 +508,14 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
     );
   }
 
+  void _resetForm() {
+    _nazivController.clear();
+    _opisController.clear();
+    _selectedDate = null;
+    _base64Image = null;
+    _isSlikaSelected = false;
+  }
+
   Widget _buildTextField(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -409,20 +558,35 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   }
 
   Widget _buildImagePreview() {
-    return _isSlikaSelected && _image != null
-        ? Container(
-            height: 150,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: FileImage(_image!),
-                fit: BoxFit.cover,
-              ),
-            ),
-          )
-        : const SizedBox.shrink();
+  if (_isSlikaSelected && _image != null) {
+    return Container(
+      height: 150,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        image: DecorationImage(
+          image: FileImage(_image!),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  } else if (_base64Image != null) {
+    return Container(
+      height: 150,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        image: DecorationImage(
+          image: _buildImageFromBase64(_base64Image!),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  } else {
+    return _buildPlaceholderImage();
   }
+}
+
 
   Widget _buildDateButton() {
     return Padding(
@@ -474,9 +638,9 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
       try {
         await _eventsProvider.Insert(newEvent);
         Navigator.pop(context);
+        _resetForm();
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Događaj uspješno dodan")));
-        _resetForm();
         _fetchEvents();
       } catch (e) {
         _showErrorDialog();
@@ -491,17 +655,6 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
             SnackBar(content: Text("Molimo odaberite sliku za događaj.")));
       }
     }
-  }
-
-  void _resetForm() {
-    setState(() {
-      _nazivController.clear();
-      _opisController.clear();
-      _selectedDate = null;
-      _image = null;
-      _base64Image = null;
-      _isSlikaSelected = false;
-    });
   }
 
   void _showErrorDialog() {

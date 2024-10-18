@@ -47,8 +47,6 @@ namespace eDnevnik.Services.DogadjajiStateMachine
 
             var mappedEntity = _mapper.Map<Model.Models.Dogadjaji>(entity);
 
-            using var bus = RabbitHutch.CreateBus("host=localhost");
-            bus.PubSub.Publish(mappedEntity);
             return mappedEntity;
         }
         public override async Task<List<string>> AllowedActions()

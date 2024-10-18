@@ -109,12 +109,16 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
           actions: [
             TextButton(
               child: const Text('Zatvori'),
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black, backgroundColor: Colors.white),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             ElevatedButton(
               child: const Text('Pošalji poruku'),
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.green),
               onPressed: () async {
                 message.odgovor = _replyController.text;
                 await _messageProvider.Update(message.porukaID!, message);
@@ -335,10 +339,17 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                     Row(
                       children: [
                         IconButton(
-                          icon: Icon(Icons.reply),
-                          onPressed: () async {
-                            _replyToMessage(e);
-                          },
+                          icon: Icon(
+                            Icons.reply,
+                            color: e.odgovor != null && e.odgovor!.isNotEmpty
+                                ? Colors.grey
+                                : Colors.blue,
+                          ),
+                          onPressed: e.odgovor != null && e.odgovor!.isNotEmpty
+                              ? null
+                              : () async {
+                                  _replyToMessage(e);
+                                },
                         ),
                       ],
                     ),

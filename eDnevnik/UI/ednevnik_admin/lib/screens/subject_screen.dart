@@ -158,15 +158,6 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
         children: [
           Row(
             children: [
-              // Expanded(
-              //   child: TextField(
-              //     decoration: InputDecoration(
-              //       labelText: "Naziv ili šifra",
-              //       prefixIcon: Icon(Icons.search),
-              //     ),
-              //     controller: _ftsController,
-              //   ),
-              // ),
               SizedBox(width: 20),
               Expanded(
                 child: TextField(
@@ -267,21 +258,24 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Align(
         alignment: Alignment.center,
-        child: ElevatedButton(
-          onPressed: () async {
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => SingleSubjectListScreen(subject: null),
-              ),
-            );
-            if (result == 'added' || result == 'updated' || result == 'deleted') {
-              _fetchSubjects();
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Colors.blue,
+        child: Padding(
+          padding: const EdgeInsets.only(top:16.0),
+          child: ElevatedButton(
+            onPressed: () async {
+              final result = await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SingleSubjectListScreen(subject: null),
+                ),
+              );
+              if (result == 'added' || result == 'updated' || result == 'deleted') {
+                _fetchSubjects();
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white, backgroundColor: Colors.blue,
+            ),
+            child: Text("Dodaj predmet"),
           ),
-          child: Text("Dodaj predmet"),
         ),
       ),
     );

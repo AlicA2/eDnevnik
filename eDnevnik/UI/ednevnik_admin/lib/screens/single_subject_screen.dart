@@ -101,27 +101,53 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
   }
 
   String? _validateNaziv(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Ovo polje ne može biti prazno.';
-    }
-    if (_containsNumbers(value)) {
-      return 'Naziv ne može sadržavati brojeve.';
-    }
-    if (_isDuplicateSubject(value)) {
-      return 'Predmet s ovim nazivom već postoji.';
-    }
-    return null;
+  if (value == null || value.isEmpty) {
+    return 'Ovo polje ne može biti prazno.';
   }
 
-  String? _validateOpis(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Ovo polje ne može biti prazno.';
-    }
-    if (_containsNumbers(value)) {
-      return 'Opis ne može sadržavati brojeve.';
-    }
-    return null;
+  if (_containsNumbers(value)) {
+    return 'Naziv ne može sadržavati brojeve.';
   }
+
+  if (_isDuplicateSubject(value)) {
+    return 'Predmet s ovim nazivom već postoji.';
+  }
+
+  if (value[0] != value[0].toUpperCase()) {
+    return 'Naziv mora početi velikim slovom.';
+  }
+
+  final romanNumerals = [" I", " II", " III", " IV"];
+  bool endsWithValidRomanNumeral = romanNumerals.any((suffix) => value.endsWith(suffix));
+
+  if (!endsWithValidRomanNumeral) {
+    return 'Naziv mora završavati s " I", " II", " III" ili " IV".';
+  }
+
+  return null;
+}
+
+
+  String? _validateOpis(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Ovo polje ne može biti prazno.';
+  }
+
+  if (_containsNumbers(value)) {
+    return 'Opis ne može sadržavati brojeve.';
+  }
+
+  if (value[0] != value[0].toUpperCase()) {
+    return 'Opis mora početi velikim slovom.';
+  }
+
+  if (!value.endsWith('.')) {
+    return 'Opis mora završiti sa tačkom.';
+  }
+
+  return null;
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +176,7 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Colors.red,
                           ),
                           onPressed: () async {await _deleteSubject();},
                           child: Text("Izbriši predmet"),
@@ -158,8 +184,8 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
                       Spacer(),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.black,
+                          backgroundColor: Colors.white,
                         ),
                         onPressed: () {
                           Navigator.pop(context);
@@ -170,7 +196,7 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor: Colors.blue,
+                          backgroundColor: Colors.green,
                         ),
                         onPressed: () async {
                         await _saveForm(context);
@@ -234,11 +260,13 @@ Future<void> _deleteSubject() async {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
+            style: ElevatedButton.styleFrom(foregroundColor: Colors.black,backgroundColor: Colors.white),
             child: Text('Odustani'),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text('Obriši'),
+            style: ElevatedButton.styleFrom(foregroundColor: Colors.white,backgroundColor: Colors.red),
+            child: Text('Izbriši'),
           ),
         ],
       ),

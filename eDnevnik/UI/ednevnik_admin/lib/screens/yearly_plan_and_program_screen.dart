@@ -204,7 +204,7 @@ class _YearlyPlanAndProgramDetailScreenState
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          width: 300,
+          width: 210,
           child: DropdownButton<School>(
             value: _selectedSchool,
             items: _schools.map((school) {

@@ -57,55 +57,85 @@ class _SingleAnnualPlanProgramScreenState
     _fetchSchools();
   }
 
- Future<void> _fetchDepartments() async {
-  if (_selectedSchool != null) {
+  Future<List<AnnualPlanProgram>> _fetchAllPlanPrograms() async {
     try {
-      var data = await _departmentProvider.get(filter: {
-        'SkolaID': _selectedSchool?.skolaID,
-      });
-      if (mounted) {
-        setState(() {
-          _departments = data.result;
-          _selectedDepartment = widget.planProgram != null
-              ? _departments.firstWhere(
-                  (dept) => dept.odjeljenjeID == widget.planProgram?.odjeljenjeID,
-                  orElse: () => _departments.isNotEmpty 
-                      ? _departments.first 
-                      : Department(0, '', 0, 0),
-                )
-              : null;
-        });
-      }
+      var planPrograms = await _planProgramProvider
+          .get(filter: {"SkolaID": _selectedSchool?.skolaID});
+      return planPrograms.result;
     } catch (e) {
-      _showErrorDialog("Failed to load departments: $e");
+      _showErrorDialog("Failed to load existing annual plan programs: $e");
+      return [];
     }
   }
-}
+
+  Future<void> _fetchDepartments() async {
+    if (_selectedSchool != null) {
+      try {
+        var allPlanPrograms = await _fetchAllPlanPrograms();
+        var usedDepartmentIDs =
+            allPlanPrograms.map((plan) => plan.odjeljenjeID).toSet();
+
+        var data = await _departmentProvider.get(filter: {
+          'SkolaID': _selectedSchool?.skolaID,
+        });
+
+        if (mounted) {
+          setState(() {
+            _departments = data.result.where((dept) {
+              return dept.odjeljenjeID == widget.planProgram?.odjeljenjeID ||
+                  !usedDepartmentIDs.contains(dept.odjeljenjeID);
+            }).toList();
+
+            _selectedDepartment = widget.planProgram != null
+                ? _departments.firstWhere(
+                    (dept) =>
+                        dept.odjeljenjeID == widget.planProgram?.odjeljenjeID,
+                    orElse: () => _departments.isNotEmpty
+                        ? _departments.first
+                        : Department(0, '', 0, 0),
+                  )
+                : null;
+          });
+        }
+      } catch (e) {
+        _showErrorDialog("Failed to load departments: $e");
+      }
+    }
+  }
 
   Future<void> _fetchSubjects() async {
-  if (_selectedSchool != null) {
-    try {
-      var data = await _subjectProvider.get(filter: {
-        'SkolaID': _selectedSchool?.skolaID,
-      });
-      if (mounted) {
-        setState(() {
-          _subjects = data.result;
-          _selectedSubject = widget.planProgram != null
-              ? _subjects.firstWhere(
-                  (sub) => sub.predmetID == widget.planProgram?.predmetID,
-                  orElse: () => _subjects.isNotEmpty 
-                      ? _subjects.first 
-                      : Subject(0, '', '', '', 0,0),
-                )
-              : null;
+    if (_selectedSchool != null) {
+      try {
+        var allPlanPrograms = await _fetchAllPlanPrograms();
+        var usedSubjectIDs =
+            allPlanPrograms.map((plan) => plan.predmetID).toSet();
+
+        var data = await _subjectProvider.get(filter: {
+          'SkolaID': _selectedSchool?.skolaID,
         });
+
+        if (mounted) {
+          setState(() {
+            _subjects = data.result.where((sub) {
+              return sub.predmetID == widget.planProgram?.predmetID ||
+                  !usedSubjectIDs.contains(sub.predmetID);
+            }).toList();
+
+            _selectedSubject = widget.planProgram != null
+                ? _subjects.firstWhere(
+                    (sub) => sub.predmetID == widget.planProgram?.predmetID,
+                    orElse: () => _subjects.isNotEmpty
+                        ? _subjects.first
+                        : Subject(0, '', '', '', 0, 0),
+                  )
+                : null;
+          });
+        }
+      } catch (e) {
+        _showErrorDialog("Failed to load subjects: $e");
       }
-    } catch (e) {
-      _showErrorDialog("Failed to load subjects: $e");
     }
   }
-}
 
   Future<void> _fetchSchools() async {
     try {
@@ -128,151 +158,166 @@ class _SingleAnnualPlanProgramScreenState
   }
 
   @override
-Widget build(BuildContext context) {
-  final isEditMode = widget.planProgram != null;
-  return MasterScreenWidget(
-    child: Align(
-      alignment: Alignment.topLeft,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: FormBuilder(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildScreenName(),
-                    SizedBox(height: 20),
-                    FormBuilderTextField(
-                      name: 'naziv',
-                      initialValue: isEditMode ? widget.planProgram?.naziv : '',
-                      decoration: InputDecoration(labelText: 'Naziv'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(
-                            errorText: 'Polje je obavezno'),
-                        (val) {
-                          if (val != null &&
-                              !RegExp(r'^[a-zA-Z\s]*$').hasMatch(val)) {
-                            return 'Mogu se uneti samo slova';
-                          }
-                          return null;
-                        },
-                      ]),
-                    ),
-                    SizedBox(height: 20),
-                    FormBuilderTextField(
-                      name: 'brojCasova',
-                      initialValue: isEditMode
-                          ? widget.planProgram?.brojCasova.toString()
-                          : '',
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(labelText: 'Broj časova'),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(
-                            errorText: 'Broj časova ne može biti prazan'),
-                        FormBuilderValidators.numeric(
-                            errorText: 'Broj časova mora biti broj'),
-                        FormBuilderValidators.min(5,
-                            errorText: 'Broj časova mora biti najmanje 5'),
-                        FormBuilderValidators.max(10,
-                            errorText: 'Broj časova mora biti najviše 10'),
-                      ]),
-                    ),
-                    SizedBox(height: 20),
-                    FormBuilderDropdown<Department>(
-                      name: 'odjeljenje',
-                      decoration: InputDecoration(labelText: 'Odjeljenje'),
-                      initialValue: _selectedDepartment,
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(errorText: 'Odjeljenje je obavezno'),
-                      ]),
-                      onChanged: isEditMode ? null : (Department? newValue) {
-                        setState(() {
-                          _selectedDepartment = newValue;
-                          _selectedDepartmentID = newValue?.odjeljenjeID;
-                        });
-                      },
-                      items: _departments.map((Department department) {
-                        return DropdownMenuItem<Department>(
-                          value: department,
-                          child: Text(department.nazivOdjeljenja ?? ""),
-                        );
-                      }).toList(),
-                      enabled: !isEditMode,
-                    ),
-                    SizedBox(height: 20),
-                    FormBuilderDropdown<Subject>(
-                      name: 'predmet',
-                      decoration: InputDecoration(labelText: 'Predmet'),
-                      initialValue: _selectedSubject,
-                      validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(errorText: 'Predmet je obavezan'),
-                      ]),
-                      onChanged: isEditMode ? null : (Subject? newValue) {
-                        setState(() {
-                          _selectedSubject = newValue;
-                          _selectedSubjectID = newValue?.predmetID;
-                        });
-                      },
-                      items: _subjects.map((Subject subject) {
-                        return DropdownMenuItem<Subject>(
-                          value: subject,
-                          child: Text(subject.naziv ?? ""),
-                        );
-                      }).toList(),
-                      enabled: !isEditMode,
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      children: [
-                        if (isEditMode)
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.blue,
-                            ),
-                            onPressed: () async {await _deletePlanProgram();},
-                            child: Text('Brisanje plana i programa'),
-                          ),
-                        Spacer(),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.blue,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
+  Widget build(BuildContext context) {
+    final isEditMode = widget.planProgram != null;
+    return MasterScreenWidget(
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: FormBuilder(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildScreenName(),
+                      SizedBox(height: 20),
+                      FormBuilderTextField(
+                        name: 'naziv',
+                        initialValue:
+                            isEditMode ? widget.planProgram?.naziv : '',
+                        decoration: InputDecoration(labelText: 'Naziv'),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Polje je obavezno'),
+                          (val) {
+                            if (val != null &&
+                                !RegExp(r'^[a-zA-Z\s]*$').hasMatch(val)) {
+                              return 'Mogu se uneti samo slova';
+                            }
+                            return null;
                           },
-                          child: Text('Odustani'),
+                        ]),
+                      ),
+                      SizedBox(height: 20),
+                      FormBuilderTextField(
+                        name: 'brojCasova',
+                        initialValue: isEditMode
+                            ? widget.planProgram?.brojCasova.toString()
+                            : '',
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(labelText: 'Broj časova'),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Broj časova ne može biti prazan'),
+                          FormBuilderValidators.numeric(
+                              errorText: 'Broj časova mora biti broj'),
+                          FormBuilderValidators.min(5,
+                              errorText: 'Broj časova mora biti najmanje 5'),
+                          FormBuilderValidators.max(10,
+                              errorText: 'Broj časova mora biti najviše 10'),
+                        ]),
+                      ),
+                      SizedBox(height: 20),
+                      FormBuilderDropdown<Department>(
+                        name: 'odjeljenje',
+                        decoration: InputDecoration(labelText: 'Odjeljenje'),
+                        initialValue: _selectedDepartment,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Odjeljenje je obavezno'),
+                        ]),
+                        onChanged: isEditMode
+                            ? null
+                            : (Department? newValue) {
+                                setState(() {
+                                  _selectedDepartment = newValue;
+                                  _selectedDepartmentID =
+                                      newValue?.odjeljenjeID;
+                                });
+                              },
+                        items: _departments.map((Department department) {
+                          return DropdownMenuItem<Department>(
+                            value: department,
+                            child: Text(department.nazivOdjeljenja ?? ""),
+                          );
+                        }).toList(),
+                        enabled: !isEditMode,
+                      ),
+                      SizedBox(height: 20),
+                      FormBuilderDropdown<Subject>(
+                        name: 'predmet',
+                        decoration: InputDecoration(labelText: 'Predmet'),
+                        initialValue: _selectedSubject,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Predmet je obavezan'),
+                        ]),
+                        onChanged: isEditMode
+                            ? null
+                            : (Subject? newValue) {
+                                setState(() {
+                                  _selectedSubject = newValue;
+                                  _selectedSubjectID = newValue?.predmetID;
+                                });
+                              },
+                        items: _subjects.map((Subject subject) {
+                          return DropdownMenuItem<Subject>(
+                            value: subject,
+                            child: Text(subject.naziv ?? ""),
+                          );
+                        }).toList(),
+                        enabled: !isEditMode,
+                      ),
+                      SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(top:16.0),
+                        child: Row(
+                          children: [
+                            if (isEditMode)
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.red,
+                                ),
+                                onPressed: () async {
+                                  await _deletePlanProgram();
+                                },
+                                child: Text('Brisanje plana i programa'),
+                              ),
+                            Spacer(),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.black,
+                                backgroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('Odustani'),
+                            ),
+                            SizedBox(width: 10),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.green,
+                              ),
+                              onPressed: () async {
+                                await _saveForm();
+                              },
+                              child: Text('Sačuvaj'),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 10),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.blue,
-                          ),
-                          onPressed: () async {await _saveForm();},
-                          child: Text('Sačuvaj'),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildScreenName() {
     return Align(
@@ -316,18 +361,20 @@ Widget build(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          width: 300,
+          width: 210,
           child: DropdownButton<School>(
             value: _selectedSchool,
             hint: Text("Select School"),
-            onChanged: isEditMode ? null :(School? newValue) async {
-              setState(() {
-                _selectedSchool = newValue;
-                _selectedSchoolID = newValue?.skolaID;
-              });
-              await _fetchDepartments();
-              await _fetchSubjects();
-            },
+            onChanged: isEditMode
+                ? null
+                : (School? newValue) async {
+                    setState(() {
+                      _selectedSchool = newValue;
+                      _selectedSchoolID = newValue?.skolaID;
+                    });
+                    await _fetchDepartments();
+                    await _fetchSubjects();
+                  },
             items: _schools.map((School school) {
               return DropdownMenuItem<School>(
                 value: school,
@@ -340,88 +387,90 @@ Widget build(BuildContext context) {
     );
   }
 
- Future<void> _saveForm() async {
-  if (_formKey.currentState?.saveAndValidate() ?? false) {
-    var formValues = Map<String, dynamic>.from(_formKey.currentState?.value ?? {});
+  Future<void> _saveForm() async {
+    if (_formKey.currentState?.saveAndValidate() ?? false) {
+      var formValues =
+          Map<String, dynamic>.from(_formKey.currentState?.value ?? {});
 
-    formValues['skolaID'] = _selectedSchool?.skolaID;
-    formValues['predmetID'] = _selectedSubject?.predmetID;
-    formValues['odjeljenjeID'] = _selectedDepartment?.odjeljenjeID;
+      formValues['skolaID'] = _selectedSchool?.skolaID;
+      formValues['predmetID'] = _selectedSubject?.predmetID;
+      formValues['odjeljenjeID'] = _selectedDepartment?.odjeljenjeID;
 
-    print('Form values: $formValues');
+      print('Form values: $formValues');
 
-    try {
-      if (widget.planProgram == null) {
-        bool exists = await _planProgramProvider.checkIfExists(
-            formValues['odjeljenjeID'] ?? 0, formValues['predmetID'] ?? 0);
+      try {
+        if (widget.planProgram == null) {
+          bool exists = await _planProgramProvider.checkIfExists(
+              formValues['odjeljenjeID'] ?? 0, formValues['predmetID'] ?? 0);
 
-        if (exists) {
-          _showErrorDialog(
-              'Plan i program za izabrano odjeljenje i predmet već postoji.');
-          return;
-        }
-        await _planProgramProvider.Insert(formValues);
-      } else {
-        final id = widget.planProgram!.godisnjiPlanProgramID;
-        if (id != null) {
-          await _planProgramProvider.Update(id, formValues);
+          if (exists) {
+            _showErrorDialog(
+                'Plan i program za izabrano odjeljenje i predmet već postoji.');
+            return;
+          }
+          await _planProgramProvider.Insert(formValues);
         } else {
-          _showErrorDialog('Neuspješno ažuriranje podataka.');
-          return;
+          final id = widget.planProgram!.godisnjiPlanProgramID;
+          if (id != null) {
+            await _planProgramProvider.Update(id, formValues);
+          } else {
+            _showErrorDialog('Neuspješno ažuriranje podataka.');
+            return;
+          }
         }
+        Navigator.pop(context, true);
+      } catch (e) {
+        _showErrorDialog("Failed to save data: $e");
       }
-      Navigator.pop(context, true);
-    } catch (e) {
-      _showErrorDialog("Failed to save data: $e");
     }
   }
-}
-
 
   Future<void> _deletePlanProgram() async {
-  final annualPlanProgramID = widget.planProgram?.godisnjiPlanProgramID;
+    final annualPlanProgramID = widget.planProgram?.godisnjiPlanProgramID;
 
-  if (annualPlanProgramID != null) {
-    try {
-      final hasClasses = await _classProvider.hasClasses(annualPlanProgramID);
+    if (annualPlanProgramID != null) {
+      try {
+        final hasClasses = await _classProvider.hasClasses(annualPlanProgramID);
 
-      if (hasClasses) {
-        _showErrorDialog(
-          'Ne možete izbrisati plan i program jer postoje časovi povezani sa njim.'
+        if (hasClasses) {
+          _showErrorDialog(
+              'Ne možete izbrisati plan i program jer postoje časovi povezani sa njim.');
+          return;
+        }
+
+        bool? confirmDelete = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Potvrda brisanja'),
+            content: Text(
+                'Da li ste sigurni da želite da obrišete ovaj plan i program?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.white),
+                child: Text('Odustani'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white, backgroundColor: Colors.red),
+                child: Text('Obriši'),
+              ),
+            ],
+          ),
         );
-        return;
-      }
 
-      bool? confirmDelete = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Potvrda brisanja'),
-          content: Text('Da li ste sigurni da želite da obrišete ovaj plan i program?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text('Odustani'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: Text('Obriši'),
-            ),
-          ],
-        ),
-      );
-
-      if (confirmDelete == true) {
-        await _planProgramProvider.delete(annualPlanProgramID);
-        Navigator.pop(context, true);
+        if (confirmDelete == true) {
+          await _planProgramProvider.delete(annualPlanProgramID);
+          Navigator.pop(context, true);
+        }
+      } catch (e) {
+        _showErrorDialog("Failed to delete data: $e");
       }
-    } catch (e) {
-      _showErrorDialog("Failed to delete data: $e");
     }
   }
-}
-
-
-
 
   void _showErrorDialog(String message) {
     showDialog(
