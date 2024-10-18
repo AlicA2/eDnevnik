@@ -151,11 +151,21 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.edit, color: Colors.blue),
-                    onPressed: () {
-                       _showEditEventDialog(event);
-                    }
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () {
+                           _showEditEventDialog(event);
+                        }
+                      ),
+                      IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        _confirmDeleteEvent(event);
+                      },
+                    ),
+                    ],
                   ),
                 ],
               ),
@@ -275,7 +285,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                         _resetForm();
                         _fetchEvents();
                       } catch (e) {
-                        _showErrorDialog();
+                        _showErrorDialog("Failed to update event.");
                       }
                     } else {
                       setState(() {
@@ -483,7 +493,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                         _resetForm();
                         _fetchEvents();
                       } catch (e) {
-                        _showErrorDialog();
+                        _showErrorDialog("Failed to delete event.");
                       }
                     } else {
                       setState(() {
@@ -587,6 +597,69 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   }
 }
 
+void _showErrorDialog(String message) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Error'),
+      content: Text(message),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text('OK'),
+        ),
+      ],
+    ),
+  );
+}
+
+
+Future<void> _confirmDeleteEvent(Events event) async {
+  bool? confirmDelete = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Potvrda brisanja'),
+      content: Text('Da li ste sigurni da želite da obrišete ovaj događaj?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
+          ),
+          child: Text('Odustani'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, true),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.red,
+          ),
+          child: Text('Izbriši'),
+        ),
+      ],
+    ),
+  );
+
+  if (confirmDelete == true) {
+    await _deleteEvent(event);
+  }
+}
+
+Future<void> _deleteEvent(Events event) async {
+  if (event.dogadjajId != null) {
+    try {
+      print('Deleting event with ID: ${event.dogadjajId}');
+      await _eventsProvider.delete(event.dogadjajId!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Događaj uspješno obrisan")),
+      );
+      _fetchEvents();
+    } catch (e) {
+      _showErrorDialog("Greška prilikom brisanja događaja: $e");
+    }
+  }
+}
 
   Widget _buildDateButton() {
     return Padding(
@@ -643,7 +716,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
             .showSnackBar(SnackBar(content: Text("Događaj uspješno dodan")));
         _fetchEvents();
       } catch (e) {
-        _showErrorDialog();
+        _showErrorDialog("An error occurred.");
       }
     } else {
       if (_selectedDate == null) {
@@ -655,24 +728,5 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
             SnackBar(content: Text("Molimo odaberite sliku za događaj.")));
       }
     }
-  }
-
-  void _showErrorDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Greška"),
-          content:
-              Text("Greška prilikom dodavanja događaja. Pokušajte ponovo."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text("U redu"),
-            ),
-          ],
-        );
-      },
-    );
   }
 }
