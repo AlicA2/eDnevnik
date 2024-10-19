@@ -32,7 +32,6 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
     _schoolProvider = context.read<SchoolProvider>();
 
     _fetchSchools();
-    // _fetchSubjects();
 
   }
 

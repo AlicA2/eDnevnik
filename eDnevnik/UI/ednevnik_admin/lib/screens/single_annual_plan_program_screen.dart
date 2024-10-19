@@ -181,22 +181,52 @@ class _SingleAnnualPlanProgramScreenState
                       _buildScreenName(),
                       SizedBox(height: 20),
                       FormBuilderTextField(
-                        name: 'naziv',
-                        initialValue:
-                            isEditMode ? widget.planProgram?.naziv : '',
-                        decoration: InputDecoration(labelText: 'Naziv'),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText: 'Polje je obavezno'),
-                          (val) {
-                            if (val != null &&
-                                !RegExp(r'^[a-zA-Z\s]*$').hasMatch(val)) {
-                              return 'Mogu se uneti samo slova';
-                            }
-                            return null;
-                          },
-                        ]),
-                      ),
+  name: 'naziv',
+  initialValue: isEditMode ? widget.planProgram?.naziv : '',
+  decoration: InputDecoration(labelText: 'Naziv'),
+  validator: FormBuilderValidators.compose([
+    FormBuilderValidators.required(errorText: 'Polje je obavezno'),
+    (val) {
+      if (val != null && !RegExp(r'^[A-Z].*').hasMatch(val)) {
+        return 'Naziv mora početi velikim slovom';
+      }
+
+      if (val != null && !val.startsWith("Plan i program za ")) {
+        return 'Naziv mora početi sa "Plan i program za "';
+      }
+
+      if (val != null && val.length > "Plan i program za ".length + 2) {
+        String subjectPart = val.substring(
+            "Plan i program za ".length,
+            val.length - 2
+        ).trim();
+
+        if (subjectPart.isNotEmpty && !RegExp(r'^[A-Z].*').hasMatch(subjectPart)) {
+          return 'Predmet mora početi velikim slovom';
+        }
+      } else {
+        return 'Naziv mora imati validan predmet';
+      }
+
+      if (val != null &&
+          !val.endsWith(" I") &&
+          !val.endsWith(" II") &&
+          !val.endsWith(" III") &&
+          !val.endsWith(" IV")) {
+        return 'Naziv mora završiti sa " I", " II", " III" ili " IV"';
+      }
+
+      if (val != null && !RegExp(r'^[a-zA-Z\s]+$').hasMatch(val)) {
+        return 'Mogu se uneti samo slova';
+      }
+
+      return null;
+    },
+  ]),
+),
+
+
+
                       SizedBox(height: 20),
                       FormBuilderTextField(
                         name: 'brojCasova',
@@ -269,7 +299,7 @@ class _SingleAnnualPlanProgramScreenState
                       ),
                       SizedBox(height: 20),
                       Padding(
-                        padding: const EdgeInsets.only(top:16.0),
+                        padding: const EdgeInsets.only(top: 16.0),
                         child: Row(
                           children: [
                             if (isEditMode)

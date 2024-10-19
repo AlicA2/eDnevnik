@@ -117,6 +117,10 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
     return 'Naziv mora početi velikim slovom.';
   }
 
+  if (value.length < 4) {
+    return 'Naziv mora imati minimum 4 slova.';
+  }
+
   final romanNumerals = [" I", " II", " III", " IV"];
   bool endsWithValidRomanNumeral = romanNumerals.any((suffix) => value.endsWith(suffix));
 
@@ -139,6 +143,10 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
 
   if (value[0] != value[0].toUpperCase()) {
     return 'Opis mora početi velikim slovom.';
+  }
+
+    if (value.length < 4) {
+    return 'Opis mora imati minimum 4 slova.';
   }
 
   if (!value.endsWith('.')) {
