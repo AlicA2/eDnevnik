@@ -230,7 +230,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                       SizedBox(height: 16),
                       _buildTextField("Opis događaja", _opisController),
                       SizedBox(height: 16),
-                      _buildDateButton(),
+                      _buildDateButton(setState),
                       SizedBox(height: 16),
                       _buildImageButton(setState),
                       SizedBox(height: 16),
@@ -438,7 +438,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                       SizedBox(height: 16),
                       _buildTextField("Opis događaja", _opisController),
                       SizedBox(height: 16),
-                      _buildDateButton(),
+                      _buildDateButton(setState),
                       SizedBox(height: 16),
                       _buildImageButton(setState),
                       SizedBox(height: 16),
@@ -661,38 +661,40 @@ Future<void> _deleteEvent(Events event) async {
   }
 }
 
-  Widget _buildDateButton() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () => _selectDate(context),
-          child: Text(
-            _selectedDate == null
-                ? "Odaberite datum događaja"
-                : DateFormat('yyyy-MM-dd').format(_selectedDate!),
-          ),
-          style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue, foregroundColor: Colors.white),
+  Widget _buildDateButton(StateSetter setState) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () => _selectDate(context, setState),
+        child: Text(
+          _selectedDate == null
+              ? "Odaberite datum događaja"
+              : DateFormat('yyyy-MM-dd').format(_selectedDate!),
         ),
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue, foregroundColor: Colors.white),
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now().add(Duration(days: 5)),
-      firstDate: DateTime.now().add(Duration(days: 5)),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
+
+  Future<void> _selectDate(BuildContext context, StateSetter setState) async {
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: _selectedDate ?? DateTime.now().add(Duration(days: 5)),
+    firstDate: DateTime.now().add(Duration(days: 5)),
+    lastDate: DateTime(2101),
+  );
+  if (picked != null && picked != _selectedDate) {
+    setState(() {
+      _selectedDate = picked;
+    });
   }
+}
+
 
   Future<void> _submitEventForm() async {
     if (_formKey.currentState!.validate() &&
