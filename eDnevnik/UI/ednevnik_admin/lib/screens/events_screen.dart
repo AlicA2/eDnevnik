@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -154,17 +156,16 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                   Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue),
-                        onPressed: () {
-                           _showEditEventDialog(event);
-                        }
-                      ),
+                          icon: Icon(Icons.edit, color: Colors.blue),
+                          onPressed: () {
+                            _showEditEventDialog(event);
+                          }),
                       IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        _confirmDeleteEvent(event);
-                      },
-                    ),
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          _confirmDeleteEvent(event);
+                        },
+                      ),
                     ],
                   ),
                 ],
@@ -226,9 +227,9 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _buildTextField("Naziv događaja", _nazivController),
+                      _buildTextField("Naziv događaja", _nazivController, true),
                       SizedBox(height: 16),
-                      _buildTextField("Opis događaja", _opisController),
+                      _buildTextField("Opis događaja", _opisController, false),
                       SizedBox(height: 16),
                       _buildDateButton(setState),
                       SizedBox(height: 16),
@@ -434,9 +435,9 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _buildTextField("Naziv događaja", _nazivController),
+                      _buildTextField("Naziv događaja", _nazivController, true),
                       SizedBox(height: 16),
-                      _buildTextField("Opis događaja", _opisController),
+                      _buildTextField("Opis događaja", _opisController, false),
                       SizedBox(height: 16),
                       _buildDateButton(setState),
                       SizedBox(height: 16),
@@ -526,21 +527,47 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
     _isSlikaSelected = false;
   }
 
-  Widget _buildTextField(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(labelText: label),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "$label je obavezno polje";
-          }
-          return null;
-        },
-      ),
-    );
-  }
+  Widget _buildTextField(String label, TextEditingController controller, bool isNaziv) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: FormBuilderTextField(
+      name: label,
+      controller: controller,
+      decoration: InputDecoration(labelText: label),
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(errorText: "$label je obavezno polje"),
+        if (isNaziv)
+          ...[
+            FormBuilderValidators.match(
+              RegExp(r"^[A-Z]"), 
+              errorText: "Morate započeti velikim slovom"
+            ),
+            FormBuilderValidators.minLength(4, errorText: "Morate imati najmanje 4 znaka"),
+            FormBuilderValidators.match(
+              RegExp(r"^[A-Za-z]+$"), 
+              errorText: "Polje sadrži samo slova"
+            ),
+          ]
+        else
+          ...[
+            FormBuilderValidators.match(
+              RegExp(r"^[A-Z]"), 
+              errorText: "Morate započeti velikim slovom"
+            ),
+            FormBuilderValidators.minLength(4, errorText: "Morate imati najmanje 4 znaka"),
+            FormBuilderValidators.match(
+              RegExp(r"^[A-Z][a-zA-Z.,!? ]+$"), 
+              errorText: "Polje sadrži samo slova i znakove . , ! ?"
+            ),
+            FormBuilderValidators.match(
+              RegExp(r"[.,!?]$"), 
+              errorText: "Morate završiti s . , ! ili ?"
+            ),
+          ],
+      ]),
+    ),
+  );
+}
 
   Widget _buildImageButton(StateSetter setState) {
     return Padding(
@@ -568,133 +595,130 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   }
 
   Widget _buildImagePreview() {
-  if (_isSlikaSelected && _image != null) {
-    return Container(
-      height: 150,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        image: DecorationImage(
-          image: FileImage(_image!),
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  } else if (_base64Image != null) {
-    return Container(
-      height: 150,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        image: DecorationImage(
-          image: _buildImageFromBase64(_base64Image!),
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  } else {
-    return _buildPlaceholderImage();
-  }
-}
-
-void _showErrorDialog(String message) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Error'),
-      content: Text(message),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text('OK'),
-        ),
-      ],
-    ),
-  );
-}
-
-
-Future<void> _confirmDeleteEvent(Events event) async {
-  bool? confirmDelete = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Potvrda brisanja'),
-      content: Text('Da li ste sigurni da želite da obrišete ovaj događaj?'),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.white,
+    if (_isSlikaSelected && _image != null) {
+      return Container(
+        height: 150,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          image: DecorationImage(
+            image: FileImage(_image!),
+            fit: BoxFit.cover,
           ),
-          child: Text('Odustani'),
         ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, true),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.red,
-          ),
-          child: Text('Izbriši'),
-        ),
-      ],
-    ),
-  );
-
-  if (confirmDelete == true) {
-    await _deleteEvent(event);
-  }
-}
-
-Future<void> _deleteEvent(Events event) async {
-  if (event.dogadjajId != null) {
-    try {
-      print('Deleting event with ID: ${event.dogadjajId}');
-      await _eventsProvider.delete(event.dogadjajId!);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Događaj uspješno obrisan")),
       );
-      _fetchEvents();
-    } catch (e) {
-      _showErrorDialog("Greška prilikom brisanja događaja: $e");
+    } else if (_base64Image != null) {
+      return Container(
+        height: 150,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          image: DecorationImage(
+            image: _buildImageFromBase64(_base64Image!),
+            fit: BoxFit.cover,
+          ),
+        ),
+      );
+    } else {
+      return _buildPlaceholderImage();
     }
   }
-}
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _confirmDeleteEvent(Events event) async {
+    bool? confirmDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Potvrda brisanja'),
+        content: Text('Da li ste sigurni da želite da obrišete ovaj događaj?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.black,
+              backgroundColor: Colors.white,
+            ),
+            child: Text('Odustani'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.red,
+            ),
+            child: Text('Izbriši'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmDelete == true) {
+      await _deleteEvent(event);
+    }
+  }
+
+  Future<void> _deleteEvent(Events event) async {
+    if (event.dogadjajId != null) {
+      try {
+        print('Deleting event with ID: ${event.dogadjajId}');
+        await _eventsProvider.delete(event.dogadjajId!);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Događaj uspješno obrisan")),
+        );
+        _fetchEvents();
+      } catch (e) {
+        _showErrorDialog("Greška prilikom brisanja događaja: $e");
+      }
+    }
+  }
 
   Widget _buildDateButton(StateSetter setState) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () => _selectDate(context, setState),
-        child: Text(
-          _selectedDate == null
-              ? "Odaberite datum događaja"
-              : DateFormat('yyyy-MM-dd').format(_selectedDate!),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () => _selectDate(context, setState),
+          child: Text(
+            _selectedDate == null
+                ? "Odaberite datum događaja"
+                : DateFormat('yyyy-MM-dd').format(_selectedDate!),
+          ),
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue, foregroundColor: Colors.white),
         ),
-        style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue, foregroundColor: Colors.white),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Future<void> _selectDate(BuildContext context, StateSetter setState) async {
-  final DateTime? picked = await showDatePicker(
-    context: context,
-    initialDate: _selectedDate ?? DateTime.now().add(Duration(days: 5)),
-    firstDate: DateTime.now().add(Duration(days: 5)),
-    lastDate: DateTime(2101),
-  );
-  if (picked != null && picked != _selectedDate) {
-    setState(() {
-      _selectedDate = picked;
-    });
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now().add(Duration(days: 5)),
+      firstDate: DateTime.now().add(Duration(days: 5)),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
   }
-}
-
 
   Future<void> _submitEventForm() async {
     if (_formKey.currentState!.validate() &&
