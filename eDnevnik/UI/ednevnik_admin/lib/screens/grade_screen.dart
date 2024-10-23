@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:ednevnik_admin/models/classes.dart';
 import 'package:ednevnik_admin/models/department_subject.dart';
+import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/classes_provider.dart';
 import 'package:ednevnik_admin/providers/classes_students_provider.dart';
 import 'package:ednevnik_admin/providers/department_subject_provider.dart';
@@ -44,6 +44,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
   late DepartmentSubjectProvider _departmentSubjectProvider;
   late ClassesProvider _classesProvider;
   late ClassesStudentsProvider _classesStudentsProvider;
+  late AnnualPlanProgramProvider _annualPlanProgramProvider;
 
   @override
   void initState() {
@@ -55,6 +56,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
     _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
     _classesProvider = context.read<ClassesProvider>();
     _classesStudentsProvider = context.read<ClassesStudentsProvider>();
+    _annualPlanProgramProvider = context.read<AnnualPlanProgramProvider>();
 
     _fetchClassesStudents();
     _initializeData();
@@ -258,6 +260,50 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
     return filteredOcjene.isNotEmpty ? filteredOcjene.join(", ") : "N/A";
   }
 
+ Future<int?> _fetchAnnualPlanProgram(int? predmetID) async {
+  if (predmetID == null) return null;
+  try {
+    var annualPlanProgramResult = await _annualPlanProgramProvider.get(filter: {"PredmetID" : predmetID});
+
+    if (annualPlanProgramResult != null && annualPlanProgramResult.result.isNotEmpty) {
+      var annualPlanProgram = annualPlanProgramResult.result.first;
+      return annualPlanProgram.godisnjiPlanProgramID;
+    } else {
+      print('No annual plan program found for Predmet ID $predmetID');
+      return null;
+    }
+  } catch (e) {
+    print("Error fetching annual plan program: $e");
+    return null;
+  }
+}
+Future<void> _fetchClassesForAnnualPlan(int godisnjiPlanProgramID, StateSetter setState) async {
+  try {
+    var classesResult = await _classesProvider.get(filter: {"GodisnjiPlanProgramID" : godisnjiPlanProgramID});
+
+    if (classesResult != null && classesResult.result.isNotEmpty) {
+      List<DateTime?> fetchedClassDates = classesResult.result
+          .where((c) => c.isOdrzan ?? false)
+          .map((c) => c.datumOdrzavanjaCasa)
+          .toList();
+
+      if (fetchedClassDates.isNotEmpty) {
+        await _pickDate(context, null, fetchedClassDates, setState);
+      } else {
+        print('No valid class dates found for GodisnjiPlanProgramID $godisnjiPlanProgramID');
+      }
+    } else {
+      print('No classes found for GodisnjiPlanProgramID $godisnjiPlanProgramID');
+    }
+  } catch (e) {
+    print("Error fetching classes: $e");
+  }
+}
+
+
+
+
+
   Future<void> _addGradeDialog(BuildContext context) async {
   Subject? selectedSubject =
       _availableSubjects.isNotEmpty ? _availableSubjects.first : null;
@@ -326,71 +372,36 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
                   SizedBox(height: 16),
                   Text(
                       "Datum: ${selectedDate?.toLocal().toString().split(' ')[0] ?? "N/A"}"),
-                  SizedBox(height: 8),
+                  
+                  SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () async {
-                      if (allowedDates.isEmpty) {
-      showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Greška'),
-            content: Text('Nemate održanih časova da možete unjeti ocjenu učeniku!'),
-            actions: <Widget>[
-              TextButton(
-                style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+  onPressed: () async {
+    if (selectedSubject != null) {
+      int? godisnjiPlanProgramID = await _fetchAnnualPlanProgram(selectedSubject!.predmetID);
+
+      if (godisnjiPlanProgramID != null) {
+        await _fetchClassesForAnnualPlan(godisnjiPlanProgramID, setState);
+      } else {
+        print("No annual plan program found for selected subject.");
+      }
     } else {
-      DateTime? initialDate = selectedDate;
-      if (!allowedDates.contains(initialDate)) {
-        initialDate = allowedDates.first;
-      }
-
-      final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: initialDate ?? DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2101),
-        selectableDayPredicate: (DateTime date) {
-          return allowedDates.any((allowedDate) =>
-              allowedDate?.year == date.year &&
-              allowedDate?.month == date.month &&
-              allowedDate?.day == date.day);
-        },
-      );
-
-      if (picked != null && picked != selectedDate) {
-        setState(() {
-          selectedDate = picked;
-        });
-      }
+      print("No subject selected.");
     }
   },
-                    child: Text('Dodaj datum'),
-                  ),
+  child: Text('Dodaj datum'),
+),
+
                 ],
               ),
             ),
             actions: <Widget>[
               TextButton(
-                style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
                 child: Text('Odustani'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
               TextButton(
-                style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green),
                 child: Text('Dodaj'),
                 onPressed: () async {
                   if (selectedSubject != null) {
@@ -424,6 +435,51 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
     },
   ).then((_) => _resetSelectedSubject());
 }
+void _showNoClassesDialog(BuildContext context) {
+  showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Greška'),
+        content: Text('Nemate održanih časova da možete unjeti ocjenu učeniku!'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+Future<void> _pickDate(BuildContext context, DateTime? selectedDate, List<DateTime?> allowedDates, StateSetter setState) async {
+  DateTime? initialDate = selectedDate;
+  if (!allowedDates.contains(initialDate)) {
+    initialDate = allowedDates.first;
+  }
+
+  final DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: initialDate ?? DateTime.now(),
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2101),
+    selectableDayPredicate: (DateTime date) {
+      return allowedDates.any((allowedDate) =>
+          allowedDate?.year == date.year &&
+          allowedDate?.month == date.month &&
+          allowedDate?.day == date.day);
+    },
+  );
+
+  if (picked != null && picked != selectedDate) {
+    setState(() {
+      selectedDate = picked;
+    });
+  }
+}
+
 
 
   @override
