@@ -281,21 +281,43 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
     }
   }
 
-  Future<void> _fetchClassesForAnnualPlan(
-      int godisnjiPlanProgramID, StateSetter setState) async {
+  Future<void> _fetchClassesForAnnualPlan(int godisnjiPlanProgramID,
+      StateSetter setState, int? korisnikID, int? predmetID) async {
     try {
       var classesResult = await _classesProvider
           .get(filter: {"GodisnjiPlanProgramID": godisnjiPlanProgramID});
+
       if (classesResult != null && classesResult.result.isNotEmpty) {
+        var gradesResult = await _gradesProvider.get(
+          filter: {
+            "KorisnikID": korisnikID,
+            "PredmetID": predmetID,
+          },
+        );
+
+        List<DateTime?> gradeDates = [];
+        if (gradesResult != null && gradesResult.result.isNotEmpty) {
+          gradeDates = gradesResult.result
+              .map((grade) => DateTime(
+                  grade.datum!.year, grade.datum!.month, grade.datum!.day))
+              .toList();
+        }
+
         List<DateTime?> fetchedClassDates = classesResult.result
             .where((c) => c.isOdrzan ?? false)
-            .map((c) => c.datumOdrzavanjaCasa)
+            .map((c) => DateTime(c.datumOdrzavanjaCasa!.year,
+                c.datumOdrzavanjaCasa!.month, c.datumOdrzavanjaCasa!.day))
             .toList();
-        if (fetchedClassDates.isNotEmpty) {
-          await _pickDate(context, fetchedClassDates, setState);
+
+        List<DateTime?> allowedDates = fetchedClassDates
+            .where((classDate) => !gradeDates.contains(classDate))
+            .toList();
+
+        if (allowedDates.isNotEmpty) {
+          await _pickDate(context, allowedDates, setState);
         } else {
           print(
-              'No valid class dates found for GodisnjiPlanProgramID $godisnjiPlanProgramID');
+              'No valid class dates available for GodisnjiPlanProgramID $godisnjiPlanProgramID');
         }
       } else {
         print(
@@ -327,11 +349,14 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             void resetFields() {
-            selectedSubject = _availableSubjects.isNotEmpty ? _availableSubjects.first : null;
-            selectedGradeValue = 1;
-            selectedDate = null;
-            _formKey.currentState?.reset();
-          }
+              selectedSubject = _availableSubjects.isNotEmpty
+                  ? _availableSubjects.first
+                  : null;
+              selectedGradeValue = 1;
+              selectedDate = null;
+              _formKey.currentState?.reset();
+            }
+
             return AlertDialog(
               title: Text('Dodaj ocjenu za učenika'),
               content: SingleChildScrollView(
@@ -406,11 +431,14 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
                                     selectedSubject!.predmetID);
                             if (godisnjiPlanProgramID != null) {
                               await _fetchClassesForAnnualPlan(
-                                  godisnjiPlanProgramID, setState);
+                                  godisnjiPlanProgramID,
+                                  setState,
+                                  widget?.userID,
+                                  selectedSubject!.predmetID);
                             } else {
                               print(
                                   "No annual plan program found for selected subject.");
-                                  _showNoClassesDialog(context);
+                              _showNoClassesDialog(context);
                             }
                           } else {
                             print("No subject selected.");
@@ -820,4 +848,4 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
       },
     );
   }
-} 
+}
