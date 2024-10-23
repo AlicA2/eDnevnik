@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using eDnevnik.Model;
 using eDnevnik.Model.Requests;
 using eDnevnik.Model.SearchObjects;
 using eDnevnik.Services.Database;
 using eDnevnik.Services.IServices;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,5 +35,31 @@ namespace eDnevnik.Services.Service
             }
             return base.AddFilter(query, search);
         }
+        public override async Task<Model.Models.OdjeljenjePredmet> Delete(int id, OdjeljenjePredmetDeleteRequest deleteRequest)
+        {
+            var odjeljenjePredmet = await _context.OdjeljenjePredmet.FindAsync(id);
+
+            if (odjeljenjePredmet == null)
+            {
+                throw new UserException("OdjeljenjePredmet nije pronađen.");
+            }
+
+            var godisnjiPlanProgram = await _context.GodisnjiPlanProgram
+                .Include(g => g.Casovi)
+                .FirstOrDefaultAsync(g => g.OdjeljenjeID == odjeljenjePredmet.OdjeljenjeID);
+
+            if (godisnjiPlanProgram == null)
+            {
+                throw new UserException("Godisnji Plan Program nije pronađen za određeno Odjeljenje.");
+            }
+
+            if (godisnjiPlanProgram.Casovi.Any(c => c.IsOdrzan))
+            {
+                throw new UserException("Ne možete izbrisati OdjeljenjePredmet zato što postoje Casovi koji su održani.");
+            }
+
+            return await base.Delete(id, deleteRequest);
+        }
+
     }
 }

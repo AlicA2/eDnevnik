@@ -184,10 +184,12 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
+          style: ElevatedButton.styleFrom(foregroundColor: Colors.black, backgroundColor: Colors.white),
           child: const Text('Odustani'),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context, true),
+          style: ElevatedButton.styleFrom(foregroundColor: Colors.white, backgroundColor: Colors.red),
           child: const Text('Obriši'),
         ),
       ],

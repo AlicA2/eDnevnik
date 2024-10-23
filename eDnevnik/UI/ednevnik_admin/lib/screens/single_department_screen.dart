@@ -264,10 +264,12 @@ class _SingleDepartmentListScreenState
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
+          style: ElevatedButton.styleFrom(foregroundColor: Colors.black,backgroundColor: Colors.white),
           child: Text('Odustani'),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context, true),
+          style: ElevatedButton.styleFrom(foregroundColor: Colors.white,backgroundColor: Colors.red),
           child: Text('Obriši'),
         ),
       ],
@@ -314,7 +316,7 @@ void _showErrorDialog(String message) {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.red,
             ),
             onPressed: () async { await _confirmDelete();},
             child: Text("Izbriši Odjeljenje"),
@@ -324,8 +326,8 @@ void _showErrorDialog(String message) {
         Spacer(),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.blue,
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -336,7 +338,7 @@ void _showErrorDialog(String message) {
         ElevatedButton(
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.green,
           ),
           onPressed: () async {
             if (_formKey.currentState?.saveAndValidate() ?? false) {

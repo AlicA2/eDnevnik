@@ -2,6 +2,8 @@ import 'package:ednevnik_admin/models/department_subject.dart';
 import 'package:ednevnik_admin/providers/department_subject_provider.dart';
 import 'package:ednevnik_admin/screens/classes_student_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:ednevnik_admin/models/classes.dart';
@@ -111,7 +113,6 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
 
       setState(() {
         _annualPlanPrograms = annualPlanResponse.result;
-        print("Moj annualPlanPrograms: $_annualPlanPrograms");
       });
 
       await _fetchDepartmentSubjects();
@@ -121,21 +122,19 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   }
 
   List<AnnualPlanProgram> _getFilteredAnnualPlanPrograms() {
-  Set<String> seenSubjects = {};
-  
-  return _annualPlanPrograms.where((program) {
-    String combinationKey = "${program.predmetID}-${program.odjeljenjeID}";
-    
-    if (!seenSubjects.contains(combinationKey)) {
-      seenSubjects.add(combinationKey);
-      return true;
-    }
+    Set<String> seenSubjects = {};
 
-    return false;
-  }).toList();
-}
+    return _annualPlanPrograms.where((program) {
+      String combinationKey = "${program.predmetID}-${program.odjeljenjeID}";
 
+      if (!seenSubjects.contains(combinationKey)) {
+        seenSubjects.add(combinationKey);
+        return true;
+      }
 
+      return false;
+    }).toList();
+  }
 
   Future<void> _fetchDepartmentSubjects() async {
     try {
@@ -196,166 +195,205 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     return _groupedClasses[normalizedDay] ?? [];
   }
 
-  Future<void> _showAddClassDialog() async {
-  DateTime? selectedDate;
-  String? selectedTime;
+  Future<void> _showAddClassDialog(BuildContext context) async {
+    final _formKey = GlobalKey<FormBuilderState>();
 
-  List<String> availableTimes = ['08:00', '09:00', '10:00', '11:00', '12:00'];
-  List<String> filteredTimes = List.from(availableTimes);
+    DateTime? selectedDate;
+    String? selectedTime;
+    List<String> availableTimes = ['08:00', '09:00', '10:00', '11:00', '12:00'];
+    List<String> filteredTimes = List.from(availableTimes);
 
-  DateTime initialDate = DateTime.now();
-  if (initialDate.weekday == DateTime.saturday) {
-    initialDate = initialDate.add(Duration(days: 2));
-  } else if (initialDate.weekday == DateTime.sunday) {
-    initialDate = initialDate.add(Duration(days: 1));
-  }
+    DateTime initialDate = DateTime.now();
+    if (initialDate.weekday == DateTime.saturday) {
+      initialDate = initialDate.add(Duration(days: 2));
+    } else if (initialDate.weekday == DateTime.sunday) {
+      initialDate = initialDate.add(Duration(days: 1));
+    }
 
-  if (initialDate.month < 9) {
-    initialDate = DateTime(initialDate.year, 9, 1);
-  }
+    if (initialDate.month < 9) {
+      initialDate = DateTime(initialDate.year, 9, 1);
+    }
 
-  await showDialog(
-    context: context,
-    builder: (dialogContext) {
-      return StatefulBuilder(builder: (context, setState) {
-        return AlertDialog(
-          title: Text('Dodaj časove za kalendar'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: initialDate,
-                    firstDate: DateTime(initialDate.year, 9, 1),
-                    lastDate: DateTime(initialDate.year, 12, 31),
-                    selectableDayPredicate: (DateTime day) {
-                      return (day.month >= 9 && day.month <= 12) &&
-                          (day.weekday != DateTime.saturday &&
-                              day.weekday != DateTime.sunday);
-                    },
-                  );
-                  if (pickedDate != null) {
-                    setState(() {
-                      selectedDate = pickedDate;
+    await showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: Text('Dodaj časove za kalendar'),
+            content: FormBuilder(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FormBuilderField(
+                    name: 'datePicker',
+                    validator: FormBuilderValidators.required(
+                      errorText: "Ovo polje je obavezno!",
+                    ),
+                    builder: (field) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: initialDate,
+                              firstDate: DateTime(initialDate.year, 9, 1),
+                              lastDate: DateTime(initialDate.year, 12, 31),
+                              selectableDayPredicate: (DateTime day) {
+                                return (day.month >= 9 && day.month <= 12) &&
+                                    (day.weekday != DateTime.saturday &&
+                                        day.weekday != DateTime.sunday);
+                              },
+                            );
+                            if (pickedDate != null) {
+                              setState(() {
+                                selectedDate = pickedDate;
 
-                      List<Classes> classesForSelectedDate =
-                          _getClassesForDay(pickedDate);
-                      List<String> occupiedTimes =
-                          classesForSelectedDate.map((classItem) {
-                        return "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}";
-                      }).toList();
+                                List<Classes> classesForSelectedDate =
+                                    _getClassesForDay(pickedDate);
+                                List<String> occupiedTimes =
+                                    classesForSelectedDate.map((classItem) {
+                                  return "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}";
+                                }).toList();
 
-                      filteredTimes = availableTimes
-                          .where((time) => !occupiedTimes.contains(time))
-                          .toList();
-                    });
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Colors.blue),
-                child: Text(selectedDate == null
-                    ? 'Odaberite datum'
-                    : 'Datum: ${selectedDate!.toLocal()}'),
-              ),
-              SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: DropdownButton<String>(
-                  value: selectedTime,
-                  isExpanded: true,
-                  hint: Text('Odaberite vrijeme'),
-                  items: filteredTimes.map((String time) {
-                    return DropdownMenuItem<String>(
-                      value: time,
-                      child: Text(time),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedTime = newValue;
-                    });
-                  },
-                ),
-              ),
-              SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: DropdownButton<AnnualPlanProgram>(
-                  value: _selectedAnnualPlanProgram,
-                  isExpanded: true,
-                  hint: Text('Odaberite Godišnji plan program'),
-                  items: _getFilteredAnnualPlanPrograms()
-                      .map((AnnualPlanProgram program) {
-                    return DropdownMenuItem<AnnualPlanProgram>(
-                      value: program,
-                      child: Text(program.naziv ?? 'N/A'),
-                    );
-                  }).toList(),
-                  onChanged: (AnnualPlanProgram? newValue) {
-                    setState(() {
-                      _selectedAnnualPlanProgram = newValue;
-                      _selectedClass = null;
-                      _fetchClasses(dialogContext);
-                    });
-                  },
-                ),
-              ),
-              if (_filteredClasses.isNotEmpty) ...[
-                SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: DropdownButton<Classes>(
-                    value: _filteredClasses.contains(_selectedClass)
-                        ? _selectedClass
-                        : null,
+                                filteredTimes = availableTimes
+                                    .where(
+                                        (time) => !occupiedTimes.contains(time))
+                                    .toList();
+                              });
+                              field.didChange(pickedDate);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.blue,
+                          ),
+                          child: Text(selectedDate == null
+                              ? 'Odaberite datum'
+                              : 'Datum: ${selectedDate!.toLocal()}'),
+                        ),
+                        if (field.hasError)
+                          Text(
+                            field.errorText!,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  FormBuilderDropdown<String>(
+                    name: 'selectedTime',
                     isExpanded: true,
-                    hint: Text('Odaberite Čas'),
-                    items: _filteredClasses.map((Classes classItem) {
-                      return DropdownMenuItem<Classes>(
-                        value: classItem,
-                        child: Text(classItem.nazivCasa ?? 'N/A'),
+                    decoration: InputDecoration(
+                      hintText: 'Odaberite vrijeme',
+                    ),
+                    validator: FormBuilderValidators.required(
+                      errorText: "Ovo polje je obavezno!",
+                    ),
+                    items: filteredTimes.map((String time) {
+                      return DropdownMenuItem<String>(
+                        value: time,
+                        child: Text(time),
                       );
                     }).toList(),
-                    onChanged: (Classes? newValue) {
+                    onChanged: (newValue) {
                       setState(() {
-                        _selectedClass = newValue;
+                        selectedTime = newValue;
                       });
                     },
                   ),
-                ),
-              ],
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
-              child: Text('Otkaži'),
+                  SizedBox(height: 16),
+                  FormBuilderDropdown<AnnualPlanProgram>(
+                    name: 'annualPlanProgram',
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      hintText: 'Odaberite Godišnji plan program',
+                    ),
+                    validator: FormBuilderValidators.required(
+                      errorText: "Ovo polje je obavezno!",
+                    ),
+                    items: _getFilteredAnnualPlanPrograms()
+                        .map((AnnualPlanProgram program) {
+                      return DropdownMenuItem<AnnualPlanProgram>(
+                        value: program,
+                        child: Text(program.naziv ?? 'N/A'),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedAnnualPlanProgram = newValue;
+                        _selectedClass = null;
+                        _fetchClasses(dialogContext);
+                      });
+                    },
+                  ),
+                  if (_filteredClasses.isNotEmpty) ...[
+                    SizedBox(height: 16),
+                    FormBuilderDropdown<Classes>(
+                      name: 'selectedClass',
+                      isExpanded: true,
+                      decoration: InputDecoration(
+                        hintText: 'Odaberite Čas',
+                      ),
+                      validator: FormBuilderValidators.required(
+                        errorText: "Ovo polje je obavezno!",
+                      ),
+                      items: _filteredClasses.map((Classes classItem) {
+                        return DropdownMenuItem<Classes>(
+                          value: classItem,
+                          child: Text(classItem.nazivCasa ?? 'N/A'),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedClass = newValue;
+                        });
+                      },
+                    ),
+                  ],
+                ],
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                if (selectedDate != null &&
-                    selectedTime != null &&
-                    _selectedClass != null &&
-                    _selectedAnnualPlanProgram != null) {
-                  _addClassForDay(selectedDate!, selectedTime!);
+            actions: [
+              TextButton(
+                onPressed: () {
                   Navigator.of(context).pop();
-                }
-              },
-              style: ElevatedButton.styleFrom(foregroundColor: Colors.white,backgroundColor: Colors.green),
-              child: Text('Dodaj'),
-            ),
-          ],
-        );
-      });
-    },
-  );
-}
+                },
+                style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
+                child: Text('Otkaži'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    final selectedDate = _formKey
+                        .currentState!.fields['datePicker']?.value as DateTime?;
+                    final selectedTime = _formKey
+                        .currentState!.fields['selectedTime']?.value as String?;
+                    final selectedClass = _formKey.currentState!
+                        .fields['selectedClass']?.value as Classes?;
 
+                    if (selectedDate != null &&
+                        selectedTime != null &&
+                        _selectedClass != null &&
+                        _selectedAnnualPlanProgram != null) {
+                      _addClassForDay(selectedDate, selectedTime);
+                      Navigator.of(context).pop();
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.green,
+                ),
+                child: Text('Dodaj'),
+              ),
+            ],
+          );
+        });
+      },
+    );
+  }
 
   void _addClassForDay(DateTime date, String time) async {
     List<String> timeParts = time.split(':');
@@ -520,133 +558,132 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   }
 
   Widget _buildSelectedClasses() {
-  List<Classes> selectedDayClasses = _getClassesForDay(_selectedDay!);
+    List<Classes> selectedDayClasses = _getClassesForDay(_selectedDay!);
 
-  if (selectedDayClasses.isEmpty) {
-    return Text("Nema časova za selektirani dan.");
-  }
+    if (selectedDayClasses.isEmpty) {
+      return Text("Nema časova za selektirani dan.");
+    }
 
-  return Padding(
-    padding: const EdgeInsets.only(left: 16, right: 16),
-    child: Column(
-      children: selectedDayClasses.map((classItem) {
-        String time = classItem.datumOdrzavanjaCasa != null
-            ? "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}"
-            : "N/A";
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16),
+      child: Column(
+        children: selectedDayClasses.map((classItem) {
+          String time = classItem.datumOdrzavanjaCasa != null
+              ? "${classItem.datumOdrzavanjaCasa!.hour.toString().padLeft(2, '0')}:${classItem.datumOdrzavanjaCasa!.minute.toString().padLeft(2, '0')}"
+              : "N/A";
 
-        return Container(
-          margin: const EdgeInsets.symmetric(vertical: 8.0),
-          decoration: BoxDecoration(
-            color: Color(0xFFF7F2FA),
-            borderRadius: BorderRadius.circular(10.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 4.0,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(8.0),
-              title: Text(
-                "$time ${classItem.nazivCasa ?? "N/A"}",
-              ),
-              trailing: Padding(
-                padding: const EdgeInsets.only(left:8.0,right:8.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.upload_outlined, color: Colors.blue),
-                      onPressed: () {
-                        _navigateToClassDetails(classItem.casoviID ?? 0);
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        _confirmDeleteClass(classItem);
-                      },
-                    ),
-                  ],
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
+            decoration: BoxDecoration(
+              color: Color(0xFFF7F2FA),
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4.0,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(8.0),
+                title: Text(
+                  "$time ${classItem.nazivCasa ?? "N/A"}",
+                ),
+                trailing: Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.upload_outlined, color: Colors.blue),
+                        onPressed: () {
+                          _navigateToClassDetails(classItem.casoviID ?? 0);
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          _confirmDeleteClass(classItem);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      }).toList(),
-    ),
-  );
-}
+          );
+        }).toList(),
+      ),
+    );
+  }
 
-void _navigateToClassDetails(int casoviID) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ClassesHeldDetailScreen(casoviID: casoviID),
-    ),
-  );
-}
-
+  void _navigateToClassDetails(int casoviID) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ClassesHeldDetailScreen(casoviID: casoviID),
+      ),
+    );
+  }
 
   void _confirmDeleteClass(Classes classItem) async {
-  if (classItem.isOdrzan == true) {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Brisanje nije moguće'),
-          content: Text('Ne možete obrisati čas koji je već održan.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
-              child: Text('U redu'),
-            ),
-          ],
-        );
-      },
-    );
-  } else {
-    bool? isConfirmed = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Potvrda brisanja'),
-          content: Text('Da li ste sigurni da želite obrisati ovaj čas?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
-              child: Text('Ne'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
+    if (classItem.isOdrzan == true) {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Brisanje nije moguće'),
+            content: Text('Ne možete obrisati čas koji je već održan.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
+                child: Text('U redu'),
               ),
-              child: Text('Da'),
-            ),
-          ],
-        );
-      },
-    );
+            ],
+          );
+        },
+      );
+    } else {
+      bool? isConfirmed = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Potvrda brisanja'),
+            content: Text('Da li ste sigurni da želite obrisati ovaj čas?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
+                child: Text('Ne'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                child: Text('Da'),
+              ),
+            ],
+          );
+        },
+      );
 
-    if (isConfirmed == true) {
-      _deleteClass(classItem);
+      if (isConfirmed == true) {
+        _deleteClass(classItem);
+      }
     }
   }
-}
 
   void _deleteClass(Classes classItem) async {
     try {
@@ -680,7 +717,9 @@ void _navigateToClassDetails(int casoviID) {
       child: Padding(
         padding: const EdgeInsets.only(right: 16, bottom: 16),
         child: ElevatedButton(
-          onPressed: _showAddClassDialog,
+          onPressed: () {
+            _showAddClassDialog(context);
+          },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
             backgroundColor: Colors.blue,

@@ -344,17 +344,23 @@ class _DepartmentSubjectDetailScreenState extends State<DepartmentSubjectDetailS
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop();  // Dismiss the dialog without any action
             },
             style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
             child: Text("Odustani"),
           ),
           ElevatedButton(
             onPressed: () async {
-              await _deleteDepartmentSubject(subject);
-              Navigator.of(context).pop();
+              try {
+                await _deleteDepartmentSubject(subject);  // Attempt to delete the subject
+                Navigator.of(context).pop();  // Close the dialog if deletion is successful
+              } catch (error) {
+                // If an error occurs, show the error dialog
+                Navigator.of(context).pop();  // Close the current dialog
+                _showErrorDialog("Ne možete obrisati predmeta za odjeljenja gdje imate održane časove!");  // Show error
+              }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red,foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
             child: Text("Obriši"),
           ),
         ],
@@ -364,17 +370,17 @@ class _DepartmentSubjectDetailScreenState extends State<DepartmentSubjectDetailS
 }
 
   Future<void> _deleteDepartmentSubject(Subject subject) async {
+  DepartmentSubject? departmentSubjectToDelete;
   try {
-    DepartmentSubject? departmentSubjectToDelete;
-    try {
-      departmentSubjectToDelete = _departmentSubjects.firstWhere(
-        (ds) => ds.predmetID == subject.predmetID,
-      );
-    } catch (e) {
-      departmentSubjectToDelete = null;
-    }
+    departmentSubjectToDelete = _departmentSubjects.firstWhere(
+      (ds) => ds.predmetID == subject.predmetID,
+    );
+  } catch (e) {
+    departmentSubjectToDelete = null;
+  }
 
-    if (departmentSubjectToDelete != null && departmentSubjectToDelete.odjeljenjePredmetID != null) {
+  if (departmentSubjectToDelete != null && departmentSubjectToDelete.odjeljenjePredmetID != null) {
+    try {
       await _departmentSubjectProvider.delete(departmentSubjectToDelete.odjeljenjePredmetID!);
 
       setState(() {
@@ -383,11 +389,33 @@ class _DepartmentSubjectDetailScreenState extends State<DepartmentSubjectDetailS
       });
 
       await _fetchAvailableSubjects();
+    } catch (error) {
+      throw Exception("Error deleting subject");
     }
-  } catch (error) {
-    print("Error deleting DepartmentSubject: $error");
+  } else {
+    throw Exception("Subject not found or cannot be deleted");
   }
 }
 
+void _showErrorDialog(String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Greška"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("OK"),
+            style: ElevatedButton.styleFrom(foregroundColor: Colors.black,backgroundColor: Colors.white),
+          ),
+        ],
+      );
+    },
+  );
+}
 
 }

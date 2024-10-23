@@ -76,9 +76,9 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
                               FormBuilderValidators.required(
                                   errorText: 'Polje je obavezno'),
                               FormBuilderValidators.match(
-                                  RegExp(r'^[a-zA-Z\s.,!]*$'),
+                                  RegExp(r'^[a-zA-Z]*$'),
                                   errorText:
-                                      'Možete koristiti samo slova i znakove: .,!'),
+                                      'Možete koristiti samo slova'),
                               (val) {
                                 if (val != null &&
                                     !RegExp(r'^[A-Z].*').hasMatch(val)) {
@@ -87,7 +87,6 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
                                 if (val != null && val.length < 4) {
                                   return 'Naziv časa mora imati minimum 4 slova';
                                 }
-                                return null;
                                 return null;
                               },
                             ]),

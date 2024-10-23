@@ -260,82 +260,98 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
   }
 
   Future<void> _addGradeDialog(BuildContext context) async {
-    Subject? selectedSubject =
-        _availableSubjects.isNotEmpty ? _availableSubjects.first : null;
-    int selectedGradeValue = 1;
-    DateTime? selectedDate = DateTime.now();
+  Subject? selectedSubject =
+      _availableSubjects.isNotEmpty ? _availableSubjects.first : null;
+  int selectedGradeValue = 1;
+  DateTime? selectedDate = DateTime.now();
 
-    List<DateTime?> allowedDates = _fetchedClasses
-        .where((c) => c.isOdrzan ?? false)
-        .map((c) => c.datumOdrzavanjaCasa)
-        .toList();
+  List<DateTime?> allowedDates = _fetchedClasses
+      .where((c) => c.isOdrzan ?? false)
+      .map((c) => c.datumOdrzavanjaCasa)
+      .toList();
 
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              title: Text('Dodaj ocjenu za učenika'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    TextFormField(
-                      initialValue: _userFullName,
-                      enabled: false,
-                      decoration: InputDecoration(
-                        labelText: 'Učenik',
-                      ),
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return AlertDialog(
+            title: Text('Dodaj ocjenu za učenika'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  TextFormField(
+                    initialValue: _userFullName,
+                    enabled: false,
+                    decoration: InputDecoration(
+                      labelText: 'Učenik',
                     ),
-                    SizedBox(height: 16),
-                    DropdownButtonFormField<Subject?>(
-                      value: selectedSubject,
-                      items: _availableSubjects.map((subject) {
-                        return DropdownMenuItem<Subject?>(
-                          value: subject,
-                          child: Text(subject.naziv ?? ""),
+                  ),
+                  SizedBox(height: 16),
+                  DropdownButtonFormField<Subject?>(
+                    value: selectedSubject,
+                    items: _availableSubjects.map((subject) {
+                      return DropdownMenuItem<Subject?>(
+                        value: subject,
+                        child: Text(subject.naziv ?? ""),
+                      );
+                    }).toList(),
+                    onChanged: (Subject? newValue) {
+                      setState(() {
+                        selectedSubject = newValue;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Predmet',
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  DropdownButtonFormField<int>(
+                    value: selectedGradeValue,
+                    items: [1, 2, 3, 4, 5].map((int value) {
+                      return DropdownMenuItem<int>(
+                        value: value,
+                        child: Text(value.toString()),
+                      );
+                    }).toList(),
+                    onChanged: (int? newValue) {
+                      setState(() {
+                        selectedGradeValue = newValue!;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Ocjena',
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                      "Datum: ${selectedDate?.toLocal().toString().split(' ')[0] ?? "N/A"}"),
+                  SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (allowedDates.isEmpty) {
+                        showDialog<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Greška'),
+                              content: Text(
+                                  'Nemate održanih časova da možete unjeti ocjenu učeniku!'),
+                              actions: <Widget>[
+                                TextButton(
+                                  style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.black),
+                                  child: Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
                         );
-                      }).toList(),
-                      onChanged: (Subject? newValue) {
-                        setState(() {
-                          selectedSubject = newValue;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Predmet',
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    DropdownButtonFormField<int>(
-                      value: selectedGradeValue,
-                      items: [1, 2, 3, 4, 5].map((int value) {
-                        return DropdownMenuItem<int>(
-                          value: value,
-                          child: Text(value.toString()),
-                        );
-                      }).toList(),
-                      onChanged: (int? newValue) {
-                        setState(() {
-                          selectedGradeValue = newValue!;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Ocjena',
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                        "Datum: ${selectedDate?.toLocal().toString().split(' ')[0] ?? "N/A"}"),
-                    SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (!allowedDates.contains(selectedDate)) {
-                          selectedDate = allowedDates.isNotEmpty
-                              ? allowedDates.first
-                              : DateTime.now();
-                        }
-
+                      } else {
                         final DateTime? picked = await showDatePicker(
                           context: context,
                           initialDate: selectedDate ?? DateTime.now(),
@@ -354,58 +370,59 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
                             selectedDate = picked;
                           });
                         }
-                      },
-                      child: Text('Dodaj datum'),
-                    ),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  style:
-                      ElevatedButton.styleFrom(foregroundColor: Colors.black),
-                  child: Text('Odustani'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.green),
-                  child: Text('Dodaj'),
-                  onPressed: () async {
-                    if (selectedSubject != null) {
-                      Grade newGrade = Grade(
-                        null,
-                        selectedGradeValue,
-                        selectedDate ?? DateTime.now(),
-                        widget.userID,
-                        selectedSubject!.predmetID,
-                      );
-
-                      try {
-                        bool success = await _subjectProvider.addOcjena(
-                            selectedSubject!.predmetID ?? 0, newGrade);
-                        if (success) {
-                          _initializeData();
-                          Navigator.of(context).pop();
-                        }
-                      } catch (e) {
-                        print("Error adding grade: $e");
                       }
-                    } else {
-                      print("No subject selected. Grade cannot be added.");
+                    },
+                    child: Text('Dodaj datum'),
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
+                child: Text('Odustani'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.green),
+                child: Text('Dodaj'),
+                onPressed: () async {
+                  if (selectedSubject != null) {
+                    Grade newGrade = Grade(
+                      null,
+                      selectedGradeValue,
+                      selectedDate ?? DateTime.now(),
+                      widget.userID,
+                      selectedSubject!.predmetID,
+                    );
+
+                    try {
+                      bool success = await _subjectProvider.addOcjena(
+                          selectedSubject!.predmetID ?? 0, newGrade);
+                      if (success) {
+                        _initializeData();
+                        Navigator.of(context).pop();
+                      }
+                    } catch (e) {
+                      print("Error adding grade: $e");
                     }
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
-    ).then((_) => _resetSelectedSubject());
-  }
+                  } else {
+                    print("No subject selected. Grade cannot be added.");
+                  }
+                },
+              ),
+            ],
+          );
+        },
+      );
+    },
+  ).then((_) => _resetSelectedSubject());
+}
+
 
   @override
   Widget build(BuildContext context) {

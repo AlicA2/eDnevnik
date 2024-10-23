@@ -73,7 +73,6 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
       print("Annual Plan Program ID is null");
       return;
     }
-
     try {
       var annualPlanProgramResponse =
           await _annualPlanProgramProvider.get(filter: {
@@ -84,6 +83,7 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
           annualPlanProgramResponse.result.isNotEmpty) {
         AnnualPlanProgram annualPlanProgram =
             annualPlanProgramResponse.result.first;
+
         await _fetchDepartment(annualPlanProgram.odjeljenjeID);
       } else {
         print(
@@ -115,8 +115,6 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
 
         if (_classesStudentsList == null || _classesStudentsList!.isEmpty) {
           await _insertClassesStudents(_fetchedDepartment!.ucenici!);
-        } else {
-          print("ClassesStudents already exist for this CasoviID.");
         }
 
         await _fetchClassesStudents();
@@ -128,6 +126,7 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
     }
   }
 
+
   Future<void> _fetchClassesStudents() async {
     try {
       var response = await _classesStudentsProvider.get(filter: {
@@ -138,8 +137,6 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
         setState(() {
           _classesStudentsList = response.result;
         });
-      } else {
-        print("No ClassesStudents found for CasoviID: ${widget.casoviID}");
       }
     } catch (e) {
       print("Failed to fetch ClassesStudents: $e");
@@ -156,7 +153,6 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
         };
 
         await _classesStudentsProvider.Insert(request);
-        print("ClassesStudent inserted for ucenikID: ${ucenik.korisnikId}");
       } catch (e) {
         print("Failed to insert ClassesStudent: $e");
       }
@@ -247,10 +243,15 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
                         children: [
                           _buildScreenName(),
                           SizedBox(height: 16.0),
-                          _classesStudentsList != null
-                              ? _buildClassesStudentsTable(
-                                  _classesStudentsList!)
-                              : SizedBox(),
+                           (_classesStudentsList == null || _classesStudentsList!.isEmpty)
+                  ? Center(
+                      child: Text(
+                        'Nema učenika u odjeljenju!',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  : _buildClassesStudentsTable(_classesStudentsList!),
                           SizedBox(height: 16.0),
                           if (_isOdrzan == true && !_isSubmitted)
                             _buildAddPresenceButton(),
@@ -359,7 +360,9 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
             children: [
               ElevatedButton(
                 onPressed:
-                    (_isSubmitted || allStudentsLocked) ? null : () => _updateClassOdrzan(true),
+                    (_classesStudentsList == null || _classesStudentsList!.isEmpty || _isSubmitted || allStudentsLocked)
+                        ? null
+                        : () => _updateClassOdrzan(true),
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       (_isOdrzan == true) ? Colors.green : Colors.grey,
@@ -373,7 +376,9 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
               SizedBox(width: 10),
               ElevatedButton(
                 onPressed:
-                    (_isSubmitted || allStudentsLocked) ? null : () => _updateClassOdrzan(false),
+                    (_classesStudentsList == null || _classesStudentsList!.isEmpty || _isSubmitted || allStudentsLocked)
+                        ? null
+                        : () => _updateClassOdrzan(false),
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       (_isOdrzan == false) ? Colors.red : Colors.grey,
@@ -391,7 +396,6 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
     ),
   );
 }
-
 
   Widget _buildClassesStudentsTable(List<ClassesStudents> classesStudents) {
     return Padding(
@@ -430,10 +434,10 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
     );
   }
 
-  Widget _buildAddPresenceButton() {
+ Widget _buildAddPresenceButton() {
   bool allStudentsLocked = _classesStudentsList?.every((student) => student.zakljucan == true) ?? true;
 
-  return (allStudentsLocked || !_isOdrzan!)
+  return (_classesStudentsList == null || _classesStudentsList!.isEmpty || allStudentsLocked || !_isOdrzan!)
       ? SizedBox()
       : ElevatedButton(
           onPressed: _isSubmitted ? null : _updateStudentsPresenceAndLock,
@@ -447,5 +451,4 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
           child: Text('Dodaj prisustvo'),
         );
 }
-
 }

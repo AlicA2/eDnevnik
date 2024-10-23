@@ -2,11 +2,13 @@ import 'package:ednevnik_admin/models/annual_plan_program.dart';
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/subject.dart';
+import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/classes_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
+import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -40,6 +42,8 @@ class _SingleAnnualPlanProgramScreenState
   int? _selectedDepartmentID;
   int? _selectedSchoolID;
   int? _selectedSubjectID;
+  User? loggedInUser;
+
 
   List<Department> _departments = [];
   List<Subject> _subjects = [];
@@ -55,6 +59,12 @@ class _SingleAnnualPlanProgramScreenState
     _classProvider = context.read<ClassesProvider>();
 
     _fetchSchools();
+  }
+
+   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loggedInUser = context.watch<UserProvider>().loggedInUser;
   }
 
   Future<List<AnnualPlanProgram>> _fetchAllPlanPrograms() async {
@@ -181,52 +191,56 @@ class _SingleAnnualPlanProgramScreenState
                       _buildScreenName(),
                       SizedBox(height: 20),
                       FormBuilderTextField(
-  name: 'naziv',
-  initialValue: isEditMode ? widget.planProgram?.naziv : '',
-  decoration: InputDecoration(labelText: 'Naziv'),
-  validator: FormBuilderValidators.compose([
-    FormBuilderValidators.required(errorText: 'Polje je obavezno'),
-    (val) {
-      if (val != null && !RegExp(r'^[A-Z].*').hasMatch(val)) {
-        return 'Naziv mora početi velikim slovom';
-      }
+                        name: 'naziv',
+                        initialValue:
+                            isEditMode ? widget.planProgram?.naziv : '',
+                        decoration: InputDecoration(labelText: 'Naziv'),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Polje je obavezno'),
+                          (val) {
+                            if (val != null &&
+                                !RegExp(r'^[A-Z].*').hasMatch(val)) {
+                              return 'Naziv mora početi velikim slovom';
+                            }
 
-      if (val != null && !val.startsWith("Plan i program za ")) {
-        return 'Naziv mora početi sa "Plan i program za "';
-      }
+                            if (val != null &&
+                                !val.startsWith("Plan i program za ")) {
+                              return 'Naziv mora početi sa "Plan i program za "';
+                            }
 
-      if (val != null && val.length > "Plan i program za ".length + 2) {
-        String subjectPart = val.substring(
-            "Plan i program za ".length,
-            val.length - 2
-        ).trim();
+                            if (val != null &&
+                                val.length > "Plan i program za ".length + 2) {
+                              String subjectPart = val
+                                  .substring("Plan i program za ".length,
+                                      val.length - 2)
+                                  .trim();
 
-        if (subjectPart.isNotEmpty && !RegExp(r'^[A-Z].*').hasMatch(subjectPart)) {
-          return 'Predmet mora početi velikim slovom';
-        }
-      } else {
-        return 'Naziv mora imati validan predmet';
-      }
+                              if (subjectPart.isNotEmpty &&
+                                  !RegExp(r'^[A-Z].*').hasMatch(subjectPart)) {
+                                return 'Predmet mora početi velikim slovom';
+                              }
+                            } else {
+                              return 'Naziv mora imati validan predmet';
+                            }
 
-      if (val != null &&
-          !val.endsWith(" I") &&
-          !val.endsWith(" II") &&
-          !val.endsWith(" III") &&
-          !val.endsWith(" IV")) {
-        return 'Naziv mora završiti sa " I", " II", " III" ili " IV"';
-      }
+                            if (val != null &&
+                                !val.endsWith(" I") &&
+                                !val.endsWith(" II") &&
+                                !val.endsWith(" III") &&
+                                !val.endsWith(" IV")) {
+                              return 'Naziv mora završiti sa " I", " II", " III" ili " IV"';
+                            }
 
-      if (val != null && !RegExp(r'^[a-zA-Z\s]+$').hasMatch(val)) {
-        return 'Mogu se uneti samo slova';
-      }
+                            if (val != null &&
+                                !RegExp(r'^[a-zA-Z\s]+$').hasMatch(val)) {
+                              return 'Mogu se uneti samo slova';
+                            }
 
-      return null;
-    },
-  ]),
-),
-
-
-
+                            return null;
+                          },
+                        ]),
+                      ),
                       SizedBox(height: 20),
                       FormBuilderTextField(
                         name: 'brojCasova',
@@ -425,6 +439,7 @@ class _SingleAnnualPlanProgramScreenState
       formValues['skolaID'] = _selectedSchool?.skolaID;
       formValues['predmetID'] = _selectedSubject?.predmetID;
       formValues['odjeljenjeID'] = _selectedDepartment?.odjeljenjeID;
+      formValues['profesorID'] = loggedInUser?.korisnikId;
 
       print('Form values: $formValues');
 

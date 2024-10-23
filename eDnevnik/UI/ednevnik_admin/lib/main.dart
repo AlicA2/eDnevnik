@@ -244,6 +244,7 @@ class LoginPage extends StatelessWidget {
                           );
                         }
                       },
+                      style: ElevatedButton.styleFrom(foregroundColor: Colors.blue),
                       child: Text("Prijava"),
                     )
                   ],

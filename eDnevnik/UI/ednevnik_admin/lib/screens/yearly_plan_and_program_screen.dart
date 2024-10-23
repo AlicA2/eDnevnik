@@ -3,10 +3,12 @@ import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/result.dart';
 import 'package:ednevnik_admin/models/subject.dart';
 import 'package:ednevnik_admin/models/school.dart';
+import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
+import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/screens/classes_screen.dart';
 import 'package:ednevnik_admin/screens/single_annual_plan_program_screen.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
@@ -34,6 +36,7 @@ class _YearlyPlanAndProgramDetailScreenState
   Department? _selectedDepartment;
   Subject? _selectedSubject;
   School? _selectedSchool;
+  User? loggedInUser;
 
   List<Department> _departments = [];
   List<Subject> _subjects = [];
@@ -48,6 +51,12 @@ class _YearlyPlanAndProgramDetailScreenState
     _schoolProvider = context.read<SchoolProvider>();
 
     _fetchSchools();
+  }
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    loggedInUser = context.watch<UserProvider>().loggedInUser;
   }
 
   Future<void> _fetchSchools() async {
@@ -103,6 +112,7 @@ class _YearlyPlanAndProgramDetailScreenState
     var filter = {
       'naziv': _nazivController.text,
       'SkolaID': _selectedSchool?.skolaID,
+      'ProfesorID': loggedInUser?.korisnikId
     };
     if (_selectedDepartment != null) {
       filter['odjeljenjeID'] = _selectedDepartment!.odjeljenjeID.toString();
