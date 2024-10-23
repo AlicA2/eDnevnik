@@ -267,7 +267,6 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
     try {
       var annualPlanProgramResult = await _annualPlanProgramProvider
           .get(filter: {"PredmetID": predmetID});
-
       if (annualPlanProgramResult != null &&
           annualPlanProgramResult.result.isNotEmpty) {
         var annualPlanProgram = annualPlanProgramResult.result.first;
@@ -287,15 +286,13 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
     try {
       var classesResult = await _classesProvider
           .get(filter: {"GodisnjiPlanProgramID": godisnjiPlanProgramID});
-
       if (classesResult != null && classesResult.result.isNotEmpty) {
         List<DateTime?> fetchedClassDates = classesResult.result
             .where((c) => c.isOdrzan ?? false)
             .map((c) => c.datumOdrzavanjaCasa)
             .toList();
-
         if (fetchedClassDates.isNotEmpty) {
-          await _pickDate(context, null, fetchedClassDates, setState);
+          await _pickDate(context, fetchedClassDates, setState);
         } else {
           print(
               'No valid class dates found for GodisnjiPlanProgramID $godisnjiPlanProgramID');
@@ -309,13 +306,14 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
     }
   }
 
+  DateTime? selectedDate;
+
   Future<void> _addGradeDialog(BuildContext context) async {
     final _formKey = GlobalKey<FormBuilderState>();
 
     Subject? selectedSubject =
         _availableSubjects.isNotEmpty ? _availableSubjects.first : null;
     int selectedGradeValue = 1;
-    DateTime? selectedDate;
 
     List<DateTime?> allowedDates = _fetchedClasses
         .where((c) => c.isOdrzan ?? false)
@@ -396,11 +394,19 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
                       SizedBox(height: 8),
                       ElevatedButton(
                         onPressed: () async {
-                          if (allowedDates.isEmpty) {
-                            _showNoClassesDialog(context);
+                          if (selectedSubject != null) {
+                            int? godisnjiPlanProgramID =
+                                await _fetchAnnualPlanProgram(
+                                    selectedSubject!.predmetID);
+                            if (godisnjiPlanProgramID != null) {
+                              await _fetchClassesForAnnualPlan(
+                                  godisnjiPlanProgramID, setState);
+                            } else {
+                              print(
+                                  "No annual plan program found for selected subject.");
+                            }
                           } else {
-                            await _pickDate(
-                                context, selectedDate, allowedDates, setState);
+                            print("No subject selected.");
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -511,11 +517,11 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
     );
   }
 
-  Future<void> _pickDate(BuildContext context, DateTime? selectedDate,
-      List<DateTime?> allowedDates, StateSetter setState) async {
+  Future<void> _pickDate(BuildContext context, List<DateTime?> allowedDates,
+      StateSetter setState) async {
     DateTime? initialDate = selectedDate;
     if (!allowedDates.contains(initialDate)) {
-      initialDate = allowedDates.first;
+      initialDate = allowedDates.isNotEmpty ? allowedDates.first : null;
     }
 
     final DateTime? picked = await showDatePicker(
