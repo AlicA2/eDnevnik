@@ -330,47 +330,50 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
                   ElevatedButton(
                     onPressed: () async {
                       if (allowedDates.isEmpty) {
-                        showDialog<void>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Greška'),
-                              content: Text(
-                                  'Nemate održanih časova da možete unjeti ocjenu učeniku!'),
-                              actions: <Widget>[
-                                TextButton(
-                                  style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.black),
-                                  child: Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        final DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: selectedDate ?? DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                          selectableDayPredicate: (DateTime date) {
-                            return allowedDates.any((allowedDate) =>
-                                allowedDate?.year == date.year &&
-                                allowedDate?.month == date.month &&
-                                allowedDate?.day == date.day);
-                          },
-                        );
+      showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Greška'),
+            content: Text('Nemate održanih časova da možete unjeti ocjenu učeniku!'),
+            actions: <Widget>[
+              TextButton(
+                style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      DateTime? initialDate = selectedDate;
+      if (!allowedDates.contains(initialDate)) {
+        initialDate = allowedDates.first;
+      }
 
-                        if (picked != null && picked != selectedDate) {
-                          setState(() {
-                            selectedDate = picked;
-                          });
-                        }
-                      }
-                    },
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: initialDate ?? DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2101),
+        selectableDayPredicate: (DateTime date) {
+          return allowedDates.any((allowedDate) =>
+              allowedDate?.year == date.year &&
+              allowedDate?.month == date.month &&
+              allowedDate?.day == date.day);
+        },
+      );
+
+      if (picked != null && picked != selectedDate) {
+        setState(() {
+          selectedDate = picked;
+        });
+      }
+    }
+  },
                     child: Text('Dodaj datum'),
                   ),
                 ],
