@@ -187,7 +187,6 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
   }
 
   Future<void> _fetchClassesStudents() async {
-    print(widget.userID);
     try {
       var classesStudentsResult = await _classesStudentsProvider.get(filter: {
         'IsPrisutan': true,
