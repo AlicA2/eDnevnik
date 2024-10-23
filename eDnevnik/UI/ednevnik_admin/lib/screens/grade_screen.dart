@@ -404,8 +404,8 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
                             } else {
                               print(
                                   "No annual plan program found for selected subject.");
+                                  _showNoClassesDialog(context);
                             }
-                            _showNoClassesDialog(context);
                           } else {
                             print("No subject selected.");
                           }
