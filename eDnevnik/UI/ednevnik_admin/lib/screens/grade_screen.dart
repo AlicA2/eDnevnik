@@ -326,6 +326,12 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
+            void resetFields() {
+            selectedSubject = _availableSubjects.isNotEmpty ? _availableSubjects.first : null;
+            selectedGradeValue = 1;
+            selectedDate = null;
+            _formKey.currentState?.reset();
+          }
             return AlertDialog(
               title: Text('Dodaj ocjenu za učenika'),
               content: SingleChildScrollView(
@@ -426,6 +432,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
                       backgroundColor: Colors.white),
                   child: Text('Odustani'),
                   onPressed: () {
+                    resetFields();
                     Navigator.of(context).pop();
                   },
                 ),
