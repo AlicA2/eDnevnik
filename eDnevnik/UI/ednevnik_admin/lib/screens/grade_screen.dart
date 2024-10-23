@@ -7,6 +7,8 @@ import 'package:ednevnik_admin/providers/classes_students_provider.dart';
 import 'package:ednevnik_admin/providers/department_subject_provider.dart';
 import 'package:ednevnik_admin/screens/grade_edit_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:ednevnik_admin/models/grade.dart';
 import 'package:ednevnik_admin/models/subject.dart';
@@ -260,227 +262,281 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
     return filteredOcjene.isNotEmpty ? filteredOcjene.join(", ") : "N/A";
   }
 
- Future<int?> _fetchAnnualPlanProgram(int? predmetID) async {
-  if (predmetID == null) return null;
-  try {
-    var annualPlanProgramResult = await _annualPlanProgramProvider.get(filter: {"PredmetID" : predmetID});
+  Future<int?> _fetchAnnualPlanProgram(int? predmetID) async {
+    if (predmetID == null) return null;
+    try {
+      var annualPlanProgramResult = await _annualPlanProgramProvider
+          .get(filter: {"PredmetID": predmetID});
 
-    if (annualPlanProgramResult != null && annualPlanProgramResult.result.isNotEmpty) {
-      var annualPlanProgram = annualPlanProgramResult.result.first;
-      return annualPlanProgram.godisnjiPlanProgramID;
-    } else {
-      print('No annual plan program found for Predmet ID $predmetID');
+      if (annualPlanProgramResult != null &&
+          annualPlanProgramResult.result.isNotEmpty) {
+        var annualPlanProgram = annualPlanProgramResult.result.first;
+        return annualPlanProgram.godisnjiPlanProgramID;
+      } else {
+        print('No annual plan program found for Predmet ID $predmetID');
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching annual plan program: $e");
       return null;
     }
-  } catch (e) {
-    print("Error fetching annual plan program: $e");
-    return null;
   }
-}
-Future<void> _fetchClassesForAnnualPlan(int godisnjiPlanProgramID, StateSetter setState) async {
-  try {
-    var classesResult = await _classesProvider.get(filter: {"GodisnjiPlanProgramID" : godisnjiPlanProgramID});
 
-    if (classesResult != null && classesResult.result.isNotEmpty) {
-      List<DateTime?> fetchedClassDates = classesResult.result
-          .where((c) => c.isOdrzan ?? false)
-          .map((c) => c.datumOdrzavanjaCasa)
-          .toList();
+  Future<void> _fetchClassesForAnnualPlan(
+      int godisnjiPlanProgramID, StateSetter setState) async {
+    try {
+      var classesResult = await _classesProvider
+          .get(filter: {"GodisnjiPlanProgramID": godisnjiPlanProgramID});
 
-      if (fetchedClassDates.isNotEmpty) {
-        await _pickDate(context, null, fetchedClassDates, setState);
+      if (classesResult != null && classesResult.result.isNotEmpty) {
+        List<DateTime?> fetchedClassDates = classesResult.result
+            .where((c) => c.isOdrzan ?? false)
+            .map((c) => c.datumOdrzavanjaCasa)
+            .toList();
+
+        if (fetchedClassDates.isNotEmpty) {
+          await _pickDate(context, null, fetchedClassDates, setState);
+        } else {
+          print(
+              'No valid class dates found for GodisnjiPlanProgramID $godisnjiPlanProgramID');
+        }
       } else {
-        print('No valid class dates found for GodisnjiPlanProgramID $godisnjiPlanProgramID');
+        print(
+            'No classes found for GodisnjiPlanProgramID $godisnjiPlanProgramID');
       }
-    } else {
-      print('No classes found for GodisnjiPlanProgramID $godisnjiPlanProgramID');
+    } catch (e) {
+      print("Error fetching classes: $e");
     }
-  } catch (e) {
-    print("Error fetching classes: $e");
   }
-}
-
-
-
-
 
   Future<void> _addGradeDialog(BuildContext context) async {
-  Subject? selectedSubject =
-      _availableSubjects.isNotEmpty ? _availableSubjects.first : null;
-  int selectedGradeValue = 1;
-  DateTime? selectedDate = DateTime.now();
+    final _formKey = GlobalKey<FormBuilderState>();
 
-  List<DateTime?> allowedDates = _fetchedClasses
-      .where((c) => c.isOdrzan ?? false)
-      .map((c) => c.datumOdrzavanjaCasa)
-      .toList();
+    Subject? selectedSubject =
+        _availableSubjects.isNotEmpty ? _availableSubjects.first : null;
+    int selectedGradeValue = 1;
+    DateTime? selectedDate;
 
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return AlertDialog(
-            title: Text('Dodaj ocjenu za učenika'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  TextFormField(
-                    initialValue: _userFullName,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      labelText: 'Učenik',
-                    ),
+    List<DateTime?> allowedDates = _fetchedClasses
+        .where((c) => c.isOdrzan ?? false)
+        .map((c) => c.datumOdrzavanjaCasa)
+        .toList();
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Dodaj ocjenu za učenika'),
+              content: SingleChildScrollView(
+                child: FormBuilder(
+                  key: _formKey,
+                  child: ListBody(
+                    children: <Widget>[
+                      FormBuilderTextField(
+                        name: 'studentName',
+                        initialValue: _userFullName,
+                        enabled: false,
+                        decoration: InputDecoration(
+                          labelText: 'Učenik',
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      FormBuilderDropdown<Subject?>(
+                        name: 'subject',
+                        initialValue: selectedSubject,
+                        items: _availableSubjects.map((subject) {
+                          return DropdownMenuItem<Subject?>(
+                            value: subject,
+                            child: Text(subject?.naziv ?? ""),
+                          );
+                        }).toList(),
+                        validator: FormBuilderValidators.required(
+                            errorText: 'Polje je obavezno'),
+                        onChanged: (Subject? newValue) {
+                          setState(() {
+                            selectedSubject = newValue;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Predmet',
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      FormBuilderDropdown<int>(
+                        name: 'gradeValue',
+                        initialValue: selectedGradeValue,
+                        items: [1, 2, 3, 4, 5].map((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text(value.toString()),
+                          );
+                        }).toList(),
+                        validator: FormBuilderValidators.required(
+                            errorText: 'Polje je obavezno'),
+                        onChanged: (int? newValue) {
+                          setState(() {
+                            selectedGradeValue = newValue!;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Ocjena',
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        "Datum: ${selectedDate != null ? selectedDate!.toLocal().toString().split(' ')[0] : "N/A"}",
+                        style: TextStyle(
+                            color: selectedDate == null
+                                ? Colors.red
+                                : Colors.black),
+                      ),
+                      SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (allowedDates.isEmpty) {
+                            _showNoClassesDialog(context);
+                          } else {
+                            await _pickDate(
+                                context, selectedDate, allowedDates, setState);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.black,
+                            backgroundColor: Colors.white),
+                        child: Text('Dodaj datum'),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 16),
-                  DropdownButtonFormField<Subject?>(
-                    value: selectedSubject,
-                    items: _availableSubjects.map((subject) {
-                      return DropdownMenuItem<Subject?>(
-                        value: subject,
-                        child: Text(subject.naziv ?? ""),
-                      );
-                    }).toList(),
-                    onChanged: (Subject? newValue) {
-                      setState(() {
-                        selectedSubject = newValue;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Predmet',
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  DropdownButtonFormField<int>(
-                    value: selectedGradeValue,
-                    items: [1, 2, 3, 4, 5].map((int value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text(value.toString()),
-                      );
-                    }).toList(),
-                    onChanged: (int? newValue) {
-                      setState(() {
-                        selectedGradeValue = newValue!;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Ocjena',
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                      "Datum: ${selectedDate?.toLocal().toString().split(' ')[0] ?? "N/A"}"),
-                  
-                  SizedBox(height: 16),
-                  ElevatedButton(
-  onPressed: () async {
-    if (selectedSubject != null) {
-      int? godisnjiPlanProgramID = await _fetchAnnualPlanProgram(selectedSubject!.predmetID);
-
-      if (godisnjiPlanProgramID != null) {
-        await _fetchClassesForAnnualPlan(godisnjiPlanProgramID, setState);
-      } else {
-        print("No annual plan program found for selected subject.");
-      }
-    } else {
-      print("No subject selected.");
-    }
-  },
-  child: Text('Dodaj datum'),
-),
-
-                ],
+                ),
               ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Odustani'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: Text('Dodaj'),
-                onPressed: () async {
-                  if (selectedSubject != null) {
-                    Grade newGrade = Grade(
-                      null,
-                      selectedGradeValue,
-                      selectedDate ?? DateTime.now(),
-                      widget.userID,
-                      selectedSubject!.predmetID,
-                    );
+              actions: <Widget>[
+                TextButton(
+                  style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.white),
+                  child: Text('Odustani'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.green),
+                  child: Text('Dodaj'),
+                  onPressed: () async {
+                    if (_formKey.currentState?.saveAndValidate() ?? false) {
+                      if (selectedDate == null) {
+                        _showNoDateSelectedDialog(context);
+                      } else if (selectedSubject != null) {
+                        Grade newGrade = Grade(
+                          null,
+                          selectedGradeValue,
+                          selectedDate!,
+                          widget.userID,
+                          selectedSubject!.predmetID,
+                        );
 
-                    try {
-                      bool success = await _subjectProvider.addOcjena(
-                          selectedSubject!.predmetID ?? 0, newGrade);
-                      if (success) {
-                        _initializeData();
-                        Navigator.of(context).pop();
+                        try {
+                          bool success = await _subjectProvider.addOcjena(
+                              selectedSubject!.predmetID ?? 0, newGrade);
+                          if (success) {
+                            _initializeData();
+                            Navigator.of(context).pop();
+                          }
+                        } catch (e) {
+                          print("Error adding grade: $e");
+                        }
+                      } else {
+                        print("No subject selected. Grade cannot be added.");
                       }
-                    } catch (e) {
-                      print("Error adding grade: $e");
+                    } else {
+                      print("Validation failed");
                     }
-                  } else {
-                    print("No subject selected. Grade cannot be added.");
-                  }
-                },
-              ),
-            ],
-          );
-        },
-      );
-    },
-  ).then((_) => _resetSelectedSubject());
-}
-void _showNoClassesDialog(BuildContext context) {
-  showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Greška'),
-        content: Text('Nemate održanih časova da možete unjeti ocjenu učeniku!'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('OK'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-Future<void> _pickDate(BuildContext context, DateTime? selectedDate, List<DateTime?> allowedDates, StateSetter setState) async {
-  DateTime? initialDate = selectedDate;
-  if (!allowedDates.contains(initialDate)) {
-    initialDate = allowedDates.first;
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).then((_) => _resetSelectedSubject());
   }
 
-  final DateTime? picked = await showDatePicker(
-    context: context,
-    initialDate: initialDate ?? DateTime.now(),
-    firstDate: DateTime(2000),
-    lastDate: DateTime(2101),
-    selectableDayPredicate: (DateTime date) {
-      return allowedDates.any((allowedDate) =>
-          allowedDate?.year == date.year &&
-          allowedDate?.month == date.month &&
-          allowedDate?.day == date.day);
-    },
-  );
-
-  if (picked != null && picked != selectedDate) {
-    setState(() {
-      selectedDate = picked;
-    });
+  void _showNoDateSelectedDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Greška'),
+          content: Text('Morate odabrati datum prije dodavanja ocjene!'),
+          actions: <Widget>[
+            TextButton(
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black, backgroundColor: Colors.white),
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
-}
 
+  void _showNoClassesDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Greška'),
+          content:
+              Text('Nemate održanih časova da možete unjeti ocjenu učeniku!'),
+          actions: <Widget>[
+            TextButton(
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black, backgroundColor: Colors.white),
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
+  Future<void> _pickDate(BuildContext context, DateTime? selectedDate,
+      List<DateTime?> allowedDates, StateSetter setState) async {
+    DateTime? initialDate = selectedDate;
+    if (!allowedDates.contains(initialDate)) {
+      initialDate = allowedDates.first;
+    }
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+      selectableDayPredicate: (DateTime date) {
+        return allowedDates.any((allowedDate) =>
+            allowedDate?.year == date.year &&
+            allowedDate?.month == date.month &&
+            allowedDate?.day == date.day);
+      },
+    );
+
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
