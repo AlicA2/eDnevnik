@@ -320,8 +320,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
               'No valid class dates available for GodisnjiPlanProgramID $godisnjiPlanProgramID');
         }
       } else {
-        print(
-            'No classes found for GodisnjiPlanProgramID $godisnjiPlanProgramID');
+            _showNoClassesDialog(context);
       }
     } catch (e) {
       print("Error fetching classes: $e");
