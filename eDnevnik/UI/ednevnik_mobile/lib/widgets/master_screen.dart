@@ -2,14 +2,11 @@ import 'package:ednevnik_admin/main.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../screens/calendar_screen.dart';
 import '../screens/events_screen.dart';
-import '../screens/help_support_screen.dart';
 import '../screens/info_attendance_screen.dart';
 import '../screens/info_student_screen.dart';
 import '../screens/messages_screen.dart';
-import '../screens/report_screen.dart';
 import '../screens/subject_screen.dart';
 import '../screens/user_profile_screen.dart';
 
@@ -149,24 +146,6 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 ));
               },
             ),
-            //ListTile(
-              //leading: Icon(Icons.insert_chart),
-              //title: Text("Plan i program"),
-              //onTap: () {
-                //Navigator.of(context).push(MaterialPageRoute(
-                  //builder: (context) => YearlyPlanAndProgramDetailScreen(),
-                //));
-              //},
-            //),
-            //ListTile(
-              //leading: Icon(Icons.bar_chart),
-              //title: Text("Izvještaj"),
-              //onTap: () {
-                //Navigator.of(context).push(MaterialPageRoute(
-                 // builder: (context) => ReportDetailScreen(),
-               // ));
-             // },
-            //),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
