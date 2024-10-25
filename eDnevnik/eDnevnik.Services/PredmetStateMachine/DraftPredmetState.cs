@@ -42,40 +42,15 @@ namespace eDnevnik.Services.KorisnikStateMachine
 
         public override async Task<Predmet> Activate(int id)
         {
-
             var set = _context.Set<Database.Predmet>();
 
             var entity = await set.FindAsync(id);
             entity.StateMachine = "active";
 
-
             await _context.SaveChangesAsync();
-
-
-            //var factory = new ConnectionFactory { HostName = "localhost" };
-            //using var connection = factory.CreateConnection();
-            //using var channel = connection.CreateModel();
-
-            //channel.QueueDeclare(queue: "predmet_added",
-            //                    durable: false,
-            //                    exclusive: false,
-            //                    autoDelete: false,
-            //                    arguments: null);
-
-            //string message = "Predmet Activated";//$"{entity.PredmetID}, {entity.Naziv},{entity.Opis}";
-            //var body = Encoding.UTF8.GetBytes(message);
-
-            //channel.BasicPublish(exchange: string.Empty,
-            //                    routingKey: "predmet_added",
-            //                    basicProperties: null,
-            //                    body: body);
-
-
 
             var mappedEntity = _mapper.Map<Model.Models.Predmet>(entity);
 
-            using var bus = RabbitHutch.CreateBus("host=localhost");
-            bus.PubSub.Publish(mappedEntity);
             return mappedEntity;
         }
         public override async Task<List<string>> AllowedActions()

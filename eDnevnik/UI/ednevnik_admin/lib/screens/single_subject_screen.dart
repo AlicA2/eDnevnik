@@ -349,38 +349,113 @@ void _showErrorDialog(String message) {
 
 
   Widget _buildScreenName() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Row(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(5),
-                topLeft: Radius.circular(20),
-                topRight: Radius.elliptical(5, 5),
-                bottomRight: Radius.circular(30.0),
-              ),
-            ),
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              widget.subject == null ? "Dodavanje predmeta" : "Uređivanje predmeta",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+  final isEditMode = widget.subject != null;
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: Row(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(5),
+              topLeft: Radius.circular(20),
+              topRight: Radius.elliptical(5, 5),
+              bottomRight: Radius.circular(30.0),
             ),
           ),
-          SizedBox(width: 16.0),
-        Expanded(
-          child: _buildSchoolDropdown(),
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            widget.subject == null ? "Dodavanje predmeta" : "Uređivanje predmeta",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
+        SizedBox(width: 16.0),
+        Expanded(child: _buildSchoolDropdown()),
+
+        // Only show these buttons when editing an existing subject
+        if (isEditMode) ...[
+          SizedBox(width: 10),
+          ElevatedButton(
+            onPressed: () => _activateSubject(widget.subject!.predmetID!),
+            child: Text("Activate"),
+          ),
+          SizedBox(width: 10),
+          ElevatedButton(
+            onPressed: () => _hideSubject(widget.subject!.predmetID!),
+            child: Text("Hide"),
+          ),
+          SizedBox(width: 10),
+          ElevatedButton(
+            onPressed: () => _showAllowedActions(widget.subject!.predmetID!),
+            child: Text("Allowed Actions"),
+          ),
         ],
-      ),
-    );
+      ],
+    ),
+  );
+}
+
+Future<void> _activateSubject(int id) async {
+  try {
+   if (mounted) {
+      Future.delayed(Duration.zero, () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Predmet uspješno aktiviran.")),
+        );
+      });
+    }
+    final subject = await _subjectProvider.activate(id);
+
+  } catch (e) {
+    print("Activation error: $e");
+    _showErrorDialog("Error activating subject: $e");
   }
+}
+
+Future<void> _hideSubject(int id) async {
+  try {
+    final subject = await _subjectProvider.hide(id);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Predmet je uspješno sakriven.")),
+    );
+    }
+  } catch (e) {
+    _showErrorDialog("Error hiding subject: $e");
+  }
+}
+
+Future<void> _showAllowedActions(int id) async {
+  try {
+    final actions = await _subjectProvider.allowedActions(id);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Allowed Actions"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: actions.map((action) => Text(action)).toList(),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  } catch (e) {
+    _showErrorDialog("Error fetching allowed actions: $e");
+  }
+}
+
 
   Widget _buildSchoolDropdown() {
     final isEditMode = widget.subject != null;
