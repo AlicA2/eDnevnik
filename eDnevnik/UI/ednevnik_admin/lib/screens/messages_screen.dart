@@ -100,9 +100,12 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(message.sadrzajPoruke ?? 'N/A'),
-              TextField(
-                controller: _replyController,
-                decoration: const InputDecoration(labelText: 'Vaš odgovor'),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: TextField(
+                  controller: _replyController,
+                  decoration: const InputDecoration(labelText: 'Vaš odgovor'),
+                ),
               ),
             ],
           ),
@@ -126,6 +129,15 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                 setState(() {
                   _replyController.clear();
                 });
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text("Odgovor uspješno poslan"),
+                  backgroundColor: Colors.green,
+                ),
+              );
+
+
               },
             ),
           ],
@@ -194,16 +206,16 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         children: [
           Row(
             children: [
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: "Unesite sadržaj poruke",
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  controller: _nazivSifraController,
-                ),
-              ),
-              SizedBox(width: 20),
+              // Expanded(
+              //   child: TextField(
+              //     decoration: InputDecoration(
+              //       labelText: "Unesite sadržaj poruke",
+              //       prefixIcon: Icon(Icons.search),
+              //     ),
+              //     controller: _nazivSifraController,
+              //   ),
+              // ),
+              // SizedBox(width: 20),
               Expanded(
                 child: _buildUcenikDropdown(),
               ),
@@ -263,14 +275,6 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
           DataColumn(
             label: Expanded(
               child: Text(
-                "Redni broj",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
                 "Učenik",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
@@ -315,7 +319,6 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
 
               return DataRow(
                 cells: [
-                  DataCell(Text((index + 1).toString())),
                   DataCell(
                     FutureBuilder<String>(
                       future: getUserName(e.ucenikID ?? 0),
