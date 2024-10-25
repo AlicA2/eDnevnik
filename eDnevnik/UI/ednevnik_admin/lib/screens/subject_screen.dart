@@ -189,14 +189,6 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
           DataColumn(
             label: Expanded(
               child: Text(
-                "Redni broj",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
                 "Naziv",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
@@ -227,21 +219,23 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                   Subject e = entry.value;
                   return DataRow(
                     cells: [
-                      DataCell(Text(index.toString())),
                       DataCell(Text(e.naziv ?? "")),
                       DataCell(Text(e.opis ?? "")),
-                      DataCell(IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () async {
-                          final result = await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => SingleSubjectListScreen(subject: e),
-                            ),
-                          );
-                          if (result == 'updated' || result == 'deleted') {
-                            _fetchSubjects();
-                          }
-                        },
+                      DataCell(Tooltip(
+                        message: "Uređivanje predmeta",
+                        child: IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () async {
+                            final result = await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => SingleSubjectListScreen(subject: e),
+                              ),
+                            );
+                            if (result == 'updated' || result == 'deleted') {
+                              _fetchSubjects();
+                            }
+                          },
+                        ),
                       )),
                     ],
                   );

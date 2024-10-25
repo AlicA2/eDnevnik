@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/result.dart';
 import 'package:ednevnik_admin/models/school.dart';
@@ -110,19 +109,30 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
     return 'Predmet s ovim nazivom već postoji.';
   }
 
-  if (value[0] != value[0].toUpperCase()) {
-    return 'Naziv mora početi velikim slovom.';
+  final romanNumerals = [" I", " II", " III", " IV"];
+  String mainPart = value;
+  bool endsWithValidRomanNumeral = false;
+
+  for (var numeral in romanNumerals) {
+    if (value.endsWith(numeral)) {
+      mainPart = value.substring(0, value.length - numeral.length).trim();
+      endsWithValidRomanNumeral = true;
+      break;
+    }
   }
 
-  if (value.length < 4) {
+  if (mainPart.isEmpty ||
+      mainPart[0] != mainPart[0].toUpperCase() ||
+      mainPart.substring(1) != mainPart.substring(1).toLowerCase()) {
+    return 'Naziv mora početi velikim slovom i svi ostali karakteri moraju biti mala slova.';
+  }
+
+  if (mainPart.length < 4) {
     return 'Naziv mora imati minimum 4 slova.';
   }
 
-  final romanNumerals = [" I", " II", " III", " IV"];
-  bool endsWithValidRomanNumeral = romanNumerals.any((suffix) => value.endsWith(suffix));
-
   if (!endsWithValidRomanNumeral) {
-    return 'Naziv mora završavati s " I", " II", " III" ili " IV".';
+    return 'Naziv mora završavati s razredom za koji je predmet " I", " II", " III" ili " IV".';
   }
 
   return null;
@@ -130,28 +140,45 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
 
 
   String? _validateOpis(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Ovo polje ne može biti prazno.';
-  }
+    if (value == null || value.isEmpty) {
+      return 'Ovo polje ne može biti prazno.';
+    }
 
-  if (_containsNumbers(value)) {
-    return 'Opis ne može sadržavati brojeve.';
-  }
+    if (_containsNumbers(value)) {
+      return 'Opis ne može sadržavati brojeve.';
+    }
 
-  if (value[0] != value[0].toUpperCase()) {
-    return 'Opis mora početi velikim slovom.';
-  }
+    if (value[0] != value[0].toUpperCase()) {
+      return 'Opis mora početi velikim slovom.';
+    }
 
     if (value.length < 4) {
-    return 'Opis mora imati minimum 4 slova.';
+      return 'Opis mora imati minimum 4 slova.';
+    }
+
+    final sentences = value.split('. ');
+  for (var i = 0; i < sentences.length; i++) {
+    var sentence = sentences[i].trim();
+    
+    if (!RegExp(r'^[A-Z][a-z]*').hasMatch(sentence)) {
+      return 'Svaka rečenica mora početi velikim slovom, a ostatak mora biti mala slova.';
+    }
+    
+    if (sentence.length > 1 && sentence.substring(1) != sentence.substring(1).toLowerCase()) {
+      return 'Svaka rečenica, osim prvog slova, mora sadržavati mala slova do tačke.';
+    }
+
+    if (i == sentences.length - 1 && !sentence.endsWith('.')) {
+      return 'Opis mora završiti sa tačkom.';
+    }
+
+    if (i < sentences.length - 1 && sentence.endsWith('.')) {
+      return 'Zadnja rečenica mora završiti sa tačkom.';
+    }
   }
 
-  if (!value.endsWith('.')) {
-    return 'Opis mora završiti sa tačkom.';
+    return null;
   }
-
-  return null;
-}
 
 
   @override
@@ -230,10 +257,22 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
         if (widget.subject == null) {
           await _subjectProvider.Insert(request);
           Navigator.pop(context, 'added');
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Uspješno ste dodali novi predmet"),
+            backgroundColor: Colors.green,
+          ),
+        );
         } else {
           await _subjectProvider.Update(
               widget.subject!.predmetID!, request);
           Navigator.pop(context, 'updated');
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Uspješno ste ažurirali predmet"),
+            backgroundColor: Colors.green,
+          ),
+        );
         }
       } on Exception catch (e) {
         showDialog(
@@ -279,6 +318,12 @@ Future<void> _deleteSubject() async {
       try {
         await _subjectProvider.delete(widget.subject!.predmetID!);
         Navigator.pop(context, 'deleted');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Uspješno ste izbrisali predmet"),
+            backgroundColor: Colors.red,
+          ),
+        );
       } catch (e) {
         _showErrorDialog("Failed to delete subject: $e");
       }
@@ -343,7 +388,7 @@ void _showErrorDialog(String message) {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          width: 300,
+          width: 210,
           child: DropdownButton<School>(
             value: _selectedSchool,
             hint: Text("Select School"),

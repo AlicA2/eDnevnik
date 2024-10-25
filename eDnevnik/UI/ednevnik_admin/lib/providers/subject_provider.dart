@@ -52,4 +52,51 @@ class SubjectProvider extends BaseProvider<Subject> {
       throw Exception("Unexpected error occurred while fetching subject data");
     }
   }
+
+  Future<Subject> activate(int id) async {
+    var url = "$_baseUrl$_endpoint/$id/activate";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http.put(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw Exception("Error while activating subject: ${response.body}");
+    }
+  }
+
+  Future<Subject> hide(int id) async {
+    var url = "$_baseUrl$_endpoint/$id/hide";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http.put(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw Exception("Error while hiding subject: ${response.body}");
+    }
+  }
+
+  Future<List<String>> allowedActions(int id) async {
+    var url = "$_baseUrl$_endpoint/$id/allowedActions";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var response = await http.get(uri, headers: headers);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return List<String>.from(data);
+    } else {
+      throw Exception("Error while fetching allowed actions: ${response.body}");
+    }
+  }
+
+
 }
