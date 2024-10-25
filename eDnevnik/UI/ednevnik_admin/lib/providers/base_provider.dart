@@ -112,7 +112,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     if (response.statusCode < 299) {
       return true;
     } else if (response.statusCode == 401) {
-      throw new Exception("Unauthorized");
+      throw new Exception("Neispravan username ili password!");
     } else {
       print(response.body);
       throw new Exception("Something bad happened please try again");

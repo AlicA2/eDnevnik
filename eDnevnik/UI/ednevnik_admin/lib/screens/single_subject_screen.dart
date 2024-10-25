@@ -85,9 +85,6 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
     setState(() {
       _subjects = subjectResult.result;
     });
-
-    print(userResult);
-    print(departmentResult);
   }
 
   bool _containsNumbers(String input) {
@@ -229,8 +226,6 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
     
       request['skolaID'] = _selectedSchool?.skolaID ?? 0;
     
-      print(request);
-    
       try {
         if (widget.subject == null) {
           await _subjectProvider.Insert(request);
@@ -282,7 +277,6 @@ Future<void> _deleteSubject() async {
 
     if (confirmDelete == true) {
       try {
-        print('Deleting subject with ID: ${widget.subject!.predmetID}');
         await _subjectProvider.delete(widget.subject!.predmetID!);
         Navigator.pop(context, 'deleted');
       } catch (e) {

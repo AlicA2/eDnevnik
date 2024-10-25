@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:ednevnik_admin/models/annual_plan_program.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/classes_provider.dart';
@@ -16,9 +17,20 @@ import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/utils/util.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main() {
+Future<void> main() async {
+  
+   WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+
+  if (Platform.isWindows) {
+    WindowManager.instance.setMinimumSize(const Size(1400, 800));
+  }
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => SubjectProvider()),
@@ -152,102 +164,145 @@ class MyMaterialApp extends StatelessWidget {
   }
 }
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
-  TextEditingController _usernameController = new TextEditingController();
-  TextEditingController _passwordController = new TextEditingController();
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+
+  bool _isPasswordObscured = true;
 
   @override
   Widget build(BuildContext context) {
     UserProvider _userProvider = context.read<UserProvider>();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Prijava"),
+        title: const Text("Prijava"),
         backgroundColor: Colors.blue,
       ),
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            constraints: BoxConstraints(maxWidth: 400, maxHeight: 500),
+            constraints: const BoxConstraints(maxWidth: 400, maxHeight: 500),
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    Image.asset(
-                      "assets/images/eDnevnik.png",
-                      height: 200,
-                      width: 300,
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
+                child: FormBuilder(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        "assets/images/eDnevnik.png",
+                        height: 200,
+                        width: 300,
+                      ),
+                      FormBuilderTextField(
+                        name: 'username',
+                        controller: _usernameController,
+                        decoration: const InputDecoration(
                           labelText: "Korisničko ime",
-                          prefixIcon: Icon(Icons.email)),
-                      controller: _usernameController,
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.email),
+                        ),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: "Ovo polje je obavezno"),
+                        ]),
+                      ),
+                      const SizedBox(height: 10),
+                      FormBuilderTextField(
+                        name: 'password',
+                        controller: _passwordController,
+                        obscureText: _isPasswordObscured,
+                        decoration: InputDecoration(
                           labelText: "Lozinka",
-                          prefixIcon: Icon(Icons.password)),
-                      controller: _passwordController,
-                      obscureText: true,
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () async {
-                        var username = _usernameController.text;
-                        var password = _passwordController.text;
-
-                        Authorization.username = username;
-                        Authorization.password = password;
-                        try {
-                          var loginData = await _userProvider.getLogedWithRole(
-                              username, password);
-
-                          if (loginData != null &&
-                              loginData['uloga'] == 'admin') {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => SubjectDetailScreen(),
-                              ),
-                            );
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: Text("Greška"),
-                                content: Text("Nemate dozvolu za pristup."),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: Text("OK"),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                        } on Exception catch (e) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: Text("Greška"),
-                              content: Text(e.toString()),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: Text("OK"),
-                                )
-                              ],
+                          prefixIcon: const Icon(Icons.password),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordObscured
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                             ),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(foregroundColor: Colors.blue),
-                      child: Text("Prijava"),
-                    )
-                  ],
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordObscured = !_isPasswordObscured;
+                              });
+                            },
+                          ),
+                        ),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: "Ovo polje je obavezno"),
+                        ]),
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(top:16.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState?.saveAndValidate() ?? false) {
+                              var username = _usernameController.text;
+                              var password = _passwordController.text;
+                        
+                              Authorization.username = username;
+                              Authorization.password = password;
+                        
+                              try {
+                                var loginData = await _userProvider.getLogedWithRole(username, password);
+                        
+                                if (loginData != null && loginData['uloga'] == 'admin') {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => SubjectDetailScreen(),
+                                    ),
+                                  );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) => AlertDialog(
+                                      title: const Text("Greška"),
+                                      content: const Text("Nemate dozvolu za pristup."),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.pop(context),
+                                          child: const Text("OK"),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              } on Exception catch (e) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text("Greška"),
+                                    content: Text(e.toString()),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text("OK"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.black,
+                          ),
+                          child: const Text("Prijava"),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
