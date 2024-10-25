@@ -172,7 +172,7 @@ class _SingleDepartmentListScreenState
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          width: 300,
+          width: 210,
           child: DropdownButton<School>(
             value: _selectedSchool,
             items: _schools.map((school) {
@@ -246,7 +246,7 @@ class _SingleDepartmentListScreenState
                 ),
                 isExpanded: true,
                 validator: FormBuilderValidators.required(
-                    errorText: 'Razrednik ne smije biti prazan'),
+                    errorText: 'Odaberite razrednika za razred'),
               ),
             ),
           ],
@@ -299,6 +299,7 @@ void _showErrorDialog(String message) {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
+          style: ElevatedButton.styleFrom(foregroundColor: Colors.black, backgroundColor: Colors.white),
           child: Text("OK"),
         ),
       ],

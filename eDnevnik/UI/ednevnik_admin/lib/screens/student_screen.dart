@@ -180,6 +180,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.white,foregroundColor: Colors.black),
             child: Text('OK'),
           ),
         ],
