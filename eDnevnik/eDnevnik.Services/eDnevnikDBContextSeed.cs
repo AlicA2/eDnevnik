@@ -1310,7 +1310,17 @@ namespace eDnevnik.Services
                 new KorisniciUloge { KorisnikUlogaID = 47, KorisnikID = 47, UlogaID = 2, DatumIzmjene = DateTime.Now },
                 new KorisniciUloge { KorisnikUlogaID = 48, KorisnikID = 48, UlogaID = 2, DatumIzmjene = DateTime.Now },
                 new KorisniciUloge { KorisnikUlogaID = 49, KorisnikID = 49, UlogaID = 2, DatumIzmjene = DateTime.Now },
-                new KorisniciUloge { KorisnikUlogaID = 50, KorisnikID = 50, UlogaID = 2, DatumIzmjene = DateTime.Now }
+                new KorisniciUloge { KorisnikUlogaID = 50, KorisnikID = 50, UlogaID = 2, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 51, KorisnikID = 51, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 52, KorisnikID = 52, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 53, KorisnikID = 53, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 54, KorisnikID = 54, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 55, KorisnikID = 55, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 56, KorisnikID = 56, UlogaID = 2, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 57, KorisnikID = 57, UlogaID = 2, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 58, KorisnikID = 58, UlogaID = 2, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 59, KorisnikID = 59, UlogaID = 2, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 60, KorisnikID = 60, UlogaID = 2, DatumIzmjene = DateTime.Now }
 
             );
         }
