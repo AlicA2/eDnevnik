@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:ednevnik_admin/models/department_subject.dart';
+import 'package:ednevnik_admin/models/final_grade.dart';
+import 'package:ednevnik_admin/providers/final_grade_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +37,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   late GradeProvider _gradeProvider;
   late UserProvider _userProvider;
   late DepartmentSubjectProvider _departmentSubjectProvider;
+  late FinalGradeProvider _finalGradeProvider;
 
   Department? _selectedDepartment;
   DepartmentSubject? _selectedSubject;
@@ -43,6 +46,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   bool _isLoading = false;
   Map<int, User> _users = {};
 
+  List<FinalGrade> _finalGrades = [];
   List<Department> _departments = [];
   List<DepartmentSubject> _subjects = [];
   List<School> _schools = [];
@@ -67,6 +71,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     _gradeProvider = context.read<GradeProvider>();
     _userProvider = context.read<UserProvider>();
     _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
+    _finalGradeProvider = context.read<FinalGradeProvider>();
 
     _initializeData();
   }
@@ -85,6 +90,23 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       });
     }
   }
+
+  Future<void> _fetchFinalGrades(int predmetID, int korisnikID) async {
+  try {
+    var finalGrades = await _finalGradeProvider.get(filter: {
+      'PredmetID': predmetID,
+      'KorisnikID': korisnikID,
+    });
+
+    if (finalGrades.result.isNotEmpty) {
+      setState(() {
+        _finalGrades = finalGrades.result;
+      });
+    }
+  } catch (e) {
+    print("Error fetching final grades: $e");
+  }
+}
 
   Future<void> _fetchSchools() async {
     try {
@@ -425,23 +447,23 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     );
   }
 
-  Future<double> _calculateZakljucnaOcjena(
-      int korisnikID, int predmetID) async {
-    var grades = await _gradeProvider.get(filter: {
-      'PredmetID': predmetID,
-      'KorisnikID': korisnikID,
-    });
+  Future<double> _calculateZakljucnaOcjena(int korisnikID, int predmetID) async {
+  var finalGrades = await _finalGradeProvider.get(filter: {
+    'PredmetID': predmetID,
+    'KorisnikID': korisnikID,
+  });
 
-    if (grades.result.isEmpty) return 0.0;
+  if (finalGrades.result.isEmpty) return 0.0;
 
-    double sum = grades.result.fold(
-        0.0,
-        (prev, element) =>
-            prev + (element.vrijednostOcjene?.toDouble() ?? 0.0));
-    double average = sum / grades.result.length;
+  double sum = finalGrades.result.fold(
+      0.0,
+      (prev, element) =>
+          prev + (element.vrijednostZakljucneOcjene?.toDouble() ?? 0.0));
+  double average = sum / finalGrades.result.length;
 
-    return average;
-  }
+  return average;
+}
+
 
   Widget _buildUserDetails() {
     List<User> filteredUsers =
@@ -450,8 +472,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     if (filteredUsers.isEmpty || _selectedSubject == null) {
       return Center(
         child: Text(
-          "Kako nema ocjena za učenike, tako nema i zaključnih ocjena.",
-          style: TextStyle(fontSize: 16, color: Colors.grey),
+          "Nema zaključnih ocjena za pregled.",
+          style: TextStyle(fontSize: 16, color: Colors.black),
           textAlign: TextAlign.center,
         ),
       );
@@ -594,9 +616,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           }
 
           return BarChartGroupData(
-            x: 0,
+            x: userId,
             barRods: barRods,
-            showingTooltipIndicators: [0],
+            showingTooltipIndicators: [],
           );
         })
         .whereType<BarChartGroupData>()

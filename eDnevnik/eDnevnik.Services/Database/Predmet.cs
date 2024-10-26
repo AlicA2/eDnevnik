@@ -16,6 +16,5 @@ namespace eDnevnik.Services.Database
         public virtual Skola Skola { get; set; } = null!;
         public virtual ICollection<OdjeljenjePredmet> OdjeljenjePredmeti { get; set; } = new List<OdjeljenjePredmet>();
         public virtual ICollection<Ocjene> Ocjene { get; set; } = new List<Ocjene>();
-        public decimal? ZakljucnaOcjena { get; set; }
     }
 }

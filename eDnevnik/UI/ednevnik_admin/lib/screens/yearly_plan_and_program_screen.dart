@@ -109,7 +109,7 @@ class _YearlyPlanAndProgramDetailScreenState
     });
 
     setState(() {
-      _subjects = [Subject(0, 'Svi predmeti', '', '', 0, 0), ...data.result];
+      _subjects = [Subject(0, 'Svi predmeti', '', '', 0), ...data.result];
 
       if (_subjects.isNotEmpty) {
         _selectedSubject = _subjects.first;
@@ -153,7 +153,7 @@ class _YearlyPlanAndProgramDetailScreenState
     return _subjects
             .firstWhere(
               (sub) => sub.predmetID == id,
-              orElse: () => Subject(0, '', '', "", 0, 0),
+              orElse: () => Subject(0, '', '', "", 0),
             )
             .naziv ??
         "";

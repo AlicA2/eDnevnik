@@ -113,12 +113,36 @@ namespace eDnevnik.Services.Service
             }
 
             predmet.Ocjene.Add(ocjena);
-            predmet.ZakljucnaOcjena = await CalculateZakljucnaOcjena(predmetID, request.KorisnikID);
+
+            await _context.SaveChangesAsync();
+
+            var zakljucnaOcjenaValue = await CalculateZakljucnaOcjena(predmetID, request.KorisnikID);
+
+            var existingZakljucnaOcjena = await _context.ZakljucnaOcjena
+                .FirstOrDefaultAsync(z => z.PredmetID == predmetID && z.KorisnikID == request.KorisnikID);
+
+            if (existingZakljucnaOcjena != null)
+            {
+                existingZakljucnaOcjena.vrijednostZakljucneOcjene = zakljucnaOcjenaValue ?? 0;
+                _context.ZakljucnaOcjena.Update(existingZakljucnaOcjena);
+            }
+            else
+            {
+                var zakljucnaOcjena = new ZakljucnaOcjena
+                {
+                    PredmetID = predmetID,
+                    KorisnikID = request.KorisnikID,
+                    vrijednostZakljucneOcjene = zakljucnaOcjenaValue ?? 0
+                };
+
+                await _context.ZakljucnaOcjena.AddAsync(zakljucnaOcjena);
+            }
 
             await _context.SaveChangesAsync();
 
             return true;
         }
+
         public async Task<decimal?> CalculateZakljucnaOcjena(int predmetID, int korisnikID)
         {
             var predmet = await _context.Predmeti

@@ -13,10 +13,9 @@ class Subject{
   String? naziv;
   String? opis;
   String? stateMachine;
-  double? zakljucnaOcjena;
   List<Grade>? ocjene;
 
-  Subject(this.predmetID,this.naziv,this.opis,this.stateMachine,this.skolaID,this.zakljucnaOcjena,[this.ocjene]);
+  Subject(this.predmetID,this.naziv,this.opis,this.stateMachine,this.skolaID,[this.ocjene]);
 
  /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

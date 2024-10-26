@@ -6,6 +6,7 @@ import 'package:ednevnik_admin/providers/classes_students_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/department_subject_provider.dart';
 import 'package:ednevnik_admin/providers/events_provider.dart';
+import 'package:ednevnik_admin/providers/final_grade_provider.dart';
 import 'package:ednevnik_admin/providers/grade_provider.dart';
 import 'package:ednevnik_admin/providers/message_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
@@ -45,6 +46,7 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => ClassesStudentsProvider()),
       ChangeNotifierProvider(create: (_) => EventsProvider()),
       ChangeNotifierProvider(create: (_) => UserEventsProvider()),
+      ChangeNotifierProvider(create: (_) => FinalGradeProvider()),
 
     ],
     child: const MyMaterialApp(),

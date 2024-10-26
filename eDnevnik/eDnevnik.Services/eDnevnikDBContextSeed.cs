@@ -42,6 +42,124 @@ namespace eDnevnik.Services
             SeedDogadjaji(modelBuilder);
             SeedOdjeljenjePredmeti(modelBuilder);
             SeedCasoviUcenici(modelBuilder);
+            SeedZakljucnaOcjena(modelBuilder);
+        }
+        private void SeedZakljucnaOcjena(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ZakljucnaOcjena>().HasData(
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 1,
+                    KorisnikID = 15,
+                    PredmetID = 1,
+                    vrijednostZakljucneOcjene = 5
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 2,
+                    KorisnikID = 16,
+                    PredmetID = 2,
+                    vrijednostZakljucneOcjene = 4
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 3,
+                    KorisnikID = 17,
+                    PredmetID = 3,
+                    vrijednostZakljucneOcjene = 3
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 4,
+                    KorisnikID = 18,
+                    PredmetID = 4,
+                    vrijednostZakljucneOcjene = 5
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 5,
+                    KorisnikID = 19,
+                    PredmetID = 1,
+                    vrijednostZakljucneOcjene = 4
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 6,
+                    KorisnikID = 20,
+                    PredmetID = 2,
+                    vrijednostZakljucneOcjene = 3
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 7,
+                    KorisnikID = 21,
+                    PredmetID = 3,
+                    vrijednostZakljucneOcjene = 2
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 8,
+                    KorisnikID = 22,
+                    PredmetID = 4,
+                    vrijednostZakljucneOcjene = 5
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 9,
+                    KorisnikID = 23,
+                    PredmetID = 1,
+                    vrijednostZakljucneOcjene = 4
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 10,
+                    KorisnikID = 24,
+                    PredmetID = 2,
+                    vrijednostZakljucneOcjene = 3
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 11,
+                    KorisnikID = 25,
+                    PredmetID = 3,
+                    vrijednostZakljucneOcjene = 5
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 12,
+                    KorisnikID = 26,
+                    PredmetID = 4,
+                    vrijednostZakljucneOcjene = 2
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 13,
+                    KorisnikID = 27,
+                    PredmetID = 1,
+                    vrijednostZakljucneOcjene = 4
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 14,
+                    KorisnikID = 28,
+                    PredmetID = 2,
+                    vrijednostZakljucneOcjene = 3
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 15,
+                    KorisnikID = 29,
+                    PredmetID = 3,
+                    vrijednostZakljucneOcjene = 4
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 16,
+                    KorisnikID = 30,
+                    PredmetID = 4,
+                    vrijednostZakljucneOcjene = 5
+                }
+            );
         }
         private void SeedDogadjaji(ModelBuilder modelBuilder)
         {

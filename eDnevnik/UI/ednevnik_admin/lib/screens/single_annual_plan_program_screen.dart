@@ -136,7 +136,7 @@ class _SingleAnnualPlanProgramScreenState
                     (sub) => sub.predmetID == widget.planProgram?.predmetID,
                     orElse: () => _subjects.isNotEmpty
                         ? _subjects.first
-                        : Subject(0, '', '', '', 0, 0),
+                        : Subject(0, '', '', '', 0),
                   )
                 : null;
           });
