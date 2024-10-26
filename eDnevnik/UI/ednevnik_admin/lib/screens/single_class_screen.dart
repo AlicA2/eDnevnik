@@ -263,11 +263,11 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
           if (id != null) {
             await _classProvider.Update(id, formValues);
             ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Uspješno ste ažurirali novi čas"),
-              backgroundColor: Colors.green,
-            ),
-          );
+              SnackBar(
+                content: Text("Uspješno ste ažurirali novi čas"),
+                backgroundColor: Colors.green,
+              ),
+            );
           } else {
             throw Exception('Class ID is null');
           }

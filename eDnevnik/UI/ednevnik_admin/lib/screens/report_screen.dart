@@ -570,7 +570,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
           }
 
           return BarChartGroupData(
-            x: userId,
+            x: 0,
             barRods: barRods,
             showingTooltipIndicators: [0],
           );
