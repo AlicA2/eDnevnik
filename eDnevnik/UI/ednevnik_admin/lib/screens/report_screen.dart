@@ -37,19 +37,17 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   late DepartmentSubjectProvider _departmentSubjectProvider;
 
   Department? _selectedDepartment;
-  Subject? _selectedSubject;
+  DepartmentSubject? _selectedSubject;
   School? _selectedSchool;
   User? _selectedUser;
   bool _isLoading = false;
+  Map<int, User> _users = {};
 
   List<Department> _departments = [];
-  List<Subject> _subjects = [];
+  List<DepartmentSubject> _subjects = [];
   List<School> _schools = [];
   List<Grade> _grades = [];
-  Map<int, User> _users = {};
-  List<DepartmentSubject> _departmentSubjects = [];
-  List<int> _filteredOdjeljenjeIDs = [];
-  List<int> _filteredPredmetIDs = [];
+  Map<int, String> _subjectNames = {};
 
   Timer? _debounce;
 
@@ -64,8 +62,8 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   void initState() {
     super.initState();
     _departmentProvider = context.read<DepartmentProvider>();
-    _subjectProvider = context.read<SubjectProvider>();
     _schoolProvider = context.read<SchoolProvider>();
+    _subjectProvider = context.read<SubjectProvider>();
     _gradeProvider = context.read<GradeProvider>();
     _userProvider = context.read<UserProvider>();
     _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
@@ -85,6 +83,84 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _fetchSchools() async {
+    try {
+      var schools = await _schoolProvider.get();
+      if (mounted) {
+        setState(() {
+          _schools = schools.result;
+          _selectedSchool = _schools.isNotEmpty ? _schools.first : null;
+        });
+
+        if (_selectedSchool != null) {
+          await _fetchDepartments();
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _fetchDepartments() async {
+    if (_selectedSchool == null) return;
+    try {
+      var data = await _departmentProvider.get(filter: {
+        'SkolaID': _selectedSchool!.skolaID,
+        'isUceniciIncluded': true,
+      });
+
+      setState(() {
+        _departments = data.result;
+        _selectedDepartment =
+            _departments.isNotEmpty ? _departments.first : null;
+      });
+
+      if (_selectedDepartment != null) {
+        await _fetchDepartmentSubjects();
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _fetchDepartmentSubjects() async {
+    if (_selectedDepartment == null) return;
+    try {
+      var data = await _departmentSubjectProvider.get(
+        filter: {'OdjeljenjeID': _selectedDepartment!.odjeljenjeID},
+      );
+
+      final List<DepartmentSubject> departmentSubjects = data.result;
+      final subjectNames = <int, String>{};
+
+      for (var departmentSubject in departmentSubjects) {
+        try {
+          final subject =
+              await _subjectProvider.getById(departmentSubject.predmetID!);
+          if (subject != null && subject.naziv != null) {
+            subjectNames[departmentSubject.predmetID!] = subject.naziv!;
+          } else {
+            subjectNames[departmentSubject.predmetID!] = "N/A";
+          }
+        } catch (e) {
+          subjectNames[departmentSubject.predmetID!] = "N/A";
+        }
+      }
+
+      setState(() {
+        _subjects = departmentSubjects;
+        _subjectNames = subjectNames;
+        _selectedSubject = _subjects.isNotEmpty ? _subjects.first : null;
+      });
+
+      if (_selectedSubject != null) {
+        await _fetchGrades();
+      }
+    } catch (e) {
+      print("Error fetching department subjects: $e");
     }
   }
 
@@ -140,136 +216,37 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     }
   }
 
-  Future<void> _fetchSchools() async {
-    try {
-      var schools = await _schoolProvider.get();
-      if (mounted) {
-        setState(() {
-          _schools = schools.result;
-          _selectedSchool = _schools.isNotEmpty ? _schools.first : null;
-        });
-
-        if (_selectedSchool != null) {
-          await Future.wait([
-            _fetchDepartmentSubjects(),
-            _fetchDepartments(),
-            _fetchSubjects(),
-            _fetchGrades(),
-          ]);
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> _fetchDepartmentSubjects() async {
-    try {
-      var data = await _departmentSubjectProvider.get();
-      setState(() {
-        _departmentSubjects = data.result;
-        _filteredOdjeljenjeIDs = _departmentSubjects
-            .map((ds) => ds.odjeljenjeID ?? 0)
-            .toSet()
-            .toList();
-        _filteredPredmetIDs =
-            _departmentSubjects.map((ds) => ds.predmetID ?? 0).toSet().toList();
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> _fetchDepartments() async {
-    try {
-      var data = await _departmentProvider.get(filter: {
-        'SkolaID': _selectedSchool?.skolaID,
-        'isUceniciIncluded': true,
-      });
-
-      List<Department> filteredDepartments = data.result.where((department) {
-        return _filteredOdjeljenjeIDs.contains(department.odjeljenjeID);
-      }).toList();
-
-      setState(() {
-        _departments = filteredDepartments;
-        _selectedDepartment =
-            filteredDepartments.isNotEmpty ? filteredDepartments.first : null;
-        _selectedUser = null;
-      });
-
-      if (_selectedDepartment != null) {
-        await _fetchSubjects();
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<void> _fetchSubjects() async {
-    try {
-      var data = await _subjectProvider.get(filter: {
-        'SkolaID': _selectedSchool?.skolaID,
-      });
-
-      List<Subject> filteredSubjects = data.result.where((subject) {
-        return _filteredPredmetIDs.contains(subject.predmetID);
-      }).toList();
-
-      setState(() {
-        _subjects = filteredSubjects;
-        _selectedSubject = _subjects.isNotEmpty ? _subjects.first : null;
-        _selectedUser = null;
-      });
-
-      if (_selectedSubject != null) {
-        await _fetchGrades();
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<double> _calculateZakljucnaOcjena(
-      int korisnikID, int predmetID) async {
-    var grades = await _gradeProvider.get(filter: {
-      'PredmetID': predmetID,
-      'KorisnikID': korisnikID,
-    });
-
-    if (grades.result.isEmpty) return 0.0;
-
-    double sum = grades.result.fold(
-        0.0,
-        (prev, element) =>
-            prev + (element.vrijednostOcjene?.toDouble() ?? 0.0));
-    double average = sum / grades.result.length;
-
-    return average;
-  }
-
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       child: Container(
+        width: double.infinity,
+        height: double.infinity,
         color: const Color(0xFFF7F2FA),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: Column(
-              children: [
-                _buildScreenName(),
-                SizedBox(height: 16.0),
-                _buildSearch(),
-                SizedBox(height: 20),
-                _isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : _buildContent(),
-              ],
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Column(
+                  children: [
+                    _buildScreenName(),
+                    SizedBox(height: 16.0),
+                    _buildSearch(),
+                    SizedBox(height: 20),
+                    _isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : _buildContent(),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -304,18 +281,21 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             ),
           ),
         ),
-        ElevatedButton.icon(
-          onPressed: _generatePDFReport,
-          icon: Icon(Icons.print),
-          label: Text("Printaj izvještaj"),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.blue,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
+        Padding(
+          padding: const EdgeInsets.only(right: 16.0),
+          child: ElevatedButton.icon(
+            onPressed: _generatePDFReport,
+            icon: Icon(Icons.print),
+            label: Text("Printaj izvještaj"),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blue,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             ),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           ),
         ),
       ],
@@ -347,13 +327,12 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                 _onDropdownChanged(() async {
                   await _fetchDepartmentSubjects();
                   await _fetchDepartments();
-                  await _fetchSubjects();
                   await _fetchGrades();
                 });
               },
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 40),
           Expanded(
             child: DropdownButton<Department>(
               hint: Text("Izaberite odjeljenje"),
@@ -363,7 +342,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                   _selectedDepartment = newValue;
                   _selectedUser = null;
                 });
-                await _fetchSubjects();
+                await _fetchDepartmentSubjects();
                 await _fetchGrades();
               },
               items: _departments.map((Department department) {
@@ -374,27 +353,28 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
               }).toList(),
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 40),
           Expanded(
-            child: DropdownButton<Subject>(
+            child: DropdownButton<DepartmentSubject>(
               hint: Text("Izaberite predmet"),
               value: _selectedSubject,
-              onChanged: (Subject? newValue) async {
+              onChanged: (DepartmentSubject? newValue) async {
                 setState(() {
                   _selectedSubject = newValue;
                   _selectedUser = null;
                 });
                 await _fetchGrades();
               },
-              items: _subjects.map((Subject subject) {
-                return DropdownMenuItem<Subject>(
-                  value: subject,
-                  child: Text(subject.naziv ?? ""),
+              items: _subjects.map((DepartmentSubject departmentSubject) {
+                return DropdownMenuItem<DepartmentSubject>(
+                  value: departmentSubject,
+                  child:
+                      Text(_subjectNames[departmentSubject.predmetID] ?? "N/A"),
                 );
               }).toList(),
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 40),
           Expanded(
             child: DropdownButton<User>(
               hint: Text("Izaberite učenika"),
@@ -445,26 +425,70 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     );
   }
 
+  Future<double> _calculateZakljucnaOcjena(
+      int korisnikID, int predmetID) async {
+    var grades = await _gradeProvider.get(filter: {
+      'PredmetID': predmetID,
+      'KorisnikID': korisnikID,
+    });
+
+    if (grades.result.isEmpty) return 0.0;
+
+    double sum = grades.result.fold(
+        0.0,
+        (prev, element) =>
+            prev + (element.vrijednostOcjene?.toDouble() ?? 0.0));
+    double average = sum / grades.result.length;
+
+    return average;
+  }
+
   Widget _buildUserDetails() {
     List<User> filteredUsers =
         _selectedUser == null ? _users.values.toList() : [_selectedUser!];
 
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: filteredUsers.length,
-      itemBuilder: (context, index) {
-        final user = filteredUsers[index];
+    if (filteredUsers.isEmpty || _selectedSubject == null) {
+      return Center(
+        child: Text(
+          "Kako nema ocjena za učenike, tako nema i zaključnih ocjena.",
+          style: TextStyle(fontSize: 16, color: Colors.grey),
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
 
-        return FutureBuilder<double>(
-          future: _calculateZakljucnaOcjena(
-              user.korisnikId!, _selectedSubject!.predmetID!),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              final finalGrade = snapshot.data ?? 0.0;
+    return FutureBuilder<List<double>>(
+      future: Future.wait(
+        filteredUsers.map((user) => _calculateZakljucnaOcjena(
+            user.korisnikId!, _selectedSubject!.predmetID!)),
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError || snapshot.data == null) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          final grades = snapshot.data!;
+          final usersWithGrades = [
+            for (int i = 0; i < filteredUsers.length; i++)
+              if (grades[i] > 0.0) MapEntry(filteredUsers[i], grades[i])
+          ];
+
+          if (usersWithGrades.isEmpty) {
+            return Center(
+              child: Text(
+                "Kako nema ocjena za učenike, tako nema i zaključnih ocjena.",
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
+
+          return ListView(
+            shrinkWrap: true,
+            children: usersWithGrades.map((entry) {
+              final user = entry.key;
+              final finalGrade = entry.value;
               return Card(
                 child: ListTile(
                   title: Text('${user.ime} ${user.prezime}'),
@@ -472,9 +496,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                       'Zaključna ocjena: ${finalGrade.toStringAsFixed(2)}'),
                 ),
               );
-            }
-          },
-        );
+            }).toList(),
+          );
+        }
       },
     );
   }
@@ -600,6 +624,16 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     );
   }
 
+  Future<String> _fetchSubjectName(int predmetID) async {
+    try {
+      final subject = await _subjectProvider.getById(predmetID);
+      return subject.naziv ?? "N/A";
+    } catch (e) {
+      print("Error fetching subject name: $e");
+      return "N/A";
+    }
+  }
+
   void _generatePDFReport() async {
     final pdf = pw.Document();
     final dateFormat = DateFormat('dd.MM.yyyy');
@@ -609,7 +643,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     final schoolName = replaceSpecialChars(_selectedSchool?.naziv ?? "N/A");
     final departmentName =
         replaceSpecialChars(_selectedDepartment?.nazivOdjeljenja ?? "N/A");
-    final subjectName = replaceSpecialChars(_selectedSubject?.naziv ?? "N/A");
+    final subjectName = _selectedSubject != null
+        ? await _fetchSubjectName(_selectedSubject!.predmetID!)
+        : "N/A";
 
     pdf.addPage(
       pw.Page(
@@ -712,9 +748,19 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     if (result != null) {
       final outputFile = File(result);
       await outputFile.writeAsBytes(await pdf.save());
-      print('PDF preuzet: ${outputFile.path}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('PDF je uspješno spremljen: ${outputFile.path}'),
+          backgroundColor: Colors.green,
+        ),
+      );
     } else {
-      print('Nema odabranog mjesta za spremanje.');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Spremanje PDF-a nije uspjelo.'),
+          backgroundColor: Colors.green,
+        ),
+      );
     }
   }
 
@@ -724,6 +770,11 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         .replaceAll('č', 'c')
         .replaceAll('ć', 'c')
         .replaceAll('đ', 'd')
-        .replaceAll('ž', 'z');
+        .replaceAll('ž', 'z')
+        .replaceAll('Đ', 'D')
+        .replaceAll('Ć', 'C')
+        .replaceAll('Č', 'C')
+        .replaceAll('Š', 'S')
+        .replaceAll('Ž', 'Z');
   }
 }
