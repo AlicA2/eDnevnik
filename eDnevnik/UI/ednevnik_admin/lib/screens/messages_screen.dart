@@ -341,18 +341,21 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                   DataCell(
                     Row(
                       children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.reply,
-                            color: e.odgovor != null && e.odgovor!.isNotEmpty
-                                ? Colors.grey
-                                : Colors.blue,
+                        Tooltip(
+                          message: "Odgovorite na poruku",
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.reply,
+                              color: e.odgovor != null && e.odgovor!.isNotEmpty
+                                  ? Colors.grey
+                                  : Colors.blue,
+                            ),
+                            onPressed: e.odgovor != null && e.odgovor!.isNotEmpty
+                                ? null
+                                : () async {
+                                    _replyToMessage(e);
+                                  },
                           ),
-                          onPressed: e.odgovor != null && e.odgovor!.isNotEmpty
-                              ? null
-                              : () async {
-                                  _replyToMessage(e);
-                                },
                         ),
                       ],
                     ),
