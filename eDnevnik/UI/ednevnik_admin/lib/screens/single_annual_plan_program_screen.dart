@@ -229,7 +229,7 @@ class _SingleAnnualPlanProgramScreenState
                                 !val.endsWith(" II") &&
                                 !val.endsWith(" III") &&
                                 !val.endsWith(" IV")) {
-                              return 'Naziv mora završiti sa " I", " II", " III" ili " IV"';
+                              return 'Naziv mora završiti sa razredom " I", " II", " III" ili " IV"';
                             }
 
                             if (val != null &&
@@ -454,10 +454,22 @@ class _SingleAnnualPlanProgramScreenState
             return;
           }
           await _planProgramProvider.Insert(formValues);
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Plan i program je uspješno spašen!'),
+            backgroundColor: Colors.green,
+          ),
+        );
         } else {
           final id = widget.planProgram!.godisnjiPlanProgramID;
           if (id != null) {
             await _planProgramProvider.Update(id, formValues);
+            ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Plan and program je uspješno ažuriran!'),
+            backgroundColor: Colors.green,
+          ),
+        );
           } else {
             _showErrorDialog('Neuspješno ažuriranje podataka.');
             return;
@@ -509,6 +521,12 @@ class _SingleAnnualPlanProgramScreenState
 
         if (confirmDelete == true) {
           await _planProgramProvider.delete(annualPlanProgramID);
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Plan i program je uspješno izbrisan!'),
+            backgroundColor: Colors.green,
+          ),
+        );
           Navigator.pop(context, true);
         }
       } catch (e) {
@@ -526,6 +544,7 @@ class _SingleAnnualPlanProgramScreenState
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(foregroundColor: Colors.black,backgroundColor: Colors.white),
             child: Text('OK'),
           ),
         ],

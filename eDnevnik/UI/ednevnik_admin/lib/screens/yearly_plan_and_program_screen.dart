@@ -52,7 +52,7 @@ class _YearlyPlanAndProgramDetailScreenState
 
     _fetchSchools();
   }
-  
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -95,7 +95,11 @@ class _YearlyPlanAndProgramDetailScreenState
       'SkolaID': _selectedSchool?.skolaID,
     });
     setState(() {
-      _departments = data.result;
+      _departments = [Department(0, 'Sva odjeljenja', 0, 0), ...data.result];
+
+      if (_departments.isNotEmpty) {
+        _selectedDepartment = _departments.first;
+      }
     });
   }
 
@@ -103,8 +107,13 @@ class _YearlyPlanAndProgramDetailScreenState
     var data = await _subjectProvider.get(filter: {
       'SkolaID': _selectedSchool?.skolaID,
     });
+
     setState(() {
-      _subjects = data.result;
+      _subjects = [Subject(0, 'Svi predmeti', '', '', 0, 0), ...data.result];
+
+      if (_subjects.isNotEmpty) {
+        _selectedSubject = _subjects.first;
+      }
     });
   }
 
@@ -114,10 +123,12 @@ class _YearlyPlanAndProgramDetailScreenState
       'SkolaID': _selectedSchool?.skolaID,
       'ProfesorID': loggedInUser?.korisnikId
     };
-    if (_selectedDepartment != null) {
+
+    if (_selectedDepartment != null && _selectedDepartment!.odjeljenjeID != 0) {
       filter['odjeljenjeID'] = _selectedDepartment!.odjeljenjeID.toString();
     }
-    if (_selectedSubject != null) {
+
+    if (_selectedSubject != null && _selectedSubject!.predmetID != 0) {
       filter['predmetID'] = _selectedSubject!.predmetID.toString();
     }
 
@@ -142,7 +153,7 @@ class _YearlyPlanAndProgramDetailScreenState
     return _subjects
             .firstWhere(
               (sub) => sub.predmetID == id,
-              orElse: () => Subject(0, '', '', "", 0,0),
+              orElse: () => Subject(0, '', '', "", 0, 0),
             )
             .naziv ??
         "";
@@ -285,7 +296,9 @@ class _YearlyPlanAndProgramDetailScreenState
               foregroundColor: Colors.white,
               backgroundColor: Colors.blue,
             ),
-            onPressed: () async { await _fetchAnnualPlanPrograms();},
+            onPressed: () async {
+              await _fetchAnnualPlanPrograms();
+            },
             child: Text("Pretraga"),
           ),
         ],
@@ -297,14 +310,6 @@ class _YearlyPlanAndProgramDetailScreenState
     return SingleChildScrollView(
       child: DataTable(
         columns: const [
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Redni broj",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
           DataColumn(
             label: Expanded(
               child: Text(
@@ -351,31 +356,42 @@ class _YearlyPlanAndProgramDetailScreenState
               AnnualPlanProgram e = entry.value;
               return DataRow(
                 cells: [
-                  DataCell(Text(index.toString())),
                   DataCell(Text(e.naziv ?? "")),
-                  DataCell(Text(_getDepartmentName(e.odjeljenjeID))),
+                  DataCell(Center(child: Text(_getDepartmentName(e.odjeljenjeID)))),
                   DataCell(Text(_getSubjectName(e.predmetID))),
-                  DataCell(Text(e.brojCasova?.toString() ?? "")),
+                  DataCell(Center(child: Text(e.brojCasova?.toString() ?? ""))),
                   DataCell(Row(
                     children: [
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          _navigateToAddOrEditScreen(e);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.navigate_next),
-                        onPressed: () async {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ClassesDetailScreen(
-                                annualPlanProgramID: e.godisnjiPlanProgramID,
-                                predmetID: e.predmetID,
+                      Tooltip(
+                        message: "Prelazak na stranicu časova",
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => ClassesDetailScreen(
+                                  annualPlanProgramID: e.godisnjiPlanProgramID,
+                                  predmetID: e.predmetID,
+                                ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.blue),
+                          child: Text("Časovi"),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Tooltip(
+                          message: "Uređivanje godišnjeg plana i programa",
+                          child: IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () {
+                              _navigateToAddOrEditScreen(e);
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   )),
