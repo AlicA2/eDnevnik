@@ -313,7 +313,7 @@ class _YearlyPlanAndProgramDetailScreenState
           DataColumn(
             label: Expanded(
               child: Text(
-                "Naziv",
+                "Naziv godišnjeg plana i programa",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),

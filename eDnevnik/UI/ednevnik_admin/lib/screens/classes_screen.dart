@@ -58,9 +58,7 @@ class _ClassesDetailScreenState extends State<ClassesDetailScreen> {
       'nazivCasa': _nazivController.text,
     };
 
-    print("Fetching classes with filter: $filter");
     var data = await _classesProvider.get(filter: filter);
-    print("Fetched data: ${data.result}");
 
     setState(() {
       result = data;
@@ -128,20 +126,12 @@ Widget _buildScreenName() {
           Expanded(
             child: TextField(
               decoration: InputDecoration(
-                labelText: "Naziv ili šifra",
+                labelText: "Naziv časa",
               ),
               controller: _ftsController,
             ),
           ),
           SizedBox(width: 10),
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: "Naziv",
-              ),
-              controller: _nazivController,
-            ),
-          ),
           ElevatedButton(
             onPressed: () async { await _fetchClasses();},
             style: ElevatedButton.styleFrom(
@@ -161,7 +151,7 @@ Widget _buildScreenName() {
           DataColumn(
             label: Expanded(
               child: Text(
-                "Redni broj",
+                "Naziv časova",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
@@ -169,15 +159,7 @@ Widget _buildScreenName() {
           DataColumn(
             label: Expanded(
               child: Text(
-                "Naziv",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Opis",
+                "Opis časova",
                 style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
@@ -196,23 +178,25 @@ Widget _buildScreenName() {
           Classes e = entry.value;
           return DataRow(
             cells: [
-              DataCell(Text(index.toString())),
               DataCell(Text(e.nazivCasa ?? "")),
               DataCell(Text(e.opis ?? "")),
               DataCell(
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SingleClassListScreen(classes: e, annualPlanProgramID: widget.annualPlanProgramID,),
-                      ),
-                    ).then((result){
-                      if(result ==true){
-                        _fetchClasses();
-                      };
-                    });
-                  },
+                Tooltip(
+                  message: "Uređivanje časa",
+                  child: IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SingleClassListScreen(classes: e, annualPlanProgramID: widget.annualPlanProgramID,),
+                        ),
+                      ).then((result){
+                        if(result ==true){
+                          _fetchClasses();
+                        };
+                      });
+                    },
+                  ),
                 ),
               ),
             ],

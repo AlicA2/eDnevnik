@@ -72,24 +72,7 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
                             name: 'nazivCasa',
                             decoration:
                                 InputDecoration(labelText: 'Naziv časa'),
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(
-                                  errorText: 'Polje je obavezno'),
-                              FormBuilderValidators.match(
-                                  RegExp(r'^[a-zA-Z]*$'),
-                                  errorText:
-                                      'Možete koristiti samo slova'),
-                              (val) {
-                                if (val != null &&
-                                    !RegExp(r'^[A-Z].*').hasMatch(val)) {
-                                  return 'Naziv časa mora početi velikim slovom';
-                                }
-                                if (val != null && val.length < 4) {
-                                  return 'Naziv časa mora imati minimum 4 slova';
-                                }
-                                return null;
-                              },
-                            ]),
+                            validator: _validateNazivCasa,
                           ),
                         ),
                         Padding(
@@ -97,29 +80,8 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
                               vertical: 8.0, horizontal: 16.0),
                           child: FormBuilderTextField(
                             name: 'opis',
-                            decoration: InputDecoration(labelText: 'Opis'),
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(
-                                  errorText: 'Polje je obavezno'),
-                              FormBuilderValidators.match(
-                                  RegExp(r'^[a-zA-Z\s.,!]*$'),
-                                  errorText:
-                                      'Možete koristiti samo slova i znakove: .,!'),
-                              (val) {
-                                if (val != null) {
-                                  if (!RegExp(r'^[A-Z].*').hasMatch(val)) {
-                                    return 'Opis mora početi velikim slovom';
-                                  }
-                                  if (val.length < 4) {
-                                    return 'Opis mora imati minimum 4 slova';
-                                  }
-                                  if (!val.endsWith('.')) {
-                                    return 'Opis mora završiti tačkom.';
-                                  }
-                                }
-                                return null;
-                              },
-                            ]),
+                            decoration: InputDecoration(labelText: 'Opis časa'),
+                            validator: _validateOpis,
                           ),
                         ),
                         SizedBox(height: 20),
@@ -186,6 +148,74 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
     );
   }
 
+  String? _validateNazivCasa(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Naziv časa je obavezan i ne može biti prazan.';
+    }
+
+    if (RegExp(r'[0-9]').hasMatch(value)) {
+      return 'Naziv časa ne može sadržavati brojeve.';
+    }
+
+    if (value.isNotEmpty &&
+        (value[0] != value[0].toUpperCase() ||
+            value.substring(1) != value.substring(1).toLowerCase())) {
+      return 'Naziv časa mora početi velikim slovom, a ostali karakteri moraju biti mala slova.';
+    }
+
+    if (value.length < 4) {
+      return 'Naziv časa mora imati minimum 4 slova.';
+    }
+
+    return null;
+  }
+
+  bool _containsNumbers(String input) {
+    return input.contains(RegExp(r'[0-9]'));
+  }
+
+  String? _validateOpis(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Opis časa je obavezan i ne može biti prazan.';
+    }
+
+    if (_containsNumbers(value)) {
+      return 'Opis ne može sadržavati brojeve.';
+    }
+
+    if (value[0] != value[0].toUpperCase()) {
+      return 'Opis mora početi velikim slovom.';
+    }
+
+    if (value.length < 4) {
+      return 'Opis mora imati minimum 4 slova.';
+    }
+
+    final sentences = value.split('. ');
+    for (var i = 0; i < sentences.length; i++) {
+      var sentence = sentences[i].trim();
+
+      if (!RegExp(r'^[A-Z][a-z]*').hasMatch(sentence)) {
+        return 'Svaka rečenica mora početi velikim slovom, a ostatak mora biti mala slova.';
+      }
+
+      if (sentence.length > 1 &&
+          sentence.substring(1) != sentence.substring(1).toLowerCase()) {
+        return 'Svaka rečenica, osim prvog slova, mora sadržavati mala slova do tačke.';
+      }
+
+      if (i == sentences.length - 1 && !sentence.endsWith('.')) {
+        return 'Opis mora završiti sa tačkom.';
+      }
+
+      if (i < sentences.length - 1 && sentence.endsWith('.')) {
+        return 'Zadnja rečenica mora završiti sa tačkom.';
+      }
+    }
+
+    return null;
+  }
+
   Widget _buildScreenName() {
     return Align(
       alignment: Alignment.centerLeft,
@@ -222,10 +252,22 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
         if (widget.classes == null) {
           print(formValues);
           await _classProvider.Insert(formValues);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Uspješno ste dodali novi čas"),
+              backgroundColor: Colors.green,
+            ),
+          );
         } else {
           final id = widget.classes!.casoviID;
           if (id != null) {
             await _classProvider.Update(id, formValues);
+            ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Uspješno ste ažurirali novi čas"),
+              backgroundColor: Colors.green,
+            ),
+          );
           } else {
             throw Exception('Class ID is null');
           }
@@ -275,6 +317,12 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
         final id = widget.classes!.casoviID;
         if (id != null) {
           await _classProvider.delete(id);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Uspješno ste izbrisali čas"),
+              backgroundColor: Colors.green,
+            ),
+          );
           Navigator.pop(context, true);
         } else {
           throw Exception('Class ID is null');
