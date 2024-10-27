@@ -141,79 +141,88 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      event.nazivDogadjaja ?? "No Name",
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        event.nazivDogadjaja ?? "No Name",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.edit,
-                            color: isActive ? Colors.grey : Colors.blue),
-                        onPressed: isActive
-                            ? null
-                            : () {
-                                _showEditEventDialog(event);
-                              },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete,
-                            color: isActive ? Colors.grey : Colors.red),
-                        onPressed: isActive
-                            ? null
-                            : () {
-                                _confirmDeleteEvent(event);
-                              },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              event.slika != null && event.slika!.isNotEmpty
-                  ? Container(
-                      height: 100,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          image: _buildImageFromBase64(event.slika!),
-                          fit: BoxFit.cover,
+                    Row(
+                      children: [
+                        Tooltip(
+                          message: "Uređivanje događaja",
+                          child: IconButton(
+                            icon: Icon(Icons.edit,
+                                color: isActive ? Colors.grey : Colors.blue),
+                            onPressed: isActive
+                                ? null
+                                : () {
+                                    _showEditEventDialog(event);
+                                  },
+                          ),
                         ),
-                      ),
-                    )
-                  : _buildPlaceholderImage(),
-              SizedBox(height: 8),
-              Text(
-                event.opisDogadjaja ?? "No Description",
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 14),
-              ),
-              SizedBox(height: 8),
-              Center(
-                child: Text(
-                  event.datumDogadjaja != null
-                      ? DateFormat('yyyy-MM-dd').format(event.datumDogadjaja!)
-                      : "No Date",
-                  style: TextStyle(color: Colors.grey),
+                        Tooltip(
+                          message: "Brisanje događaja",
+                          child: IconButton(
+                            icon: Icon(Icons.delete,
+                                color: isActive ? Colors.grey : Colors.red),
+                            onPressed: isActive
+                                ? null
+                                : () {
+                                    _confirmDeleteEvent(event);
+                                  },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 16),
-              _buildActionButtons2(event, isActive, isDraft),
-            ],
-          ),
+                SizedBox(height: 8),
+                event.slika != null && event.slika!.isNotEmpty
+                    ? Container(
+                        height: 100,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: _buildImageFromBase64(event.slika!),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )
+                    : _buildPlaceholderImage(),
+                SizedBox(height: 8),
+                Text(
+                  event.opisDogadjaja ?? "No Description",
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    event.datumDogadjaja != null
+                        ? DateFormat('yyyy-MM-dd').format(event.datumDogadjaja!)
+                        : "No Date",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16),
+            _buildActionButtons2(event, isActive, isDraft),
+          ],
         ),
       ),
     );
@@ -224,49 +233,61 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
       children: [
         SizedBox(
           width: double.infinity,
-          child: ElevatedButton(
-            onPressed: isDraft
-                ? () async {
-                    try {
-                      await _eventsProvider.activate(event.dogadjajId!);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Događaj uspješno aktiviran")),
-                      );
-                      _fetchEvents();
-                    } catch (e) {
-                      _showErrorDialog("Error activating event: $e");
+          child: Tooltip(
+            message: "Aktiviraj događaj",
+            child: ElevatedButton(
+              onPressed: isDraft
+                  ? () async {
+                      try {
+                        await _eventsProvider.activate(event.dogadjajId!);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Događaj uspješno aktiviran"),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        _fetchEvents();
+                      } catch (e) {
+                        _showErrorDialog("Error activating event: $e");
+                      }
                     }
-                  }
-                : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: isDraft ? Colors.green : Colors.grey,
-              foregroundColor: Colors.white,
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isDraft ? Colors.green : Colors.grey,
+                foregroundColor: Colors.white,
+              ),
+              child: Text("Aktiviraj Događaj"),
             ),
-            child: Text("Aktiviraj Događaj"),
           ),
         ),
         SizedBox(height: 8),
         SizedBox(
           width: double.infinity,
-          child: ElevatedButton(
-            onPressed: isActive
-                ? () async {
-                    try {
-                      await _eventsProvider.hide(event.dogadjajId!);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Događaj uspješno sakriven")),
-                      );
-                      _fetchEvents();
-                    } catch (e) {
-                      _showErrorDialog("Error hiding event: $e");
+          child: Tooltip(
+            message: "Sakrij događaj",
+            child: ElevatedButton(
+              onPressed: isActive
+                  ? () async {
+                      try {
+                        await _eventsProvider.hide(event.dogadjajId!);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Događaj uspješno sakriven"),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        _fetchEvents();
+                      } catch (e) {
+                        _showErrorDialog("Error hiding event: $e");
+                      }
                     }
-                  }
-                : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: isActive ? Colors.orange : Colors.grey,
-              foregroundColor: Colors.white,
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isActive ? Colors.orange : Colors.grey,
+                foregroundColor: Colors.white,
+              ),
+              child: Text("Sakrij Događaj"),
             ),
-            child: Text("Sakrij Događaj"),
           ),
         ),
       ],
@@ -824,8 +845,10 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
         await _eventsProvider.Insert(newEvent);
         Navigator.pop(context);
         _resetForm();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Događaj uspješno dodan")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Događaj uspješno dodan"),
+          backgroundColor: Colors.green,
+        ));
         _fetchEvents();
       } catch (e) {
         _showErrorDialog("An error occurred.");

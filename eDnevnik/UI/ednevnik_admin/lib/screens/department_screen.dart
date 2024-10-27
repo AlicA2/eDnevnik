@@ -168,16 +168,6 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
             ),
           ),
           SizedBox(width: 20),
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: "Šifra",
-                prefixIcon: Icon(Icons.search),
-              ),
-              controller: _ftsController,
-            ),
-          ),
-          SizedBox(width: 20),
           ElevatedButton(
             onPressed: () async { await _fetchDepartments();},
             style: ElevatedButton.styleFrom(
@@ -223,7 +213,6 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
       Department e = entry.value;
       return DataRow(
         cells: [
-          DataCell(Text((index + 1).toString())),
           DataCell(Text(e.nazivOdjeljenja ?? "N/A")),
           DataCell(
             e.razrednikID != null
@@ -294,14 +283,6 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
     return SingleChildScrollView(
       child: DataTable(
         columns: const [
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Redni broj",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
           DataColumn(
             label: Expanded(
               child: Text(
