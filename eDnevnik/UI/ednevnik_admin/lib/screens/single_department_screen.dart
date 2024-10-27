@@ -256,58 +256,68 @@ class _SingleDepartmentListScreenState
   }
 
   Future<void> _confirmDelete() async {
-  bool? confirmDelete = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Potvrda brisanja'),
-      content: Text('Da li ste sigurni da želite da obrišete ovo odjeljenje?'),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          style: ElevatedButton.styleFrom(foregroundColor: Colors.black,backgroundColor: Colors.white),
-          child: Text('Odustani'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, true),
-          style: ElevatedButton.styleFrom(foregroundColor: Colors.white,backgroundColor: Colors.red),
-          child: Text('Obriši'),
-        ),
-      ],
-    ),
-  );
+    bool? confirmDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Potvrda brisanja'),
+        content:
+            Text('Da li ste sigurni da želite da obrišete ovo odjeljenje?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black, backgroundColor: Colors.white),
+            child: Text('Odustani'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.red),
+            child: Text('Obriši'),
+          ),
+        ],
+      ),
+    );
 
-  if (confirmDelete == true) {
-    try {
-      if (widget.department != null && widget.department!.odjeljenjeID != null) {
-        await _departmentProvider.delete(widget.department!.odjeljenjeID!);
-        Navigator.pop(context, true);
+    if (confirmDelete == true) {
+      try {
+        if (widget.department != null &&
+            widget.department!.odjeljenjeID != null) {
+          await _departmentProvider.delete(widget.department!.odjeljenjeID!);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Uspješno ste obrisali odjeljenje."),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context, true);
+        }
+      } on DepartmentDeleteException catch (e) {
+        _showErrorDialog(e.message);
+      } catch (e) {
+        _showErrorDialog(
+            'Ne možete obrisati odjeljenje koje ima predmete ili učenike!');
       }
-    } on DepartmentDeleteException catch (e) {
-      _showErrorDialog(e.message);
-    } catch (e) {
-      _showErrorDialog('Ne možete obrisati odjeljenje koje ima predmete ili učenike!');
     }
   }
-}
 
-void _showErrorDialog(String message) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) => AlertDialog(
-      title: Text("Greška"),
-      content: Text(message),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          style: ElevatedButton.styleFrom(foregroundColor: Colors.black, backgroundColor: Colors.white),
-          child: Text("OK"),
-        ),
-      ],
-    ),
-  );
-}
-
-
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text("Greška"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black, backgroundColor: Colors.white),
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildActionButtons() {
     return Row(
@@ -319,7 +329,9 @@ void _showErrorDialog(String message) {
               foregroundColor: Colors.white,
               backgroundColor: Colors.red,
             ),
-            onPressed: () async { await _confirmDelete();},
+            onPressed: () async {
+              await _confirmDelete();
+            },
             child: Text("Izbriši Odjeljenje"),
           ),
           SizedBox(width: 16.0),
@@ -378,6 +390,12 @@ void _showErrorDialog(String message) {
                     "RazrednikID": int.parse(razrednikID!),
                     "SkolaID": _selectedSchool?.skolaID ?? 0,
                   });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Uspješno ste dodali novo odjeljenje."),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
                 } else {
                   await _departmentProvider.Update(
                       widget.department!.odjeljenjeID!, {
@@ -385,6 +403,12 @@ void _showErrorDialog(String message) {
                     "RazrednikID": int.parse(razrednikID!),
                     "SkolaID": _selectedSchool?.skolaID ?? 0,
                   });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Uspješno ste ažurirali odjeljenje."),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
                 }
 
                 Navigator.pop(context, true);
