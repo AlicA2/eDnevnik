@@ -46,20 +46,24 @@ namespace eDnevnik.Services.Service
 
             var godisnjiPlanProgram = await _context.GodisnjiPlanProgram
                 .Include(g => g.Casovi)
-                .FirstOrDefaultAsync(g => g.OdjeljenjeID == odjeljenjePredmet.OdjeljenjeID);
+                .FirstOrDefaultAsync(g => g.OdjeljenjeID == odjeljenjePredmet.OdjeljenjeID
+                                           && g.PredmetID == odjeljenjePredmet.PredmetID);
 
-            if (godisnjiPlanProgram == null)
+            // Check if the godisnjiPlanProgram is found
+            if (godisnjiPlanProgram != null)
             {
-                throw new UserException("Godisnji Plan Program nije pronađen za određeno Odjeljenje.");
+                // Only throw exception if there are classes that have IsOdrzan = true
+                if (godisnjiPlanProgram.Casovi.Any(c => c.IsOdrzan))
+                {
+                    throw new UserException("Ne možete izbrisati OdjeljenjePredmet zato što postoje Casovi koji su održani.");
+                }
             }
 
-            if (godisnjiPlanProgram.Casovi.Any(c => c.IsOdrzan))
-            {
-                throw new UserException("Ne možete izbrisati OdjeljenjePredmet zato što postoje Casovi koji su održani.");
-            }
-
+            // Proceed with deletion as there are no restrictions
             return await base.Delete(id, deleteRequest);
         }
+
+
 
     }
 }
