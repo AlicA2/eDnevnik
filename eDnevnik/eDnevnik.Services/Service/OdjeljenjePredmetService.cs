@@ -49,21 +49,15 @@ namespace eDnevnik.Services.Service
                 .FirstOrDefaultAsync(g => g.OdjeljenjeID == odjeljenjePredmet.OdjeljenjeID
                                            && g.PredmetID == odjeljenjePredmet.PredmetID);
 
-            // Check if the godisnjiPlanProgram is found
             if (godisnjiPlanProgram != null)
             {
-                // Only throw exception if there are classes that have IsOdrzan = true
                 if (godisnjiPlanProgram.Casovi.Any(c => c.IsOdrzan))
                 {
                     throw new UserException("Ne možete izbrisati OdjeljenjePredmet zato što postoje Casovi koji su održani.");
                 }
             }
 
-            // Proceed with deletion as there are no restrictions
             return await base.Delete(id, deleteRequest);
         }
-
-
-
     }
 }

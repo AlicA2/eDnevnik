@@ -382,9 +382,12 @@ class _DepartmentSubjectDetailScreenState
           ),
           child: ListTile(
             title: Text(subject.naziv ?? "N/A"),
-            trailing: IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _showDeleteConfirmationDialog(subject),
+            trailing: Tooltip(
+              message: "Brisanje predmeta iz odjeljenja",
+              child: IconButton(
+                icon: Icon(Icons.delete, color: Colors.red),
+                onPressed: () => _showDeleteConfirmationDialog(subject),
+              ),
             ),
           ),
         );

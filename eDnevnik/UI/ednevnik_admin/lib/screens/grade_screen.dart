@@ -323,7 +323,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
               'No valid class dates available for GodisnjiPlanProgramID $godisnjiPlanProgramID');
         }
       } else {
-            _showNoClassesDialog(context);
+        _showNoClassesDialog(context);
       }
     } catch (e) {
       print("Error fetching classes: $e");
@@ -488,9 +488,18 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
                           bool success = await _subjectProvider.addOcjena(
                               selectedSubject!.predmetID ?? 0, newGrade);
                           if (success) {
-                            await _fetchFinalGrade(widget.userID!, selectedSubject!.predmetID!);
+                            await _fetchFinalGrade(
+                                widget.userID!, selectedSubject!.predmetID!);
                             _initializeData();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    "Uspješno ste dodali novu ocjenu učeniku."),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
                             Navigator.of(context).pop();
+                            resetFields();
                           }
                         } catch (e) {
                           print("Error adding grade: $e");
@@ -714,131 +723,139 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
   }
 
   Widget _buildDataListView() {
-  final Map<int, List<Grade>> gradesBySubject = {};
-  for (var grade in _grades) {
-    if (gradesBySubject.containsKey(grade.predmetID)) {
-      gradesBySubject[grade.predmetID!]!.add(grade);
-    } else {
-      gradesBySubject[grade.predmetID!] = [grade];
+    final Map<int, List<Grade>> gradesBySubject = {};
+    for (var grade in _grades) {
+      if (gradesBySubject.containsKey(grade.predmetID)) {
+        gradesBySubject[grade.predmetID!]!.add(grade);
+      } else {
+        gradesBySubject[grade.predmetID!] = [grade];
+      }
     }
-  }
 
-  List<DataRow> dataRows = [];
-  for (var entry in gradesBySubject.entries) {
-    int predmetID = entry.key;
-    List<Grade> grades = entry.value;
+    List<DataRow> dataRows = [];
+    for (var entry in gradesBySubject.entries) {
+      int predmetID = entry.key;
+      List<Grade> grades = entry.value;
 
-    if (_selectedSubject == null || _selectedSubject!.predmetID == predmetID) {
-      Subject? subject = _subjects[predmetID];
+      if (_selectedSubject == null ||
+          _selectedSubject!.predmetID == predmetID) {
+        Subject? subject = _subjects[predmetID];
 
-      dataRows.add(
-        DataRow(
-          cells: [
-            DataCell(Text(subject?.naziv ?? "N/A")),
-            DataCell(FutureBuilder<String?>(
-              future: _fetchFinalGrade(widget.userID ?? 0, predmetID),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text('Loading...');
-                } else if (snapshot.hasError) {
-                  return Text('Error');
-                } else {
-                  return Text(snapshot.data ?? "N/A");
-                }
-              },
-            )),
-            DataCell(Text(_getGradeValues(subject))),
-            DataCell(
-              IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () {
-                  _showEditGradeDialog(context, grades);
-                },
+        dataRows.add(
+          DataRow(
+            cells: [
+              DataCell(Text(subject?.naziv ?? "N/A")),
+              DataCell(Center(
+                child: FutureBuilder<String?>(
+                  future: _fetchFinalGrade(widget.userID ?? 0, predmetID),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Text('Loading...');
+                    } else if (snapshot.hasError) {
+                      return Text('Error');
+                    } else {
+                      return Text(snapshot.data ?? "N/A");
+                    }
+                  },
+                ),
+              )),
+              DataCell(Center(child: Text(_getGradeValues(subject)))),
+              DataCell(
+                Tooltip(
+                  message: "Uređivanje ocjene",
+                  child: Center(
+                    child: IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        _showEditGradeDialog(context, grades);
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              DataCell(
+                IconButton(
+                  icon: Icon(Icons.info_outline),
+                  onPressed: () {
+                    _showGradeDetailsDialog(context, subject, grades);
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+
+    return SingleChildScrollView(
+      child: DataTable(
+        columns: const [
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Naziv Predmeta",
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
-            DataCell(
-              IconButton(
-                icon: Icon(Icons.info_outline),
-                onPressed: () {
-                  _showGradeDetailsDialog(context, subject, grades);
-                },
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Zaključna Ocjena",
+                style: TextStyle(fontStyle: FontStyle.italic),
               ),
             ),
-          ],
-        ),
-      );
-    }
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Sve Ocjene",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Uredi ocjene",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "Info",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
+        ],
+        rows: dataRows,
+      ),
+    );
   }
 
-  return SingleChildScrollView(
-    child: DataTable(
-      columns: const [
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              "Naziv Predmeta",
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              "Zaključna Ocjena",
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              "Sve Ocjene",
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              "Uredi ocjene",
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ),
-        ),
-        DataColumn(
-          label: Expanded(
-            child: Text(
-              "Info",
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ),
-        ),
-      ],
-      rows: dataRows,
-    ),
-  );
-}
+  Future<String?> _fetchFinalGrade(int korisnikID, int predmetID) async {
+    try {
+      var finalGradeResult = await _finalGradeProvider.get(filter: {
+        'KorisnikID': korisnikID,
+        'PredmetID': predmetID,
+      });
 
-Future<String?> _fetchFinalGrade(int korisnikID, int predmetID) async {
-  try {
-    var finalGradeResult = await _finalGradeProvider.get(filter: {
-      'KorisnikID': korisnikID,
-      'PredmetID': predmetID,
-    });
-
-    if (finalGradeResult != null && finalGradeResult.result.isNotEmpty) {
-      var finalGrade = finalGradeResult.result.first;
-      return finalGrade.vrijednostZakljucneOcjene?.toString();
-    } else {
-      print('No final grade found for KorisnikID: $korisnikID and PredmetID: $predmetID');
+      if (finalGradeResult != null && finalGradeResult.result.isNotEmpty) {
+        var finalGrade = finalGradeResult.result.first;
+        return finalGrade.vrijednostZakljucneOcjene?.toString();
+      } else {
+        print(
+            'No final grade found for KorisnikID: $korisnikID and PredmetID: $predmetID');
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching final grade: $e");
       return null;
     }
-  } catch (e) {
-    print("Error fetching final grade: $e");
-    return null;
   }
-}
-
 
   void _showEditGradeDialog(BuildContext context, List<Grade> grades) async {
     bool? dataChanged = await Navigator.push(

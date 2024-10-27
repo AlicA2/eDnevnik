@@ -3,6 +3,8 @@ import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/screens/grade_screen.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/department.dart';
@@ -149,6 +151,12 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
             _selectedDepartment!.odjeljenjeID!,
             student.korisnikId!,
           );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Uspješno ste izbrisali učenika iz odjeljenja."),
+              backgroundColor: Colors.green,
+            ),
+          );
           setState(() {
             _students.remove(student);
           });
@@ -235,131 +243,107 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
   }
 
   void _openDialog() {
-    Department? selectedDepartment;
-    User? selectedStudent;
-    List<User> availableStudents = [];
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+  Department? selectedDepartment;
+  User? selectedStudent;
+  List<User> availableStudents = [];
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            List<Object?> assignedStudentIds = _departments
-                .expand((department) =>
-                    department.ucenici?.map((student) => student.korisnikId) ??
-                    [])
-                .toList();
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          List<Object?> assignedStudentIds = _departments
+              .expand((department) =>
+                  department.ucenici?.map((student) => student.korisnikId) ?? [])
+              .toList();
 
-            availableStudents = _studentss
-                .where((student) =>
-                    !assignedStudentIds.contains(student.korisnikId))
-                .toList();
+          availableStudents = _studentss
+              .where((student) =>
+                  !assignedStudentIds.contains(student.korisnikId))
+              .toList();
 
-            return AlertDialog(
-              title: Text('Dodaj učenika u odjeljenje'),
-              content: Column(
+          return AlertDialog(
+            title: Text('Dodaj učenika u odjeljenje'),
+            content: FormBuilder(
+              key: _formKey,
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: DropdownButton<Department>(
-                      value: selectedDepartment,
-                      isExpanded: true,
-                      hint: Text('Odaberite odjeljenje'),
-                      items: _departments.map((department) {
-                        return DropdownMenuItem<Department>(
-                          value: department,
-                          child: Text(department.nazivOdjeljenja ?? "N/A"),
-                        );
-                      }).toList(),
-                      onChanged: (Department? newValue) {
-                        setState(() {
-                          selectedDepartment = newValue;
-                        });
-                      },
-                    ),
+                  FormBuilderDropdown<Department>(
+                    name: 'department',
+                    decoration: InputDecoration(labelText: 'Odaberite odjeljenje'),
+                    validator: FormBuilderValidators.required(
+                        errorText: 'Ovo polje je obavezno'),
+                    items: _departments.map((department) {
+                      return DropdownMenuItem<Department>(
+                        value: department,
+                        child: Text(department.nazivOdjeljenja ?? "N/A"),
+                      );
+                    }).toList(),
+                    onChanged: (Department? newValue) {
+                      setState(() {
+                        selectedDepartment = newValue;
+                      });
+                    },
                   ),
                   SizedBox(height: 16.0),
-                  SizedBox(
-                    width: double.infinity,
-                    child: DropdownButton<User>(
-                      value: selectedStudent,
-                      isExpanded: true,
-                      hint: Text('Odaberite učenika'),
-                      items: availableStudents.map((student) {
-                        return DropdownMenuItem<User>(
-                          value: student,
-                          child: Text('${student.ime} ${student.prezime}'),
-                        );
-                      }).toList(),
-                      onChanged: (User? newValue) {
-                        setState(() {
-                          selectedStudent = newValue;
-                        });
-                      },
-                    ),
+                  FormBuilderDropdown<User>(
+                    name: 'student',
+                    decoration: InputDecoration(labelText: 'Odaberite učenika'),
+                    validator: FormBuilderValidators.required(
+                        errorText: 'Ovo polje je obavezno'),
+                    items: availableStudents.map((student) {
+                      return DropdownMenuItem<User>(
+                        value: student,
+                        child: Text('${student.ime} ${student.prezime}'),
+                      );
+                    }).toList(),
+                    onChanged: (User? newValue) {
+                      setState(() {
+                        selectedStudent = newValue;
+                      });
+                    },
                   ),
                 ],
               ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style:
-                      ElevatedButton.styleFrom(foregroundColor: Colors.black),
-                  child: Text('Odustani'),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    if (selectedDepartment != null && selectedStudent != null) {
-                      try {
-                        await _departmentProvider.addStudentToDepartment(
-                          selectedDepartment!.odjeljenjeID!,
-                          selectedStudent!.korisnikId!,
-                        );
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
+                child: Text('Odustani'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  if (_formKey.currentState?.saveAndValidate() ?? false) {
+                    try {
+                      await _departmentProvider.addStudentToDepartment(
+                        selectedDepartment!.odjeljenjeID!,
+                        selectedStudent!.korisnikId!,
+                      );
 
-                        _fetchDepartmentsAndInitialize(
-                            schoolID: _selectedSchool?.skolaID);
+                      _fetchDepartmentsAndInitialize(
+                          schoolID: _selectedSchool?.skolaID);
 
-                        Navigator.of(context).pop();
+                      Navigator.of(context).pop();
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                '${selectedStudent?.ime} ${selectedStudent?.prezime} je dodan u ${selectedDepartment?.nazivOdjeljenja}'),
-                          ),
-                        );
-                      } catch (e) {
-                        print('Error adding student to department: $e');
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text('Greška'),
-                            content: Text('Dodavanje učenika nije uspjelo.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    } else {
-                      if (selectedDepartment == null) {
-                        print('No department selected');
-                      }
-                      if (selectedStudent == null) {
-                        print('No student selected');
-                      }
-
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              '${selectedStudent?.ime} ${selectedStudent?.prezime} je dodan u ${selectedDepartment?.nazivOdjeljenja}'),
+                        backgroundColor: Colors.green,
+                        ),
+                      );
+                    } catch (e) {
+                      print('Error adding student to department: $e');
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
                           title: Text('Greška'),
-                          content:
-                              Text('Morate odabrati odjeljenje i učenika.'),
+                          content: Text('Dodavanje učenika nije uspjelo.'),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context),
@@ -369,20 +353,21 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                         ),
                       );
                     }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.green,
-                  ),
-                  child: Text('Dodaj'),
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.green,
                 ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
+                child: Text('Dodaj'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
 
   Widget _buildScreenHeader() {
     return Row(
@@ -510,7 +495,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
           return DataRow(
             cells: [
               DataCell(Text("${student.ime} ${student.prezime}")),
-              DataCell(Text(department.nazivOdjeljenja ?? "N/A")),
+              DataCell(Center(child: Text(department.nazivOdjeljenja ?? "N/A"))),
               DataCell(
                 ElevatedButton(
                   onPressed: () {
@@ -530,11 +515,14 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                 ),
               ),
               DataCell(
-                IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () {
-                    _confirmDelete(student);
-                  },
+                Tooltip(
+                  message: "Brisanje učenika iz odjeljanja",
+                  child: IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      _confirmDelete(student);
+                    },
+                  ),
                 ),
               ),
             ],

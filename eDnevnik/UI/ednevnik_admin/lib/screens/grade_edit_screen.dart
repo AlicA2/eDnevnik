@@ -59,7 +59,7 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
               ),
             ),
             floatingActionButton: Padding(
-              padding: const EdgeInsets.only(left:32,right:32,bottom:16),
+              padding: const EdgeInsets.only(left: 32, right: 32, bottom: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -70,14 +70,22 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
                       Navigator.pop(context, _isDataChanged);
                     },
                     backgroundColor: Colors.blue,
-                    child: const Icon(Icons.arrow_back),
+                    child: Tooltip(
+                        message: "Nazad", child: const Icon(Icons.arrow_back)),
                   ),
                   const Spacer(),
                   FloatingActionButton(
                     heroTag: 'saveButton',
-                    child: const Icon(Icons.save),
+                    child: Tooltip(
+                        message: "Spasi", child: const Icon(Icons.save)),
                     onPressed: () async {
                       await _saveEditedGrades();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Uspješno ste dodali novu ocjenu."),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
                       Navigator.pop(context, true);
                     },
                     backgroundColor: Colors.blue,
@@ -86,7 +94,8 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
                 ],
               ),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
           ),
         ),
       ),
@@ -122,7 +131,7 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
 
   Widget _buildGradeEditRow(Grade grade) {
     return Padding(
-      padding: const EdgeInsets.only(right:32,left:32,top:16),
+      padding: const EdgeInsets.only(right: 32, left: 32, top: 16),
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),
         child: Padding(
@@ -159,8 +168,19 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: ElevatedButton.icon(
-                  onPressed: () => _confirmDelete(grade),
-                  icon: const Icon(Icons.delete, color: Colors.white),
+                  onPressed: () {
+                    _confirmDelete(grade);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Uspješno ste izbrisali ocjenu."),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  },
+                  icon: Tooltip(
+                    message: "Brisanje ocjene",
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
                   label: const Text('Obriši'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
@@ -176,40 +196,42 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
   }
 
   Future<void> _confirmDelete(Grade grade) async {
-  bool? confirmDelete = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Potvrda brisanja'),
-      content: const Text('Da li ste sigurni da želite da obrišete ovu ocjenu?'),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          style: ElevatedButton.styleFrom(foregroundColor: Colors.black, backgroundColor: Colors.white),
-          child: const Text('Odustani'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, true),
-          style: ElevatedButton.styleFrom(foregroundColor: Colors.white, backgroundColor: Colors.red),
-          child: const Text('Obriši'),
-        ),
-      ],
-    ),
-  );
+    bool? confirmDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Potvrda brisanja'),
+        content:
+            const Text('Da li ste sigurni da želite da obrišete ovu ocjenu?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black, backgroundColor: Colors.white),
+            child: const Text('Odustani'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.red),
+            child: const Text('Obriši'),
+          ),
+        ],
+      ),
+    );
 
-  if (confirmDelete == true) {
-    try {
-      await _gradesProvider.delete(grade.ocjenaID!);
-      setState(() {
-        widget.grades.removeWhere((g) => g.ocjenaID == grade.ocjenaID);
-        _isDataChanged = true;
-         Navigator.pop(context, true);
-      });
-    } catch (e) {
-      print("Error deleting grade: $e");
+    if (confirmDelete == true) {
+      try {
+        await _gradesProvider.delete(grade.ocjenaID!);
+        setState(() {
+          widget.grades.removeWhere((g) => g.ocjenaID == grade.ocjenaID);
+          _isDataChanged = true;
+          Navigator.pop(context, true);
+        });
+      } catch (e) {
+        print("Error deleting grade: $e");
+      }
     }
   }
-}
-
 
   Future<void> _saveEditedGrades() async {
     try {
@@ -225,7 +247,7 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
               grade.predmetID,
             );
             await _gradesProvider.Update(grade.ocjenaID!, updatedGrade);
-            _isDataChanged = true; 
+            _isDataChanged = true;
           }
         }
       }
