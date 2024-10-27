@@ -144,81 +144,87 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Flexible(
-                      child: Text(
-                        event.nazivDogadjaja ?? "No Name",
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Tooltip(
-                          message: "Uređivanje događaja",
-                          child: IconButton(
-                            icon: Icon(Icons.edit,
-                                color: isActive ? Colors.grey : Colors.blue),
-                            onPressed: isActive
-                                ? null
-                                : () {
-                                    _showEditEventDialog(event);
-                                  },
+                        Flexible(
+                          child: Text(
+                            event.nazivDogadjaja ?? "No Name",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        Tooltip(
-                          message: "Brisanje događaja",
-                          child: IconButton(
-                            icon: Icon(Icons.delete,
-                                color: isActive ? Colors.grey : Colors.red),
-                            onPressed: isActive
-                                ? null
-                                : () {
-                                    _confirmDeleteEvent(event);
-                                  },
-                          ),
+                        Row(
+                          children: [
+                            Tooltip(
+                              message: "Uređivanje događaja",
+                              child: IconButton(
+                                icon: Icon(Icons.edit,
+                                    color:
+                                        isActive ? Colors.grey : Colors.blue),
+                                onPressed: isActive
+                                    ? null
+                                    : () {
+                                        _showEditEventDialog(event);
+                                      },
+                              ),
+                            ),
+                            Tooltip(
+                              message: "Brisanje događaja",
+                              child: IconButton(
+                                icon: Icon(Icons.delete,
+                                    color: isActive ? Colors.grey : Colors.red),
+                                onPressed: isActive
+                                    ? null
+                                    : () {
+                                        _confirmDeleteEvent(event);
+                                      },
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
+                    SizedBox(height: 8),
+                    event.slika != null && event.slika!.isNotEmpty
+                        ? Container(
+                            height: 100,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                image: _buildImageFromBase64(event.slika!),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )
+                        : _buildPlaceholderImage(),
+                    SizedBox(height: 8),
+                    Text(
+                      event.opisDogadjaja ?? "No Description",
+                      style: TextStyle(fontSize: 14),
+                      maxLines: null,
+                      softWrap: true,
+                    ),
+                    SizedBox(height: 8),
+                    Center(
+                      child: Text(
+                        event.datumDogadjaja != null
+                            ? DateFormat('yyyy-MM-dd')
+                                .format(event.datumDogadjaja!)
+                            : "No Date",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
                   ],
                 ),
-                SizedBox(height: 8),
-                event.slika != null && event.slika!.isNotEmpty
-                    ? Container(
-                        height: 100,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: _buildImageFromBase64(event.slika!),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      )
-                    : _buildPlaceholderImage(),
-                SizedBox(height: 8),
-                Text(
-                  event.opisDogadjaja ?? "No Description",
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 14),
-                ),
-                SizedBox(height: 8),
-                Center(
-                  child: Text(
-                    event.datumDogadjaja != null
-                        ? DateFormat('yyyy-MM-dd').format(event.datumDogadjaja!)
-                        : "No Date",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
-              ],
+              ),
             ),
             SizedBox(height: 16),
             _buildActionButtons2(event, isActive, isDraft),
@@ -310,31 +316,36 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
               title: Text("Uredi Događaj"),
-              content: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildTextField("Naziv događaja", _nazivController, true),
-                      SizedBox(height: 16),
-                      _buildTextField("Opis događaja", _opisController, false),
-                      SizedBox(height: 16),
-                      _buildDateButton(setState),
-                      SizedBox(height: 16),
-                      _buildImageButton(setState),
-                      SizedBox(height: 16),
-                      _buildImagePreview(),
-                      if (_isSlikaSelected) SizedBox(height: 16),
-                      if (errorMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16.0),
-                          child: Text(
-                            errorMessage!,
-                            style: TextStyle(color: Colors.red),
+              content: Container(
+                width: 500,
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildTextField(
+                            "Naziv događaja", _nazivController, true),
+                        SizedBox(height: 16),
+                        _buildTextField(
+                            "Opis događaja", _opisController, false),
+                        SizedBox(height: 16),
+                        _buildDateButton(setState),
+                        SizedBox(height: 16),
+                        _buildImageButton(setState),
+                        SizedBox(height: 16),
+                        _buildImagePreview(),
+                        if (_isSlikaSelected) SizedBox(height: 16),
+                        if (errorMessage != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: Text(
+                              errorMessage!,
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -520,39 +531,44 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
               title: Text("Dodaj Događaj"),
-              content: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildTextField("Naziv događaja", _nazivController, true),
-                      SizedBox(height: 16),
-                      _buildTextField("Opis događaja", _opisController, false),
-                      SizedBox(height: 16),
-                      _buildDateButton(setState),
-                      if (_selectedDate == null && errorMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            "Molimo odaberite datum događaja.",
-                            style: TextStyle(color: Colors.red),
+              content: Container(
+                width: 500,
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildTextField(
+                            "Naziv događaja", _nazivController, true),
+                        SizedBox(height: 16),
+                        _buildTextField(
+                            "Opis događaja", _opisController, false),
+                        SizedBox(height: 16),
+                        _buildDateButton(setState),
+                        if (_selectedDate == null && errorMessage != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              "Molimo odaberite datum događaja.",
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
-                        ),
-                      SizedBox(height: 16),
-                      _buildImageButton(setState),
-                      SizedBox(height: 16),
-                      _buildImagePreview(),
-                      if (_isSlikaSelected) SizedBox(height: 16),
-                      if (_base64Image == null && errorMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            "Molimo odaberite sliku za događaj.",
-                            style: TextStyle(color: Colors.red),
+                        SizedBox(height: 16),
+                        _buildImageButton(setState),
+                        SizedBox(height: 16),
+                        _buildImagePreview(),
+                        if (_isSlikaSelected) SizedBox(height: 16),
+                        if (_base64Image == null && errorMessage != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              "Molimo odaberite sliku za događaj.",
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -639,26 +655,15 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
         name: label,
         controller: controller,
         decoration: InputDecoration(labelText: label),
-        validator: FormBuilderValidators.compose([
-          FormBuilderValidators.required(errorText: "$label je obavezno polje"),
-          if (isNaziv) ...[
-            FormBuilderValidators.match(RegExp(r"^[A-Z]"),
-                errorText: "Morate započeti velikim slovom"),
-            FormBuilderValidators.minLength(4,
-                errorText: "Morate imati najmanje 4 znaka"),
-            FormBuilderValidators.match(RegExp(r"^[A-Za-z]+$"),
-                errorText: "Polje sadrži samo slova"),
-          ] else ...[
-            FormBuilderValidators.match(RegExp(r"^[A-Z]"),
-                errorText: "Morate započeti velikim slovom"),
-            FormBuilderValidators.minLength(4,
-                errorText: "Morate imati najmanje 4 znaka"),
-            FormBuilderValidators.match(RegExp(r"^[A-Z][a-zA-Z.,!? ]+$"),
-                errorText: "Polje sadrži samo slova i znakove . , ! ?"),
-            FormBuilderValidators.match(RegExp(r"[.,!?]$"),
-                errorText: "Morate završiti s . , ! ili ?"),
-          ],
-        ]),
+        minLines: 1,
+        maxLines: null,
+        validator: (value) {
+          if (isNaziv) {
+            return _validateNazivCasa(value);
+          } else {
+            return _validateOpis(value);
+          }
+        },
       ),
     );
   }
@@ -864,4 +869,72 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
       }
     }
   }
+}
+
+String? _validateNazivCasa(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Naziv događaja je obavezan i ne može biti prazan.';
+  }
+
+  if (RegExp(r'[0-9]').hasMatch(value)) {
+    return 'Naziv događaja ne može sadržavati brojeve.';
+  }
+
+  if (value.isNotEmpty &&
+      (value[0] != value[0].toUpperCase() ||
+          value.substring(1) != value.substring(1).toLowerCase())) {
+    return 'Naziv događaja mora početi velikim slovom, a ostali karakteri moraju biti mala slova.';
+  }
+
+  if (value.length < 4) {
+    return 'Naziv događaja mora imati minimum 4 slova.';
+  }
+
+  return null;
+}
+
+bool _containsNumbers(String input) {
+  return input.contains(RegExp(r'[0-9]'));
+}
+
+String? _validateOpis(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Opis događaja je obavezan i ne može biti prazan.';
+  }
+
+  if (_containsNumbers(value)) {
+    return 'Opis ne može sadržavati brojeve.';
+  }
+
+  if (value[0] != value[0].toUpperCase()) {
+    return 'Opis mora početi velikim slovom.';
+  }
+
+  if (value.length < 4) {
+    return 'Opis mora imati minimum 4 slova.';
+  }
+
+  final sentences = value.split('. ');
+  for (var i = 0; i < sentences.length; i++) {
+    var sentence = sentences[i].trim();
+
+    if (!RegExp(r'^[A-Z][a-z]*').hasMatch(sentence)) {
+      return 'Svaka rečenica mora početi velikim slovom, a ostatak mora biti mala slova.';
+    }
+
+    if (sentence.length > 1 &&
+        sentence.substring(1) != sentence.substring(1).toLowerCase()) {
+      return 'Svaka rečenica, osim prvog slova, mora sadržavati mala slova do tačke.';
+    }
+
+    if (i == sentences.length - 1 && !sentence.endsWith('.')) {
+      return 'Opis mora završiti sa tačkom.';
+    }
+
+    if (i < sentences.length - 1 && sentence.endsWith('.')) {
+      return 'Zadnja rečenica mora završiti sa tačkom.';
+    }
+  }
+
+  return null;
 }
