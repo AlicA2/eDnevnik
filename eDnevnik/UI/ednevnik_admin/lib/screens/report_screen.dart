@@ -92,21 +92,21 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   }
 
   Future<void> _fetchFinalGrades(int predmetID, int korisnikID) async {
-  try {
-    var finalGrades = await _finalGradeProvider.get(filter: {
-      'PredmetID': predmetID,
-      'KorisnikID': korisnikID,
-    });
-
-    if (finalGrades.result.isNotEmpty) {
-      setState(() {
-        _finalGrades = finalGrades.result;
+    try {
+      var finalGrades = await _finalGradeProvider.get(filter: {
+        'PredmetID': predmetID,
+        'KorisnikID': korisnikID,
       });
+
+      if (finalGrades.result.isNotEmpty) {
+        setState(() {
+          _finalGrades = finalGrades.result;
+        });
+      }
+    } catch (e) {
+      print("Error fetching final grades: $e");
     }
-  } catch (e) {
-    print("Error fetching final grades: $e");
   }
-}
 
   Future<void> _fetchSchools() async {
     try {
@@ -447,23 +447,23 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     );
   }
 
-  Future<double> _calculateZakljucnaOcjena(int korisnikID, int predmetID) async {
-  var finalGrades = await _finalGradeProvider.get(filter: {
-    'PredmetID': predmetID,
-    'KorisnikID': korisnikID,
-  });
+  Future<double> _calculateZakljucnaOcjena(
+      int korisnikID, int predmetID) async {
+    var finalGrades = await _finalGradeProvider.get(filter: {
+      'PredmetID': predmetID,
+      'KorisnikID': korisnikID,
+    });
 
-  if (finalGrades.result.isEmpty) return 0.0;
+    if (finalGrades.result.isEmpty) return 0.0;
 
-  double sum = finalGrades.result.fold(
-      0.0,
-      (prev, element) =>
-          prev + (element.vrijednostZakljucneOcjene?.toDouble() ?? 0.0));
-  double average = sum / finalGrades.result.length;
+    double sum = finalGrades.result.fold(
+        0.0,
+        (prev, element) =>
+            prev + (element.vrijednostZakljucneOcjene?.toDouble() ?? 0.0));
+    double average = sum / finalGrades.result.length;
 
-  return average;
-}
-
+    return average;
+  }
 
   Widget _buildUserDetails() {
     List<User> filteredUsers =

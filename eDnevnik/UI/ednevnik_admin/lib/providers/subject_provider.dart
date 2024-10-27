@@ -98,5 +98,4 @@ class SubjectProvider extends BaseProvider<Subject> {
     }
   }
 
-
 }
