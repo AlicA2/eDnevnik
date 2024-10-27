@@ -118,7 +118,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
       padding: const EdgeInsets.all(16.0),
       itemCount: _eventsList.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 5,
+        crossAxisCount: 4,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
         childAspectRatio: 0.75,
@@ -131,132 +131,147 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   }
 
   Widget _buildEventCard(Events event) {
-  bool isActive = event.stateMachine == "active";
-  bool isDraft = event.stateMachine == "draft";
+    bool isActive = event.stateMachine == "active";
+    bool isDraft = event.stateMachine == "draft";
 
-  return Card(
-    elevation: 4,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(15),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Text(
-                    event.nazivDogadjaja ?? "No Name",
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Text(
+                      event.nazivDogadjaja ?? "No Name",
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit, color: isActive ? Colors.grey : Colors.blue),
-                      onPressed: isActive ? null : () {
-                        _showEditEventDialog(event);
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete, color: isActive ? Colors.grey : Colors.red),
-                      onPressed: isActive ? null : () {
-                        _confirmDeleteEvent(event);
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            event.slika != null && event.slika!.isNotEmpty
-                ? Container(
-                    height: 100,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: _buildImageFromBase64(event.slika!),
-                        fit: BoxFit.cover,
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit,
+                            color: isActive ? Colors.grey : Colors.blue),
+                        onPressed: isActive
+                            ? null
+                            : () {
+                                _showEditEventDialog(event);
+                              },
                       ),
-                    ),
-                  )
-                : _buildPlaceholderImage(),
-            SizedBox(height: 8),
-            Text(
-              event.opisDogadjaja ?? "No Description",
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 14),
-            ),
-            SizedBox(height: 8),
-            Text(
-              event.datumDogadjaja != null
-                  ? DateFormat('yyyy-MM-dd').format(event.datumDogadjaja!)
-                  : "No Date",
-              style: TextStyle(color: Colors.grey),
-            ),
-            SizedBox(height: 16),
-            _buildActionButtons2(event, isActive, isDraft),
-          ],
+                      IconButton(
+                        icon: Icon(Icons.delete,
+                            color: isActive ? Colors.grey : Colors.red),
+                        onPressed: isActive
+                            ? null
+                            : () {
+                                _confirmDeleteEvent(event);
+                              },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              event.slika != null && event.slika!.isNotEmpty
+                  ? Container(
+                      height: 100,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: _buildImageFromBase64(event.slika!),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  : _buildPlaceholderImage(),
+              SizedBox(height: 8),
+              Text(
+                event.opisDogadjaja ?? "No Description",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 14),
+              ),
+              SizedBox(height: 8),
+              Center(
+                child: Text(
+                  event.datumDogadjaja != null
+                      ? DateFormat('yyyy-MM-dd').format(event.datumDogadjaja!)
+                      : "No Date",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+              SizedBox(height: 16),
+              _buildActionButtons2(event, isActive, isDraft),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget _buildActionButtons2(Events event, bool isActive, bool isDraft) {
-  return Column(
-    children: [
-      ElevatedButton(
-        onPressed: isDraft
-            ? () async {
-                try {
-                  await _eventsProvider.activate(event.dogadjajId!);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Događaj uspješno aktiviran")),
-                  );
-                  _fetchEvents();
-                } catch (e) {
-                  _showErrorDialog("Error activating event: $e");
-                }
-              }
-            : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isDraft ? Colors.green : Colors.grey,
-          foregroundColor: Colors.white,
+  Widget _buildActionButtons2(Events event, bool isActive, bool isDraft) {
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: isDraft
+                ? () async {
+                    try {
+                      await _eventsProvider.activate(event.dogadjajId!);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Događaj uspješno aktiviran")),
+                      );
+                      _fetchEvents();
+                    } catch (e) {
+                      _showErrorDialog("Error activating event: $e");
+                    }
+                  }
+                : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isDraft ? Colors.green : Colors.grey,
+              foregroundColor: Colors.white,
+            ),
+            child: Text("Aktiviraj Događaj"),
+          ),
         ),
-        child: Text("Aktiviraj Događaj"),
-      ),
-      SizedBox(height: 8),
-      ElevatedButton(
-        onPressed: isActive
-            ? () async {
-                try {
-                  await _eventsProvider.hide(event.dogadjajId!);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Događaj uspješno sakriven")),
-                  );
-                  _fetchEvents();
-                } catch (e) {
-                  _showErrorDialog("Error hiding event: $e");
-                }
-              }
-            : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isActive ? Colors.orange : Colors.grey,
-          foregroundColor: Colors.white,
+        SizedBox(height: 8),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: isActive
+                ? () async {
+                    try {
+                      await _eventsProvider.hide(event.dogadjajId!);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Događaj uspješno sakriven")),
+                      );
+                      _fetchEvents();
+                    } catch (e) {
+                      _showErrorDialog("Error hiding event: $e");
+                    }
+                  }
+                : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isActive ? Colors.orange : Colors.grey,
+              foregroundColor: Colors.white,
+            ),
+            child: Text("Sakrij Događaj"),
+          ),
         ),
-        child: Text("Sakrij Događaj"),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
   Future<void> _showEditEventDialog(Events event) {
     String? errorMessage;
@@ -768,28 +783,28 @@ Widget _buildActionButtons2(Events event, bool isActive, bool isDraft) {
   }
 
   Future<void> _selectDate(BuildContext context, StateSetter setState) async {
-  final DateTime currentDate = DateTime.now();
-  final DateTime firstSelectableDate = currentDate.add(Duration(days: 3));
-  final DateTime lastDate = DateTime(2101);
+    final DateTime currentDate = DateTime.now();
+    final DateTime firstSelectableDate = currentDate.add(Duration(days: 3));
+    final DateTime lastDate = DateTime(2101);
 
-  final DateTime initialDate = (_selectedDate != null && _selectedDate!.isAfter(firstSelectableDate))
-      ? _selectedDate!
-      : firstSelectableDate;
+    final DateTime initialDate =
+        (_selectedDate != null && _selectedDate!.isAfter(firstSelectableDate))
+            ? _selectedDate!
+            : firstSelectableDate;
 
-  final DateTime? picked = await showDatePicker(
-    context: context,
-    initialDate: initialDate,
-    firstDate: firstSelectableDate,
-    lastDate: lastDate,
-  );
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: firstSelectableDate,
+      lastDate: lastDate,
+    );
 
-  if (picked != null && picked != _selectedDate) {
-    setState(() {
-      _selectedDate = picked;
-    });
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
   }
-}
-
 
   Future<void> _submitEventForm() async {
     if (_formKey.currentState!.validate() &&
