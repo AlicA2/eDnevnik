@@ -213,7 +213,7 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
       Department e = entry.value;
       return DataRow(
         cells: [
-          DataCell(Text(e.nazivOdjeljenja ?? "N/A")),
+          DataCell(Center(child: Text(e.nazivOdjeljenja ?? "N/A"))),
           DataCell(
             e.razrednikID != null
                 ? FutureBuilder<User>(
@@ -270,9 +270,12 @@ class _DepartmentDetailScreenState extends State<DepartmentDetailScreen> {
             ),
           ),
           DataCell(
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () => _navigateToAddEditDepartment(e),
+            Tooltip(
+              message: "Uređivanje odjeljenja",
+              child: IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () => _navigateToAddEditDepartment(e),
+              ),
             ),
           ),
         ],
