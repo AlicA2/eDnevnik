@@ -278,11 +278,13 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                       try {
                         await _eventsProvider.Update(
                             event.dogadjajId!, updatedEvent);
-                        Navigator.pop(context);
-                        _resetForm();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Događaj uspješno uređen")),
+                          SnackBar(
+                            content: Text("Uspješno ste ažurirali događaj."),
+                            backgroundColor: Colors.green,
+                          ),
                         );
+                        Navigator.pop(context);
                         _resetForm();
                         _fetchEvents();
                       } catch (e) {
@@ -420,114 +422,117 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   }
 
   Future<void> _showEventDialog() {
-  String? errorMessage;
+    String? errorMessage;
 
-  return showDialog(
-    context: context,
-    builder: (context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return AlertDialog(
-            title: Text("Dodaj Događaj"),
-            content: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildTextField("Naziv događaja", _nazivController, true),
-                    SizedBox(height: 16),
-                    _buildTextField("Opis događaja", _opisController, false),
-                    SizedBox(height: 16),
-                    _buildDateButton(setState),
-                    if (_selectedDate == null && errorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          "Molimo odaberite datum događaja.",
-                          style: TextStyle(color: Colors.red),
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text("Dodaj Događaj"),
+              content: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildTextField("Naziv događaja", _nazivController, true),
+                      SizedBox(height: 16),
+                      _buildTextField("Opis događaja", _opisController, false),
+                      SizedBox(height: 16),
+                      _buildDateButton(setState),
+                      if (_selectedDate == null && errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            "Molimo odaberite datum događaja.",
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
-                      ),
-                    SizedBox(height: 16),
-                    _buildImageButton(setState),
-                    SizedBox(height: 16),
-                    _buildImagePreview(),
-                    if (_isSlikaSelected) SizedBox(height: 16),
-                    if (_base64Image == null && errorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          "Molimo odaberite sliku za događaj.",
-                          style: TextStyle(color: Colors.red),
+                      SizedBox(height: 16),
+                      _buildImageButton(setState),
+                      SizedBox(height: 16),
+                      _buildImagePreview(),
+                      if (_isSlikaSelected) SizedBox(height: 16),
+                      if (_base64Image == null && errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            "Molimo odaberite sliku za događaj.",
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  _resetForm();
-                  Navigator.pop(context);
-                },
-                child: Text("Odustani"),
-                style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate() &&
-                      _selectedDate != null &&
-                      _base64Image != null) {
-                    setState(() {
-                      errorMessage = null;
-                    });
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    _resetForm();
+                    Navigator.pop(context);
+                  },
+                  child: Text("Odustani"),
+                  style:
+                      ElevatedButton.styleFrom(foregroundColor: Colors.black),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate() &&
+                        _selectedDate != null &&
+                        _base64Image != null) {
+                      setState(() {
+                        errorMessage = null;
+                      });
 
-                    Events newEvent = Events(
-                      null,
-                      _nazivController.text,
-                      _opisController.text,
-                      _base64Image,
-                      _selectedDate,
-                      "active",
-                      _selectedSchool?.skolaID,
-                    );
-
-                    try {
-                      await _eventsProvider.Insert(newEvent);
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Događaj uspješno dodan")),
+                      Events newEvent = Events(
+                        null,
+                        _nazivController.text,
+                        _opisController.text,
+                        _base64Image,
+                        _selectedDate,
+                        "active",
+                        _selectedSchool?.skolaID,
                       );
-                      _resetForm();
-                      _fetchEvents();
-                    } catch (e) {
-                      _showErrorDialog("Failed to delete event.");
-                    }
-                  } else {
-                    setState(() {
-                      if (_selectedDate == null) {
-                        errorMessage = "Molimo odaberite datum događaja.";
-                      }
-                      if (_base64Image == null) {
-                        errorMessage = "Molimo odaberite sliku za događaj.";
-                      }
-                    });
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white),
-                child: Text("Dodaj"),
-              ),
-            ],
-          );
-        },
-      );
-    },
-  );
-}
 
+                      try {
+                        await _eventsProvider.Insert(newEvent);
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Uspješno ste dodali novi događaj."),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        _resetForm();
+                        _fetchEvents();
+                      } catch (e) {
+                        _showErrorDialog("Failed to delete event.");
+                      }
+                    } else {
+                      setState(() {
+                        if (_selectedDate == null) {
+                          errorMessage = "Molimo odaberite datum događaja.";
+                        }
+                        if (_base64Image == null) {
+                          errorMessage = "Molimo odaberite sliku za događaj.";
+                        }
+                      });
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white),
+                  child: Text("Dodaj"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
   void _resetForm() {
     _nazivController.clear();
@@ -537,47 +542,37 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
     _isSlikaSelected = false;
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, bool isNaziv) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: FormBuilderTextField(
-      name: label,
-      controller: controller,
-      decoration: InputDecoration(labelText: label),
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: "$label je obavezno polje"),
-        if (isNaziv)
-          ...[
-            FormBuilderValidators.match(
-              RegExp(r"^[A-Z]"), 
-              errorText: "Morate započeti velikim slovom"
-            ),
-            FormBuilderValidators.minLength(4, errorText: "Morate imati najmanje 4 znaka"),
-            FormBuilderValidators.match(
-              RegExp(r"^[A-Za-z]+$"), 
-              errorText: "Polje sadrži samo slova"
-            ),
-          ]
-        else
-          ...[
-            FormBuilderValidators.match(
-              RegExp(r"^[A-Z]"), 
-              errorText: "Morate započeti velikim slovom"
-            ),
-            FormBuilderValidators.minLength(4, errorText: "Morate imati najmanje 4 znaka"),
-            FormBuilderValidators.match(
-              RegExp(r"^[A-Z][a-zA-Z.,!? ]+$"), 
-              errorText: "Polje sadrži samo slova i znakove . , ! ?"
-            ),
-            FormBuilderValidators.match(
-              RegExp(r"[.,!?]$"), 
-              errorText: "Morate završiti s . , ! ili ?"
-            ),
+  Widget _buildTextField(
+      String label, TextEditingController controller, bool isNaziv) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: FormBuilderTextField(
+        name: label,
+        controller: controller,
+        decoration: InputDecoration(labelText: label),
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(errorText: "$label je obavezno polje"),
+          if (isNaziv) ...[
+            FormBuilderValidators.match(RegExp(r"^[A-Z]"),
+                errorText: "Morate započeti velikim slovom"),
+            FormBuilderValidators.minLength(4,
+                errorText: "Morate imati najmanje 4 znaka"),
+            FormBuilderValidators.match(RegExp(r"^[A-Za-z]+$"),
+                errorText: "Polje sadrži samo slova"),
+          ] else ...[
+            FormBuilderValidators.match(RegExp(r"^[A-Z]"),
+                errorText: "Morate započeti velikim slovom"),
+            FormBuilderValidators.minLength(4,
+                errorText: "Morate imati najmanje 4 znaka"),
+            FormBuilderValidators.match(RegExp(r"^[A-Z][a-zA-Z.,!? ]+$"),
+                errorText: "Polje sadrži samo slova i znakove . , ! ?"),
+            FormBuilderValidators.match(RegExp(r"[.,!?]$"),
+                errorText: "Morate završiti s . , ! ili ?"),
           ],
-      ]),
-    ),
-  );
-}
+        ]),
+      ),
+    );
+  }
 
   Widget _buildImageButton(StateSetter setState) {
     return Padding(
@@ -688,7 +683,10 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
         print('Deleting event with ID: ${event.dogadjajId}');
         await _eventsProvider.delete(event.dogadjajId!);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Događaj uspješno obrisan")),
+          SnackBar(
+            content: Text("Uspješno ste izbrisali događaj."),
+            backgroundColor: Colors.green,
+          ),
         );
         _fetchEvents();
       } catch (e) {
