@@ -254,44 +254,7 @@ Widget _buildActionButtons2(Events event, bool isActive, bool isDraft) {
         ),
         child: Text("Sakrij Događaj"),
       ),
-      SizedBox(height: 8),
-      ElevatedButton(
-        onPressed: () async {
-          try {
-            final actions = await _eventsProvider.allowedActions(event.dogadjajId!);
-            _showAllowedActionsDialog(actions);
-          } catch (e) {
-            _showErrorDialog("Error fetching allowed actions: $e");
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-        ),
-        child: Text("Dozvoljene Akcije"),
-      ),
     ],
-  );
-}
-
-void _showAllowedActionsDialog(List<String> actions) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Dozvoljene Akcije"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: actions.map((action) => Text(action)).toList(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("OK"),
-          ),
-        ],
-      );
-    },
   );
 }
 
