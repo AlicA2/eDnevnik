@@ -68,9 +68,8 @@ class _SingleDepartmentListScreenState
   Future<void> _initForm() async {
     userResult = await _userProvider.get();
     if (mounted) {
-      setState(() {
-        _razrednikDropdownItems = _buildRazrednikDropdownItems();
-      });
+      _razrednikDropdownItems = await _buildRazrednikDropdownItems();
+      setState(() {});
     }
 
     if (widget.department != null) {
@@ -83,15 +82,29 @@ class _SingleDepartmentListScreenState
     }
   }
 
-  List<DropdownMenuItem<String>> _buildRazrednikDropdownItems() {
+  Future<bool> _hasAssignedDepartment(int? userId) async {
+    if (userId == null) return false;
+    var departments = await _departmentProvider.get();
+    return departments.result?.any((d) => d.razrednikID == userId) ?? false;
+  }
+
+  Future<List<DropdownMenuItem<String>>> _buildRazrednikDropdownItems() async {
     if (userResult == null || userResult!.result == null) {
       return [];
     }
 
-    var filteredUsers = userResult!.result!
-        .where((user) => user.uloge!.any((role) => role.ulogaID == 1));
+    var filteredUsers = await Future.wait(userResult!.result!.map((user) async {
+      bool isRazrednik = user.uloge!.any((role) => role.ulogaID == 1);
+      bool isAssigned = user.korisnikId == widget.department?.razrednikID
+          ? false
+          : await _hasAssignedDepartment(user.korisnikId);
 
-    return filteredUsers.map((user) {
+      return isRazrednik && !isAssigned ? user : null;
+    }));
+
+    var validUsers = filteredUsers.whereType<User>();
+
+    return validUsers.map((user) {
       return DropdownMenuItem<String>(
         value: user.korisnikId.toString(),
         child: Text('${user.ime} ${user.prezime}'),
