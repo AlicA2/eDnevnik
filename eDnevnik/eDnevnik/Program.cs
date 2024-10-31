@@ -57,7 +57,7 @@ builder.Services.AddSwaggerGen(c =>
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
         Scheme = "basic"
     });
-
+    
     c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement()
     {
         {
@@ -113,61 +113,61 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-string hostname = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitMQ";
-string username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";
-string password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
-string virtualHost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
+//string hostname = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitMQ";
+//string username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";
+//string password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
+//string virtualHost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
 
-var factory = new ConnectionFactory
-{
-    HostName = hostname,
-    UserName = username,
-    Password = password,
-    VirtualHost = virtualHost,
-};
+//var factory = new ConnectionFactory
+//{
+//    HostName = hostname,
+//    UserName = username,
+//    Password = password,
+//    VirtualHost = virtualHost,
+//};
 
-using var connection = factory.CreateConnection();
-using var channel = connection.CreateModel();
+//using var connection = factory.CreateConnection();
+//using var channel = connection.CreateModel();
 
-channel.QueueDeclare(queue: "poruka_added",
-                     durable: false,
-                     exclusive: false,
-                     autoDelete: false,
-                     arguments: null);
+//channel.QueueDeclare(queue: "poruka_added",
+//                     durable: false,
+//                     exclusive: false,
+//                     autoDelete: false,
+//                     arguments: null);
 
-Console.WriteLine(" [*] Waiting for messages.");
+//Console.WriteLine(" [*] Waiting for messages.");
 
-var consumer = new EventingBasicConsumer(channel);
-consumer.Received += async (model, ea) =>
-{
-    var body = ea.Body.ToArray();
-    var message = Encoding.UTF8.GetString(body);
-    Console.WriteLine(message);
+//var consumer = new EventingBasicConsumer(channel);
+//consumer.Received += async (model, ea) =>
+//{
+//    var body = ea.Body.ToArray();
+//    var message = Encoding.UTF8.GetString(body);
+//    Console.WriteLine(message);
 
-    var insertRequest = JsonSerializer.Deserialize<PorukaInsertRequest>(message);
-    using (var scope = app.Services.CreateScope())
-    {
-        var porukeService = scope.ServiceProvider.GetRequiredService<IPorukeService>();
+//    var insertRequest = JsonSerializer.Deserialize<PorukaInsertRequest>(message);
+//    using (var scope = app.Services.CreateScope())
+//    {
+//        var porukeService = scope.ServiceProvider.GetRequiredService<IPorukeService>();
 
-        if (insertRequest != null)
-        {
-            try
-            {
-                var result = await porukeService.Insert(insertRequest);
-                if (result != null)
-                {
-                    Console.WriteLine("Poruka uspješno dodata.");
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error handling contact addition: {e.Message}");
-            }
-        }
-    }
-};
+//        if (insertRequest != null)
+//        {
+//            try
+//            {
+//                var result = await porukeService.Insert(insertRequest);
+//                if (result != null)
+//                {
+//                    Console.WriteLine("Poruka uspješno dodata.");
+//                }
+//            }
+//            catch (Exception e)
+//            {
+//                Console.WriteLine($"Error handling contact addition: {e.Message}");
+//            }
+//        }
+//    }
+//};
 
-channel.BasicConsume(queue: "poruka_added", autoAck: true, consumer: consumer);
+//channel.BasicConsume(queue: "poruka_added", autoAck: true, consumer: consumer);
 
 
 app.Run();

@@ -597,17 +597,23 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        icon: Icon(Icons.upload_outlined, color: Colors.blue),
-                        onPressed: () {
-                          _navigateToClassDetails(classItem.casoviID ?? 0);
-                        },
+                      Tooltip(
+                        message: "Prelazak na stranicu za prisustvo",
+                        child: IconButton(
+                          icon: Icon(Icons.upload_outlined, color: Colors.blue),
+                          onPressed: () {
+                            _navigateToClassDetails(classItem.casoviID ?? 0);
+                          },
+                        ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          _confirmDeleteClass(classItem);
-                        },
+                      Tooltip(
+                        message: "Brisanje časa",
+                        child: IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            _confirmDeleteClass(classItem);
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -695,7 +701,13 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
       };
 
       await _classesProvider.Update(classItem.casoviID ?? 0, requestBody);
-
+      ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "Uspješno ste izbrisali čas iz kalendara."),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
       setState(() {
         _classes.removeWhere(
             (existingClass) => existingClass.casoviID == classItem.casoviID);

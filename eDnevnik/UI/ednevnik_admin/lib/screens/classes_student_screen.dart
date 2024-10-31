@@ -176,6 +176,13 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
 
       try {
         await _classesProvider.Update(widget.casoviID!, updateRequest);
+        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "Uspješno ste ažurirali čas."),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
         print("Class updated successfully!");
       } catch (e) {
         print("Failed to update class: $e");
@@ -208,6 +215,14 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
         await _classesStudentsProvider.Update(
             student.casoviUceniciID!, updateRequest);
         student.zakljucan = true;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "Uspješno ste ažurirali čas."),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
       }
 
       setState(() {

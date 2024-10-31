@@ -108,7 +108,7 @@ namespace eDnevnik.Services.Service
 
             if (student == null)
             {
-                throw new ArgumentException("Učenik nije pronađen u odjeljenju");
+                throw new ArgumentException("Učenik nije pronađen u odjeljenju.");
             }
 
             var hasGrades = odjeljenje.OdjeljenjePredmeti
@@ -119,12 +119,21 @@ namespace eDnevnik.Services.Service
                 throw new UserException("Ne možete obrisati učenika koji ima ocjene.");
             }
 
-            odjeljenje.Ucenici.Remove(student);
+            var hasAttendanceRecords = await _context.CasoviUcenici
+                .AnyAsync(cu => cu.UcenikID == korisnikID && cu.IsPrisutan);
 
+            if (hasAttendanceRecords)
+            {
+                throw new UserException("Ne možete obrisati učenika koji je bio prisutan na održanim časovima.");
+            }
+
+            odjeljenje.Ucenici.Remove(student);
             await _context.SaveChangesAsync();
 
             return true;
         }
+
+
 
         public override async Task<Model.Models.Odjeljenje> Delete(int id, OdjeljenjeDeleteRequest request)
         {
