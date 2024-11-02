@@ -169,13 +169,7 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
                 alignment: Alignment.centerRight,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    _confirmDelete(grade);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Uspješno ste izbrisali ocjenu."),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
+                    _confirmDelete(grade);        
                   },
                   icon: Tooltip(
                     message: "Brisanje ocjene",
@@ -222,6 +216,12 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
     if (confirmDelete == true) {
       try {
         await _gradesProvider.delete(grade.ocjenaID!);
+        ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Uspješno ste izbrisali ocjenu."),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
         setState(() {
           widget.grades.removeWhere((g) => g.ocjenaID == grade.ocjenaID);
           _isDataChanged = true;
