@@ -189,7 +189,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 1,
                     NazivDogadjaja = "Sportski dan",
-                    OpisDogadjaja = "Organizacija sportskih aktivnosti za učenike.",
+                    OpisDogadjaja = "Organizacija sportskih aktivnosti za učenike. Cilj je potaknuti fizičku aktivnost i promovirati zdrav način života. Učenici će imati priliku natjecati se u različitim sportskim disciplinama.",
                     Slika = imageData1,
                     DatumDogadjaja = new DateTime(2024, 3, 15),
                     StateMachine = "active",
@@ -199,7 +199,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 2,
                     NazivDogadjaja = "Humanitarni koncert",
-                    OpisDogadjaja = "Koncert učenika za prikupljanje sredstava za lokalne dobrotvorne organizacije.",
+                    OpisDogadjaja = "Koncert učenika za prikupljanje sredstava za lokalne dobrotvorne organizacije. Program će uključivati razne muzičke izvedbe. Svi prihodi bit će donirani u dobrotvorne svrhe.",
                     Slika = imageData2,
                     DatumDogadjaja = new DateTime(2024, 4, 10),
                     StateMachine = "active",
@@ -209,7 +209,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 3,
                     NazivDogadjaja = "Proslava završene godine",
-                    OpisDogadjaja = "Proslava za učenike i profesore.",
+                    OpisDogadjaja = "Proslava za učenike i profesore. Događaj će uključivati različite zabavne aktivnosti i prigodni program. Prilika je to da se proslave uspjesi ostvareni tokom godine.",
                     Slika = imageData3,
                     DatumDogadjaja = new DateTime(2024, 6, 20),
                     StateMachine = "active",
@@ -219,7 +219,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 4,
                     NazivDogadjaja = "Predavanje o sigurnosti",
-                    OpisDogadjaja = "Edukativno predavanje za učenike.",
+                    OpisDogadjaja = "Edukativno predavanje za učenike. Fokus će biti na važnosti sigurnosti u svakodnevnom životu. Učenici će naučiti osnovne sigurnosne mjere i kako se zaštititi u različitim situacijama.",
                     Slika = imageData4,
                     DatumDogadjaja = new DateTime(2024, 2, 5),
                     StateMachine = "active",
@@ -229,7 +229,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 5,
                     NazivDogadjaja = "Kviz znanja",
-                    OpisDogadjaja = "Takmičenje učenika u znanju iz različitih predmeta.",
+                    OpisDogadjaja = "Takmičenje učenika u znanju iz različitih predmeta. Cilj je potaknuti učenike na dodatno učenje kroz igru i zabavu. Najuspješniji timovi bit će nagrađeni.",
                     Slika = imageData5,
                     DatumDogadjaja = new DateTime(2024, 5, 18),
                     StateMachine = "active",
@@ -239,7 +239,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 6,
                     NazivDogadjaja = "Ekskurzija",
-                    OpisDogadjaja = "Školska ekskurzija u Sarajevo.",
+                    OpisDogadjaja = "Školska ekskurzija u Sarajevo. Učenici će imati priliku posjetiti kulturno-historijske znamenitosti. Ekskurzija će uključivati i edukativne radionice na terenu.",
                     Slika = imageData6,
                     DatumDogadjaja = new DateTime(2024, 9, 10),
                     StateMachine = "active",
@@ -249,7 +249,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 7,
                     NazivDogadjaja = "Likovna izložba",
-                    OpisDogadjaja = "Izložba radova učenika likovnog odjela.",
+                    OpisDogadjaja = "Izložba radova učenika likovnog odjela. Posjetioci će imati priliku vidjeti kreativnost i talent učenika. Izložba će trajati nekoliko dana i bit će otvorena za javnost.",
                     Slika = imageData7,
                     DatumDogadjaja = new DateTime(2024, 3, 25),
                     StateMachine = "active",
@@ -259,7 +259,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 8,
                     NazivDogadjaja = "Pozorišna predstava",
-                    OpisDogadjaja = "Školska predstava u režiji profesora i učenika.",
+                    OpisDogadjaja = "Školska predstava u režiji profesora i učenika. Predstava će prikazati talent učenika u dramskim umjetnostima. Učenici su mjesecima pripremali predstavu kako bi se pokazali u najboljem svjetlu.",
                     Slika = imageData8,
                     DatumDogadjaja = new DateTime(2024, 4, 22),
                     StateMachine = "active",
@@ -269,7 +269,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 9,
                     NazivDogadjaja = "Seminar o ekologiji",
-                    OpisDogadjaja = "Edukativni seminar o očuvanju okoliša.",
+                    OpisDogadjaja = "Edukativni seminar o očuvanju okoliša. Učenici će naučiti važnost zaštite prirode i održivog razvoja. Na kraju seminara, učesnici će dobiti certifikate.",
                     Slika = imageData9,
                     DatumDogadjaja = new DateTime(2024, 6, 5),
                     StateMachine = "active",
@@ -279,7 +279,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 10,
                     NazivDogadjaja = "Humanitarna pomoć",
-                    OpisDogadjaja = "Prikupljanje sredstava za pomoć djeci.",
+                    OpisDogadjaja = "Prikupljanje sredstava za pomoć djeci. Organiziran je program koji uključuje aukcije i donatorske aktivnosti. Cijeli događaj je volonterskog karaktera.",
                     Slika = imageData10,
                     DatumDogadjaja = new DateTime(2024, 5, 30),
                     StateMachine = "active",
@@ -289,7 +289,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 11,
                     NazivDogadjaja = "Dan kulture",
-                    OpisDogadjaja = "Manifestacija koja promoviše različite kulture.",
+                    OpisDogadjaja = "Manifestacija koja promoviše različite kulture. Učenici će imati priliku predstaviti svoju kulturnu baštinu. Događaj uključuje plesne i muzičke izvedbe iz različitih dijelova svijeta.",
                     Slika = imageData11,
                     DatumDogadjaja = new DateTime(2024, 10, 12),
                     StateMachine = "active",
@@ -299,7 +299,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 12,
                     NazivDogadjaja = "Šahovski turnir",
-                    OpisDogadjaja = "Takmičenje u šahu za sve učenike.",
+                    OpisDogadjaja = "Takmičenje u šahu za sve učenike. Turnir će okupiti najbolje školske šahiste. Pobjednik će predstavljati školu na regionalnom takmičenju.",
                     Slika = imageData12,
                     DatumDogadjaja = new DateTime(2024, 11, 20),
                     StateMachine = "active",
@@ -309,7 +309,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 13,
                     NazivDogadjaja = "Festival nauke",
-                    OpisDogadjaja = "Događaj posvećen popularizaciji nauke među učenicima.",
+                    OpisDogadjaja = "Događaj posvećen popularizaciji nauke među učenicima. Predstavljeni su eksperimenti i naučne prezentacije. Cilj je potaknuti učenike da istražuju svijet nauke.",
                     Slika = imageData13,
                     DatumDogadjaja = new DateTime(2024, 10, 10),
                     StateMachine = "active",
@@ -319,7 +319,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 14,
                     NazivDogadjaja = "Dan škole",
-                    OpisDogadjaja = "Proslava dana osnivanja škole.",
+                    OpisDogadjaja = "Proslava dana osnivanja škole. Pripremljen je bogat program koji uključuje kulturne aktivnosti i nagrade za učenike. Prilika je to da se istaknu najuspješniji učenici i profesori.",
                     Slika = imageData14,
                     DatumDogadjaja = new DateTime(2024, 12, 1),
                     StateMachine = "active",
@@ -329,7 +329,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 15,
                     NazivDogadjaja = "Matursko veče",
-                    OpisDogadjaja = "Proslava mature za završni razred.",
+                    OpisDogadjaja = "Proslava mature za završni razred. Veče je posvećeno proslavi završetka školovanja. Učenici će imati priliku da se opuste i obilježe kraj jednog poglavlja.",
                     Slika = imageData15,
                     DatumDogadjaja = new DateTime(2024, 6, 25),
                     StateMachine = "active",
@@ -339,7 +339,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 16,
                     NazivDogadjaja = "Priredba povodom Nove godine",
-                    OpisDogadjaja = "Novogodišnja priredba za učenike nižih razreda.",
+                    OpisDogadjaja = "Novogodišnja priredba za učenike nižih razreda. Priredba će uključivati pjesme, plesove i razne igre. Djeca će uživati u programu pripremljenom posebno za njih.",
                     Slika = imageData16,
                     DatumDogadjaja = new DateTime(2024, 12, 20),
                     StateMachine = "active",
@@ -349,7 +349,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 17,
                     NazivDogadjaja = "Dan maternjeg jezika",
-                    OpisDogadjaja = "Održavanje radionica i predavanja povodom Dana maternjeg jezika.",
+                    OpisDogadjaja = "Održavanje radionica i predavanja povodom Dana maternjeg jezika. Učenici će se upoznati s važnošću očuvanja jezika i kulture. Cilj je potaknuti svijest o značaju jezika kao kulturne baštine.",
                     Slika = imageData17,
                     DatumDogadjaja = new DateTime(2024, 2, 21),
                     StateMachine = "active",
@@ -359,7 +359,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 18,
                     NazivDogadjaja = "Muzički koncert",
-                    OpisDogadjaja = "Koncert učenika muzičke škole.",
+                    OpisDogadjaja = "Koncert učenika muzičke škole. Na programu će biti izvedbe klasične i moderne muzike. Koncert će biti otvoren za roditelje i goste.",
                     Slika = imageData18,
                     DatumDogadjaja = new DateTime(2024, 5, 15),
                     StateMachine = "active",
@@ -369,7 +369,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 19,
                     NazivDogadjaja = "Sajam knjiga",
-                    OpisDogadjaja = "Sajam knjiga organizovan od strane škole.",
+                    OpisDogadjaja = "Sajam knjiga organizovan od strane škole. Učenici će imati priliku kupiti knjige po promotivnim cijenama. Događaj će uključivati i radionice o važnosti čitanja.",
                     Slika = imageData19,
                     DatumDogadjaja = new DateTime(2024, 9, 30),
                     StateMachine = "active",
@@ -379,7 +379,7 @@ namespace eDnevnik.Services
                 {
                     DogadjajId = 20,
                     NazivDogadjaja = "Predavanje o prvoj pomoći",
-                    OpisDogadjaja = "Edukativno predavanje o pružanju prve pomoći.",
+                    OpisDogadjaja = "Edukativno predavanje o pružanju prve pomoći. Učenici će imati priliku učiti o osnovama prve pomoći. Na kraju će dobiti priliku vježbati naučeno kroz praktične primjere.",
                     Slika = imageData20,
                     DatumDogadjaja = new DateTime(2024, 3, 10),
                     StateMachine = "active",
@@ -813,17 +813,17 @@ namespace eDnevnik.Services
                 new GodisnjiPlanProgram { GodisnjiPlanProgramID = 29, brojCasova = 5, Naziv = "Plan i program za Informatiku II", OdjeljenjeID = 11, PredmetID = 29, SkolaID = 2, ProfesorID = 4 },
                 new GodisnjiPlanProgram { GodisnjiPlanProgramID = 30, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku II", OdjeljenjeID = 11, PredmetID = 30, SkolaID = 2, ProfesorID = 4 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 31, brojCasova = 5, Naziv = "Plan i program za Biologiju III", OdjeljenjeID = 13, PredmetID = 31, SkolaID = 2, ProfesorID = 5 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 32, brojCasova = 5, Naziv = "Plan i program za Fiziku III", OdjeljenjeID = 13, PredmetID = 32, SkolaID = 2, ProfesorID = 5 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 33, brojCasova = 5, Naziv = "Plan i program za Hemiju III", OdjeljenjeID = 13, PredmetID = 33, SkolaID = 2, ProfesorID = 5 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 34, brojCasova = 5, Naziv = "Plan i program za Informatiku III", OdjeljenjeID = 13, PredmetID = 34, SkolaID = 2, ProfesorID = 5 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 35, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku III", OdjeljenjeID = 13, PredmetID = 35, SkolaID = 2, ProfesorID = 5 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 31, brojCasova = 5, Naziv = "Plan i program za Biologiju III", OdjeljenjeID = 13, PredmetID = 31, SkolaID = 2, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 32, brojCasova = 5, Naziv = "Plan i program za Fiziku III", OdjeljenjeID = 13, PredmetID = 32, SkolaID = 2, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 33, brojCasova = 5, Naziv = "Plan i program za Hemiju III", OdjeljenjeID = 13, PredmetID = 33, SkolaID = 2, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 34, brojCasova = 5, Naziv = "Plan i program za Informatiku III", OdjeljenjeID = 13, PredmetID = 34, SkolaID = 2, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 35, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku III", OdjeljenjeID = 13, PredmetID = 35, SkolaID = 2, ProfesorID = 1 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 36, brojCasova = 5, Naziv = "Plan i program za Biologiju IV", OdjeljenjeID = 14, PredmetID = 36, SkolaID = 2, ProfesorID = 6 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 37, brojCasova = 5, Naziv = "Plan i program za Fiziku IV", OdjeljenjeID = 14, PredmetID = 37, SkolaID = 2, ProfesorID = 6 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 38, brojCasova = 5, Naziv = "Plan i program za Hemiju IV", OdjeljenjeID = 14, PredmetID = 38, SkolaID = 2, ProfesorID = 6 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 39, brojCasova = 5, Naziv = "Plan i program za Informatiku IV", OdjeljenjeID = 14, PredmetID = 39, SkolaID = 2, ProfesorID = 6 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 40, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku IV", OdjeljenjeID = 14, PredmetID = 40, SkolaID = 2, ProfesorID = 6 }
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 36, brojCasova = 5, Naziv = "Plan i program za Biologiju IV", OdjeljenjeID = 14, PredmetID = 36, SkolaID = 2, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 37, brojCasova = 5, Naziv = "Plan i program za Fiziku IV", OdjeljenjeID = 14, PredmetID = 37, SkolaID = 2, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 38, brojCasova = 5, Naziv = "Plan i program za Hemiju IV", OdjeljenjeID = 14, PredmetID = 38, SkolaID = 2, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 39, brojCasova = 5, Naziv = "Plan i program za Informatiku IV", OdjeljenjeID = 14, PredmetID = 39, SkolaID = 2, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 40, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku IV", OdjeljenjeID = 14, PredmetID = 40, SkolaID = 2, ProfesorID = 1 }
             );
         }
         private void SeedPoruke(ModelBuilder modelBuilder)

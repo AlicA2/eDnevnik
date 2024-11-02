@@ -206,16 +206,6 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
         children: [
           Row(
             children: [
-              // Expanded(
-              //   child: TextField(
-              //     decoration: InputDecoration(
-              //       labelText: "Unesite sadržaj poruke",
-              //       prefixIcon: Icon(Icons.search),
-              //     ),
-              //     controller: _nazivSifraController,
-              //   ),
-              // ),
-              // SizedBox(width: 20),
               Expanded(
                 child: _buildUcenikDropdown(),
               ),
