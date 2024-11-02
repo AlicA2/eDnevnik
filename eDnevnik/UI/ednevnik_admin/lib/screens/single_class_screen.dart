@@ -149,72 +149,70 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
   }
 
   String? _validateNazivCasa(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Naziv časa je obavezan i ne može biti prazan.';
-    }
-
-    if (RegExp(r'[0-9]').hasMatch(value)) {
-      return 'Naziv časa ne može sadržavati brojeve.';
-    }
-
-    if (value.isNotEmpty &&
-        (value[0] != value[0].toUpperCase() ||
-            value.substring(1) != value.substring(1).toLowerCase())) {
-      return 'Naziv časa mora početi velikim slovom, a ostali karakteri moraju biti mala slova.';
-    }
-
-    if (value.length < 4) {
-      return 'Naziv časa mora imati minimum 4 slova.';
-    }
-
-    return null;
+  if (value == null || value.isEmpty) {
+    return 'Naziv časa je obavezan i ne može biti prazan.';
   }
 
-  bool _containsNumbers(String input) {
-    return input.contains(RegExp(r'[0-9]'));
+  if (RegExp(r'[0-9]').hasMatch(value)) {
+    return 'Naziv časa ne može sadržavati brojeve.';
   }
 
-  String? _validateOpis(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Opis časa je obavezan i ne može biti prazan.';
-    }
-
-    if (_containsNumbers(value)) {
-      return 'Opis ne može sadržavati brojeve.';
-    }
-
-    if (value[0] != value[0].toUpperCase()) {
-      return 'Opis mora početi velikim slovom.';
-    }
-
-    if (value.length < 4) {
-      return 'Opis mora imati minimum 4 slova.';
-    }
-
-    final sentences = value.split('. ');
-    for (var i = 0; i < sentences.length; i++) {
-      var sentence = sentences[i].trim();
-
-      if (!RegExp(r'^[A-Z][a-z]*').hasMatch(sentence)) {
-        return 'Svaka rečenica mora početi velikim slovom, a ostatak mora biti mala slova.';
-      }
-
-      if (sentence.length > 1 &&
-          sentence.substring(1) != sentence.substring(1).toLowerCase()) {
-        return 'Svaka rečenica, osim prvog slova, mora sadržavati mala slova do tačke.';
-      }
-
-      if (i == sentences.length - 1 && !sentence.endsWith('.')) {
-        return 'Opis mora završiti sa tačkom.';
-      }
-
-      if (i < sentences.length - 1 && sentence.endsWith('.')) {
-        return 'Zadnja rečenica mora završiti sa tačkom.';
-      }
-    }
-
-    return null;
+  if (!RegExp(r'^[A-ZŽĐŠĆČ][a-zžđšćč]*$').hasMatch(value)) {
+    return 'Naziv časa mora početi velikim slovom, a ostali karakteri moraju biti mala slova.';
   }
+
+  if (value.length < 4) {
+    return 'Naziv časa mora imati minimum 4 slova.';
+  }
+
+  return null;
+}
+
+bool _containsNumbers(String input) {
+  return input.contains(RegExp(r'[0-9]'));
+}
+
+String? _validateOpis(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Opis časa je obavezan i ne može biti prazan.';
+  }
+
+  if (_containsNumbers(value)) {
+    return 'Opis ne može sadržavati brojeve.';
+  }
+
+  if (!RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(value)) {
+    return 'Opis mora početi velikim slovom.';
+  }
+
+  if (value.length < 4) {
+    return 'Opis mora imati minimum 4 slova.';
+  }
+
+  final sentences = value.split('. ');
+  for (var i = 0; i < sentences.length; i++) {
+    var sentence = sentences[i].trim();
+
+    if (!RegExp(r'^[A-ZŽĐŠĆČ][a-zžđšćč]*$').hasMatch(sentence)) {
+      return 'Svaka rečenica mora početi velikim slovom, a ostatak mora biti mala slova.';
+    }
+
+    if (sentence.length > 1 &&
+        sentence.substring(1) != sentence.substring(1).toLowerCase()) {
+      return 'Svaka rečenica, osim prvog slova, mora sadržavati mala slova do tačke.';
+    }
+
+    if (i == sentences.length - 1 && !sentence.endsWith('.')) {
+      return 'Opis mora završiti sa tačkom.';
+    }
+
+    if (i < sentences.length - 1 && sentence.endsWith('.')) {
+      return 'Zadnja rečenica mora završiti sa tačkom.';
+    }
+  }
+
+  return null;
+}
 
   Widget _buildScreenName() {
     return Align(

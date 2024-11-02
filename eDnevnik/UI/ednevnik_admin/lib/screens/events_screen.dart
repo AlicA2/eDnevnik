@@ -659,7 +659,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
         maxLines: null,
         validator: (value) {
           if (isNaziv) {
-            return _validateNazivCasa(value);
+            return _validateNazivDogadjaja(value);
           } else {
             return _validateOpis(value);
           }
@@ -774,7 +774,6 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   Future<void> _deleteEvent(Events event) async {
     if (event.dogadjajId != null) {
       try {
-        print('Deleting event with ID: ${event.dogadjajId}');
         await _eventsProvider.delete(event.dogadjajId!);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -871,7 +870,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   }
 }
 
-String? _validateNazivCasa(String? value) {
+String? _validateNazivDogadjaja(String? value) {
   if (value == null || value.isEmpty) {
     return 'Naziv događaja je obavezan i ne može biti prazan.';
   }
@@ -880,9 +879,7 @@ String? _validateNazivCasa(String? value) {
     return 'Naziv događaja ne može sadržavati brojeve.';
   }
 
-  if (value.isNotEmpty &&
-      (value[0] != value[0].toUpperCase() ||
-          value.substring(1) != value.substring(1).toLowerCase())) {
+  if (!RegExp(r'^[A-ZŽĐŠĆČ][a-zžđšćč]*$').hasMatch(value)) {
     return 'Naziv događaja mora početi velikim slovom, a ostali karakteri moraju biti mala slova.';
   }
 
@@ -906,7 +903,7 @@ String? _validateOpis(String? value) {
     return 'Opis ne može sadržavati brojeve.';
   }
 
-  if (value[0] != value[0].toUpperCase()) {
+  if (!RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(value)) {
     return 'Opis mora početi velikim slovom.';
   }
 
@@ -918,7 +915,7 @@ String? _validateOpis(String? value) {
   for (var i = 0; i < sentences.length; i++) {
     var sentence = sentences[i].trim();
 
-    if (!RegExp(r'^[A-Z][a-z]*').hasMatch(sentence)) {
+    if (!RegExp(r'^[A-ZŽĐŠĆČ][a-zžđšćč]*$').hasMatch(sentence)) {
       return 'Svaka rečenica mora početi velikim slovom, a ostatak mora biti mala slova.';
     }
 
@@ -938,3 +935,4 @@ String? _validateOpis(String? value) {
 
   return null;
 }
+
