@@ -11,7 +11,7 @@ import 'package:http/http.dart';
 class AnnualPlanProgramProvider extends BaseProvider<AnnualPlanProgram> {
   AnnualPlanProgramProvider() : super("GodisnjiPlanProgram");
   static const String _baseUrl = String.fromEnvironment("baseUrl",
-      defaultValue: "https://10.0.2.2:7260/");
+      defaultValue: "http://10.0.2.2:7260/");
   static const String _endpoint = "GodisnjiPlanProgram";
 
   @override
