@@ -43,9 +43,12 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => LoginPage(),
-                ));
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                      (route) => false,
+                );
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Uspješno ste se odjavili!'),
                       backgroundColor: Colors.green),
