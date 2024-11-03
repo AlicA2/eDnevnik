@@ -27,6 +27,8 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   late EventsProvider _eventsProvider;
   late DepartmentProvider _departmentProvider;
 
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -53,8 +55,7 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
           if (department.ucenici != null &&
               department.ucenici!.any((user) => user.korisnikId == loggedInUser?.korisnikId)) {
             userSchool = department.skolaID;
-
-            _fetchEvents();
+            await _fetchEvents();
             break;
           }
         }
@@ -70,7 +71,8 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
         var events = await _eventsProvider.get(filter: {'SkolaID': userSchool});
         if (mounted) {
           setState(() {
-            _eventsList = events.result;
+            _eventsList = events.result.where((event) => event.stateMachine == "active").toList();
+            isLoading = false;
           });
         }
       } catch (e) {
@@ -78,6 +80,10 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
           _eventsList = [];
         });
       }
+    } else {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -97,7 +103,13 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
               children: [
                 _buildScreenHeader(),
                 SizedBox(height: 16.0),
-                Expanded(child: _buildEventCards()),
+                Expanded(
+                  child: isLoading
+                      ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                      : _buildEventCards(),
+                ),
               ],
             ),
           ),
@@ -175,7 +187,6 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
       ),
     );
   }
-
 
   Widget _buildEventImage(String? slika) {
     try {

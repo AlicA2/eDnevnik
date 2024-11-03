@@ -46,6 +46,10 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => LoginPage(),
                 ));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Uspješno ste se odjavili!'),
+                      backgroundColor: Colors.green),
+                );
               },
               style: ElevatedButton.styleFrom(foregroundColor: Colors.white,backgroundColor: Colors.red),
               child: Text("Odjava"),

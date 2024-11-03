@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:ednevnik_admin/models/annual_plan_program.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/classes_provider.dart';
 import 'package:ednevnik_admin/providers/classes_students_provider.dart';
@@ -15,10 +13,11 @@ import 'package:ednevnik_admin/providers/user_events_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/utils/util.dart';
-import 'package:ednevnik_admin/widgets/master_screen.dart';
-import 'package:flutter/material.dart' as flutter; // Use alias for Flutter
+import 'package:flutter/material.dart' as flutter;
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import '.env';
 
@@ -150,98 +149,145 @@ class MyMaterialApp extends StatelessWidget {
   }
 }
 
-class LoginPage extends flutter.StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
-  flutter.TextEditingController _usernameController = flutter.TextEditingController();
-  flutter.TextEditingController _passwordController = flutter.TextEditingController();
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+
+  bool _isPasswordObscured = true;
 
   @override
   Widget build(BuildContext context) {
     UserProvider _userProvider = context.read<UserProvider>();
-    return flutter.Scaffold(
-      appBar: flutter.AppBar(
-        title: flutter.Text("Prijava"),
-        backgroundColor: flutter.Colors.blue,
-      ),
-      body: flutter.Center(
-        child: flutter.SingleChildScrollView(
-          child: flutter.Container(
-            constraints: flutter.BoxConstraints(maxWidth: 400, maxHeight: 500),
-            child: flutter.Card( // Resolve conflict by using flutter.Card
-              child: flutter.Padding(
-                padding: const flutter.EdgeInsets.all(20.0),
-                child: flutter.Column(
-                  children: [
-                    flutter.Image.asset(
-                      "assets/images/eDnevnik.png",
-                      height: 200,
-                      width: 300,
-                    ),
-                    flutter.TextField(
-                      decoration: flutter.InputDecoration(
-                          labelText: "Korisničko ime",
-                          prefixIcon: flutter.Icon(flutter.Icons.email)),
-                      controller: _usernameController,
-                    ),
-                    flutter.SizedBox(height: 10),
-                    flutter.TextField(
-                      decoration: flutter.InputDecoration(
-                          labelText: "Lozinka",
-                          prefixIcon: flutter.Icon(flutter.Icons.password)),
-                      controller: _passwordController,
-                      obscureText: true,
-                    ),
-                    flutter.SizedBox(height: 10),
-                    flutter.ElevatedButton(
-                      onPressed: () async {
-                        var username = _usernameController.text;
-                        var password = _passwordController.text;
 
-                        Authorization.username = username;
-                        Authorization.password = password;
-                        try {
-                          var loginData = await _userProvider.getLogedWithRole(username, password);
-                          if (loginData != null && loginData['uloga'] == 'učenik') {
-                            Navigator.of(context).push(
-                              flutter.MaterialPageRoute(
-                                builder: (context) => SubjectDetailScreen(),
-                              ),
-                            );
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => flutter.AlertDialog(
-                                title: flutter.Text("Greška"),
-                                content: flutter.Text("Nemate dozvolu za pristup."),
-                                actions: [
-                                  flutter.TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: flutter.Text("OK"),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                        } on Exception catch (e) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => flutter.AlertDialog(
-                              title: flutter.Text("Greška"),
-                              content: flutter.Text(e.toString()),
-                              actions: [
-                                flutter.TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: flutter.Text("OK"),
-                                ),
-                              ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Prijava"),
+        backgroundColor: Colors.blue,
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400, maxHeight: 500),
+            child: flutter.Card(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: FormBuilder(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        "assets/images/eDnevnik.png",
+                        height: 200,
+                        width: 300,
+                      ),
+                      FormBuilderTextField(
+                        name: 'username',
+                        controller: _usernameController,
+                        decoration: const InputDecoration(
+                          labelText: "Korisničko ime",
+                          prefixIcon: Icon(Icons.email),
+                        ),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: "Ovo polje je obavezno"),
+                        ]),
+                      ),
+                      const SizedBox(height: 10),
+                      FormBuilderTextField(
+                        name: 'password',
+                        controller: _passwordController,
+                        obscureText: _isPasswordObscured,
+                        decoration: InputDecoration(
+                          labelText: "Lozinka",
+                          prefixIcon: const Icon(Icons.password),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordObscured
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                             ),
-                          );
-                        }
-                      },
-                      child: flutter.Text("Prijava"),
-                    ),
-                  ],
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordObscured = !_isPasswordObscured;
+                              });
+                            },
+                          ),
+                        ),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: "Ovo polje je obavezno"),
+                        ]),
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(top:16.0),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState?.saveAndValidate() ?? false) {
+                              var username = _usernameController.text;
+                              var password = _passwordController.text;
+
+                              Authorization.username = username;
+                              Authorization.password = password;
+
+                              try {
+                                var loginData = await _userProvider.getLogedWithRole(username, password);
+
+                                if (loginData != null && loginData['uloga'] == 'učenik') {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => SubjectDetailScreen(),
+                                    ),
+                                  );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) => AlertDialog(
+                                      title: const Text("Greška"),
+                                      content: const Text("Nemate dozvolu za pristup."),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.pop(context),
+                                          child: const Text("OK"),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              } on Exception catch (e) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text("Greška"),
+                                    content: Text(e.toString()),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text("OK"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.black,
+                          ),
+                          child: const Text("Prijava"),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

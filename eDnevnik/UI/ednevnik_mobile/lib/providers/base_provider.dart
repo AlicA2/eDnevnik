@@ -13,7 +13,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   BaseProvider(String endPoint) {
     _endPoint = endPoint;
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "http://10.0.2.2:7260/");
+        defaultValue: "https://10.0.2.2:7260/");
   }
 
   Future<SearchResult<T>> get(

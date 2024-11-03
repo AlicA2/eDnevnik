@@ -43,6 +43,53 @@ namespace eDnevnik.Services
             SeedOdjeljenjePredmeti(modelBuilder);
             SeedCasoviUcenici(modelBuilder);
             SeedZakljucnaOcjena(modelBuilder);
+            SeedDogadjajiKorisnici(modelBuilder);
+        }
+        private void SeedDogadjajiKorisnici(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<KorisnikDogadjaj>().HasData(
+                new KorisnikDogadjaj { KorisnikDogadjajID = 1, DogadjajId = 1, KorisnikID = 16 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 2, DogadjajId = 2, KorisnikID = 16 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 3, DogadjajId = 3, KorisnikID = 17 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 4, DogadjajId = 4, KorisnikID = 18 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 5, DogadjajId = 5, KorisnikID = 19 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 6, DogadjajId = 6, KorisnikID = 20 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 7, DogadjajId = 7, KorisnikID = 20 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 8, DogadjajId = 8, KorisnikID = 21 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 9, DogadjajId = 9, KorisnikID = 21 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 10, DogadjajId = 10, KorisnikID = 22 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 11, DogadjajId = 1, KorisnikID = 23 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 12, DogadjajId = 2, KorisnikID = 23 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 13, DogadjajId = 3, KorisnikID = 23 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 14, DogadjajId = 4, KorisnikID = 23 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 15, DogadjajId = 5, KorisnikID = 24 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 16, DogadjajId = 6, KorisnikID = 25 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 17, DogadjajId = 7, KorisnikID = 26 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 18, DogadjajId = 8, KorisnikID = 27 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 19, DogadjajId = 9, KorisnikID = 28 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 20, DogadjajId = 10, KorisnikID = 29 },
+
+                new KorisnikDogadjaj { KorisnikDogadjajID = 21, DogadjajId = 1, KorisnikID = 30 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 22, DogadjajId = 2, KorisnikID = 30 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 23, DogadjajId = 3, KorisnikID = 30 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 24, DogadjajId = 4, KorisnikID = 31 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 25, DogadjajId = 5, KorisnikID = 32 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 26, DogadjajId = 6, KorisnikID = 33 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 27, DogadjajId = 7, KorisnikID = 34 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 28, DogadjajId = 8, KorisnikID = 35 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 29, DogadjajId = 9, KorisnikID = 35 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 30, DogadjajId = 10, KorisnikID = 36 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 31, DogadjajId = 1, KorisnikID = 37 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 32, DogadjajId = 2, KorisnikID = 38 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 33, DogadjajId = 3, KorisnikID = 39 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 34, DogadjajId = 4, KorisnikID = 40 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 35, DogadjajId = 5, KorisnikID = 41 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 36, DogadjajId = 6, KorisnikID = 41 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 37, DogadjajId = 7, KorisnikID = 41 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 38, DogadjajId = 8, KorisnikID = 41 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 39, DogadjajId = 9, KorisnikID = 41 },
+                new KorisnikDogadjaj { KorisnikDogadjajID = 40, DogadjajId = 10, KorisnikID = 41 }
+            );
         }
         private void SeedZakljucnaOcjena(ModelBuilder modelBuilder)
         {
@@ -1523,16 +1570,16 @@ namespace eDnevnik.Services
                 new Korisnik { KorisnikID = 39, Ime = "Zoran", Prezime = "Cvjetković", Email = "student25@gmail.com", Telefon = "+38700000025", KorisnickoIme = "student25", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
                 new Korisnik { KorisnikID = 40, Ime = "Anja", Prezime = "Lukić", Email = "student26@gmail.com", Telefon = "+38700000026", KorisnickoIme = "student26", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
                 new Korisnik { KorisnikID = 41, Ime = "Ramo", Prezime = "Hukić", Email = "student27@gmail.com", Telefon = "+38700000027", KorisnickoIme = "student27", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
-                new Korisnik { KorisnikID = 42, Ime = "Maida", Prezime = "Sulejmanović", Email = "student28@gmail.com", Telefon = "+38700000028", KorisnickoIme = "student28", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 43, Ime = "Mirela", Prezime = "Bajramović", Email = "student29@gmail.com", Telefon = "+38700000029", KorisnickoIme = "student29", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 44, Ime = "Filip", Prezime = "Lukić", Email = "student30@gmail.com", Telefon = "+38700000030", KorisnickoIme = "student30", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 45, Ime = "Mirza", Prezime = "Redžović", Email = "student31@gmail.com", Telefon = "+38700000031", KorisnickoIme = "student31", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 46, Ime = "Sara", Prezime = "Bulić", Email = "student32@gmail.com", Telefon = "+38700000032", KorisnickoIme = "student32", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 47, Ime = "Svetlana", Prezime = "Trivić", Email = "student33@gmail.com", Telefon = "+38700000033", KorisnickoIme = "student33", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 48, Ime = "Tarik", Prezime = "Banjac", Email = "student34@gmail.com", Telefon = "+38700000034", KorisnickoIme = "student34", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 49, Ime = "Jasmina", Prezime = "Kovačević", Email = "student35@gmail.com", Telefon = "+38700000035", KorisnickoIme = "student35", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 50, Ime = "Dino", Prezime = "Hodžić", Email = "student36@gmail.com", Telefon = "+38700000036", KorisnickoIme = "student36", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 51, Ime = "Amar", Prezime = "Kovačević", Email = "student37@gmail.com", Telefon = "+38700000037", KorisnickoIme = "student37", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 3 },
+                new Korisnik { KorisnikID = 42, Ime = "Maida", Prezime = "Sulejmanović", Email = "student28@gmail.com", Telefon = "+38700000028", KorisnickoIme = "student28", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 8 },
+                new Korisnik { KorisnikID = 43, Ime = "Mirela", Prezime = "Bajramović", Email = "student29@gmail.com", Telefon = "+38700000029", KorisnickoIme = "student29", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 8 },
+                new Korisnik { KorisnikID = 44, Ime = "Filip", Prezime = "Lukić", Email = "student30@gmail.com", Telefon = "+38700000030", KorisnickoIme = "student30", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 8 },
+                new Korisnik { KorisnikID = 45, Ime = "Mirza", Prezime = "Redžović", Email = "student31@gmail.com", Telefon = "+38700000031", KorisnickoIme = "student31", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 8 },
+                new Korisnik { KorisnikID = 46, Ime = "Sara", Prezime = "Bulić", Email = "student32@gmail.com", Telefon = "+38700000032", KorisnickoIme = "student32", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 9 },
+                new Korisnik { KorisnikID = 47, Ime = "Svetlana", Prezime = "Trivić", Email = "student33@gmail.com", Telefon = "+38700000033", KorisnickoIme = "student33", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 9 },
+                new Korisnik { KorisnikID = 48, Ime = "Tarik", Prezime = "Banjac", Email = "student34@gmail.com", Telefon = "+38700000034", KorisnickoIme = "student34", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 9 },
+                new Korisnik { KorisnikID = 49, Ime = "Jasmina", Prezime = "Kovačević", Email = "student35@gmail.com", Telefon = "+38700000035", KorisnickoIme = "student35", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 9 },
+                new Korisnik { KorisnikID = 50, Ime = "Dino", Prezime = "Hodžić", Email = "student36@gmail.com", Telefon = "+38700000036", KorisnickoIme = "student36", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 10 },
+                new Korisnik { KorisnikID = 51, Ime = "Amar", Prezime = "Kovačević", Email = "student37@gmail.com", Telefon = "+38700000037", KorisnickoIme = "student37", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 10 },
                 new Korisnik { KorisnikID = 52, Ime = "Ivana", Prezime = "Savić", Email = "student38@gmail.com", Telefon = "+38700000038", KorisnickoIme = "student38", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
                 new Korisnik { KorisnikID = 53, Ime = "Haris", Prezime = "Marić", Email = "student39@gmail.com", Telefon = "+38700000039", KorisnickoIme = "student39", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
                 new Korisnik { KorisnikID = 54, Ime = "Selma", Prezime = "Džafić", Email = "student40@gmail.com", Telefon = "+38700000040", KorisnickoIme = "student40", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },

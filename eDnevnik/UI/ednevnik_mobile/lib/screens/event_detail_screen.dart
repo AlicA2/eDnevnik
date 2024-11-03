@@ -308,7 +308,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         },
       )
           : const Center(
-        child: Text("No recommended events available."),
+        child: Text("Trenutno nemate preporučenih događaja."),
       ),
     );
   }

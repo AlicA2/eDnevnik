@@ -305,15 +305,6 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
               },
               body: ListTile(
                 title: Text(subject.opis ?? "No description available"),
-                trailing: subject.isExpanded == false
-                    ? IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () async {
-
-
-                  },
-                )
-                    : null,
               ),
 
               isExpanded: expanded,

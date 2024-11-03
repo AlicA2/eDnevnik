@@ -66,7 +66,8 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Poruka poslana uspješno!')),
+        SnackBar(content: Text('Poruka poslana uspješno!'),
+        backgroundColor: Colors.green),
       );
     }
   }

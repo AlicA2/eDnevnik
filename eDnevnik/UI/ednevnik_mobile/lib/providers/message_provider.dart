@@ -6,7 +6,7 @@ import 'base_provider.dart';
 
 class MessageProvider extends BaseProvider<Message> {
   static const String _baseUrl =
-  String.fromEnvironment("baseUrl", defaultValue: "http://10.0.2.2:7005/");
+  String.fromEnvironment("baseUrl", defaultValue: "https://10.0.2.2:7005/");
 
   static const String _endpoint = "Poruka";
 
