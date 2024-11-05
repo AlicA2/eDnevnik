@@ -3,6 +3,7 @@ import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/calendar_screen.dart';
+import '../screens/card_screen.dart';
 import '../screens/events_screen.dart';
 import '../screens/info_attendance_screen.dart';
 import '../screens/info_student_screen.dart';
@@ -150,6 +151,15 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => CalendarDetailScreen(),
+                ));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.list_alt),
+              title: Text("Pregled rezervacija"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CardDetailScreen(),
                 ));
               },
             ),

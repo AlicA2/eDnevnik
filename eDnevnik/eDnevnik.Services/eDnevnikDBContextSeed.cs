@@ -513,8 +513,7 @@ namespace eDnevnik.Services
                 new CasoviUcenici { CasoviUceniciID = 69, CasoviID = 7, UcenikID = 45, IsPrisutan = true, zakljucan = true },
                 new CasoviUcenici { CasoviUceniciID = 70, CasoviID = 7, UcenikID = 46, IsPrisutan = true, zakljucan = true },
 
-
-                            new CasoviUcenici { CasoviUceniciID = 71, CasoviID = 8, UcenikID = 15, IsPrisutan = true, zakljucan = true },
+                new CasoviUcenici { CasoviUceniciID = 71, CasoviID = 8, UcenikID = 15, IsPrisutan = true, zakljucan = true },
                 new CasoviUcenici { CasoviUceniciID = 72, CasoviID = 8, UcenikID = 16, IsPrisutan = true, zakljucan = true },
                 new CasoviUcenici { CasoviUceniciID = 73, CasoviID = 8, UcenikID = 17, IsPrisutan = true, zakljucan = true },
                 new CasoviUcenici { CasoviUceniciID = 74, CasoviID = 8, UcenikID = 18, IsPrisutan = true, zakljucan = true },
@@ -1250,7 +1249,32 @@ namespace eDnevnik.Services
                     Opis = "Mikrokontroleri i automatski sistemi",
                     SkolaID = 2,
                     StateMachine = "active"
+                },
+                new Predmet
+                {
+                    PredmetID = 41,
+                    Naziv = "Psihologija I",
+                    Opis = "Uvod u psihologiju i osnovne psihološke procese",
+                    SkolaID = 1,
+                    StateMachine = "active"
+                },
+                new Predmet
+                {
+                    PredmetID = 42,
+                    Naziv = "Sociologija I",
+                    Opis = "Osnove sociologije i društvenih struktura",
+                    SkolaID = 1,
+                    StateMachine = "active"
+                },
+                new Predmet
+                {
+                    PredmetID = 43,
+                    Naziv = "Geografija I",
+                    Opis = "Osnovne geografske karakteristike i prirodni resursi",
+                    SkolaID = 1,
+                    StateMachine = "active"
                 }
+
             );
         }
         private void SeedOdjeljenje(ModelBuilder modelBuilder)
@@ -1570,11 +1594,11 @@ namespace eDnevnik.Services
                 new Korisnik { KorisnikID = 39, Ime = "Zoran", Prezime = "Cvjetković", Email = "student25@gmail.com", Telefon = "+38700000025", KorisnickoIme = "student25", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
                 new Korisnik { KorisnikID = 40, Ime = "Anja", Prezime = "Lukić", Email = "student26@gmail.com", Telefon = "+38700000026", KorisnickoIme = "student26", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
                 new Korisnik { KorisnikID = 41, Ime = "Ramo", Prezime = "Hukić", Email = "student27@gmail.com", Telefon = "+38700000027", KorisnickoIme = "student27", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
-                new Korisnik { KorisnikID = 42, Ime = "Maida", Prezime = "Sulejmanović", Email = "student28@gmail.com", Telefon = "+38700000028", KorisnickoIme = "student28", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 8 },
-                new Korisnik { KorisnikID = 43, Ime = "Mirela", Prezime = "Bajramović", Email = "student29@gmail.com", Telefon = "+38700000029", KorisnickoIme = "student29", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 8 },
-                new Korisnik { KorisnikID = 44, Ime = "Filip", Prezime = "Lukić", Email = "student30@gmail.com", Telefon = "+38700000030", KorisnickoIme = "student30", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 8 },
-                new Korisnik { KorisnikID = 45, Ime = "Mirza", Prezime = "Redžović", Email = "student31@gmail.com", Telefon = "+38700000031", KorisnickoIme = "student31", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 8 },
-                new Korisnik { KorisnikID = 46, Ime = "Sara", Prezime = "Bulić", Email = "student32@gmail.com", Telefon = "+38700000032", KorisnickoIme = "student32", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 9 },
+                new Korisnik { KorisnikID = 42, Ime = "Maida", Prezime = "Sulejmanović", Email = "student28@gmail.com", Telefon = "+38700000028", KorisnickoIme = "student28", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 43, Ime = "Mirela", Prezime = "Bajramović", Email = "student29@gmail.com", Telefon = "+38700000029", KorisnickoIme = "student29", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 44, Ime = "Filip", Prezime = "Lukić", Email = "student30@gmail.com", Telefon = "+38700000030", KorisnickoIme = "student30", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 45, Ime = "Mirza", Prezime = "Redžović", Email = "student31@gmail.com", Telefon = "+38700000031", KorisnickoIme = "student31", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 46, Ime = "Sara", Prezime = "Bulić", Email = "student32@gmail.com", Telefon = "+38700000032", KorisnickoIme = "student32", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
                 new Korisnik { KorisnikID = 47, Ime = "Svetlana", Prezime = "Trivić", Email = "student33@gmail.com", Telefon = "+38700000033", KorisnickoIme = "student33", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 9 },
                 new Korisnik { KorisnikID = 48, Ime = "Tarik", Prezime = "Banjac", Email = "student34@gmail.com", Telefon = "+38700000034", KorisnickoIme = "student34", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 9 },
                 new Korisnik { KorisnikID = 49, Ime = "Jasmina", Prezime = "Kovačević", Email = "student35@gmail.com", Telefon = "+38700000035", KorisnickoIme = "student35", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 9 },

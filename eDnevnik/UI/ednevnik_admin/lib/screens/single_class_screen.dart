@@ -157,8 +157,8 @@ class _SingleClassListScreenState extends State<SingleClassListScreen> {
     return 'Naziv časa ne može sadržavati brojeve.';
   }
 
-  if (!RegExp(r'^[A-ZŽĐŠĆČ][a-zžđšćč]*$').hasMatch(value)) {
-    return 'Naziv časa mora početi velikim slovom, a ostali karakteri moraju biti mala slova.';
+  if (!RegExp(r'^[A-ZŽĐŠĆČ][a-zžđšćč\s]*$').hasMatch(value)) {
+    return 'Naziv časa mora početi velikim slovom, a ostali karakteri moraju biti mala slova ili razmaci.';
   }
 
   if (value.length < 4) {
@@ -190,26 +190,21 @@ String? _validateOpis(String? value) {
   }
 
   final sentences = value.split('. ');
-  for (var i = 0; i < sentences.length; i++) {
-    var sentence = sentences[i].trim();
+    for (var i = 0; i < sentences.length; i++) {
+      var sentence = sentences[i].trim();
 
-    if (!RegExp(r'^[A-ZŽĐŠĆČ][a-zžđšćč]*$').hasMatch(sentence)) {
-      return 'Svaka rečenica mora početi velikim slovom, a ostatak mora biti mala slova.';
-    }
+      if (sentence.isNotEmpty && !RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(sentence)) {
+        return 'Svaka rečenica mora početi velikim slovom.';
+      }
 
-    if (sentence.length > 1 &&
-        sentence.substring(1) != sentence.substring(1).toLowerCase()) {
-      return 'Svaka rečenica, osim prvog slova, mora sadržavati mala slova do tačke.';
-    }
+      if (i == sentences.length - 1 && !sentence.endsWith('.')) {
+        return 'Opis mora završiti sa tačkom.';
+      }
 
-    if (i == sentences.length - 1 && !sentence.endsWith('.')) {
-      return 'Opis mora završiti sa tačkom.';
+      if (i < sentences.length - 1 && sentence.endsWith('.')) {
+        return 'Samo zadnja rečenica može završavati sa tačkom.';
+      }
     }
-
-    if (i < sentences.length - 1 && sentence.endsWith('.')) {
-      return 'Zadnja rečenica mora završiti sa tačkom.';
-    }
-  }
 
   return null;
 }
@@ -327,7 +322,7 @@ String? _validateOpis(String? value) {
         }
       }
     } catch (e) {
-      _showErrorDialog(e.toString());
+      _showErrorDialog("Ne možete obrisati časovi koji su održani.");
     }
   }
 

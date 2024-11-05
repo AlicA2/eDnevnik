@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:ednevnik_admin/models/department_subject.dart';
 import 'package:ednevnik_admin/models/subject.dart';
@@ -98,16 +100,19 @@ class _DepartmentSubjectDetailScreenState
   }
 
   void _showAddSubjectDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        Subject? selectedSubject;
+  final _formKey = GlobalKey<FormBuilderState>();
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      Subject? selectedSubject;
 
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              title: Text("Dodaj predmet za odjeljenje"),
-              content: Column(
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: Text("Dodaj predmet za odjeljenje"),
+            content: FormBuilder(
+              key: _formKey,
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
@@ -120,83 +125,77 @@ class _DepartmentSubjectDetailScreenState
                     enabled: false,
                   ),
                   SizedBox(height: 16),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 12.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(5.0),
+                  FormBuilderDropdown<Subject>(
+                    name: 'subject',
+                    decoration: InputDecoration(
+                      labelText: "Izaberite predmet",
+                      border: OutlineInputBorder(),
                     ),
-                    child: DropdownButton<Subject>(
-                      isExpanded: true,
-                      hint: Text("Izaberite predmet"),
-                      value: selectedSubject,
-                      onChanged: (Subject? newValue) {
-                        setState(() {
-                          selectedSubject = newValue;
-                        });
-                      },
-                      items: _availableSubjects
-                          .map<DropdownMenuItem<Subject>>((Subject subject) {
-                        return DropdownMenuItem<Subject>(
-                          value: subject,
-                          child: Text(subject.naziv ?? "N/A"),
-                        );
-                      }).toList(),
-                      underline: SizedBox(),
+                    items: _availableSubjects.map((subject) {
+                      return DropdownMenuItem<Subject>(
+                        value: subject,
+                        child: Text(subject.naziv ?? "N/A"),
+                      );
+                    }).toList(),
+                    validator: FormBuilderValidators.required(
+                      errorText: "Ovo polje je obavezno",
                     ),
+                    onChanged: (Subject? newValue) {
+                      setState(() {
+                        selectedSubject = newValue;
+                      });
+                    },
                   ),
                 ],
               ),
-              actions: [
-                TextButton(
-                  onPressed: () {
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style:
+                    ElevatedButton.styleFrom(foregroundColor: Colors.black),
+                child: Text("Odustani"),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  if (_formKey.currentState?.saveAndValidate() ?? false) {
+                    var newDepartmentSubject = DepartmentSubject(
+                      null,
+                      selectedSubject!.predmetID,
+                      _selectedDepartment!.odjeljenjeID,
+                    );
+
+                    await _departmentSubjectProvider.Insert(newDepartmentSubject);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Uspješno ste dodali predmet za odjeljenje."),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+
+                    setState(() {
+                      _subjects.clear();
+                      _departmentSubjects.clear();
+                    });
+
+                    await _fetchDepartmentSubjects();
                     Navigator.of(context).pop();
-                  },
-                  style:
-                      ElevatedButton.styleFrom(foregroundColor: Colors.black),
-                  child: Text("Odustani"),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (selectedSubject != null) {
-                      var newDepartmentSubject = DepartmentSubject(
-                        null,
-                        selectedSubject!.predmetID,
-                        _selectedDepartment!.odjeljenjeID,
-                      );
-
-                      await _departmentSubjectProvider.Insert(
-                          newDepartmentSubject);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              "Uspješno ste dodali predmet za odjeljenje."),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-
-                      setState(() {
-                        _subjects.clear();
-                        _departmentSubjects.clear();
-                      });
-
-                      await _fetchDepartmentSubjects();
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.green),
-                  child: Text("Dodaj"),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.green),
+                child: Text("Dodaj"),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
 
   void _showDeleteConfirmationDialog(Subject subject) {
     showDialog(

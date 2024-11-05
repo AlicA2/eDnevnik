@@ -41,6 +41,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     _checkUserTicket();
     _fetchEvents();
     _fetchRecommendedEvents();
+    _userEventsProvider.addListener(_checkUserTicket);
+  }
+
+  @override
+  void dispose() {
+    _userEventsProvider.removeListener(_checkUserTicket);
+    super.dispose();
   }
 
   Future<void> _checkUserTicket() async {
@@ -225,14 +232,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
           if (paymentSuccess) {
             var userEventRequest = {
-              'DogadjajID': widget.dogadjajID,
+              'DogadjajId': widget.dogadjajID,
               'KorisnikID': loggedInUser?.korisnikId,
             };
 
             var userEvent = await _userEventsProvider.Insert(userEventRequest);
 
             if (userEvent != null) {
-              print("User Event inserted successfully with ID: ${userEvent.KorisnikDogadjajID}");
               setState(() {
                 _hasTicket = true;
               });

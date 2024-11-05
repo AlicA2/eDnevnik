@@ -441,8 +441,6 @@ class _SingleAnnualPlanProgramScreenState
       formValues['odjeljenjeID'] = _selectedDepartment?.odjeljenjeID;
       formValues['profesorID'] = loggedInUser?.korisnikId;
 
-      print('Form values: $formValues');
-
       try {
         if (widget.planProgram == null) {
           bool exists = await _planProgramProvider.checkIfExists(

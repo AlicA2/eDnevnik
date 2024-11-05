@@ -131,13 +131,11 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                 });
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text("Odgovor uspješno poslan"),
-                  backgroundColor: Colors.green,
-                ),
-              );
-
-
+                  SnackBar(
+                    content: const Text("Odgovor uspješno poslan"),
+                    backgroundColor: Colors.green,
+                  ),
+                );
               },
             ),
           ],
@@ -331,22 +329,23 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
                   DataCell(
                     Row(
                       children: [
-                        Tooltip(
-                          message: "Odgovorite na poruku",
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.reply,
-                              color: e.odgovor != null && e.odgovor!.isNotEmpty
-                                  ? Colors.grey
-                                  : Colors.blue,
-                            ),
-                            onPressed: e.odgovor != null && e.odgovor!.isNotEmpty
-                                ? null
-                                : () async {
+                        e.odgovor != null && e.odgovor!.isNotEmpty
+                            ? Icon(
+                                Icons.reply,
+                                color: Colors.grey,
+                              )
+                            : Tooltip(
+                                message: "Odgovorite na poruku",
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.reply,
+                                    color: Colors.blue,
+                                  ),
+                                  onPressed: () async {
                                     _replyToMessage(e);
                                   },
-                          ),
-                        ),
+                                ),
+                              ),
                       ],
                     ),
                   ),

@@ -1,7 +1,6 @@
 import 'package:ednevnik_admin/screens/received_message_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:ednevnik_admin/models/message.dart';
 import 'package:ednevnik_admin/providers/message_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
@@ -141,19 +140,33 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(right:16),
-          child: IconButton(
-            icon: Icon(Icons.mail_outline, color: Colors.blue),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ReceivedMessagesScreen(),
+          padding: const EdgeInsets.only(right: 16),
+          child: Row(
+            children: [
+              Text(
+                "Pregled poruka",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
-              );
-            },
+              ),
+              SizedBox(width: 8),
+              IconButton(
+                icon: Icon(Icons.mail_outline, color: Colors.blue),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReceivedMessagesScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
+
       ],
     );
   }

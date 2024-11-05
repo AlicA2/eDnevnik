@@ -129,5 +129,22 @@ namespace eDnevnik.Services.Service
             return await base.Update(id, request);
         }
 
+        public override async Task<Model.Models.Casovi> Delete(int id, CasoviDeleteRequest deleteRequest)
+        {
+            var casovi = await _context.Casovi.FindAsync(id);
+
+            if (casovi == null)
+            {
+                throw new UserException("Casovi not found.");
+            }
+
+            if (casovi.IsOdrzan)
+            {
+                throw new UserException("Ne mozete obrisati casove koji su odrzani.");
+            }
+
+            return await base.Delete(id, deleteRequest);
+        }
+
     }
 }

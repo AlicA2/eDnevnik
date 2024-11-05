@@ -55,6 +55,34 @@ namespace eDnevnik.Services.Service
             return base.AddInclude(query, search);
         }
 
+        public override async Task<Model.Models.Predmet> Delete(int id, PredmetDeleteRequest delete)
+        {
+            var entity = await _context.Predmeti.FindAsync(id);
+
+            if (entity == null)
+            {
+                throw new UserException("Predmet not found.");
+            }
+
+            try
+            {
+                _context.Predmeti.Remove(entity);
+                await _context.SaveChangesAsync();
+                return _mapper.Map<Model.Models.Predmet>(entity);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is Microsoft.Data.SqlClient.SqlException sqlEx && sqlEx.Number == 547)
+                {
+                    throw new UserException("Ne mozete obrisati Predmet zato sto je povezan sa jos jednim zapisom u sistemu.");
+                }
+                else
+                {
+                    throw new UserException("An unexpected error occurred while deleting the Predmet.");
+                }
+            }
+        }
+
         public override async Task<Model.Models.Predmet> Insert(PredmetInsertRequest insert)
         {
             var state = _baseState.CreateState("initial");

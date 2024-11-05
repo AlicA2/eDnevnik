@@ -307,100 +307,111 @@ class _YearlyPlanAndProgramDetailScreenState
   }
 
   Widget _buildDataListView() {
-    return SingleChildScrollView(
-      child: DataTable(
-        columns: const [
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Naziv godišnjeg plana i programa",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
+    return result == null || result!.result.isEmpty
+        ? Center(
+            child: Text(
+              "Nema podataka za prikazati.",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Odjeljenje",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Predmet",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "Broj Časova",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-          DataColumn(
-            label: Expanded(
-              child: Text(
-                "",
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
-          ),
-        ],
-        rows: result?.result.asMap().entries.map((entry) {
-              int index = entry.key + 1;
-              AnnualPlanProgram e = entry.value;
-              return DataRow(
-                cells: [
-                  DataCell(Text(e.naziv ?? "")),
-                  DataCell(Center(child: Text(_getDepartmentName(e.odjeljenjeID)))),
-                  DataCell(Text(_getSubjectName(e.predmetID))),
-                  DataCell(Center(child: Text(e.brojCasova?.toString() ?? ""))),
-                  DataCell(Row(
-                    children: [
-                      Tooltip(
-                        message: "Prelazak na stranicu časova",
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => ClassesDetailScreen(
-                                  annualPlanProgramID: e.godisnjiPlanProgramID,
-                                  predmetID: e.predmetID,
+          )
+        : SingleChildScrollView(
+            child: DataTable(
+              columns: const [
+                DataColumn(
+                  label: Expanded(
+                    child: Text(
+                      "Naziv godišnjeg plana i programa",
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text(
+                      "Odjeljenje",
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text(
+                      "Predmet",
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text(
+                      "Broj Časova",
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text(
+                      "",
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                ),
+              ],
+              rows: result?.result.asMap().entries.map((entry) {
+                    int index = entry.key + 1;
+                    AnnualPlanProgram e = entry.value;
+                    return DataRow(
+                      cells: [
+                        DataCell(Text(e.naziv ?? "")),
+                        DataCell(Center(
+                            child: Text(_getDepartmentName(e.odjeljenjeID)))),
+                        DataCell(Text(_getSubjectName(e.predmetID))),
+                        DataCell(Center(
+                            child: Text(e.brojCasova?.toString() ?? ""))),
+                        DataCell(Row(
+                          children: [
+                            Tooltip(
+                              message: "Prelazak na stranicu časova",
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ClassesDetailScreen(
+                                        annualPlanProgramID:
+                                            e.godisnjiPlanProgramID,
+                                        predmetID: e.predmetID,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: Colors.blue),
+                                child: Text("Časovi"),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: Tooltip(
+                                message:
+                                    "Uređivanje godišnjeg plana i programa",
+                                child: IconButton(
+                                  icon: Icon(Icons.edit),
+                                  onPressed: () {
+                                    _navigateToAddOrEditScreen(e);
+                                  },
                                 ),
                               ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.blue),
-                          child: Text("Časovi"),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16.0),
-                        child: Tooltip(
-                          message: "Uređivanje godišnjeg plana i programa",
-                          child: IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () {
-                              _navigateToAddOrEditScreen(e);
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-                ],
-              );
-            }).toList() ??
-            [],
-      ),
-    );
+                            ),
+                          ],
+                        )),
+                      ],
+                    );
+                  }).toList() ??
+                  [],
+            ),
+          );
   }
 
   Widget _buildAddButton() {

@@ -11,7 +11,6 @@ class StripeService {
   Future<bool> makePayment() async {
     try {
       String? paymentIntentClientSecret = await _createPaymentIntent(10, "usd");
-      print("Payment Intent Client Secret: $paymentIntentClientSecret");
 
       if (paymentIntentClientSecret == null) return false;
 
@@ -22,13 +21,15 @@ class StripeService {
         ),
       );
 
-      return await _processPayment();
+      await Stripe.instance.presentPaymentSheet();
 
+      return true;
     } catch (e) {
-      print(e);
+      print("Payment Error: $e");
       return false;
     }
   }
+
 
   Future<String?> _createPaymentIntent(int amount, String currency) async {
     try {

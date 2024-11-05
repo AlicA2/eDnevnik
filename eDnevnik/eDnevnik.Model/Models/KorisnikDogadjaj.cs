@@ -8,6 +8,7 @@ namespace eDnevnik.Model.Models
 {
     public class KorisnikDogadjaj
     {
+        public int KorisnikDogadjajID { get; set; }
         public int KorisnikID { get; set; }
         public int DogadjajId { get; set; }
     }

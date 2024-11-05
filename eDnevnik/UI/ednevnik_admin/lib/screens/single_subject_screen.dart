@@ -97,87 +97,86 @@ class _SingleSubjectListScreenState extends State<SingleSubjectListScreen> {
   }
 
   String? _validateNaziv(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Ovo polje ne može biti prazno.';
-  }
-
-  if (_containsNumbers(value)) {
-    return 'Naziv ne može sadržavati brojeve.';
-  }
-
-  if (_isDuplicateSubject(value)) {
-    return 'Predmet s ovim nazivom već postoji.';
-  }
-
-  final romanNumerals = [" I", " II", " III", " IV"];
-  String mainPart = value;
-  bool endsWithValidRomanNumeral = false;
-
-  for (var numeral in romanNumerals) {
-    if (value.endsWith(numeral)) {
-      mainPart = value.substring(0, value.length - numeral.length).trim();
-      endsWithValidRomanNumeral = true;
-      break;
-    }
-  }
-  
-  if (mainPart.isEmpty ||
-      !RegExp(r'^[A-ZŽĐŠĆČ][a-zžđšćč]*$').hasMatch(mainPart)) {
-    return 'Naziv mora početi velikim slovom i svi ostali karakteri moraju biti mala slova.';
-  }
-
-  if (mainPart.length < 4) {
-    return 'Naziv mora imati minimum 4 slova.';
-  }
-
-  if (!endsWithValidRomanNumeral) {
-    return 'Naziv mora završavati s razredom za koji je predmet " I", " II", " III" ili " IV".';
-  }
-
-  return null;
-}
-
-String? _validateOpis(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Ovo polje ne može biti prazno.';
-  }
-
-  if (_containsNumbers(value)) {
-    return 'Opis ne može sadržavati brojeve.';
-  }
-
-  if (!RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(value)) {
-    return 'Opis mora početi velikim slovom.';
-  }
-
-  if (value.length < 4) {
-    return 'Opis mora imati minimum 4 slova.';
-  }
-
-  final sentences = value.split('. ');
-  for (var i = 0; i < sentences.length; i++) {
-    var sentence = sentences[i].trim();
-
-    if (!RegExp(r'^[A-ZŽĐŠĆČ][a-zžđšćč]*$').hasMatch(sentence)) {
-      return 'Svaka rečenica mora početi velikim slovom, a ostatak mora biti mala slova.';
+    if (value == null || value.isEmpty) {
+      return 'Ovo polje ne može biti prazno.';
     }
 
-    if (sentence.length > 1 &&
-        sentence.substring(1) != sentence.substring(1).toLowerCase()) {
-      return 'Svaka rečenica, osim prvog slova, mora sadržavati mala slova do tačke.';
+    if (_containsNumbers(value)) {
+      return 'Naziv ne može sadržavati brojeve.';
     }
 
-    if (i == sentences.length - 1 && !sentence.endsWith('.')) {
-      return 'Opis mora završiti sa tačkom.';
+    if (_isDuplicateSubject(value)) {
+      return 'Predmet s ovim nazivom već postoji.';
     }
 
-    if (i < sentences.length - 1 && sentence.endsWith('.')) {
-      return 'Zadnja rečenica mora završiti sa tačkom.';
+    final romanNumerals = [" I", " II", " III", " IV"];
+    String mainPart = value;
+    bool endsWithValidRomanNumeral = false;
+
+    for (var numeral in romanNumerals) {
+      if (value.endsWith(numeral)) {
+        mainPart = value.substring(0, value.length - numeral.length).trim();
+        endsWithValidRomanNumeral = true;
+        break;
+      }
     }
+
+    final sentences = value.split('. ');
+    for (var i = 0; i < sentences.length; i++) {
+      var sentence = sentences[i].trim();
+
+      if (sentence.isNotEmpty && !RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(sentence)) {
+        return 'Svaka rečenica mora početi velikim slovom.';
+      }
+    }
+
+    if (mainPart.length < 4) {
+      return 'Naziv mora imati minimum 4 slova.';
+    }
+
+    if (!endsWithValidRomanNumeral) {
+      return 'Naziv mora završavati s razredom za koji je predmet " I", " II", " III" ili " IV".';
+    }
+
+    return null;
   }
 
-  return null;
-}
+  String? _validateOpis(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Ovo polje ne može biti prazno.';
+    }
+
+    if (_containsNumbers(value)) {
+      return 'Opis ne može sadržavati brojeve.';
+    }
+
+    if (!RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(value)) {
+      return 'Opis mora početi velikim slovom.';
+    }
+
+    if (value.length < 4) {
+      return 'Opis mora imati minimum 4 slova.';
+    }
+
+    final sentences = value.split('. ');
+    for (var i = 0; i < sentences.length; i++) {
+      var sentence = sentences[i].trim();
+
+      if (sentence.isNotEmpty && !RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(sentence)) {
+        return 'Svaka rečenica mora početi velikim slovom.';
+      }
+
+      if (i == sentences.length - 1 && !sentence.endsWith('.')) {
+        return 'Opis mora završiti sa tačkom.';
+      }
+
+      if (i < sentences.length - 1 && sentence.endsWith('.')) {
+        return 'Samo zadnja rečenica može završavati sa tačkom.';
+      }
+    }
+
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -329,7 +328,8 @@ String? _validateOpis(String? value) {
             ),
           );
         } catch (e) {
-          _showErrorDialog("Failed to delete subject: $e");
+          _showErrorDialog(
+              "Ne možete obrisati Predmet zato što je povezan sa još jednim zapisom u sistemu.");
         }
       }
     }
@@ -339,11 +339,13 @@ String? _validateOpis(String? value) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
+        title: Text('Greška'),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black, backgroundColor: Colors.white),
             child: Text('OK'),
           ),
         ],
@@ -401,7 +403,7 @@ String? _validateOpis(String? value) {
                   : () => _hideSubject(widget.subject!.predmetID!),
               style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white, backgroundColor: Colors.green),
-              child: Text("Deaktiviraj predmet"),
+              child: Text("Sakrij predmet"),
             ),
             SizedBox(width: 10),
           ],
@@ -514,7 +516,8 @@ String? _validateOpis(String? value) {
     final isEditMode = widget.subject != null;
     final isActiveState = widget.subject?.stateMachine == 'active';
     final isDraftState = widget.subject?.stateMachine == 'draft';
-    final isAddingNewSubject = widget.subject == null || widget.subject?.stateMachine == null;
+    final isAddingNewSubject =
+        widget.subject == null || widget.subject?.stateMachine == null;
 
     return FormBuilder(
       key: _formKey,
