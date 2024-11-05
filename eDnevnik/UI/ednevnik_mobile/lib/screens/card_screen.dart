@@ -179,6 +179,26 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
             backgroundColor: Colors.green,
           ),
         );
+
+        Future.delayed(Duration(seconds: 5), () {
+          if (mounted) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text("Obavještenje"),
+                content: Text(
+                  "Vaš povrat sredstava biće izvršen u kratkom roku. Zahvaljujemo na strpljenju.",
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text("U redu"),
+                  ),
+                ],
+              ),
+            );
+          }
+        });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -197,6 +217,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
       );
     }
   }
+
 
 
 
