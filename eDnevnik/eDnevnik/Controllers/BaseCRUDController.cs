@@ -18,7 +18,6 @@ namespace eDnevnik.Controllers
             _service = service;
         }
         [HttpPost]
-        //[Authorize(Roles="admin")]
         public virtual async Task<T> Insert(TInsert insert)
         {
             return await _service.Insert(insert);

@@ -12,7 +12,6 @@ class AnnualPlanProgram{
   int? odjeljenjeID;
   int? skolaID;
   int? profesorID;
-  // List<Classes> casovi = [];
 
   AnnualPlanProgram(this.godisnjiPlanProgramID,this.brojCasova,this.naziv,this.predmetID, this.odjeljenjeID,this.skolaID,this.profesorID);
 
