@@ -143,7 +143,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
             SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
-                _cancelReservation(event.dogadjajId!);
+                _showCancelConfirmationDialog(event.dogadjajId!);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
@@ -157,6 +157,35 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
     );
   }
 
+  void _showCancelConfirmationDialog(int dogadjajId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Potvrda otkazivanja"),
+          content: Text("Da li ste sigurni da želite otkazati rezervaciju?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.black,backgroundColor: Colors.white),
+              child: Text("Ne"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _cancelReservation(dogadjajId);
+              },
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.white,backgroundColor: Colors.red),
+              child: Text("Da"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _cancelReservation(int dogadjajId) async {
     try {
       var response = await _userEventsProvider.get(
@@ -166,39 +195,76 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
       if (response.result.isNotEmpty) {
         UserEvents userEvent = response.result.first;
 
-        await _userEventsProvider.delete(userEvent.korisnikDogadjajID!);
+        var eventResponse = await _eventsProvider.get(filter: {'DogadjajID': dogadjajId});
+        if (eventResponse.result.isNotEmpty) {
+          Events event = eventResponse.result.first;
 
-        setState(() {
-          userEvents.removeWhere((event) => event.korisnikDogadjajID == userEvent.korisnikDogadjajID);
-          userEventsList.removeWhere((event) => event.dogadjajId == dogadjajId);
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Rezervacija je uspješno otkazana"),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        Future.delayed(Duration(seconds: 5), () {
-          if (mounted) {
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text("Obavještenje"),
-                content: Text(
-                  "Vaš povrat sredstava biće izvršen u kratkom roku. Zahvaljujemo na strpljenju.",
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text("U redu"),
-                  ),
-                ],
+          DateTime? eventDateTime = event.datumDogadjaja;
+          if (eventDateTime == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Podaci o vremenu događaja nisu dostupni."),
+                backgroundColor: Colors.red,
               ),
             );
+            return;
           }
-        });
+
+          DateTime now = DateTime.now();
+          if (eventDateTime.isBefore(now)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Događaj je već završen. Otkazivanje nije moguće."),
+                backgroundColor: Colors.red,
+              ),
+            );
+            return;
+          }
+
+          if (eventDateTime.difference(now).inDays < 3) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Otkazivanje nije moguće manje od 3 dana prije događaja."),
+                backgroundColor: Colors.red,
+              ),
+            );
+            return;
+          }
+
+          await _userEventsProvider.delete(userEvent.korisnikDogadjajID!);
+
+          setState(() {
+            userEvents.removeWhere((event) => event.korisnikDogadjajID == userEvent.korisnikDogadjajID);
+            userEventsList.removeWhere((event) => event.dogadjajId == dogadjajId);
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Rezervacija je uspješno otkazana."),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          Future.delayed(Duration(seconds: 5), () {
+            if (mounted) {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text("Obavještenje"),
+                  content: Text(
+                    "Vaš povrat sredstava biće izvršen u kratkom roku. Zahvaljujemo na strpljenju.",
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text("U redu"),
+                    ),
+                  ],
+                ),
+              );
+            }
+          });
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -217,6 +283,7 @@ class _CardDetailScreenState extends State<CardDetailScreen> {
       );
     }
   }
+
 
 
 

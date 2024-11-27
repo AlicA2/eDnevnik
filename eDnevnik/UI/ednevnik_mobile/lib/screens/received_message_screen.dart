@@ -38,9 +38,7 @@ class _ReceivedMessagesScreenState extends State<ReceivedMessagesScreen> {
 
       var data = await _messageProvider.get(filter: filters);
       setState(() {
-        receivedMessages = data.result
-            .where((message) => message.odgovor != null && message.odgovor!.isNotEmpty)
-            .toList();
+        receivedMessages = data.result;
       });
     }
   }
