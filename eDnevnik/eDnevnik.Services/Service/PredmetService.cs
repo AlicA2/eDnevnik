@@ -132,7 +132,8 @@ namespace eDnevnik.Services.Service
                 KorisnikID = request.KorisnikID,
                 PredmetID = predmetID,
                 VrijednostOcjene = request.VrijednostOcjene,
-                Datum = request.Datum
+                Datum = request.Datum,
+                Komentar = request.Komentar
             };
 
             if (ocjena.VrijednostOcjene < 1 || ocjena.VrijednostOcjene > 5)

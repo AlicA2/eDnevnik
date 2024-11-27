@@ -319,8 +319,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
         if (allowedDates.isNotEmpty) {
           await _pickDate(context, allowedDates, setState);
         } else {
-          print(
-              'No valid class dates available for GodisnjiPlanProgramID $godisnjiPlanProgramID');
+          _showNoClassesDialog(context);
         }
       } else {
         _showNoClassesDialog(context);
@@ -334,6 +333,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
 
   Future<void> _addGradeDialog(BuildContext context) async {
     final _formKey = GlobalKey<FormBuilderState>();
+    String? komentar;
 
     Subject? selectedSubject =
         _availableSubjects.isNotEmpty ? _availableSubjects.first : null;
@@ -417,6 +417,19 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
                         ),
                       ),
                       SizedBox(height: 16),
+                      FormBuilderTextField(
+                        name: 'komentar',
+                        maxLines: 3,
+                        decoration: InputDecoration(
+                          labelText: 'Komentar',
+                          hintText: 'Unesite komentar',
+                        ),
+                        onChanged: (value) {
+                          komentar = value;
+                        },
+                        validator: _validateKomentar,
+                      ),
+                      SizedBox(height: 16),
                       Text(
                         "Datum: ${selectedDate != null ? selectedDate!.toLocal().toString().split(' ')[0] : "N/A"}",
                         style: TextStyle(
@@ -482,6 +495,7 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
                           selectedDate!,
                           widget.userID,
                           selectedSubject!.predmetID,
+                          komentar,
                         );
 
                         try {
@@ -540,6 +554,47 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
         );
       },
     );
+  }
+
+  bool _containsNumbers(String input) {
+    return input.contains(RegExp(r'[0-9]'));
+  }
+
+  String? _validateKomentar(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Komentar je obavezan i ne može biti prazan.';
+    }
+
+    if (_containsNumbers(value)) {
+      return 'Komentar ne može sadržavati brojeve.';
+    }
+
+    if (!RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(value)) {
+      return 'Komentar mora početi velikim slovom.';
+    }
+
+    if (value.length < 4) {
+      return 'Komentar mora imati minimum 4 slova.';
+    }
+
+    final sentences = value.split('. ');
+    for (var i = 0; i < sentences.length; i++) {
+      var sentence = sentences[i].trim();
+
+      if (sentence.isNotEmpty && !RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(sentence)) {
+        return 'Svaka rečenica mora početi velikim slovom.';
+      }
+
+      if (i == sentences.length - 1 && !sentence.endsWith('.')) {
+        return 'Komentar mora završiti sa tačkom.';
+      }
+
+      if (i < sentences.length - 1 && sentence.endsWith('.')) {
+        return 'Samo zadnja rečenica može završavati sa tačkom.';
+      }
+    }
+
+    return null;
   }
 
   void _showNoClassesDialog(BuildContext context) {
@@ -883,9 +938,47 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
                 String datum =
                     grade.datum?.toLocal().toString().split(' ')[0] ?? "N/A";
                 String vrijednostOcjene = grade.vrijednostOcjene.toString();
+                String komentar = grade.komentar ?? "N/A";
                 return ListTile(
-                  title: Text("Datum: $datum"),
-                  subtitle: Text("Ocjena: $vrijednostOcjene"),
+                  title: Row(
+                    children: [
+                      Text(
+                        "Datum: ",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(datum),
+                    ],
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text(
+                            "Ocjena: ",
+                            style: TextStyle(
+                                fontWeight:
+                                    FontWeight.bold),
+                          ),
+                          Text(vrijednostOcjene),
+                        ],
+                      ),
+                      SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text(
+                            "Komentar: ",
+                            style: TextStyle(
+                                fontWeight:
+                                    FontWeight.bold),
+                          ),
+                          Text(komentar),
+                        ],
+                      ),
+                    ],
+                  ),
                 );
               }).toList(),
             ),

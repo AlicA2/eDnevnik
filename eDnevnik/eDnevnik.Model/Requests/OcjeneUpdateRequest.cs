@@ -11,5 +11,6 @@ namespace eDnevnik.Model.Requests
         public int VrijednostOcjene { get; set; }
         public int PredmetID { get; set; }
         public DateTime Datum { get; set; }
+        public string? Komentar { get; set; }
     }
 }

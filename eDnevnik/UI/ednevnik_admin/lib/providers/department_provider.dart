@@ -12,7 +12,7 @@ import 'package:http/http.dart';
 class DepartmentProvider extends BaseProvider<Department> {
   DepartmentProvider() : super("Odjeljenje");
   static const String _baseUrl = String.fromEnvironment("baseUrl",
-      defaultValue: "http://localhost:7260/");
+      defaultValue: "https://localhost:7260/");
   static const String _endpoint = "Odjeljenje";
 
   @override
@@ -41,8 +41,6 @@ class DepartmentProvider extends BaseProvider<Department> {
     throw Exception("Failed to add student to department: ${response.body}");
   }
 }
-
-
 
   Future<List<Department>> getDepartmentsWithStudents({int? schoolID}) async {
     var url = "$_baseUrl$_endpoint/WithStudents";

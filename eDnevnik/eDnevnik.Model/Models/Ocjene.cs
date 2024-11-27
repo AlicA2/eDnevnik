@@ -13,5 +13,6 @@ namespace eDnevnik.Model.Models
         public DateTime Datum { get; set; }
         public int KorisnikID { get; set; }
         public int PredmetID { get; set; }
+        public string? Komentar { get; set; }
     }
 }

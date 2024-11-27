@@ -12,7 +12,7 @@ import 'package:http/http.dart';
 class SubjectProvider extends BaseProvider<Subject> {
   SubjectProvider() : super("Predmet");
   static const String _baseUrl = String.fromEnvironment("baseUrl",
-      defaultValue: "http://localhost:7260/");
+      defaultValue: "https://localhost:7260/");
   static const String _endpoint = "Predmet";
   @override
   Subject fromJson(data) {
@@ -26,7 +26,8 @@ class SubjectProvider extends BaseProvider<Subject> {
     var body = jsonEncode({
       "korisnikID": grade.korisnikID,
       "vrijednostOcjene": grade.vrijednostOcjene,
-      "datum": grade.datum?.toIso8601String()
+      "datum": grade.datum?.toIso8601String(),
+      "komentar": grade.komentar
     });
 
     var response = await http.post(uri, headers: headers, body: body);

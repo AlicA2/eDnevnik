@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 class UserProvider extends BaseProvider<User> {
   static const String _baseUrl =
-      String.fromEnvironment("baseUrl", defaultValue: "http://localhost:7260/");
+      String.fromEnvironment("baseUrl", defaultValue: "https://localhost:7260/");
   static const String _endpoint = "Korisnik";
 
   UserProvider() : super("Korisnik");

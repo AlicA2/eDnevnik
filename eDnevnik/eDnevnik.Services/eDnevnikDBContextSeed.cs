@@ -697,6 +697,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 9, 30, 9, 0, 0),
                     KorisnikID = 15,
                     PredmetID = 1,
+                    Komentar = "Odličan rezultat."
                 },
                 new Ocjene
                 {
@@ -705,6 +706,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 2, 10, 0, 0),
                     KorisnikID = 16,
                     PredmetID = 2,
+                    Komentar = "Vrlo dobar."
                 },
                 new Ocjene
                 {
@@ -713,6 +715,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 7, 9, 0, 0),
                     KorisnikID = 17,
                     PredmetID = 3,
+                    Komentar = "Zadovoljavajući rezultat."
                 },
                 new Ocjene
                 {
@@ -721,6 +724,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 9, 10, 0, 0),
                     KorisnikID = 18,
                     PredmetID = 4,
+                    Komentar = "Odličan uspjeh."
                 },
                 new Ocjene
                 {
@@ -729,6 +733,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 14, 9, 0, 0),
                     KorisnikID = 19,
                     PredmetID = 1,
+                    Komentar = "Vrlo dobar."
                 },
                 new Ocjene
                 {
@@ -737,6 +742,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 9, 30, 10, 0, 0),
                     KorisnikID = 20,
                     PredmetID = 2,
+                    Komentar = "Solidan trud."
                 },
                 new Ocjene
                 {
@@ -745,6 +751,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 2, 11, 0, 0),
                     KorisnikID = 21,
                     PredmetID = 3,
+                    Komentar = "Potrebno više truda."
                 },
                 new Ocjene
                 {
@@ -753,6 +760,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 7, 10, 0, 0),
                     KorisnikID = 22,
                     PredmetID = 4,
+                    Komentar = "Odličan rezultat."
                 },
                 new Ocjene
                 {
@@ -761,6 +769,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 9, 11, 0, 0),
                     KorisnikID = 23,
                     PredmetID = 1,
+                    Komentar = "Vrlo dobar."
                 },
                 new Ocjene
                 {
@@ -769,6 +778,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 14, 10, 0, 0),
                     KorisnikID = 24,
                     PredmetID = 2,
+                    Komentar = "Zadovoljavajući."
                 },
                 new Ocjene
                 {
@@ -777,6 +787,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 1, 9, 0, 0),
                     KorisnikID = 25,
                     PredmetID = 3,
+                    Komentar = "Odličan rad."
                 },
                 new Ocjene
                 {
@@ -785,6 +796,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 3, 10, 0, 0),
                     KorisnikID = 26,
                     PredmetID = 4,
+                    Komentar = "Nedovoljno zalaganje."
                 },
                 new Ocjene
                 {
@@ -793,6 +805,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 8, 9, 0, 0),
                     KorisnikID = 27,
                     PredmetID = 1,
+                    Komentar = "Dobar uspjeh."
                 },
                 new Ocjene
                 {
@@ -801,6 +814,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 10, 10, 0, 0),
                     KorisnikID = 28,
                     PredmetID = 2,
+                    Komentar = "Zadovoljavajući rezultat."
                 },
                 new Ocjene
                 {
@@ -809,6 +823,7 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 15, 9, 0, 0),
                     KorisnikID = 29,
                     PredmetID = 3,
+                    Komentar = "Vrlo dobar."
                 },
                 new Ocjene
                 {
@@ -817,9 +832,11 @@ namespace eDnevnik.Services
                     Datum = new DateTime(2024, 10, 1, 10, 0, 0),
                     KorisnikID = 30,
                     PredmetID = 4,
+                    Komentar = "Izuzetan uspjeh."
                 }
             );
         }
+
         private void SeedGodisnjiPlanProgram(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GodisnjiPlanProgram>().HasData(

@@ -187,6 +187,47 @@ namespace eDnevnik.Services.Service
             return _mapper.Map<Model.Models.Ocjene>(ocjenaEntity);
         }
 
+        public override async Task<Model.Models.Ocjene> Delete(int id, OcjeneDeleteRequest delete)
+        {
+            var ocjena = await _context.Ocjene.FindAsync(id);
+            if (ocjena == null)
+            {
+                throw new ArgumentException("Ocjena not found.");
+            }
+
+            int predmetID = ocjena.PredmetID;
+            int korisnikID = ocjena.KorisnikID;
+
+            _context.Ocjene.Remove(ocjena);
+            await _context.SaveChangesAsync();
+
+            var zakljucnaOcjenaValue = await CalculateZakljucnaOcjena(predmetID, korisnikID);
+
+            var existingZakljucnaOcjena = await _context.ZakljucnaOcjena
+                .FirstOrDefaultAsync(z => z.PredmetID == predmetID && z.KorisnikID == korisnikID);
+
+            if (existingZakljucnaOcjena != null)
+            {
+                existingZakljucnaOcjena.vrijednostZakljucneOcjene = zakljucnaOcjenaValue ?? 0;
+                _context.ZakljucnaOcjena.Update(existingZakljucnaOcjena);
+            }
+            else
+            {
+                var zakljucnaOcjena = new ZakljucnaOcjena
+                {
+                    PredmetID = predmetID,
+                    KorisnikID = korisnikID,
+                    vrijednostZakljucneOcjene = zakljucnaOcjenaValue ?? 0
+                };
+
+                await _context.ZakljucnaOcjena.AddAsync(zakljucnaOcjena);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<Model.Models.Ocjene>(ocjena);
+        }
+
 
     }
 }

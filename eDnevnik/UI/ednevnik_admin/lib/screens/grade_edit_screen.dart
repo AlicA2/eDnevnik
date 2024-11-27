@@ -17,12 +17,17 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
   late GradeProvider _gradesProvider;
   final Map<int, int?> _editedGrades = {};
 
+  final Map<int, GlobalKey<FormState>> _formKeys = {};
+
   bool _isDataChanged = false;
 
   @override
   void initState() {
     super.initState();
     _gradesProvider = context.read<GradeProvider>();
+    for (var grade in widget.grades) {
+      _formKeys[grade.ocjenaID!] = GlobalKey<FormState>();
+    }
   }
 
   @override
@@ -79,14 +84,31 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
                     child: Tooltip(
                         message: "Spasi", child: const Icon(Icons.save)),
                     onPressed: () async {
-                      await _saveEditedGrades();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Uspješno ste dodali novu ocjenu."),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                      Navigator.pop(context, true);
+                      bool allValid = true;
+                      for (var key in _formKeys.values) {
+                        if (!key.currentState!.validate()) {
+                          allValid = false;
+                        }
+                      }
+
+                      if (allValid) {
+                        await _saveEditedGrades();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Uspješno ste dodali novu ocjenu."),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        Navigator.pop(context, true);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'Molimo ispravite greške u komentarima prije spremanja.'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
                     },
                     backgroundColor: Colors.blue,
                   ),
@@ -136,53 +158,71 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
         margin: const EdgeInsets.only(bottom: 16),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Datum: ${grade.datum?.toLocal().toString().split(' ')[0] ?? 'N/A'}',
-                style: const TextStyle(color: Colors.black),
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<int>(
-                value: _editedGrades[grade.ocjenaID] ?? grade.vrijednostOcjene,
-                items: [1, 2, 3, 4, 5].map((int value) {
-                  return DropdownMenuItem<int>(
-                    value: value,
-                    child: Text(value.toString()),
-                  );
-                }).toList(),
-                onChanged: (int? newValue) {
-                  if (mounted) {
+          child: Form(
+            key: _formKeys[grade.ocjenaID],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Datum: ${grade.datum?.toLocal().toString().split(' ')[0] ?? 'N/A'}',
+                  style: const TextStyle(color: Colors.black),
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  initialValue: grade.komentar ?? '',
+                  decoration: const InputDecoration(
+                    labelText: 'Komentar:',
+                  ),
+                  onChanged: (newValue) {
                     setState(() {
-                      _editedGrades[grade.ocjenaID!] = newValue;
+                      grade.komentar = newValue;
                       _isDataChanged = true;
                     });
-                  }
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Ocjena:',
-                ),
-              ),
-              const SizedBox(height: 8),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    _confirmDelete(grade);        
                   },
-                  icon: Tooltip(
-                    message: "Brisanje ocjene",
-                    child: const Icon(Icons.delete, color: Colors.white),
-                  ),
-                  label: const Text('Obriši'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
+                  validator: _validateKomentar,
+                ),
+                const SizedBox(height: 8),
+                DropdownButtonFormField<int>(
+                  value:
+                      _editedGrades[grade.ocjenaID] ?? grade.vrijednostOcjene,
+                  items: [1, 2, 3, 4, 5].map((int value) {
+                    return DropdownMenuItem<int>(
+                      value: value,
+                      child: Text(value.toString()),
+                    );
+                  }).toList(),
+                  onChanged: (int? newValue) {
+                    if (mounted) {
+                      setState(() {
+                        _editedGrades[grade.ocjenaID!] = newValue;
+                        _isDataChanged = true;
+                      });
+                    }
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Ocjena:',
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      _confirmDelete(grade);
+                    },
+                    icon: Tooltip(
+                      message: "Brisanje ocjene",
+                      child: const Icon(Icons.delete, color: Colors.white),
+                    ),
+                    label: const Text('Obriši'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -217,11 +257,11 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
       try {
         await _gradesProvider.delete(grade.ocjenaID!);
         ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Uspješno ste izbrisali ocjenu."),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
+          SnackBar(
+            content: Text("Uspješno ste izbrisali ocjenu."),
+            backgroundColor: Colors.green,
+          ),
+        );
         setState(() {
           widget.grades.removeWhere((g) => g.ocjenaID == grade.ocjenaID);
           _isDataChanged = true;
@@ -234,9 +274,28 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
   }
 
   Future<void> _saveEditedGrades() async {
+    bool allValid = true;
+    for (var key in _formKeys.values) {
+      if (!key.currentState!.validate()) {
+        allValid = false;
+      }
+    }
+
+    if (!allValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Molimo ispravite greške u komentarima prije spremanja.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     try {
       for (var grade in widget.grades) {
-        if (_editedGrades.containsKey(grade.ocjenaID)) {
+        if (_editedGrades.containsKey(grade.ocjenaID) ||
+            grade.komentar != null) {
           int? updatedValue = _editedGrades[grade.ocjenaID];
           if (updatedValue != null && updatedValue != grade.vrijednostOcjene) {
             Grade updatedGrade = Grade(
@@ -245,14 +304,58 @@ class _EditGradesScreenState extends State<EditGradesScreen> {
               DateTime.now(),
               grade.korisnikID,
               grade.predmetID,
+              grade.komentar,
             );
             await _gradesProvider.Update(grade.ocjenaID!, updatedGrade);
             _isDataChanged = true;
+          } else if (grade.komentar != null) {
+            await _gradesProvider.Update(grade.ocjenaID!, grade);
           }
         }
       }
     } catch (e) {
       print("Error saving grades: $e");
     }
+  }
+
+  bool _containsNumbers(String input) {
+    return input.contains(RegExp(r'[0-9]'));
+  }
+
+  String? _validateKomentar(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Komentar je obavezan i ne može biti prazan.';
+    }
+
+    if (_containsNumbers(value)) {
+      return 'Komentar ne može sadržavati brojeve.';
+    }
+
+    if (!RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(value)) {
+      return 'Komentar mora početi velikim slovom.';
+    }
+
+    if (value.length < 4) {
+      return 'Komentar mora imati minimum 4 slova.';
+    }
+
+    final sentences = value.split('. ');
+    for (var i = 0; i < sentences.length; i++) {
+      var sentence = sentences[i].trim();
+
+      if (sentence.isNotEmpty && !RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(sentence)) {
+        return 'Svaka rečenica mora početi velikim slovom.';
+      }
+
+      if (i == sentences.length - 1 && !sentence.endsWith('.')) {
+        return 'Komentar mora završiti sa tačkom.';
+      }
+
+      if (i < sentences.length - 1 && sentence.endsWith('.')) {
+        return 'Samo zadnja rečenica može završavati sa tačkom.';
+      }
+    }
+
+    return null;
   }
 }

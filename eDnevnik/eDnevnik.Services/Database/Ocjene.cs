@@ -11,6 +11,7 @@ namespace eDnevnik.Services.Database
         public int OcjenaID { get; set; }
         public int VrijednostOcjene { get; set; }
         public DateTime Datum { get; set; }
+        public string? Komentar { get; set; }
         public int KorisnikID { get; set; }
         public virtual Korisnik Korisnik { get; set; } = null!;
         public int PredmetID { get; set; }
