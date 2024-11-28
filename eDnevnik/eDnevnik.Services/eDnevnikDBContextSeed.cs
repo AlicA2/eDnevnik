@@ -1572,7 +1572,7 @@ namespace eDnevnik.Services
                     LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=",
                     LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w=="
                 },
-                new Korisnik { KorisnikID = 3, Ime = "Tarik", Prezime = "Mehić", Email = "tarik.mehic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "roditelj", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 3, Ime = "Tarik", Prezime = "Mehić", Email = "tarik.mehic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "tarik", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
                 new Korisnik { KorisnikID = 4, Ime = "Denis", Prezime = "Musić", Email = "denis.music@gmail.com", Telefon = "060300400", KorisnickoIme = "denis", LozinkaHash = "JfJzsL3ngGWki+Dn67C+8WLy73I=", LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg==" },
                 new Korisnik { KorisnikID = 5, Ime = "Amar", Prezime = "Alić", Email = "amar.alic@gmail.com", Telefon = "+38700000001", KorisnickoIme = "amar", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
                 new Korisnik { KorisnikID = 6, Ime = "Almir", Prezime = "Gogolo", Email = "almir.gogolo@gmail.com", Telefon = "+38700000002", KorisnickoIme = "almir", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },

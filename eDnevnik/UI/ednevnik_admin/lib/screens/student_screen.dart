@@ -23,6 +23,7 @@ class StudentDetailScreen extends StatefulWidget {
 class _StudentDetailScreenState extends State<StudentDetailScreen> {
   List<User> _students = [];
   List<User> _studentss = [];
+  List<User> _studentsForDialog = [];
   bool _isLoading = true;
 
   List<School> _schools = [];
@@ -42,8 +43,8 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
     _schoolProvider = context.read<SchoolProvider>();
     _departmentProvider = context.read<DepartmentProvider>();
     _fetchUsers();
-
     _fetchSchools();
+    _fetchUsersForDialog();
   }
 
   Future<void> _fetchUsers() async {
@@ -52,6 +53,19 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
       if (mounted) {
         setState(() {
           _studentss = usersResponse.result;
+        });
+      }
+    } catch (e) {
+      print('Error fetching users: $e');
+    }
+  }
+
+  Future<void> _fetchUsersForDialog() async {
+    try {
+      var usersResponse = await _userProvider.get();
+      if (mounted) {
+        setState(() {
+          _studentsForDialog = usersResponse.result;
         });
       }
     } catch (e) {
@@ -401,15 +415,271 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
             ),
           ),
         ),
-        SizedBox(width: 16.0),
+        SizedBox(width: 32.0),
         Expanded(
           child: _buildSchoolDropdown(),
         ),
-        SizedBox(width: 16.0),
+        SizedBox(width: 32.0),
         Expanded(
           child: _buildDepartmentDropdown(),
         ),
+        SizedBox(width: 32.0),
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: ElevatedButton(
+              onPressed: () => _showAddStudentDialog(context),
+              child: Text("Dodaj učenika/cu"),
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.blue)),
+        ),
       ],
+    );
+  }
+
+  void _showAddStudentDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final _formKey = GlobalKey<FormState>();
+        final _nameController = TextEditingController();
+        final _surnameController = TextEditingController();
+        final _emailController = TextEditingController();
+        final _phoneController = TextEditingController();
+        final _usernameController = TextEditingController();
+        final _passwordController = TextEditingController();
+        final _passwordConfirmController = TextEditingController();
+        final userProvider = context.read<UserProvider>();
+
+        bool _isDuplicateUsername(String username) {
+          return _studentsForDialog
+              .any((student) => student.korisnickoIme == username);
+        }
+
+        bool _isDuplicatePhone(String phone) {
+          return _studentsForDialog.any((student) => student.telefon == phone);
+        }
+
+        bool _isDuplicateEmail(String email) {
+          return _studentsForDialog.any((student) => student.email == email);
+        }
+
+        String? _validateName(String? value) {
+          final regex = RegExp(r'^[A-ZŠĐČĆŽ][a-zšđčćž]*$');
+          if (value == null || value.isEmpty) {
+            return "Polje je obavezno";
+          }
+          if (!regex.hasMatch(value)) {
+            return "Morate početi ime velikim slovom, a ostala slova moraju biti mala";
+          }
+          if (value.length < 3) {
+            return "Polje mora imati najmanje 3 karaktera";
+          }
+          return null;
+        }
+
+        String? _validateSurname(String? value) {
+          final regex = RegExp(r'^[A-ZŠĐČĆŽ][a-zšđčćž]*$');
+          if (value == null || value.isEmpty) {
+            return "Polje je obavezno";
+          }
+          if (!regex.hasMatch(value)) {
+            return "Morate početi prezime velikim slovom, a ostala slova moraju biti mala";
+          }
+          if (value.length < 3) {
+            return "Polje mora imati najmanje 3 karaktera";
+          }
+          return null;
+        }
+
+        String? _validateEmail(String? value) {
+          if (value == null || value.isEmpty) {
+            return "Email je obavezan.";
+          }
+          final emailRegex = RegExp(
+              r'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@(gmail|outlook|hotmail)\.com$');
+          if (!emailRegex.hasMatch(value)) {
+            return "Email mora biti u formatu ime.prezime@gmail.com, outlook.com ili hotmail.com.";
+          }
+          if (_isDuplicateEmail(value)) {
+            return "Ovaj email već postoji";
+          }
+          return null;
+        }
+
+        String? _validatePhone(String? value) {
+          final phoneRegex = RegExp(r'^\d{3} \d{3} \d{3}$');
+          if (value == null || value.isEmpty) {
+            return "Unesite broj telefona";
+          }
+          if (!phoneRegex.hasMatch(value)) {
+            return "Telefon mora biti u formatu 000 000 000";
+          }
+          if (_isDuplicatePhone(value)) {
+            return "Ovaj telefon se već koristi";
+          }
+          return null;
+        }
+
+        String? _validateUsername(String? value) {
+          final regex = RegExp(r'^[a-zšđčćž]+(\d{1,2})?$');
+          if (value == null || value.isEmpty) {
+            return "Polje je obavezno";
+          }
+          if (!regex.hasMatch(value)) {
+            return "Korisničko ime mora sadržati samo mala slova i opcionalno jednocifreni ili dvocifreni broj na kraju.";
+          }
+          if (value.length < 3) {
+            return "Polje mora imati najmanje 3 karaktera";
+          }
+          if (_isDuplicateUsername(value)) {
+            return "Korisničko ime već postoji. Opcionalno možete dodati jednocifreni ili dvocifreni broj na kraju.";
+          }
+          return null;
+        }
+
+        String? _validatePassword(String? value) {
+          if (value == null || value.isEmpty) {
+            return "Polje je obavezno.";
+          }
+          if (value.length < 6) {
+            return "Minimalno 6 karaktera.";
+          }
+          return null;
+        }
+
+        String? _validateConfirmPassword(String? value) {
+          if (value == null || value != _passwordController.text) {
+            return "Lozinke se ne podudaraju";
+          }
+          return null;
+        }
+
+        return AlertDialog(
+          title: Text("Dodaj učenika/cu"),
+          content: SizedBox(
+            width: 600,
+            height: 350,
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                              controller: _nameController,
+                              decoration: InputDecoration(
+                                  labelText: "Ime", errorMaxLines: 2),
+                              validator: _validateName),
+                        ),
+                        SizedBox(width: 35.0),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _surnameController,
+                            decoration: InputDecoration(
+                                labelText: "Prezime", errorMaxLines: 2),
+                            validator: _validateSurname,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(labelText: "Email"),
+                      validator: _validateEmail,
+                    ),
+                    SizedBox(height: 16.0),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _phoneController,
+                            decoration: InputDecoration(labelText: "Telefon"),
+                            validator: _validatePhone,
+                          ),
+                        ),
+                        SizedBox(width: 35.0),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _usernameController,
+                            decoration: InputDecoration(
+                                labelText: "Korisničko ime", errorMaxLines: 3),
+                            validator: _validateUsername,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(labelText: "Lozinka"),
+                      obscureText: true,
+                      validator: _validatePassword,
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _passwordConfirmController,
+                      decoration: InputDecoration(labelText: "Potvrda lozinke"),
+                      obscureText: true,
+                      validator: _validateConfirmPassword,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("Otkaži"),
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.white)),
+            SizedBox(width: 8.0),
+            ElevatedButton(
+              onPressed: () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  try {
+                    var newUser = {
+                      'Ime': _nameController.text.trim(),
+                      'Prezime': _surnameController.text.trim(),
+                      'Email': _emailController.text.trim(),
+                      'Telefon': _phoneController.text.trim(),
+                      'KorisnickoIme': _usernameController.text.trim(),
+                      'Password': _passwordController.text.trim(),
+                      'PasswordPotvrda': _passwordConfirmController.text.trim(),
+                    };
+
+                    await userProvider.Insert(newUser);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Učenik uspješno dodat!"),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+
+                    Navigator.of(context).pop();
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Greška prilikom dodavanja učenika: $e"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              },
+              child: Text("Dodaj"),
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.green),
+            ),
+          ],
+        );
+      },
     );
   }
 
