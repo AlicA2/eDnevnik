@@ -839,13 +839,13 @@ namespace eDnevnik.Services
         private void SeedGodisnjiPlanProgram(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GodisnjiPlanProgram>().HasData(
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 1, brojCasova = 5, Naziv = "Plan i program za Matematiku I", OdjeljenjeID = 1, PredmetID = 1, SkolaID = 1, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 1, brojCasova = 5, Naziv = "Plan i program za Matematiku I", OdjeljenjeID = 1, PredmetID = 1, SkolaID = 1, ProfesorID = 69 },
                 new GodisnjiPlanProgram { GodisnjiPlanProgramID = 2, brojCasova = 5, Naziv = "Plan i program za Fiziku I", OdjeljenjeID = 1, PredmetID = 3, SkolaID = 1, ProfesorID = 2 },
                 new GodisnjiPlanProgram { GodisnjiPlanProgramID = 3, brojCasova = 5, Naziv = "Plan i program za Hemiju I", OdjeljenjeID = 1, PredmetID = 5, SkolaID = 1, ProfesorID = 3 },
                 new GodisnjiPlanProgram { GodisnjiPlanProgramID = 4, brojCasova = 5, Naziv = "Plan i program za Informatiku I", OdjeljenjeID = 1, PredmetID = 7, SkolaID = 1, ProfesorID = 4 },
                 new GodisnjiPlanProgram { GodisnjiPlanProgramID = 5, brojCasova = 5, Naziv = "Plan i program za Engleski I", OdjeljenjeID = 1, PredmetID = 9, SkolaID = 1, ProfesorID = 5 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 6, brojCasova = 5, Naziv = "Plan i program za Matematiku II", OdjeljenjeID = 4, PredmetID = 11, SkolaID = 1, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 6, brojCasova = 5, Naziv = "Plan i program za Matematiku II", OdjeljenjeID = 4, PredmetID = 11, SkolaID = 1, ProfesorID = 69 },
                 new GodisnjiPlanProgram { GodisnjiPlanProgramID = 7, brojCasova = 5, Naziv = "Plan i program za Fiziku II", OdjeljenjeID = 4, PredmetID = 12, SkolaID = 1, ProfesorID = 2 },
                 new GodisnjiPlanProgram { GodisnjiPlanProgramID = 8, brojCasova = 5, Naziv = "Plan i program za Hemiju II", OdjeljenjeID = 4, PredmetID = 13, SkolaID = 1, ProfesorID = 3 },
                 new GodisnjiPlanProgram { GodisnjiPlanProgramID = 9, brojCasova = 5, Naziv = "Plan i program za Informatiku II", OdjeljenjeID = 4, PredmetID = 14, SkolaID = 1, ProfesorID = 4 },
@@ -1301,7 +1301,7 @@ namespace eDnevnik.Services
                     OdjeljenjeID = 1,
                     NazivOdjeljenja = "1A",
                     SkolaID = 1,
-                    RazrednikID = 1
+                    RazrednikID = 61
                 },
                 new Odjeljenje
                 {
@@ -1446,7 +1446,7 @@ namespace eDnevnik.Services
                 {
                     KorisnikUlogaID = 1,
                     KorisnikID = 1,
-                    UlogaID = 1,
+                    UlogaID = 3,
                     DatumIzmjene = DateTime.Now
                 },
                 new KorisniciUloge
@@ -1533,7 +1533,8 @@ namespace eDnevnik.Services
                 new KorisniciUloge { KorisnikUlogaID = 65, KorisnikID = 65, UlogaID = 1, DatumIzmjene = DateTime.Now },
                 new KorisniciUloge { KorisnikUlogaID = 66, KorisnikID = 66, UlogaID = 1, DatumIzmjene = DateTime.Now },
                 new KorisniciUloge { KorisnikUlogaID = 67, KorisnikID = 67, UlogaID = 1, DatumIzmjene = DateTime.Now },
-                new KorisniciUloge { KorisnikUlogaID = 68, KorisnikID = 68, UlogaID = 1, DatumIzmjene = DateTime.Now }
+                new KorisniciUloge { KorisnikUlogaID = 68, KorisnikID = 68, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 69, KorisnikID = 69, UlogaID = 1, DatumIzmjene = DateTime.Now }
             );
         }
         private void SeedUloge(ModelBuilder modelBuilder)
@@ -1542,14 +1543,20 @@ namespace eDnevnik.Services
                 new Uloge
                 {
                     UlogaID = 1,
-                    Naziv = "admin",
-                    Opis = "admin ili profesor"
+                    Naziv = "profesor",
+                    Opis = "profesor"
                 },
                 new Uloge
                 {
                     UlogaID = 2,
                     Naziv = "učenik",
                     Opis = "učenik ili roditelj"
+                },
+                new Uloge
+                {
+                    UlogaID = 3,
+                    Naziv = "admin",
+                    Opis = "admin"
                 }
             );
         }
@@ -1643,8 +1650,8 @@ namespace eDnevnik.Services
                 new Korisnik { KorisnikID = 65, Ime = "Esad", Prezime = "Mehić", Email = "esad.mehic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "esad", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
                 new Korisnik { KorisnikID = 66, Ime = "Tarik", Prezime = "Čomor", Email = "tarik.comor@gmail.com", Telefon = "+38700000000", KorisnickoIme = "tarik2", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
                 new Korisnik { KorisnikID = 67, Ime = "Armin", Prezime = "Palačkić", Email = "armin.palackic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "armin", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 68, Ime = "Jašar", Prezime = "Hozić", Email = "jasar.hozic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "jasar", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" }
-
+                new Korisnik { KorisnikID = 68, Ime = "Jašar", Prezime = "Hozić", Email = "jasar.hozic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "jasar", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 69, Ime = "Hamza", Prezime = "Memić", Email = "hamza.memic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "hamza", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" }
                 );
         }
     }

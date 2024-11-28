@@ -85,7 +85,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     try {
       var classesResponse = await _classesProvider.get(filter: {
         'SkolaID': _selectedSchool?.skolaID,
-        'ProfesorID': loggedInUser?.korisnikId,
+        // 'ProfesorID': loggedInUser?.korisnikId,
       });
 
       if (mounted) {
@@ -108,7 +108,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     try {
       var annualPlanResponse = await _annualPlanProgramProvider.get(filter: {
         'SkolaID': _selectedSchool!.skolaID,
-        'ProfesorID': loggedInUser!.korisnikId,
+        // 'ProfesorID': loggedInUser!.korisnikId,
       });
 
       setState(() {
