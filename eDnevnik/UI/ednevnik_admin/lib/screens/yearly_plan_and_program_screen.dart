@@ -30,6 +30,7 @@ class _YearlyPlanAndProgramDetailScreenState
   late DepartmentProvider _departmentProvider;
   late SubjectProvider _subjectProvider;
   late SchoolProvider _schoolProvider;
+  late UserProvider _userProvider;
 
   TextEditingController _nazivController = TextEditingController();
 
@@ -38,6 +39,7 @@ class _YearlyPlanAndProgramDetailScreenState
   School? _selectedSchool;
   User? loggedInUser;
 
+  List<User> _profesors = [];
   List<Department> _departments = [];
   List<Subject> _subjects = [];
   List<School> _schools = [];
@@ -49,6 +51,7 @@ class _YearlyPlanAndProgramDetailScreenState
     _departmentProvider = context.read<DepartmentProvider>();
     _subjectProvider = context.read<SubjectProvider>();
     _schoolProvider = context.read<SchoolProvider>();
+    _userProvider = context.read<UserProvider>();
 
     _fetchSchools();
   }
@@ -70,7 +73,19 @@ class _YearlyPlanAndProgramDetailScreenState
             _fetchDepartments();
             _fetchSubjects();
             _fetchAnnualPlanPrograms();
+            _fetchProfesors();
           }
+        });
+      }
+    } catch (e) {}
+  }
+
+  Future<void> _fetchProfesors() async {
+    try {
+      var profesors = await _userProvider.get();
+      if (mounted) {
+        setState(() {
+          _profesors = profesors.result;
         });
       }
     } catch (e) {}
@@ -121,7 +136,7 @@ class _YearlyPlanAndProgramDetailScreenState
     var filter = {
       'naziv': _nazivController.text,
       'SkolaID': _selectedSchool?.skolaID,
-      'ProfesorID': loggedInUser?.korisnikId
+      // 'ProfesorID': loggedInUser?.korisnikId
     };
 
     if (_selectedDepartment != null && _selectedDepartment!.odjeljenjeID != 0) {
@@ -148,6 +163,16 @@ class _YearlyPlanAndProgramDetailScreenState
             .nazivOdjeljenja ??
         "";
   }
+
+  String _getProfesorsName(int? id) {
+  final user = _profesors.firstWhere(
+    (prof) => prof.korisnikId == id,
+    orElse: () => User(null, null, null, null, null, null, null, null, null, null, null),
+  );
+
+  return "${user.ime ?? ""} ${user.prezime ?? ""}".trim();
+}
+
 
   String _getSubjectName(int? id) {
     return _subjects
@@ -344,6 +369,14 @@ class _YearlyPlanAndProgramDetailScreenState
                 DataColumn(
                   label: Expanded(
                     child: Text(
+                      "Profesor",
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text(
                       "Broj Časova",
                       style: TextStyle(fontStyle: FontStyle.italic),
                     ),
@@ -367,6 +400,7 @@ class _YearlyPlanAndProgramDetailScreenState
                         DataCell(Center(
                             child: Text(_getDepartmentName(e.odjeljenjeID)))),
                         DataCell(Text(_getSubjectName(e.predmetID))),
+                        DataCell(Text(_getProfesorsName(e.profesorID))),
                         DataCell(Center(
                             child: Text(e.brojCasova?.toString() ?? ""))),
                         DataCell(Row(

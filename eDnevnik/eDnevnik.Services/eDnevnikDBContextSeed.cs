@@ -836,57 +836,56 @@ namespace eDnevnik.Services
                 }
             );
         }
-
         private void SeedGodisnjiPlanProgram(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GodisnjiPlanProgram>().HasData(
                 new GodisnjiPlanProgram { GodisnjiPlanProgramID = 1, brojCasova = 5, Naziv = "Plan i program za Matematiku I", OdjeljenjeID = 1, PredmetID = 1, SkolaID = 1, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 2, brojCasova = 5, Naziv = "Plan i program za Fiziku I", OdjeljenjeID = 1, PredmetID = 3, SkolaID = 1, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 3, brojCasova = 5, Naziv = "Plan i program za Hemiju I", OdjeljenjeID = 1, PredmetID = 5, SkolaID = 1, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 4, brojCasova = 5, Naziv = "Plan i program za Informatiku I", OdjeljenjeID = 1, PredmetID = 7, SkolaID = 1, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 5, brojCasova = 5, Naziv = "Plan i program za Engleski I", OdjeljenjeID = 1, PredmetID = 9, SkolaID = 1, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 2, brojCasova = 5, Naziv = "Plan i program za Fiziku I", OdjeljenjeID = 1, PredmetID = 3, SkolaID = 1, ProfesorID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 3, brojCasova = 5, Naziv = "Plan i program za Hemiju I", OdjeljenjeID = 1, PredmetID = 5, SkolaID = 1, ProfesorID = 3 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 4, brojCasova = 5, Naziv = "Plan i program za Informatiku I", OdjeljenjeID = 1, PredmetID = 7, SkolaID = 1, ProfesorID = 4 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 5, brojCasova = 5, Naziv = "Plan i program za Engleski I", OdjeljenjeID = 1, PredmetID = 9, SkolaID = 1, ProfesorID = 5 },
 
                 new GodisnjiPlanProgram { GodisnjiPlanProgramID = 6, brojCasova = 5, Naziv = "Plan i program za Matematiku II", OdjeljenjeID = 4, PredmetID = 11, SkolaID = 1, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 7, brojCasova = 5, Naziv = "Plan i program za Fiziku II", OdjeljenjeID = 4, PredmetID = 12, SkolaID = 1, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 8, brojCasova = 5, Naziv = "Plan i program za Hemiju II", OdjeljenjeID = 4, PredmetID = 13, SkolaID = 1, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 9, brojCasova = 5, Naziv = "Plan i program za Informatiku II", OdjeljenjeID = 4, PredmetID = 14, SkolaID = 1, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 10, brojCasova = 5, Naziv = "Plan i program za Engleski II", OdjeljenjeID = 4, PredmetID = 15, SkolaID = 1, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 7, brojCasova = 5, Naziv = "Plan i program za Fiziku II", OdjeljenjeID = 4, PredmetID = 12, SkolaID = 1, ProfesorID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 8, brojCasova = 5, Naziv = "Plan i program za Hemiju II", OdjeljenjeID = 4, PredmetID = 13, SkolaID = 1, ProfesorID = 3 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 9, brojCasova = 5, Naziv = "Plan i program za Informatiku II", OdjeljenjeID = 4, PredmetID = 14, SkolaID = 1, ProfesorID = 4 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 10, brojCasova = 5, Naziv = "Plan i program za Engleski II", OdjeljenjeID = 4, PredmetID = 15, SkolaID = 1, ProfesorID = 5 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 11, brojCasova = 5, Naziv = "Plan i program za Matematiku III", OdjeljenjeID = 6, PredmetID = 16, SkolaID = 1, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 12, brojCasova = 5, Naziv = "Plan i program za Fiziku III", OdjeljenjeID = 6, PredmetID = 17, SkolaID = 1, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 13, brojCasova = 5, Naziv = "Plan i program za Hemiju III", OdjeljenjeID = 6, PredmetID = 18, SkolaID = 1, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 14, brojCasova = 5, Naziv = "Plan i program za Informatiku III", OdjeljenjeID = 6, PredmetID = 19, SkolaID = 1, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 15, brojCasova = 5, Naziv = "Plan i program za Engleski III", OdjeljenjeID = 6, PredmetID = 20, SkolaID = 1, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 11, brojCasova = 5, Naziv = "Plan i program za Matematiku III", OdjeljenjeID = 6, PredmetID = 16, SkolaID = 1, ProfesorID = 6 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 12, brojCasova = 5, Naziv = "Plan i program za Fiziku III", OdjeljenjeID = 6, PredmetID = 17, SkolaID = 1, ProfesorID = 7 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 13, brojCasova = 5, Naziv = "Plan i program za Hemiju III", OdjeljenjeID = 6, PredmetID = 18, SkolaID = 1, ProfesorID = 8 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 14, brojCasova = 5, Naziv = "Plan i program za Informatiku III", OdjeljenjeID = 6, PredmetID = 19, SkolaID = 1, ProfesorID = 9 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 15, brojCasova = 5, Naziv = "Plan i program za Engleski III", OdjeljenjeID = 6, PredmetID = 20, SkolaID = 1, ProfesorID = 10 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 16, brojCasova = 5, Naziv = "Plan i program za Matematiku IV", OdjeljenjeID = 7, PredmetID = 21, SkolaID = 1, ProfesorID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 17, brojCasova = 5, Naziv = "Plan i program za Fiziku IV", OdjeljenjeID = 7, PredmetID = 22, SkolaID = 1, ProfesorID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 18, brojCasova = 5, Naziv = "Plan i program za Hemiju IV", OdjeljenjeID = 7, PredmetID = 23, SkolaID = 1, ProfesorID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 19, brojCasova = 5, Naziv = "Plan i program za Informatiku IV", OdjeljenjeID = 7, PredmetID = 24, SkolaID = 1, ProfesorID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 20, brojCasova = 5, Naziv = "Plan i program za Engleski IV", OdjeljenjeID = 7, PredmetID = 25, SkolaID = 1, ProfesorID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 16, brojCasova = 5, Naziv = "Plan i program za Matematiku IV", OdjeljenjeID = 7, PredmetID = 21, SkolaID = 1, ProfesorID = 6 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 17, brojCasova = 5, Naziv = "Plan i program za Fiziku IV", OdjeljenjeID = 7, PredmetID = 22, SkolaID = 1, ProfesorID = 7 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 18, brojCasova = 5, Naziv = "Plan i program za Hemiju IV", OdjeljenjeID = 7, PredmetID = 23, SkolaID = 1, ProfesorID = 8 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 19, brojCasova = 5, Naziv = "Plan i program za Informatiku IV", OdjeljenjeID = 7, PredmetID = 24, SkolaID = 1, ProfesorID = 9 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 20, brojCasova = 5, Naziv = "Plan i program za Engleski IV", OdjeljenjeID = 7, PredmetID = 25, SkolaID = 1, ProfesorID = 10 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 21, brojCasova = 5, Naziv = "Plan i program za Biologiju I", OdjeljenjeID = 8, PredmetID = 2, SkolaID = 2, ProfesorID = 3 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 22, brojCasova = 5, Naziv = "Plan i program za Fiziku I", OdjeljenjeID = 8, PredmetID = 4, SkolaID = 2, ProfesorID = 3 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 23, brojCasova = 5, Naziv = "Plan i program za Hemiju I", OdjeljenjeID = 8, PredmetID = 6, SkolaID = 2, ProfesorID = 3 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 24, brojCasova = 5, Naziv = "Plan i program za Informatiku I", OdjeljenjeID = 8, PredmetID = 8, SkolaID = 2, ProfesorID = 3 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 25, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku I", OdjeljenjeID = 8, PredmetID = 10, SkolaID = 2, ProfesorID = 3 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 21, brojCasova = 5, Naziv = "Plan i program za Biologiju I", OdjeljenjeID = 8, PredmetID = 2, SkolaID = 2, ProfesorID = 11 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 22, brojCasova = 5, Naziv = "Plan i program za Fiziku I", OdjeljenjeID = 8, PredmetID = 4, SkolaID = 2, ProfesorID = 12 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 23, brojCasova = 5, Naziv = "Plan i program za Hemiju I", OdjeljenjeID = 8, PredmetID = 6, SkolaID = 2, ProfesorID = 13 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 24, brojCasova = 5, Naziv = "Plan i program za Informatiku I", OdjeljenjeID = 8, PredmetID = 8, SkolaID = 2, ProfesorID = 14 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 25, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku I", OdjeljenjeID = 8, PredmetID = 10, SkolaID = 2, ProfesorID = 61 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 26, brojCasova = 5, Naziv = "Plan i program za Biologiju II", OdjeljenjeID = 11, PredmetID = 26, SkolaID = 2, ProfesorID = 4 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 27, brojCasova = 5, Naziv = "Plan i program za Fiziku II", OdjeljenjeID = 11, PredmetID = 27, SkolaID = 2, ProfesorID = 4 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 28, brojCasova = 5, Naziv = "Plan i program za Hemiju II", OdjeljenjeID = 11, PredmetID = 28, SkolaID = 2, ProfesorID = 4 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 29, brojCasova = 5, Naziv = "Plan i program za Informatiku II", OdjeljenjeID = 11, PredmetID = 29, SkolaID = 2, ProfesorID = 4 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 30, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku II", OdjeljenjeID = 11, PredmetID = 30, SkolaID = 2, ProfesorID = 4 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 26, brojCasova = 5, Naziv = "Plan i program za Biologiju II", OdjeljenjeID = 11, PredmetID = 26, SkolaID = 2, ProfesorID = 62 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 27, brojCasova = 5, Naziv = "Plan i program za Fiziku II", OdjeljenjeID = 11, PredmetID = 27, SkolaID = 2, ProfesorID = 63 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 28, brojCasova = 5, Naziv = "Plan i program za Hemiju II", OdjeljenjeID = 11, PredmetID = 28, SkolaID = 2, ProfesorID = 64 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 29, brojCasova = 5, Naziv = "Plan i program za Informatiku II", OdjeljenjeID = 11, PredmetID = 29, SkolaID = 2, ProfesorID = 65 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 30, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku II", OdjeljenjeID = 11, PredmetID = 30, SkolaID = 2, ProfesorID = 61 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 31, brojCasova = 5, Naziv = "Plan i program za Biologiju III", OdjeljenjeID = 13, PredmetID = 31, SkolaID = 2, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 32, brojCasova = 5, Naziv = "Plan i program za Fiziku III", OdjeljenjeID = 13, PredmetID = 32, SkolaID = 2, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 33, brojCasova = 5, Naziv = "Plan i program za Hemiju III", OdjeljenjeID = 13, PredmetID = 33, SkolaID = 2, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 34, brojCasova = 5, Naziv = "Plan i program za Informatiku III", OdjeljenjeID = 13, PredmetID = 34, SkolaID = 2, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 35, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku III", OdjeljenjeID = 13, PredmetID = 35, SkolaID = 2, ProfesorID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 31, brojCasova = 5, Naziv = "Plan i program za Biologiju III", OdjeljenjeID = 13, PredmetID = 31, SkolaID = 2, ProfesorID = 66 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 32, brojCasova = 5, Naziv = "Plan i program za Fiziku III", OdjeljenjeID = 13, PredmetID = 32, SkolaID = 2, ProfesorID = 67 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 33, brojCasova = 5, Naziv = "Plan i program za Hemiju III", OdjeljenjeID = 13, PredmetID = 33, SkolaID = 2, ProfesorID = 68 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 34, brojCasova = 5, Naziv = "Plan i program za Informatiku III", OdjeljenjeID = 13, PredmetID = 34, SkolaID = 2, ProfesorID = 65 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 35, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku III", OdjeljenjeID = 13, PredmetID = 35, SkolaID = 2, ProfesorID = 61 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 36, brojCasova = 5, Naziv = "Plan i program za Biologiju IV", OdjeljenjeID = 14, PredmetID = 36, SkolaID = 2, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 37, brojCasova = 5, Naziv = "Plan i program za Fiziku IV", OdjeljenjeID = 14, PredmetID = 37, SkolaID = 2, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 38, brojCasova = 5, Naziv = "Plan i program za Hemiju IV", OdjeljenjeID = 14, PredmetID = 38, SkolaID = 2, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 39, brojCasova = 5, Naziv = "Plan i program za Informatiku IV", OdjeljenjeID = 14, PredmetID = 39, SkolaID = 2, ProfesorID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 40, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku IV", OdjeljenjeID = 14, PredmetID = 40, SkolaID = 2, ProfesorID = 1 }
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 36, brojCasova = 5, Naziv = "Plan i program za Biologiju IV", OdjeljenjeID = 14, PredmetID = 36, SkolaID = 2, ProfesorID = 66 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 37, brojCasova = 5, Naziv = "Plan i program za Fiziku IV", OdjeljenjeID = 14, PredmetID = 37, SkolaID = 2, ProfesorID = 67 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 38, brojCasova = 5, Naziv = "Plan i program za Hemiju IV", OdjeljenjeID = 14, PredmetID = 38, SkolaID = 2, ProfesorID = 68 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 39, brojCasova = 5, Naziv = "Plan i program za Informatiku IV", OdjeljenjeID = 14, PredmetID = 39, SkolaID = 2, ProfesorID = 65 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 40, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku IV", OdjeljenjeID = 14, PredmetID = 40, SkolaID = 2, ProfesorID = 61 }
             );
         }
         private void SeedPoruke(ModelBuilder modelBuilder)
@@ -1526,8 +1525,15 @@ namespace eDnevnik.Services
                 new KorisniciUloge { KorisnikUlogaID = 57, KorisnikID = 57, UlogaID = 2, DatumIzmjene = DateTime.Now },
                 new KorisniciUloge { KorisnikUlogaID = 58, KorisnikID = 58, UlogaID = 2, DatumIzmjene = DateTime.Now },
                 new KorisniciUloge { KorisnikUlogaID = 59, KorisnikID = 59, UlogaID = 2, DatumIzmjene = DateTime.Now },
-                new KorisniciUloge { KorisnikUlogaID = 60, KorisnikID = 60, UlogaID = 2, DatumIzmjene = DateTime.Now }
-
+                new KorisniciUloge { KorisnikUlogaID = 60, KorisnikID = 60, UlogaID = 2, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 61, KorisnikID = 61, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 62, KorisnikID = 62, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 63, KorisnikID = 63, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 64, KorisnikID = 64, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 65, KorisnikID = 65, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 66, KorisnikID = 66, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 67, KorisnikID = 67, UlogaID = 1, DatumIzmjene = DateTime.Now },
+                new KorisniciUloge { KorisnikUlogaID = 68, KorisnikID = 68, UlogaID = 1, DatumIzmjene = DateTime.Now }
             );
         }
         private void SeedUloge(ModelBuilder modelBuilder)
@@ -1629,7 +1635,15 @@ namespace eDnevnik.Services
                 new Korisnik { KorisnikID = 57, Ime = "Džana", Prezime = "Begić", Email = "student43@gmail.com", Telefon = "+38700000043", KorisnickoIme = "student43", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
                 new Korisnik { KorisnikID = 58, Ime = "Elma", Prezime = "Imamović", Email = "student44@gmail.com", Telefon = "+38700000044", KorisnickoIme = "student44", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
                 new Korisnik { KorisnikID = 59, Ime = "Zlatan", Prezime = "Radić", Email = "student45@gmail.com", Telefon = "+38700000045", KorisnickoIme = "student45", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 60, Ime = "Anja", Prezime = "Petrović", Email = "student46@gmail.com", Telefon = "+38700000046", KorisnickoIme = "student46", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" }
+                new Korisnik { KorisnikID = 60, Ime = "Anja", Prezime = "Petrović", Email = "student46@gmail.com", Telefon = "+38700000046", KorisnickoIme = "student46", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 61, Ime = "Dževad", Prezime = "Mehić", Email = "dzevad.mehic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "dzevad", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 62, Ime = "Anes", Prezime = "Horozović", Email = "anes.horozovic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "anes", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 63, Ime = "Nijaz", Prezime = "Kajtaz", Email = "nijaz.kajtaz@gmail.com", Telefon = "+38700000000", KorisnickoIme = "nijaz", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 64, Ime = "Enes", Prezime = "Čepalo", Email = "enes.cepalo@gmail.com", Telefon = "+38700000000", KorisnickoIme = "enes", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 65, Ime = "Esad", Prezime = "Mehić", Email = "esad.mehic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "esad", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 66, Ime = "Tarik", Prezime = "Čomor", Email = "tarik.comor@gmail.com", Telefon = "+38700000000", KorisnickoIme = "tarik2", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 67, Ime = "Armin", Prezime = "Palačkić", Email = "armin.palackic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "armin", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 68, Ime = "Jašar", Prezime = "Hozić", Email = "jasar.hozic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "jasar", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" }
 
                 );
         }

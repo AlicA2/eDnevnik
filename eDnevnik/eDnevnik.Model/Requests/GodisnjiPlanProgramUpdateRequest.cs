@@ -13,5 +13,6 @@ namespace eDnevnik.Model.Requests
         public int OdjeljenjeID { get; set; }
         public int PredmetID { get; set; }
         public int SkolaID { get; set; }
+        public int ProfesorID { get; set; }
     }
 }

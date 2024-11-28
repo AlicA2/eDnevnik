@@ -34,20 +34,23 @@ class _SingleAnnualPlanProgramScreenState
   late SubjectProvider _subjectProvider;
   late SchoolProvider _schoolProvider;
   late ClassesProvider _classProvider;
+  late UserProvider _usersProvider;
 
   Department? _selectedDepartment;
   Subject? _selectedSubject;
   School? _selectedSchool;
+  User? _selectedProfesor;
 
+  int? _selectedProfesorID;
   int? _selectedDepartmentID;
   int? _selectedSchoolID;
   int? _selectedSubjectID;
   User? loggedInUser;
 
-
   List<Department> _departments = [];
   List<Subject> _subjects = [];
   List<School> _schools = [];
+  List<User> _profesor = [];
 
   @override
   void initState() {
@@ -57,14 +60,39 @@ class _SingleAnnualPlanProgramScreenState
     _subjectProvider = context.read<SubjectProvider>();
     _schoolProvider = context.read<SchoolProvider>();
     _classProvider = context.read<ClassesProvider>();
+    _usersProvider = context.read<UserProvider>();
 
     _fetchSchools();
+    _fetchUsers();
   }
 
-   @override
+  Future<void> _fetchUsers() async {
+    try {
+      var userList = await _usersProvider
+          .get(filter: {"isUlogeIncluded": true, "UlogaID": 1});
+      if (mounted) {
+        setState(() {
+          _profesor = userList.result;
+
+          if (widget.planProgram?.profesorID != null) {
+            _selectedProfesor = _profesor.firstWhere(
+              (profesor) =>
+                  profesor.korisnikId == widget.planProgram?.profesorID,
+              orElse: () => User(null, null, null, null, null, null, null, null,
+                  null, null, null),
+            );
+            _selectedProfesorID = _selectedProfesor?.korisnikId;
+          }
+        });
+      }
+    } catch (e) {
+      _showErrorDialog("Failed to load users: $e");
+    }
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    loggedInUser = context.watch<UserProvider>().loggedInUser;
   }
 
   Future<List<AnnualPlanProgram>> _fetchAllPlanPrograms() async {
@@ -261,6 +289,28 @@ class _SingleAnnualPlanProgramScreenState
                         ]),
                       ),
                       SizedBox(height: 20),
+                      FormBuilderDropdown<User>(
+                        name: 'profesor',
+                        decoration:
+                            InputDecoration(labelText: 'Izaberite profesora'),
+                        initialValue: _selectedProfesor,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Profesor je obavezan'),
+                        ]),
+                        onChanged: (User? newValue) {
+                          setState(() {
+                            _selectedProfesor = newValue;
+                          });
+                        },
+                        items: _profesor.map((User profesor) {
+                          return DropdownMenuItem<User>(
+                            value: profesor,
+                            child: Text('${profesor.ime} ${profesor.prezime}'),
+                          );
+                        }).toList(),
+                      ),
+                      SizedBox(height: 20),
                       FormBuilderDropdown<Department>(
                         name: 'odjeljenje',
                         decoration: InputDecoration(labelText: 'Odjeljenje'),
@@ -274,8 +324,6 @@ class _SingleAnnualPlanProgramScreenState
                             : (Department? newValue) {
                                 setState(() {
                                   _selectedDepartment = newValue;
-                                  _selectedDepartmentID =
-                                      newValue?.odjeljenjeID;
                                 });
                               },
                         items: _departments.map((Department department) {
@@ -439,7 +487,7 @@ class _SingleAnnualPlanProgramScreenState
       formValues['skolaID'] = _selectedSchool?.skolaID;
       formValues['predmetID'] = _selectedSubject?.predmetID;
       formValues['odjeljenjeID'] = _selectedDepartment?.odjeljenjeID;
-      formValues['profesorID'] = loggedInUser?.korisnikId;
+      formValues['profesorID'] = _selectedProfesor?.korisnikId;
 
       try {
         if (widget.planProgram == null) {
@@ -453,21 +501,21 @@ class _SingleAnnualPlanProgramScreenState
           }
           await _planProgramProvider.Insert(formValues);
           ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Plan i program je uspješno spašen!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+            SnackBar(
+              content: Text('Plan i program je uspješno spašen!'),
+              backgroundColor: Colors.green,
+            ),
+          );
         } else {
           final id = widget.planProgram!.godisnjiPlanProgramID;
           if (id != null) {
             await _planProgramProvider.Update(id, formValues);
             ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Plan and program je uspješno ažuriran!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+              SnackBar(
+                content: Text('Plan and program je uspješno ažuriran!'),
+                backgroundColor: Colors.green,
+              ),
+            );
           } else {
             _showErrorDialog('Neuspješno ažuriranje podataka.');
             return;
@@ -520,11 +568,11 @@ class _SingleAnnualPlanProgramScreenState
         if (confirmDelete == true) {
           await _planProgramProvider.delete(annualPlanProgramID);
           ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Plan i program je uspješno izbrisan!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+            SnackBar(
+              content: Text('Plan i program je uspješno izbrisan!'),
+              backgroundColor: Colors.green,
+            ),
+          );
           Navigator.pop(context, true);
         }
       } catch (e) {
@@ -542,7 +590,8 @@ class _SingleAnnualPlanProgramScreenState
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            style: ElevatedButton.styleFrom(foregroundColor: Colors.black,backgroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black, backgroundColor: Colors.white),
             child: Text('OK'),
           ),
         ],
