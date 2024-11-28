@@ -13,6 +13,7 @@ import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/user_events_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
+import 'package:ednevnik_admin/providers/user_roles_provider.dart';
 import 'package:ednevnik_admin/screens/single_subject_screen.dart';
 import 'package:ednevnik_admin/screens/subject_screen.dart';
 import 'package:ednevnik_admin/utils/util.dart';
@@ -47,6 +48,7 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => EventsProvider()),
       ChangeNotifierProvider(create: (_) => UserEventsProvider()),
       ChangeNotifierProvider(create: (_) => FinalGradeProvider()),
+      ChangeNotifierProvider(create: (_) => UserRolesProvider()),
 
     ],
     child: const MyMaterialApp(),

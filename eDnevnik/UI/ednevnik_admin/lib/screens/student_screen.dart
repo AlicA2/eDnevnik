@@ -1,5 +1,6 @@
 import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
+import 'package:ednevnik_admin/providers/user_roles_provider.dart';
 import 'package:ednevnik_admin/screens/grade_screen.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
@@ -449,6 +450,8 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         final _passwordController = TextEditingController();
         final _passwordConfirmController = TextEditingController();
         final userProvider = context.read<UserProvider>();
+        final userRolesProvider = context.read<UserRolesProvider>();
+
 
         bool _isDuplicateUsername(String username) {
           return _studentsForDialog
@@ -653,7 +656,19 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                       'PasswordPotvrda': _passwordConfirmController.text.trim(),
                     };
 
-                    await userProvider.Insert(newUser);
+                    var addedUser = await userProvider.Insert(newUser);
+
+                    var newRoleAssignment = {
+                    'KorisnikID': addedUser.korisnikId,
+                    'UlogaID': 2,
+                    'DatumIzmjene': DateTime.now().toIso8601String(),
+                  };
+
+                  try {
+                    await userRolesProvider.Insert(newRoleAssignment);
+                  } catch (e) {
+                    print("Error inserting role assignment: $e");
+                  }
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -661,6 +676,8 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                         backgroundColor: Colors.green,
                       ),
                     );
+
+                  _fetchUsers();
 
                     Navigator.of(context).pop();
                   } catch (e) {

@@ -78,6 +78,11 @@ namespace eDnevnik.Services
             CreateMap<Model.Requests.ZakljucnaOcjenaInsertRequest, Services.Database.ZakljucnaOcjena>();
             CreateMap<Model.Requests.ZakljucnaOcjenaUpdateRequest, Services.Database.ZakljucnaOcjena>();
             CreateMap<Model.Requests.ZakljucnaOcjenaDeleteRequest, Services.Database.ZakljucnaOcjena>();
+
+            CreateMap<Database.KorisniciUloge, Model.Models.KorisniciUloge>();
+            CreateMap<Model.Requests.KorisniciUlogeInsertRequest, Services.Database.KorisniciUloge>();
+            CreateMap<Model.Requests.KorisniciUlogeUpdateRequest, Services.Database.KorisniciUloge>();
+            CreateMap<Model.Requests.KorisniciUlogeDeleteRequest, Services.Database.KorisniciUloge>();
         }
     }
 }
