@@ -1,4 +1,8 @@
+import 'package:ednevnik_admin/models/school_year.dart';
 import 'package:ednevnik_admin/models/user.dart';
+import 'package:ednevnik_admin/models/user_detail.dart';
+import 'package:ednevnik_admin/providers/school_year_provider.dart';
+import 'package:ednevnik_admin/providers/user_detail_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/providers/user_roles_provider.dart';
 import 'package:ednevnik_admin/screens/grade_screen.dart';
@@ -24,6 +28,8 @@ class StudentDetailScreen extends StatefulWidget {
 class _StudentDetailScreenState extends State<StudentDetailScreen> {
   List<User> _students = [];
   List<User> _studentss = [];
+  List<UserDetail> _userDetailData = [];
+  List<SchoolYear> _schoolYearData = [];
   List<User> _studentsForDialog = [];
   bool _isLoading = true;
 
@@ -36,6 +42,8 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
   late UserProvider _userProvider;
   late SchoolProvider _schoolProvider;
   late DepartmentProvider _departmentProvider;
+  late SchoolYearProvider _schoolYearProvider;
+  late UserDetailProvider _userDetailProvider;
 
   @override
   void initState() {
@@ -43,6 +51,11 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
     _userProvider = context.read<UserProvider>();
     _schoolProvider = context.read<SchoolProvider>();
     _departmentProvider = context.read<DepartmentProvider>();
+    _schoolYearProvider = context.read<SchoolYearProvider>();
+    _userDetailProvider = context.read<UserDetailProvider>();
+
+    _fetchSchoolYear();
+    _fetchUserDetails();
     _fetchUsers();
     _fetchSchools();
     _fetchUsersForDialog();
@@ -54,6 +67,33 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
       if (mounted) {
         setState(() {
           _studentss = usersResponse.result;
+        });
+      }
+    } catch (e) {
+      print('Error fetching users: $e');
+    }
+  }
+
+  Future<void> _fetchUserDetails() async {
+    try {
+      var userDetailResponse = await _userDetailProvider.get();
+      if (mounted) {
+        setState(() {
+          _userDetailData = userDetailResponse.result;
+
+        });
+      }
+    } catch (e) {
+      print('Error fetching users: $e');
+    }
+  }
+
+  Future<void> _fetchSchoolYear() async {
+    try {
+      var schoolYearResponse = await _schoolYearProvider.get();
+      if (mounted) {
+        setState(() {
+          _schoolYearData = schoolYearResponse.result;
         });
       }
     } catch (e) {
@@ -262,6 +302,52 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
     );
   }
 
+  
+
+  Widget _buildScreenHeader() {
+    return Row(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(5),
+              topLeft: Radius.circular(20),
+              topRight: Radius.elliptical(5, 5),
+              bottomRight: Radius.circular(30.0),
+            ),
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            "Učenici",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(width: 32.0),
+        Expanded(
+          child: _buildSchoolDropdown(),
+        ),
+        SizedBox(width: 32.0),
+        Expanded(
+          child: _buildDepartmentDropdown(),
+        ),
+        SizedBox(width: 32.0),
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+          child: ElevatedButton(
+              onPressed: () => _showAddStudentDialog(context),
+              child: Text("Dodaj učenika/cu"),
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.blue)),
+        ),
+      ],
+    );
+  }
+
   void _openDialog() {
     final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
     Department? selectedDepartment;
@@ -393,50 +479,6 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
     );
   }
 
-  Widget _buildScreenHeader() {
-    return Row(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(5),
-              topLeft: Radius.circular(20),
-              topRight: Radius.elliptical(5, 5),
-              bottomRight: Radius.circular(30.0),
-            ),
-          ),
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            "Učenici",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        SizedBox(width: 32.0),
-        Expanded(
-          child: _buildSchoolDropdown(),
-        ),
-        SizedBox(width: 32.0),
-        Expanded(
-          child: _buildDepartmentDropdown(),
-        ),
-        SizedBox(width: 32.0),
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-          child: ElevatedButton(
-              onPressed: () => _showAddStudentDialog(context),
-              child: Text("Dodaj učenika/cu"),
-              style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, backgroundColor: Colors.blue)),
-        ),
-      ],
-    );
-  }
-
   void _showAddStudentDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -452,6 +494,11 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         final userProvider = context.read<UserProvider>();
         final userRolesProvider = context.read<UserRolesProvider>();
 
+        int? _selectYearOfPlan;
+        int? _selectedEnrollmentYear;
+        int? _selectedStudyYear;
+        
+        Department? selectedDepartment;
 
         bool _isDuplicateUsername(String username) {
           return _studentsForDialog
@@ -472,7 +519,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
             return "Polje je obavezno";
           }
           if (!regex.hasMatch(value)) {
-            return "Morate početi ime velikim slovom, a ostala slova moraju biti mala";
+            return "Morate početi ime velikim slovom, a ostala slova moraju biti mala. Nisu dozvoljeni brojevi i specijalni karakteri.";
           }
           if (value.length < 3) {
             return "Polje mora imati najmanje 3 karaktera";
@@ -486,7 +533,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
             return "Polje je obavezno";
           }
           if (!regex.hasMatch(value)) {
-            return "Morate početi prezime velikim slovom, a ostala slova moraju biti mala";
+            return "Morate početi prezime velikim slovom, a ostala slova moraju biti mala. Nisu dozvoljeni brojevi i specijalni karakteri.";
           }
           if (value.length < 3) {
             return "Polje mora imati najmanje 3 karaktera";
@@ -574,7 +621,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                           child: TextFormField(
                               controller: _nameController,
                               decoration: InputDecoration(
-                                  labelText: "Ime", errorMaxLines: 2),
+                                  labelText: "Ime", errorMaxLines: 3),
                               validator: _validateName),
                         ),
                         SizedBox(width: 35.0),
@@ -582,7 +629,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                           child: TextFormField(
                             controller: _surnameController,
                             decoration: InputDecoration(
-                                labelText: "Prezime", errorMaxLines: 2),
+                                labelText: "Prezime", errorMaxLines: 3),
                             validator: _validateSurname,
                           ),
                         ),
@@ -616,6 +663,96 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                       ],
                     ),
                     SizedBox(height: 16.0),
+
+                    Row(
+                    children: [
+                      Expanded(
+                        child: DropdownButtonFormField<int>(
+                          decoration: InputDecoration(
+                            labelText: "Godina upisa",
+                          ),
+                          items: _schoolYearData
+                              .map((year) => DropdownMenuItem<int>(
+                                    value: year.skolskaGodinaID,
+                                    child: Text(year.naziv ?? ""),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedEnrollmentYear = value;
+                            });
+                          },
+                          validator: (value) =>
+                              value == null ? "Odaberite godinu upisa" : null,
+                        ),
+                      ),
+                      SizedBox(width: 35.0),
+                      Expanded(
+                        child: DropdownButtonFormField<int>(
+                          decoration: InputDecoration(
+                            labelText: "Godina studija",
+                          ),
+                          items: [1, 2, 3, 4]
+                              .map((year) => DropdownMenuItem<int>(
+                                    value: year,
+                                    child: Text(year.toString()),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedStudyYear = value;
+                            });
+                          },
+                          validator: (value) =>
+                              value == null ? "Odaberite godinu studija" : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                    SizedBox(height: 16.0),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: FormBuilderDropdown<Department>(
+                              name: 'department',
+                              decoration: InputDecoration(labelText: 'Izaberite odjeljenje učeniku'),
+                              validator: (value) => value == null ? "Odaberite odjeljenje" : null,
+                              items: _departments.map((department) {
+                                return DropdownMenuItem<Department>(
+                                  value: department,
+                                  child: Text(department.nazivOdjeljenja ?? "N/A"),
+                                );
+                              }).toList(),
+                              onChanged: (Department? newValue) {
+                                setState(() {
+                                  selectedDepartment = newValue;
+                                });
+                              },
+                            ),
+                        ),
+                          Expanded(
+                        child: DropdownButtonFormField<int>(
+                          decoration: InputDecoration(
+                            labelText: "Godina koju učenik upisuje",
+                          ),
+                          items: _schoolYearData
+                              .map((year) => DropdownMenuItem<int>(
+                                    value: year.skolskaGodinaID,
+                                    child: Text(year.naziv ?? ""),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectYearOfPlan = value;
+                            });
+                          },
+                          validator: (value) =>
+                              value == null ? "Odaberite godinu upisa" : null,
+                        ),
+                      ),
+                      ],
+                    ),
+                      SizedBox(height: 16.0),
                     TextFormField(
                       controller: _passwordController,
                       decoration: InputDecoration(labelText: "Lozinka"),
@@ -668,6 +805,37 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                     await userRolesProvider.Insert(newRoleAssignment);
                   } catch (e) {
                     print("Error inserting role assignment: $e");
+                  }
+
+                  var userDetails = {
+                    'KorisnikID': addedUser.korisnikId,
+                    'GodinaUpisaID': _selectedEnrollmentYear,
+                    'GodinaStudija': _selectedStudyYear,
+                    'UpisanaSkolskaGodinaID': _selectYearOfPlan,
+
+                  };
+
+                  print("User details print : ${userDetails}");
+
+                  try {
+                    await _userDetailProvider.Insert(userDetails);
+                  } catch (e) {
+                    print("Error inserting user details: $e");
+                  }
+
+                  print("Student in department : ${addedUser.korisnikId} and ${selectedDepartment?.odjeljenjeID}");
+
+                  try{
+                    await _departmentProvider.addStudentToDepartment(
+                          selectedDepartment!.odjeljenjeID!,
+                          addedUser!.korisnikId!,
+                        );
+
+                        _fetchDepartmentsAndInitialize(
+                            schoolID: _selectedSchool?.skolaID);
+                  }catch(e){
+                    print("Error inserting student in department: $e");
+
                   }
 
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -794,21 +962,23 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
               DataCell(
                   Center(child: Text(department.nazivOdjeljenja ?? "N/A"))),
               DataCell(
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => GradeDetailScreen(
-                          userID: student.korisnikId,
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => GradeDetailScreen(
+                            userID: student.korisnikId,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: Text("Prikaz ocjena"),
                   ),
-                  child: Text("Prikaz ocjena"),
                 ),
               ),
               DataCell(

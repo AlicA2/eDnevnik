@@ -24,6 +24,11 @@ namespace eDnevnik.Services.Configurations
             builder.HasMany(k => k.KorisniciDogadjaji)
                    .WithOne(kd => kd.Korisnik)
                    .HasForeignKey(kd => kd.KorisnikID);
+
+            builder.HasOne(k => k.KorisnikDetalji)
+                   .WithOne(kd => kd.Korisnik)
+                   .HasForeignKey<KorisnikDetalji>(kd => kd.KorisnikID)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

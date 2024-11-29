@@ -44,6 +44,30 @@ namespace eDnevnik.Services
             SeedCasoviUcenici(modelBuilder);
             SeedZakljucnaOcjena(modelBuilder);
             SeedDogadjajiKorisnici(modelBuilder);
+            SeedSkolskaGodina(modelBuilder);
+            SeedKorisnikDetalji(modelBuilder);
+        }
+        private void SeedKorisnikDetalji(ModelBuilder modelBuilder)
+        {
+            //modelBuilder.Entity<KorisnikDetalji>().HasData(
+
+            //);
+        }
+
+        private void SeedSkolskaGodina(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SkolskaGodina>().HasData(
+                new SkolskaGodina
+                {
+                    SkolskaGodinaID = 1,
+                    Naziv = "2024/2025"
+                },
+                new SkolskaGodina
+                {
+                    SkolskaGodinaID = 2,
+                    Naziv = "2025/2026"
+                }
+            );
         }
         private void SeedDogadjajiKorisnici(ModelBuilder modelBuilder)
         {

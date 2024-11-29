@@ -11,7 +11,6 @@ namespace eDnevnik.Services.Database
         public int KorisnikDogadjajID { get; set; }
         public int KorisnikID { get; set; }
         public virtual Korisnik Korisnik { get; set; }
-
         public int DogadjajId { get; set; }
         public virtual Dogadjaji Dogadjaj { get; set; }
     }

@@ -83,6 +83,16 @@ namespace eDnevnik.Services
             CreateMap<Model.Requests.KorisniciUlogeInsertRequest, Services.Database.KorisniciUloge>();
             CreateMap<Model.Requests.KorisniciUlogeUpdateRequest, Services.Database.KorisniciUloge>();
             CreateMap<Model.Requests.KorisniciUlogeDeleteRequest, Services.Database.KorisniciUloge>();
+
+            CreateMap<Database.KorisnikDetalji, Model.Models.KorisnikDetalji>();
+            CreateMap<Model.Requests.KorisnikDetaljiInsertRequest, Services.Database.KorisnikDetalji>();
+            CreateMap<Model.Requests.KorisnikDetaljiUpdateRequest, Services.Database.KorisnikDetalji>();
+            CreateMap<Model.Requests.KorisnikDetaljiDeleteRequest, Services.Database.KorisnikDetalji>();
+
+            CreateMap<Database.SkolskaGodina, Model.Models.SkolskaGodina>();
+            CreateMap<Model.Requests.SkolskaGodinaInsertRequest, Services.Database.SkolskaGodina>();
+            CreateMap<Model.Requests.SkolskaGodinaUpdateRequest, Services.Database.SkolskaGodina>();
+            CreateMap<Model.Requests.SkolskaGodinaDeleteRequest, Services.Database.SkolskaGodina>();
         }
     }
 }

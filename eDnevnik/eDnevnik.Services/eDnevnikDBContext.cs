@@ -20,6 +20,8 @@ namespace eDnevnik.Services
         public DbSet<Dogadjaji> Dogadjaji { get; set; }
         public DbSet<KorisnikDogadjaj> KorisniciDogadjaji { get; set; }
         public DbSet<ZakljucnaOcjena> ZakljucnaOcjena { get; set; }
+        public DbSet<SkolskaGodina> SkolskaGodina { get; set; }
+        public DbSet<KorisnikDetalji> KorisnikDetalji { get; set; }
 
 
         public eDnevnikDBContext(DbContextOptions<eDnevnikDBContext> options):base(options)

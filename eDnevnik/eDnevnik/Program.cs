@@ -32,6 +32,8 @@ builder.Services.AddTransient<IDogadjajiService, DogadjajiService>();
 builder.Services.AddTransient<IKorisnikDogadjajService, KorisnikDogadjajService>();
 builder.Services.AddTransient<IZakljucnaOcjenaService, ZakljucnaOcjenaService>();
 builder.Services.AddTransient<IKorisniciUlogeService, KorisniciUlogeService>();
+builder.Services.AddTransient<IKorisnikDetaljiService, KorisnikDetaljiService>();
+builder.Services.AddTransient<ISkolskaGodinaService, SkolskaGodinaService>();
 
 
 builder.Services.AddTransient<BaseState>();
