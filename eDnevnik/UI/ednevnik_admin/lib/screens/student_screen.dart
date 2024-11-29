@@ -80,7 +80,6 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
       if (mounted) {
         setState(() {
           _userDetailData = userDetailResponse.result;
-
         });
       }
     } catch (e) {
@@ -302,8 +301,6 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
     );
   }
 
-  
-
   Widget _buildScreenHeader() {
     return Row(
       children: [
@@ -497,7 +494,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         int? _selectYearOfPlan;
         int? _selectedEnrollmentYear;
         int? _selectedStudyYear;
-        
+
         Department? selectedDepartment;
 
         bool _isDuplicateUsername(String username) {
@@ -663,96 +660,101 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                       ],
                     ),
                     SizedBox(height: 16.0),
-
                     Row(
-                    children: [
-                      Expanded(
-                        child: DropdownButtonFormField<int>(
-                          decoration: InputDecoration(
-                            labelText: "Godina upisa",
+                      children: [
+                        Expanded(
+                          child: DropdownButtonFormField<int>(
+                            decoration: InputDecoration(
+                              labelText: "Godina upisa u školu",
+                            ),
+                            items: _schoolYearData
+                                .map((year) => DropdownMenuItem<int>(
+                                      value: year.skolskaGodinaID,
+                                      child: Text(year.naziv ?? ""),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedEnrollmentYear = value;
+                              });
+                            },
+                            validator: (value) => value == null
+                                ? "Odaberite godinu kada se učenik upisao u školu"
+                                : null,
                           ),
-                          items: _schoolYearData
-                              .map((year) => DropdownMenuItem<int>(
-                                    value: year.skolskaGodinaID,
-                                    child: Text(year.naziv ?? ""),
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedEnrollmentYear = value;
-                            });
-                          },
-                          validator: (value) =>
-                              value == null ? "Odaberite godinu upisa" : null,
                         ),
-                      ),
-                      SizedBox(width: 35.0),
-                      Expanded(
-                        child: DropdownButtonFormField<int>(
-                          decoration: InputDecoration(
-                            labelText: "Godina studija",
+                        SizedBox(width: 35.0),
+                        Expanded(
+                          child: DropdownButtonFormField<int>(
+                            decoration: InputDecoration(
+                              labelText: "Godina studija",
+                            ),
+                            items: [1, 2, 3, 4]
+                                .map((year) => DropdownMenuItem<int>(
+                                      value: year,
+                                      child: Text(year.toString()),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedStudyYear = value;
+                              });
+                            },
+                            validator: (value) => value == null
+                                ? "Odaberite godinu studija"
+                                : null,
                           ),
-                          items: [1, 2, 3, 4]
-                              .map((year) => DropdownMenuItem<int>(
-                                    value: year,
-                                    child: Text(year.toString()),
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedStudyYear = value;
-                            });
-                          },
-                          validator: (value) =>
-                              value == null ? "Odaberite godinu studija" : null,
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
                     SizedBox(height: 16.0),
                     Row(
                       children: [
                         Expanded(
                           child: FormBuilderDropdown<Department>(
-                              name: 'department',
-                              decoration: InputDecoration(labelText: 'Izaberite odjeljenje učeniku'),
-                              validator: (value) => value == null ? "Odaberite odjeljenje" : null,
-                              items: _departments.map((department) {
-                                return DropdownMenuItem<Department>(
-                                  value: department,
-                                  child: Text(department.nazivOdjeljenja ?? "N/A"),
-                                );
-                              }).toList(),
-                              onChanged: (Department? newValue) {
-                                setState(() {
-                                  selectedDepartment = newValue;
-                                });
-                              },
-                            ),
-                        ),
-                          Expanded(
-                        child: DropdownButtonFormField<int>(
-                          decoration: InputDecoration(
-                            labelText: "Godina koju učenik upisuje",
+                            name: 'department',
+                            decoration: InputDecoration(
+                                labelText: 'Izaberite odjeljenje učeniku'),
+                            validator: (value) =>
+                                value == null ? "Odaberite odjeljenje" : null,
+                            items: _departments.map((department) {
+                              return DropdownMenuItem<Department>(
+                                value: department,
+                                child:
+                                    Text(department.nazivOdjeljenja ?? "N/A"),
+                              );
+                            }).toList(),
+                            onChanged: (Department? newValue) {
+                              setState(() {
+                                selectedDepartment = newValue;
+                              });
+                            },
                           ),
-                          items: _schoolYearData
-                              .map((year) => DropdownMenuItem<int>(
-                                    value: year.skolskaGodinaID,
-                                    child: Text(year.naziv ?? ""),
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectYearOfPlan = value;
-                            });
-                          },
-                          validator: (value) =>
-                              value == null ? "Odaberite godinu upisa" : null,
                         ),
-                      ),
+                        SizedBox(width: 35.0),
+                        Expanded(
+                          child: DropdownButtonFormField<int>(
+                            decoration: InputDecoration(
+                              labelText: "Školska godina koju učenik upisuje",
+                            ),
+                            items: _schoolYearData
+                                .map((year) => DropdownMenuItem<int>(
+                                      value: year.skolskaGodinaID,
+                                      child: Text(year.naziv ?? ""),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectYearOfPlan = value;
+                              });
+                            },
+                            validator: (value) =>
+                                value == null ? "Odaberite godinu upisa" : null,
+                          ),
+                        ),
                       ],
                     ),
-                      SizedBox(height: 16.0),
+                    SizedBox(height: 16.0),
                     TextFormField(
                       controller: _passwordController,
                       decoration: InputDecoration(labelText: "Lozinka"),
@@ -796,47 +798,46 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                     var addedUser = await userProvider.Insert(newUser);
 
                     var newRoleAssignment = {
-                    'KorisnikID': addedUser.korisnikId,
-                    'UlogaID': 2,
-                    'DatumIzmjene': DateTime.now().toIso8601String(),
-                  };
+                      'KorisnikID': addedUser.korisnikId,
+                      'UlogaID': 2,
+                      'DatumIzmjene': DateTime.now().toIso8601String(),
+                    };
 
-                  try {
-                    await userRolesProvider.Insert(newRoleAssignment);
-                  } catch (e) {
-                    print("Error inserting role assignment: $e");
-                  }
+                    try {
+                      await userRolesProvider.Insert(newRoleAssignment);
+                    } catch (e) {
+                      print("Error inserting role assignment: $e");
+                    }
 
-                  var userDetails = {
-                    'KorisnikID': addedUser.korisnikId,
-                    'GodinaUpisaID': _selectedEnrollmentYear,
-                    'GodinaStudija': _selectedStudyYear,
-                    'UpisanaSkolskaGodinaID': _selectYearOfPlan,
+                    var userDetails = {
+                      'KorisnikID': addedUser.korisnikId,
+                      'GodinaUpisaID': _selectedEnrollmentYear,
+                      'GodinaStudija': _selectedStudyYear,
+                      'UpisanaSkolskaGodinaID': _selectYearOfPlan,
+                    };
 
-                  };
+                    print("User details print : ${userDetails}");
 
-                  print("User details print : ${userDetails}");
+                    try {
+                      await _userDetailProvider.Insert(userDetails);
+                    } catch (e) {
+                      print("Error inserting user details: $e");
+                    }
 
-                  try {
-                    await _userDetailProvider.Insert(userDetails);
-                  } catch (e) {
-                    print("Error inserting user details: $e");
-                  }
+                    print(
+                        "Student in department : ${addedUser.korisnikId} and ${selectedDepartment?.odjeljenjeID}");
 
-                  print("Student in department : ${addedUser.korisnikId} and ${selectedDepartment?.odjeljenjeID}");
+                    try {
+                      await _departmentProvider.addStudentToDepartment(
+                        selectedDepartment!.odjeljenjeID!,
+                        addedUser!.korisnikId!,
+                      );
 
-                  try{
-                    await _departmentProvider.addStudentToDepartment(
-                          selectedDepartment!.odjeljenjeID!,
-                          addedUser!.korisnikId!,
-                        );
-
-                        _fetchDepartmentsAndInitialize(
-                            schoolID: _selectedSchool?.skolaID);
-                  }catch(e){
-                    print("Error inserting student in department: $e");
-
-                  }
+                      _fetchDepartmentsAndInitialize(
+                          schoolID: _selectedSchool?.skolaID);
+                    } catch (e) {
+                      print("Error inserting student in department: $e");
+                    }
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -845,7 +846,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                       ),
                     );
 
-                  _fetchUsers();
+                    _fetchUsers();
 
                     Navigator.of(context).pop();
                   } catch (e) {
@@ -913,6 +914,192 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
     );
   }
 
+  void _showStudentInfoDialog(BuildContext context, User student,
+      List<UserDetail> userDetails, List<SchoolYear> schoolYears) {
+    final userDetail = userDetails.firstWhere(
+      (detail) => detail.korisnikID == student.korisnikId,
+      orElse: () => UserDetail(null, null, null, null, null, null, null),
+    );
+
+    final enrollmentYear = userDetail != null
+        ? schoolYears
+            .firstWhere(
+              (year) => year.skolskaGodinaID == userDetail.godinaUpisaID,
+              orElse: () => SchoolYear(),
+            )
+            ?.naziv
+        : "N/A";
+
+    final enrollmentInSchoolYear = userDetail != null
+        ? schoolYears
+            .firstWhere(
+              (year) =>
+                  year.skolskaGodinaID == userDetail.upisanaSkolskaGodinaID,
+              orElse: () => SchoolYear(),
+            )
+            ?.naziv
+        : "N/A";
+
+    final studyYear = userDetail?.godinaStudija?.toString() ?? "N/A";
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Informacije o učeniku"),
+          content: SizedBox(
+            width: 600,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Ime: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: "${student.ime}",
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Prezime: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: "${student.prezime}",
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Email: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: "${student.email ?? "N/A"}",
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Telefon: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: "${student.telefon ?? "N/A"}",
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Korisničko ime: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: "${student.korisnickoIme}",
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Odjeljenje: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: "${_departments.firstWhere(
+                                (dept) =>
+                                    dept.ucenici?.contains(student) ?? false,
+                                orElse: () =>
+                                    Department(null, 'Unknown', null, null),
+                              ).nazivOdjeljenja ?? "N/A"}",
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Godina upisa učenika u školu: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: "$enrollmentYear",
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Godina studija: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: "$studyYear",
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Upisana školska godina: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: "$enrollmentInSchoolYear",
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("Zatvori"),
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black, backgroundColor: Colors.white),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildDataListView() {
     return SingleChildScrollView(
       child: DataTable(
@@ -938,6 +1125,16 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
               child: Text(
                 "Prikaži ocjene za učenika",
                 style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
+          DataColumn(
+            label: Expanded(
+              child: Center(
+                child: Text(
+                  "Info",
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
               ),
             ),
           ),
@@ -979,6 +1176,15 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                     ),
                     child: Text("Prikaz ocjena"),
                   ),
+                ),
+              ),
+              DataCell(
+                IconButton(
+                  icon: Icon(Icons.info_outline),
+                  onPressed: () {
+                    _showStudentInfoDialog(
+                        context, student, _userDetailData, _schoolYearData);
+                  },
                 ),
               ),
               DataCell(
