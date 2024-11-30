@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using eDnevnik.Model;
 using eDnevnik.Model.Requests;
 using eDnevnik.Model.SearchObjects;
 using eDnevnik.Services.Database;
 using eDnevnik.Services.IServices;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,5 +47,9 @@ namespace eDnevnik.Services.Service
             }
             return base.AddFilter(query, search);
         }
+
+        
+
+
     }
 }

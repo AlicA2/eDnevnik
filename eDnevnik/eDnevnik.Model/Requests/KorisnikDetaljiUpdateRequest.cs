@@ -11,7 +11,7 @@ namespace eDnevnik.Model.Requests
         public int? KorisnikID { get; set; }
         public int? GodinaStudija { get; set; }
         public bool? ObnavljaGodinu { get; set; }
-        public double? ProsjecnaOcjena { get; set; }
+        public decimal? ProsjecnaOcjena { get; set; }
         public int GodinaUpisaID { get; set; }
         public int UpisanaSkolskaGodinaID { get; set; }
     }

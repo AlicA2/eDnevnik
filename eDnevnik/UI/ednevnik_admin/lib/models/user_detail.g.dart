@@ -11,7 +11,7 @@ UserDetail _$UserDetailFromJson(Map<String, dynamic> json) => UserDetail(
       (json['korisnikID'] as num?)?.toInt(),
       (json['godinaStudija'] as num?)?.toInt(),
       json['obnavljaGodinu'] as bool?,
-      (json['prosjecnaOcjena'] as num?)?.toInt(),
+      (json['prosjecnaOcjena'] as num?)?.toDouble(),
       (json['godinaUpisaID'] as num?)?.toInt(),
       (json['upisanaSkolskaGodinaID'] as num?)?.toInt(),
     );

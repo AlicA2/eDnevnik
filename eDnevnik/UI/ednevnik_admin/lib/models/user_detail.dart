@@ -11,7 +11,7 @@ class UserDetail {
   int? korisnikID;
   int? godinaStudija;
   bool? obnavljaGodinu;
-  int? prosjecnaOcjena;
+  double? prosjecnaOcjena;
   int? godinaUpisaID;
   int? upisanaSkolskaGodinaID;
   

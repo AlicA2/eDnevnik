@@ -814,18 +814,14 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                       'GodinaUpisaID': _selectedEnrollmentYear,
                       'GodinaStudija': _selectedStudyYear,
                       'UpisanaSkolskaGodinaID': _selectYearOfPlan,
+                      'ProsjecnaOcjena' : 0.00,
                     };
-
-                    print("User details print : ${userDetails}");
 
                     try {
                       await _userDetailProvider.Insert(userDetails);
                     } catch (e) {
                       print("Error inserting user details: $e");
                     }
-
-                    print(
-                        "Student in department : ${addedUser.korisnikId} and ${selectedDepartment?.odjeljenjeID}");
 
                     try {
                       await _departmentProvider.addStudentToDepartment(
@@ -847,6 +843,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                     );
 
                     _fetchUsers();
+                    _fetchUserDetails();
 
                     Navigator.of(context).pop();
                   } catch (e) {
@@ -941,6 +938,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         : "N/A";
 
     final studyYear = userDetail?.godinaStudija?.toString() ?? "N/A";
+    final medianGrade = userDetail?.prosjecnaOcjena?.toString() ?? "N/A";
 
     showDialog(
       context: context,
@@ -1083,6 +1081,20 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 8.0),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Prosječna ocjena: ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text: "$medianGrade",
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -1146,6 +1158,14 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
               ),
             ),
           ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
         ],
         rows: _students.map((student) {
           var department = _departments.firstWhere(
@@ -1179,12 +1199,27 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                 ),
               ),
               DataCell(
-                IconButton(
-                  icon: Icon(Icons.info_outline),
-                  onPressed: () {
-                    _showStudentInfoDialog(
-                        context, student, _userDetailData, _schoolYearData);
-                  },
+                Tooltip(
+                  message: "Informacije o učeniku",
+                  child: IconButton(
+                    icon: Icon(Icons.info_outline),
+                    onPressed: () {
+                      _showStudentInfoDialog(
+                          context, student, _userDetailData, _schoolYearData);
+                    },
+                  ),
+                ),
+              ),
+              DataCell(
+                Tooltip(
+                  message: "Uređivanje učenika",
+                  child: Center(
+                    child: IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                      },
+                    ),
+                  ),
                 ),
               ),
               DataCell(

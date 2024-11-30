@@ -829,11 +829,14 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
                 ),
               ),
               DataCell(
-                IconButton(
-                  icon: Icon(Icons.info_outline),
-                  onPressed: () {
-                    _showGradeDetailsDialog(context, subject, grades);
-                  },
+                Tooltip(
+                  message: "Informacije o ocjenama",
+                  child: IconButton(
+                    icon: Icon(Icons.info_outline),
+                    onPressed: () {
+                      _showGradeDetailsDialog(context, subject, grades);
+                    },
+                  ),
                 ),
               ),
             ],
@@ -879,9 +882,11 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
           ),
           DataColumn(
             label: Expanded(
-              child: Text(
-                "Info",
-                style: TextStyle(fontStyle: FontStyle.italic),
+              child: Center(
+                child: Text(
+                  "Info",
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
               ),
             ),
           ),
