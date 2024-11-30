@@ -185,8 +185,6 @@ class _GradeDetailScreenState extends State<GradeDetailScreen> {
             _fetchedClasses = allClasses;
           });
         }
-      } else {
-        print("No casoviIDs found to filter classes.");
       }
     } catch (e) {
       print("Error fetching Classes: $e");

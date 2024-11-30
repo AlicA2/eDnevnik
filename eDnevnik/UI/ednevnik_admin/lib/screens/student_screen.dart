@@ -1182,18 +1182,18 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
+                      Navigator.of(context)
+                          .push(
                         MaterialPageRoute(
                           builder: (context) => GradeDetailScreen(
                             userID: student.korisnikId,
                           ),
                         ),
-                      );
+                      ).then((_) {
+                        _fetchUserDetails();
+                      });
                     },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.blue,
-                    ),
+                    style: ElevatedButton.styleFrom(foregroundColor: Colors.white, backgroundColor: Colors.blue),
                     child: Text("Prikaz ocjena"),
                   ),
                 ),
