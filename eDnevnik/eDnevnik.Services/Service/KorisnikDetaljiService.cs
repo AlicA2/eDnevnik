@@ -47,9 +47,5 @@ namespace eDnevnik.Services.Service
             }
             return base.AddFilter(query, search);
         }
-
-        
-
-
     }
 }

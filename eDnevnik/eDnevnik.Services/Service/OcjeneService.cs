@@ -77,6 +77,8 @@ namespace eDnevnik.Services.Service
 
             await _context.SaveChangesAsync();
 
+            await UpdateProsjecnaOcjena(ocjena.KorisnikID);
+
             return _mapper.Map<Model.Models.Ocjene>(ocjena);
         }
 
@@ -184,6 +186,8 @@ namespace eDnevnik.Services.Service
 
             await _context.SaveChangesAsync();
 
+            await UpdateProsjecnaOcjena(ocjenaEntity.KorisnikID);
+
             return _mapper.Map<Model.Models.Ocjene>(ocjenaEntity);
         }
 
@@ -225,7 +229,32 @@ namespace eDnevnik.Services.Service
 
             await _context.SaveChangesAsync();
 
+            await UpdateProsjecnaOcjena(korisnikID);
+
             return _mapper.Map<Model.Models.Ocjene>(ocjena);
+        }
+
+        private async Task UpdateProsjecnaOcjena(int korisnikID)
+        {
+            var zakljucneOcjene = await _context.ZakljucnaOcjena
+                .Where(z => z.KorisnikID == korisnikID)
+                .Select(z => z.vrijednostZakljucneOcjene)
+                .ToListAsync();
+
+            if (zakljucneOcjene.Any())
+            {
+                var prosjecnaOcjena = zakljucneOcjene.Average();
+
+                var korisnikDetalji = await _context.KorisnikDetalji
+                    .FirstOrDefaultAsync(kd => kd.KorisnikID == korisnikID);
+
+                if (korisnikDetalji != null)
+                {
+                    korisnikDetalji.ProsjecnaOcjena = Math.Round(prosjecnaOcjena, 2);
+                    _context.KorisnikDetalji.Update(korisnikDetalji);
+                    await _context.SaveChangesAsync();
+                }
+            }
         }
 
 

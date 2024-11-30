@@ -118,6 +118,9 @@ namespace eDnevnik.Services.Service
 
         public async Task<bool> AddOcjena(int predmetID, OcjeneInsertRequest request)
         {
+            var ocjenaEntity = _mapper.Map<Database.Ocjene>(request);
+
+
             var predmet = await _context.Predmeti
                 .Include(p => p.Ocjene)
                 .FirstOrDefaultAsync(p => p.PredmetID == predmetID);
@@ -169,7 +172,32 @@ namespace eDnevnik.Services.Service
 
             await _context.SaveChangesAsync();
 
+            await UpdateProsjecnaOcjena(ocjenaEntity.KorisnikID);
+
             return true;
+        }
+
+        private async Task UpdateProsjecnaOcjena(int korisnikID)
+        {
+            var zakljucneOcjene = await _context.ZakljucnaOcjena
+                .Where(z => z.KorisnikID == korisnikID)
+                .Select(z => z.vrijednostZakljucneOcjene)
+                .ToListAsync();
+
+            if (zakljucneOcjene.Any())
+            {
+                var prosjecnaOcjena = zakljucneOcjene.Average();
+
+                var korisnikDetalji = await _context.KorisnikDetalji
+                    .FirstOrDefaultAsync(kd => kd.KorisnikID == korisnikID);
+
+                if (korisnikDetalji != null)
+                {
+                    korisnikDetalji.ProsjecnaOcjena = Math.Round(prosjecnaOcjena, 2);
+                    _context.KorisnikDetalji.Update(korisnikDetalji);
+                    await _context.SaveChangesAsync();
+                }
+            }
         }
 
         public async Task<decimal?> CalculateZakljucnaOcjena(int predmetID, int korisnikID)
