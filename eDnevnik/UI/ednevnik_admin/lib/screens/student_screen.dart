@@ -866,6 +866,405 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
     );
   }
 
+  void _showEditStudentDialog(BuildContext context,User student) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final _formKey = GlobalKey<FormState>();
+        final _nameController = TextEditingController(text: student.ime);
+        final _surnameController = TextEditingController(text: student.prezime);
+        final _emailController = TextEditingController(text: student.email);
+        final _phoneController = TextEditingController(text: student.telefon);
+        final _usernameController = TextEditingController(text: student.korisnickoIme);
+        final _passwordController = TextEditingController();
+        final _passwordConfirmController = TextEditingController();
+        final userProvider = context.read<UserProvider>();
+        final userRolesProvider = context.read<UserRolesProvider>();
+
+        final userDetail = _userDetailData.firstWhere((detail) => detail.korisnikID == student.korisnikId,
+        orElse: () => UserDetail(null,null,null,null,null,null,null));
+
+        int? _selectYearOfPlan = userDetail.godinaUpisaID;
+        int? _selectedEnrollmentYear = userDetail.godinaStudija;
+        int? _selectedStudyYear = userDetail.upisanaSkolskaGodinaID;
+
+
+        
+        Department? selectedDepartment = _departments.firstWhere((department) => department.odjeljenjeID == student.odjeljenjeID,
+        orElse: () => Department(null,null,null,null,null));
+
+        bool _isDuplicateUsername(String username) {
+          return _studentsForDialog
+              .any((student) => student.korisnickoIme == username);
+        }
+
+        bool _isDuplicatePhone(String phone) {
+          return _studentsForDialog.any((student) => student.telefon == phone);
+        }
+
+        bool _isDuplicateEmail(String email) {
+          return _studentsForDialog.any((student) => student.email == email);
+        }
+
+        String? _validateName(String? value) {
+          final regex = RegExp(r'^[A-ZŠĐČĆŽ][a-zšđčćž]*$');
+          if (value == null || value.isEmpty) {
+            return "Polje je obavezno";
+          }
+          if (!regex.hasMatch(value)) {
+            return "Morate početi ime velikim slovom, a ostala slova moraju biti mala. Nisu dozvoljeni brojevi i specijalni karakteri.";
+          }
+          if (value.length < 3) {
+            return "Polje mora imati najmanje 3 karaktera";
+          }
+          return null;
+        }
+
+        String? _validateSurname(String? value) {
+          final regex = RegExp(r'^[A-ZŠĐČĆŽ][a-zšđčćž]*$');
+          if (value == null || value.isEmpty) {
+            return "Polje je obavezno";
+          }
+          if (!regex.hasMatch(value)) {
+            return "Morate početi prezime velikim slovom, a ostala slova moraju biti mala. Nisu dozvoljeni brojevi i specijalni karakteri.";
+          }
+          if (value.length < 3) {
+            return "Polje mora imati najmanje 3 karaktera";
+          }
+          return null;
+        }
+
+        String? _validateEmail(String? value) {
+          if (value == null || value.isEmpty) {
+            return "Email je obavezan.";
+          }
+          final emailRegex = RegExp(
+              r'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@(gmail|outlook|hotmail)\.com$');
+          if (!emailRegex.hasMatch(value)) {
+            return "Email mora biti u formatu ime.prezime@gmail.com, outlook.com ili hotmail.com.";
+          }
+          if (_isDuplicateEmail(value)) {
+            return "Ovaj email već postoji";
+          }
+          return null;
+        }
+
+        String? _validatePhone(String? value) {
+          final phoneRegex = RegExp(r'^\d{3} \d{3} \d{3}$');
+          if (value == null || value.isEmpty) {
+            return "Unesite broj telefona";
+          }
+          if (!phoneRegex.hasMatch(value)) {
+            return "Telefon mora biti u formatu 000 000 000";
+          }
+          if (_isDuplicatePhone(value)) {
+            return "Ovaj telefon se već koristi";
+          }
+          return null;
+        }
+
+        String? _validateUsername(String? value) {
+          final regex = RegExp(r'^[a-zšđčćž]+(\d{1,2})?$');
+          if (value == null || value.isEmpty) {
+            return "Polje je obavezno";
+          }
+          if (!regex.hasMatch(value)) {
+            return "Korisničko ime mora sadržati samo mala slova i opcionalno jednocifreni ili dvocifreni broj na kraju.";
+          }
+          if (value.length < 3) {
+            return "Polje mora imati najmanje 3 karaktera";
+          }
+          if (_isDuplicateUsername(value)) {
+            return "Korisničko ime već postoji. Opcionalno možete dodati jednocifreni ili dvocifreni broj na kraju.";
+          }
+          return null;
+        }
+
+        String? _validatePassword(String? value) {
+          if (value == null || value.isEmpty) {
+            return "Polje je obavezno.";
+          }
+          if (value.length < 6) {
+            return "Minimalno 6 karaktera.";
+          }
+          return null;
+        }
+
+        String? _validateConfirmPassword(String? value) {
+          if (value == null || value != _passwordController.text) {
+            return "Lozinke se ne podudaraju";
+          }
+          return null;
+        }
+
+        return AlertDialog(
+          title: Text("Uredi učenika/cu"),
+          content: SizedBox(
+            width: 600,
+            height: 350,
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                              controller: _nameController,
+                              decoration: InputDecoration(
+                                  labelText: "Ime", errorMaxLines: 3),
+                              validator: _validateName),
+                        ),
+                        SizedBox(width: 35.0),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _surnameController,
+                            decoration: InputDecoration(
+                                labelText: "Prezime", errorMaxLines: 3),
+                            validator: _validateSurname,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(labelText: "Email"),
+                      validator: _validateEmail,
+                    ),
+                    SizedBox(height: 16.0),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _phoneController,
+                            decoration: InputDecoration(labelText: "Telefon"),
+                            validator: _validatePhone,
+                          ),
+                        ),
+                        SizedBox(width: 35.0),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _usernameController,
+                            decoration: InputDecoration(
+                                labelText: "Korisničko ime", errorMaxLines: 3),
+                            validator: _validateUsername,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DropdownButtonFormField<int>(
+                            decoration: InputDecoration(
+                              labelText: "Godina upisa u školu",
+                            ),
+                            value: _selectedEnrollmentYear,
+                            items: _schoolYearData
+                                .map((year) => DropdownMenuItem<int>(
+                                      value: year.skolskaGodinaID,
+                                      child: Text(year.naziv ?? ""),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedEnrollmentYear = value;
+                              });
+                            },
+                            validator: (value) => value == null
+                                ? "Odaberite godinu kada se učenik upisao u školu"
+                                : null,
+                          ),
+                        ),
+                        SizedBox(width: 35.0),
+                        Expanded(
+                          child: DropdownButtonFormField<int>(
+                            decoration: InputDecoration(
+                              labelText: "Godina studija",
+                            ),
+                            value: _selectedStudyYear,
+                            items: [1, 2, 3, 4]
+                                .map((year) => DropdownMenuItem<int>(
+                                      value: year,
+                                      child: Text(year.toString()),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedStudyYear = value;
+                              });
+                            },
+                            validator: (value) => value == null
+                                ? "Odaberite godinu studija"
+                                : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0),
+                    Row(
+                    children: [
+                      Expanded(
+                        child: DropdownButtonFormField<Department>(
+                          decoration: InputDecoration(labelText: "Odjeljenje"),
+                          value: selectedDepartment,
+                          items: _departments.map((dept) {
+                            return DropdownMenuItem<Department>(
+                              value: dept,
+                              child: Text(dept.nazivOdjeljenja ?? ""),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            selectedDepartment = value;
+                          },
+                          validator: (value) {
+                            if (value == null) {
+                              return "Odaberite odjeljenje";
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                        SizedBox(width: 35.0),
+                        Expanded(
+                          child: DropdownButtonFormField<int>(
+                            decoration: InputDecoration(
+                              labelText: "Školska godina koju učenik upisuje",
+                            ),
+                              value:_selectedStudyYear,
+                            items: _schoolYearData
+                                .map((year) => DropdownMenuItem<int>(
+                                      value: year.skolskaGodinaID,
+                                      child: Text(year.naziv ?? ""),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectYearOfPlan = value;
+                              });
+                            },
+                            validator: (value) =>
+                                value == null ? "Odaberite godinu upisa" : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(labelText: "Lozinka"),
+                      obscureText: true,
+                      validator: _validatePassword,
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _passwordConfirmController,
+                      decoration: InputDecoration(labelText: "Potvrda lozinke"),
+                      obscureText: true,
+                      validator: _validateConfirmPassword,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("Otkaži"),
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.white)),
+            SizedBox(width: 8.0),
+            ElevatedButton(
+              onPressed: () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  try {
+                    var newUser = {
+                      'Ime': _nameController.text.trim(),
+                      'Prezime': _surnameController.text.trim(),
+                      'Email': _emailController.text.trim(),
+                      'Telefon': _phoneController.text.trim(),
+                      'KorisnickoIme': _usernameController.text.trim(),
+                      'Password': _passwordController.text.trim(),
+                      'PasswordPotvrda': _passwordConfirmController.text.trim(),
+                    };
+
+                    var addedUser = await userProvider.Insert(newUser);
+
+                    var newRoleAssignment = {
+                      'KorisnikID': addedUser.korisnikId,
+                      'UlogaID': 2,
+                      'DatumIzmjene': DateTime.now().toIso8601String(),
+                    };
+
+                    try {
+                      await userRolesProvider.Insert(newRoleAssignment);
+                    } catch (e) {
+                      print("Error inserting role assignment: $e");
+                    }
+
+                    var userDetails = {
+                      'KorisnikID': addedUser.korisnikId,
+                      'GodinaUpisaID': _selectedEnrollmentYear,
+                      'GodinaStudija': _selectedStudyYear,
+                      'UpisanaSkolskaGodinaID': _selectYearOfPlan,
+                      'ProsjecnaOcjena' : 0.00,
+                    };
+
+                    try {
+                      await _userDetailProvider.Insert(userDetails);
+                    } catch (e) {
+                      print("Error inserting user details: $e");
+                    }
+
+                    try {
+                      await _departmentProvider.addStudentToDepartment(
+                        selectedDepartment!.odjeljenjeID!,
+                        addedUser!.korisnikId!,
+                      );
+
+                      _fetchDepartmentsAndInitialize(
+                          schoolID: _selectedSchool?.skolaID);
+                    } catch (e) {
+                      print("Error inserting student in department: $e");
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Učenik uspješno dodat!"),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+
+                    _fetchUsers();
+                    _fetchUserDetails();
+
+                    Navigator.of(context).pop();
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Greška prilikom dodavanja učenika: $e"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              },
+              child: Text("Sačuvaj"),
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.green),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildSchoolDropdown() {
     return DropdownButton<School>(
       value: _selectedSchool,
@@ -1217,6 +1616,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                     child: IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
+                        _showEditStudentDialog(context, student);
                       },
                     ),
                   ),

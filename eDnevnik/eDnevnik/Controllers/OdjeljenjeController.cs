@@ -53,6 +53,25 @@ namespace eDnevnik.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("UpdateStudentDepartment")]
+        public async Task<IActionResult> UpdateStudentDepartment(int currentOdjeljenjeID, int newOdjeljenjeID, int korisnikID)
+        {
+            try
+            {
+                var result = await _odjeljenjeService.UpdateStudentDepartment(currentOdjeljenjeID, newOdjeljenjeID, korisnikID);
+                if (result)
+                {
+                    return Ok("Student successfully transferred to the new department.");
+                }
+                return BadRequest("Unable to transfer student to the new department.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("WithStudents")]
         public async Task<PagedResult<Odjeljenje>> GetWithStudents([FromQuery] OdjeljenjeSearchObject search)
         {

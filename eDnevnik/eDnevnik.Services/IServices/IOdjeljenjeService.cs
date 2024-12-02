@@ -13,5 +13,6 @@ namespace eDnevnik.Services.IServices
     {
         Task<bool> AddStudentToDepartment(int odjeljenjeID, int korisnikID);
         Task<bool> RemoveStudentFromDepartment(int odjeljenjeID, int korisnikID);
+        Task<bool> UpdateStudentDepartment(int currentOdjeljenjeID, int newOdjeljenjeID, int korisnikID);
     }
 }

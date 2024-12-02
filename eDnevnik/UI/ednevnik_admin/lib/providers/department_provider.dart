@@ -81,4 +81,26 @@ class DepartmentProvider extends BaseProvider<Department> {
       throw Exception("Failed to remove student from department");
     }
   }
+
+  Future<void> updateStudentDepartment(int currentOdjeljenjeID, int newOdjeljenjeID, int korisnikID) async {
+    var url =
+        "$_baseUrl$_endpoint/UpdateStudentDepartment?currentOdjeljenjeID=$currentOdjeljenjeID&newOdjeljenjeID=$newOdjeljenjeID&korisnikID=$korisnikID";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    print("PUT Request to $url");
+
+    var response = await http.put(uri, headers: headers);
+
+    print("Response status: ${response.statusCode}");
+    print("Response body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      print("Student successfully transferred to the new department.");
+    } else {
+      var errorMessage = jsonDecode(response.body)['message'] ?? "Unknown error";
+      print("Failed response: ${response.body}");
+      throw Exception("Failed to update student department: $errorMessage");
+    }
+  }
 }

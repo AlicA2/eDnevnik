@@ -133,7 +133,44 @@ namespace eDnevnik.Services.Service
             return true;
         }
 
+        public async Task<bool> UpdateStudentDepartment(int currentOdjeljenjeID, int newOdjeljenjeID, int korisnikID)
+        {
+            var currentOdjeljenje = await _context.Odjeljenje
+                .Include(o => o.Ucenici)
+                .FirstOrDefaultAsync(o => o.OdjeljenjeID == currentOdjeljenjeID);
 
+            if (currentOdjeljenje == null)
+            {
+                throw new ArgumentException("Trenutno odjeljenje nije pronađeno.");
+            }
+
+            var newOdjeljenje = await _context.Odjeljenje
+                .Include(o => o.Ucenici)
+                .FirstOrDefaultAsync(o => o.OdjeljenjeID == newOdjeljenjeID);
+
+            if (newOdjeljenje == null)
+            {
+                throw new ArgumentException("Novo odjeljenje nije pronađeno.");
+            }
+
+            var student = currentOdjeljenje.Ucenici.FirstOrDefault(u => u.KorisnikID == korisnikID);
+            if (student == null)
+            {
+                throw new ArgumentException("Učenik nije pronađen u trenutnom odjeljenju.");
+            }
+
+            if (newOdjeljenje.Ucenici.Any(u => u.KorisnikID == korisnikID))
+            {
+                throw new InvalidOperationException("Učenik je već u novom odjeljenju.");
+            }
+
+            currentOdjeljenje.Ucenici.Remove(student);
+            newOdjeljenje.Ucenici.Add(student);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
 
         public override async Task<Model.Models.Odjeljenje> Delete(int id, OdjeljenjeDeleteRequest request)
         {
