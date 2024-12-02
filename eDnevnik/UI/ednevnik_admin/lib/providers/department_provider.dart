@@ -88,8 +88,6 @@ class DepartmentProvider extends BaseProvider<Department> {
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
-    print("PUT Request to $url");
-
     var response = await http.put(uri, headers: headers);
 
     print("Response status: ${response.statusCode}");

@@ -884,27 +884,29 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         final userDetail = _userDetailData.firstWhere((detail) => detail.korisnikID == student.korisnikId,
         orElse: () => UserDetail(null,null,null,null,null,null,null));
 
-        int? _selectYearOfPlan = userDetail.godinaUpisaID;
-        int? _selectedEnrollmentYear = userDetail.godinaStudija;
-        int? _selectedStudyYear = userDetail.upisanaSkolskaGodinaID;
+        int? _selectGodinaUpisa = userDetail.godinaUpisaID;
+        int? _selectedGodinaStudija = userDetail.godinaStudija;
+        int? _selectedUpisanaSkolskaGodina = userDetail.upisanaSkolskaGodinaID;
 
 
         
         Department? selectedDepartment = _departments.firstWhere((department) => department.odjeljenjeID == student.odjeljenjeID,
         orElse: () => Department(null,null,null,null,null));
 
-        bool _isDuplicateUsername(String username) {
-          return _studentsForDialog
-              .any((student) => student.korisnickoIme == username);
-        }
+        Department? initialDepartment = selectedDepartment;
 
-        bool _isDuplicatePhone(String phone) {
-          return _studentsForDialog.any((student) => student.telefon == phone);
-        }
+        // bool _isDuplicateUsername(String username) {
+        //   return _studentsForDialog
+        //       .any((student) => student.korisnickoIme == username);
+        // }
 
-        bool _isDuplicateEmail(String email) {
-          return _studentsForDialog.any((student) => student.email == email);
-        }
+        // bool _isDuplicatePhone(String phone) {
+        //   return _studentsForDialog.any((student) => student.telefon == phone);
+        // }
+
+        // bool _isDuplicateEmail(String email) {
+        //   return _studentsForDialog.any((student) => student.email == email);
+        // }
 
         String? _validateName(String? value) {
           final regex = RegExp(r'^[A-ZŠĐČĆŽ][a-zšđčćž]*$');
@@ -943,9 +945,9 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
           if (!emailRegex.hasMatch(value)) {
             return "Email mora biti u formatu ime.prezime@gmail.com, outlook.com ili hotmail.com.";
           }
-          if (_isDuplicateEmail(value)) {
-            return "Ovaj email već postoji";
-          }
+          // if (_isDuplicateEmail(value)) {
+          //   return "Ovaj email već postoji";
+          // }
           return null;
         }
 
@@ -957,9 +959,9 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
           if (!phoneRegex.hasMatch(value)) {
             return "Telefon mora biti u formatu 000 000 000";
           }
-          if (_isDuplicatePhone(value)) {
-            return "Ovaj telefon se već koristi";
-          }
+          // if (_isDuplicatePhone(value)) {
+          //   return "Ovaj telefon se već koristi";
+          // }
           return null;
         }
 
@@ -974,9 +976,9 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
           if (value.length < 3) {
             return "Polje mora imati najmanje 3 karaktera";
           }
-          if (_isDuplicateUsername(value)) {
-            return "Korisničko ime već postoji. Opcionalno možete dodati jednocifreni ili dvocifreni broj na kraju.";
-          }
+          // if (_isDuplicateUsername(value)) {
+          //   return "Korisničko ime već postoji. Opcionalno možete dodati jednocifreni ili dvocifreni broj na kraju.";
+          // }
           return null;
         }
 
@@ -1008,54 +1010,54 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                              controller: _nameController,
-                              decoration: InputDecoration(
-                                  labelText: "Ime", errorMaxLines: 3),
-                              validator: _validateName),
-                        ),
-                        SizedBox(width: 35.0),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _surnameController,
-                            decoration: InputDecoration(
-                                labelText: "Prezime", errorMaxLines: 3),
-                            validator: _validateSurname,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.0),
-                    TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(labelText: "Email"),
-                      validator: _validateEmail,
-                    ),
-                    SizedBox(height: 16.0),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: _phoneController,
-                            decoration: InputDecoration(labelText: "Telefon"),
-                            validator: _validatePhone,
-                          ),
-                        ),
-                        SizedBox(width: 35.0),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _usernameController,
-                            decoration: InputDecoration(
-                                labelText: "Korisničko ime", errorMaxLines: 3),
-                            validator: _validateUsername,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.0),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //           controller: _nameController,
+                    //           decoration: InputDecoration(
+                    //               labelText: "Ime", errorMaxLines: 3),
+                    //           validator: _validateName),
+                    //     ),
+                    //     SizedBox(width: 35.0),
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: _surnameController,
+                    //         decoration: InputDecoration(
+                    //             labelText: "Prezime", errorMaxLines: 3),
+                    //         validator: _validateSurname,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(height: 16.0),
+                    // TextFormField(
+                    //   controller: _emailController,
+                    //   decoration: InputDecoration(labelText: "Email"),
+                    //   validator: _validateEmail,
+                    // ),
+                    // SizedBox(height: 16.0),
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: _phoneController,
+                    //         decoration: InputDecoration(labelText: "Telefon"),
+                    //         validator: _validatePhone,
+                    //       ),
+                    //     ),
+                    //     SizedBox(width: 35.0),
+                    //     Expanded(
+                    //       child: TextFormField(
+                    //         controller: _usernameController,
+                    //         decoration: InputDecoration(
+                    //             labelText: "Korisničko ime", errorMaxLines: 3),
+                    //         validator: _validateUsername,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(height: 16.0),
                     Row(
                       children: [
                         Expanded(
@@ -1063,7 +1065,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                             decoration: InputDecoration(
                               labelText: "Godina upisa u školu",
                             ),
-                            value: _selectedEnrollmentYear,
+                            value: _selectGodinaUpisa,
                             items: _schoolYearData
                                 .map((year) => DropdownMenuItem<int>(
                                       value: year.skolskaGodinaID,
@@ -1072,7 +1074,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                                 .toList(),
                             onChanged: (value) {
                               setState(() {
-                                _selectedEnrollmentYear = value;
+                                _selectGodinaUpisa = value;
                               });
                             },
                             validator: (value) => value == null
@@ -1086,7 +1088,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                             decoration: InputDecoration(
                               labelText: "Godina studija",
                             ),
-                            value: _selectedStudyYear,
+                            value: _selectedGodinaStudija,
                             items: [1, 2, 3, 4]
                                 .map((year) => DropdownMenuItem<int>(
                                       value: year,
@@ -1095,7 +1097,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                                 .toList(),
                             onChanged: (value) {
                               setState(() {
-                                _selectedStudyYear = value;
+                                _selectedGodinaStudija = value;
                               });
                             },
                             validator: (value) => value == null
@@ -1135,7 +1137,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                             decoration: InputDecoration(
                               labelText: "Školska godina koju učenik upisuje",
                             ),
-                              value:_selectedStudyYear,
+                              value:_selectedUpisanaSkolskaGodina,
                             items: _schoolYearData
                                 .map((year) => DropdownMenuItem<int>(
                                       value: year.skolskaGodinaID,
@@ -1144,7 +1146,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                                 .toList(),
                             onChanged: (value) {
                               setState(() {
-                                _selectYearOfPlan = value;
+                                _selectedUpisanaSkolskaGodina = value;
                               });
                             },
                             validator: (value) =>
@@ -1153,20 +1155,20 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16.0),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(labelText: "Lozinka"),
-                      obscureText: true,
-                      validator: _validatePassword,
-                    ),
-                    SizedBox(height: 16.0),
-                    TextFormField(
-                      controller: _passwordConfirmController,
-                      decoration: InputDecoration(labelText: "Potvrda lozinke"),
-                      obscureText: true,
-                      validator: _validateConfirmPassword,
-                    ),
+                    // SizedBox(height: 16.0),
+                    // TextFormField(
+                    //   controller: _passwordController,
+                    //   decoration: InputDecoration(labelText: "Lozinka"),
+                    //   obscureText: true,
+                    //   validator: _validatePassword,
+                    // ),
+                    // SizedBox(height: 16.0),
+                    // TextFormField(
+                    //   controller: _passwordConfirmController,
+                    //   decoration: InputDecoration(labelText: "Potvrda lozinke"),
+                    //   obscureText: true,
+                    //   validator: _validateConfirmPassword,
+                    // ),
                   ],
                 ),
               ),
@@ -1184,74 +1186,49 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
               onPressed: () async {
                 if (_formKey.currentState?.validate() ?? false) {
                   try {
-                    var newUser = {
-                      'Ime': _nameController.text.trim(),
-                      'Prezime': _surnameController.text.trim(),
-                      'Email': _emailController.text.trim(),
-                      'Telefon': _phoneController.text.trim(),
-                      'KorisnickoIme': _usernameController.text.trim(),
-                      'Password': _passwordController.text.trim(),
-                      'PasswordPotvrda': _passwordConfirmController.text.trim(),
-                    };
+                     final userDetailUpdateRequest = {
+                      'KorisnikID': student.korisnikId,
+                    'GodinaUpisaID': _selectGodinaUpisa,
+                    'GodinaStudija': _selectedGodinaStudija,
+                    'UpisanaSkolskaGodinaID': _selectedUpisanaSkolskaGodina,
+                    
+                  };
+                  print(userDetailUpdateRequest);
+                  await _userDetailProvider.Update(
+                    userDetail.korisnikDetaljiID!,
+                    userDetailUpdateRequest,
+                  );
 
-                    var addedUser = await userProvider.Insert(newUser);
-
-                    var newRoleAssignment = {
-                      'KorisnikID': addedUser.korisnikId,
-                      'UlogaID': 2,
-                      'DatumIzmjene': DateTime.now().toIso8601String(),
-                    };
-
-                    try {
-                      await userRolesProvider.Insert(newRoleAssignment);
-                    } catch (e) {
-                      print("Error inserting role assignment: $e");
-                    }
-
-                    var userDetails = {
-                      'KorisnikID': addedUser.korisnikId,
-                      'GodinaUpisaID': _selectedEnrollmentYear,
-                      'GodinaStudija': _selectedStudyYear,
-                      'UpisanaSkolskaGodinaID': _selectYearOfPlan,
-                      'ProsjecnaOcjena' : 0.00,
-                    };
-
-                    try {
-                      await _userDetailProvider.Insert(userDetails);
-                    } catch (e) {
-                      print("Error inserting user details: $e");
-                    }
-
-                    try {
-                      await _departmentProvider.addStudentToDepartment(
-                        selectedDepartment!.odjeljenjeID!,
-                        addedUser!.korisnikId!,
-                      );
-
-                      _fetchDepartmentsAndInitialize(
-                          schoolID: _selectedSchool?.skolaID);
-                    } catch (e) {
-                      print("Error inserting student in department: $e");
-                    }
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Učenik uspješno dodat!"),
-                        backgroundColor: Colors.green,
-                      ),
+                  if (initialDepartment?.odjeljenjeID != selectedDepartment?.odjeljenjeID) {
+                    await _departmentProvider.updateStudentDepartment(
+                      initialDepartment?.odjeljenjeID ?? 0,
+                      selectedDepartment?.odjeljenjeID ?? 0,
+                      student.korisnikId!,
                     );
+                  }
 
-                    _fetchUsers();
-                    _fetchUserDetails();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Učenik uspješno ažuriran!"),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
 
-                    Navigator.of(context).pop();
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Greška prilikom dodavanja učenika: $e"),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
+                  _fetchUsers();
+                  _fetchUserDetails();
+                  final schoolID = selectedDepartment?.skolaID;
+                  if (schoolID != null) {
+                    await _fetchDepartmentsAndInitialize(schoolID: schoolID);
+                  }
+                  Navigator.of(context).pop();
+                } catch (e) {
+                      print("Greska kod azuriranja ucenika: ${e}");
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Greška prilikom ažuriranja učenika: $e"),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
                   }
                 }
               },
