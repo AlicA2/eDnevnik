@@ -40,10 +40,6 @@ namespace eDnevnik.Services.Service
             {
                 query = query.Where(x => x.OdjeljenjeID == search.OdjeljenjeID.Value);
             }
-            if (search.KorisnikId.HasValue)
-            {
-                query = query.Where(x => x.KorisnikID == search.KorisnikId.Value);
-            }
 
             return base.AddFilter(query, search);
         }
