@@ -303,8 +303,6 @@ void _toggleShowUnassignedProfessors(bool value) async {
             child: Column(
               children: [
                 _buildScreenHeader(),
-                if (_selectedSchool == null) _buildUnassignedCheckbox(),
-                SizedBox(height: 16.0),
                 Expanded(
                   child: _isLoading ? _buildLoading() : _buildDataListView(),
                 ),
@@ -316,39 +314,87 @@ void _toggleShowUnassignedProfessors(bool value) async {
     );
   }
 
-  
+  Widget _buildDepartmentDropdown() {
+  return DropdownButton<Department?>(
+    value: _selectedDepartment,
+    items: [
+      DropdownMenuItem<Department?>(
+        value: null,
+        child: Text("Sva odjeljenja"),
+      ),
+      ..._departments.map((department) {
+        return DropdownMenuItem<Department?>(
+          value: department,
+          child: Text(department.nazivOdjeljenja ?? "N/A"),
+        );
+      }).toList(),
+    ],
+    onChanged: (Department? newValue) {
+      setState(() {
+        _selectedDepartment = newValue;
+        _filterProfessorsByDepartment(newValue);
+      });
+    },
+  );
+}
+
+void _filterProfessorsByDepartment(Department? department) {
+  if (department == null) {
+    setState(() {
+      _students = _allUsers
+          .where((user) =>
+              user.korisniciUloge?.any((role) => role.ulogaID == 1) ?? false)
+          .toList();
+    });
+  } else {
+    setState(() {
+      _students = _allUsers.where((user) {
+        return user.korisnikId == department.razrednikID;
+      }).toList();
+    });
+  }
+}
 
   Widget _buildScreenHeader() {
-    return Row(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(5),
-              topLeft: Radius.circular(20),
-              topRight: Radius.elliptical(5, 5),
-              bottomRight: Radius.circular(30.0),
-            ),
-          ),
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            "Profesori",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+  return Row(
+    children: [
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(5),
+            topLeft: Radius.circular(20),
+            topRight: Radius.elliptical(5, 5),
+            bottomRight: Radius.circular(30.0),
           ),
         ),
-        SizedBox(width: 32.0),
-        Expanded(
-          child: _buildSchoolDropdown(),
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          "Profesori",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        
+      ),
+      SizedBox(width: 32.0),
+      Expanded(child: _buildSchoolDropdown()),
+      SizedBox(width: 16.0),
+                      if (_selectedSchool == null) Padding(
+                        padding: const EdgeInsets.only(right:16.0),
+                        child: _buildUnassignedCheckbox(),
+                      ),
+                SizedBox(height: 16.0),
+      if (_selectedSchool != null) ...[
+        if (_isLoading) CircularProgressIndicator(),
+        if (!_isLoading && _departments.isNotEmpty)
+          Expanded(child: _buildDepartmentDropdown()),
       ],
-    );
-  }
+    ],
+  );
+}
+
 
   Widget _buildSchoolDropdown() {
   return DropdownButton<School?>(
