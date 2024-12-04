@@ -19,7 +19,7 @@ namespace eDnevnik.Services.Configurations
             builder.HasMany(k => k.KorisniciUloge)
                    .WithOne(ku => ku.Korisnik)
                    .HasForeignKey(ku => ku.KorisnikID)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(k => k.KorisniciDogadjaji)
                    .WithOne(kd => kd.Korisnik)
