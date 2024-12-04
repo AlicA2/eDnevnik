@@ -638,7 +638,7 @@ class _ProfesorDetailScreenState extends State<ProfesorDetailScreen> {
         }
 
         return AlertDialog(
-          title: Text("Dodaj učenika/cu"),
+          title: Text("Dodaj profesora"),
           content: SizedBox(
             width: 600,
             height: 350,
@@ -757,12 +757,14 @@ class _ProfesorDetailScreenState extends State<ProfesorDetailScreen> {
                       ),
                     );
                     await _fetchDepartmentsAndInitialize(
-                        schoolID: _selectedSchool?.skolaID);
-                    setState(() {
-                      _students.add(newUser);
-                    });
+                      schoolID: _selectedSchool?.skolaID);
+                    await _fetchUsers();
 
-                    Navigator.of(context).pop();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProfesorDetailScreen()),
+                    );
+
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
