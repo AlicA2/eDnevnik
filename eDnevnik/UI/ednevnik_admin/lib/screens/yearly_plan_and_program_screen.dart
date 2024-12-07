@@ -1,11 +1,13 @@
 import 'package:ednevnik_admin/models/annual_plan_program.dart';
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/result.dart';
+import 'package:ednevnik_admin/models/school_year.dart';
 import 'package:ednevnik_admin/models/subject.dart';
 import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
+import 'package:ednevnik_admin/providers/school_year_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
@@ -31,18 +33,21 @@ class _YearlyPlanAndProgramDetailScreenState
   late SubjectProvider _subjectProvider;
   late SchoolProvider _schoolProvider;
   late UserProvider _userProvider;
+  late SchoolYearProvider _schoolYearProvider;
 
   TextEditingController _nazivController = TextEditingController();
 
   Department? _selectedDepartment;
   Subject? _selectedSubject;
   School? _selectedSchool;
+  SchoolYear? _selectedSchoolYear;
   User? loggedInUser;
 
   List<User> _profesors = [];
   List<Department> _departments = [];
   List<Subject> _subjects = [];
   List<School> _schools = [];
+  List<SchoolYear> _schoolYears = [];
 
   bool isLoading = true;
 
@@ -54,14 +59,33 @@ class _YearlyPlanAndProgramDetailScreenState
     _subjectProvider = context.read<SubjectProvider>();
     _schoolProvider = context.read<SchoolProvider>();
     _userProvider = context.read<UserProvider>();
+    _schoolYearProvider = context.read<SchoolYearProvider>();
 
     _fetchSchools();
+    _fetchSchoolYears();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     loggedInUser = context.watch<UserProvider>().loggedInUser;
+  }
+
+  Future<void> _fetchSchoolYears() async {
+    try {
+      var schoolYearsData = await _schoolYearProvider.get();
+      if (mounted) {
+        setState(() {
+          _schoolYears = [
+            SchoolYear(skolskaGodinaID: -1, naziv: "Sve godine"),
+            ...schoolYearsData.result,
+          ];
+          _selectedSchoolYear = _schoolYears.first;
+        });
+      }
+    } catch (e) {
+      print("Failed to load school years: $e");
+    }
   }
 
   Future<void> _fetchSchools() async {
@@ -192,6 +216,12 @@ class _YearlyPlanAndProgramDetailScreenState
 
       if (_selectedSubject != null && _selectedSubject!.predmetID != 0) {
         filter['predmetID'] = _selectedSubject!.predmetID.toString();
+      }
+
+      if (_selectedSchoolYear != null &&
+          _selectedSchoolYear!.skolskaGodinaID != -1) {
+        filter['SkolskaGodinaID'] =
+            _selectedSchoolYear!.skolskaGodinaID.toString();
       }
 
       var data = await _annualPlanProgramProvider.get(filter: filter);
@@ -367,6 +397,24 @@ class _YearlyPlanAndProgramDetailScreenState
                 );
               }).toList(),
             ),
+          ),
+          SizedBox(width: 10),
+          Expanded(
+            child: DropdownButton<SchoolYear>(
+  value: _selectedSchoolYear,
+  onChanged: (SchoolYear? newValue) {
+    setState(() {
+      _selectedSchoolYear = newValue;
+    });
+  },
+  items: _schoolYears.map((SchoolYear year) {
+    return DropdownMenuItem<SchoolYear>(
+      value: year,
+      child: Text(year.naziv ?? ""),
+    );
+  }).toList(),
+),
+
           ),
           SizedBox(width: 10),
           ElevatedButton(
