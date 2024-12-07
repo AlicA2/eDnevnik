@@ -44,6 +44,8 @@ class _YearlyPlanAndProgramDetailScreenState
   List<Subject> _subjects = [];
   List<School> _schools = [];
 
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -63,6 +65,9 @@ class _YearlyPlanAndProgramDetailScreenState
   }
 
   Future<void> _fetchSchools() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       var schools = await _schoolProvider.get();
       if (mounted) {
@@ -74,21 +79,35 @@ class _YearlyPlanAndProgramDetailScreenState
             _fetchSubjects();
             _fetchAnnualPlanPrograms();
             _fetchProfesors();
+          } else {
+            isLoading = false;
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> _fetchProfesors() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       var profesors = await _userProvider.get();
       if (mounted) {
         setState(() {
           _profesors = profesors.result;
+          isLoading = false;
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void _navigateToAddOrEditScreen([AnnualPlanProgram? planProgram]) async {
@@ -106,52 +125,86 @@ class _YearlyPlanAndProgramDetailScreenState
   }
 
   Future<void> _fetchDepartments() async {
-    var data = await _departmentProvider.get(filter: {
-      'SkolaID': _selectedSchool?.skolaID,
-    });
     setState(() {
-      _departments = [Department(0, 'Sva odjeljenja', 0, 0), ...data.result];
-
-      if (_departments.isNotEmpty) {
-        _selectedDepartment = _departments.first;
-      }
+      isLoading = true;
     });
+    try {
+      var data = await _departmentProvider.get(filter: {
+        'SkolaID': _selectedSchool?.skolaID,
+      });
+      setState(() {
+        _departments = [Department(0, 'Sva odjeljenja', 0, 0), ...data.result];
+
+        if (_departments.isNotEmpty) {
+          _selectedDepartment = _departments.first;
+        } else {
+          isLoading = false;
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> _fetchSubjects() async {
-    var data = await _subjectProvider.get(filter: {
-      'SkolaID': _selectedSchool?.skolaID,
-    });
-
     setState(() {
-      _subjects = [Subject(0, 'Svi predmeti', '', '', 0), ...data.result];
-
-      if (_subjects.isNotEmpty) {
-        _selectedSubject = _subjects.first;
-      }
+      isLoading = true;
     });
+    try {
+      var data = await _subjectProvider.get(filter: {
+        'SkolaID': _selectedSchool?.skolaID,
+      });
+
+      setState(() {
+        _subjects = [Subject(0, 'Svi predmeti', '', '', 0), ...data.result];
+
+        if (_subjects.isNotEmpty) {
+          _selectedSubject = _subjects.first;
+        } else {
+          isLoading = false;
+        }
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> _fetchAnnualPlanPrograms() async {
-    var filter = {
-      'naziv': _nazivController.text,
-      'SkolaID': _selectedSchool?.skolaID,
-      // 'ProfesorID': loggedInUser?.korisnikId
-    };
-
-    if (_selectedDepartment != null && _selectedDepartment!.odjeljenjeID != 0) {
-      filter['odjeljenjeID'] = _selectedDepartment!.odjeljenjeID.toString();
-    }
-
-    if (_selectedSubject != null && _selectedSubject!.predmetID != 0) {
-      filter['predmetID'] = _selectedSubject!.predmetID.toString();
-    }
-
-    var data = await _annualPlanProgramProvider.get(filter: filter);
-
     setState(() {
-      result = data;
+      isLoading = true;
     });
+    try {
+      var filter = {
+        'naziv': _nazivController.text,
+        'SkolaID': _selectedSchool?.skolaID,
+        // 'ProfesorID': loggedInUser?.korisnikId
+      };
+
+      if (_selectedDepartment != null &&
+          _selectedDepartment!.odjeljenjeID != 0) {
+        filter['odjeljenjeID'] = _selectedDepartment!.odjeljenjeID.toString();
+      }
+
+      if (_selectedSubject != null && _selectedSubject!.predmetID != 0) {
+        filter['predmetID'] = _selectedSubject!.predmetID.toString();
+      }
+
+      var data = await _annualPlanProgramProvider.get(filter: filter);
+
+      setState(() {
+        result = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   String _getDepartmentName(int? id) {
@@ -165,14 +218,14 @@ class _YearlyPlanAndProgramDetailScreenState
   }
 
   String _getProfesorsName(int? id) {
-  final user = _profesors.firstWhere(
-    (prof) => prof.korisnikId == id,
-    orElse: () => User(null, null, null, null, null, null, null, null, null, null, null),
-  );
+    final user = _profesors.firstWhere(
+      (prof) => prof.korisnikId == id,
+      orElse: () => User(
+          null, null, null, null, null, null, null, null, null, null, null),
+    );
 
-  return "${user.ime ?? ""} ${user.prezime ?? ""}".trim();
-}
-
+    return "${user.ime ?? ""} ${user.prezime ?? ""}".trim();
+  }
 
   String _getSubjectName(int? id) {
     return _subjects
@@ -332,6 +385,11 @@ class _YearlyPlanAndProgramDetailScreenState
   }
 
   Widget _buildDataListView() {
+    if (isLoading) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return result == null || result!.result.isEmpty
         ? Center(
             child: Text(
