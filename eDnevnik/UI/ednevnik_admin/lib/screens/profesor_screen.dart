@@ -189,71 +189,72 @@ class _ProfesorDetailScreenState extends State<ProfesorDetailScreen> {
   }
 
   Future<void> _confirmDelete(User profesor) async {
-  bool isRazrednik = _departments.any((dept) => dept.razrednikID == profesor.korisnikId);
+    bool isRazrednik =
+        _departments.any((dept) => dept.razrednikID == profesor.korisnikId);
 
-  if (isRazrednik) {
-    _showErrorDialog(
-        'Profesor je razrednik u odjeljenju i ne može biti obrisan.');
-    return;
-  }
+    if (isRazrednik) {
+      _showErrorDialog(
+          'Profesor je razrednik u odjeljenju i ne može biti obrisan.');
+      return;
+    }
 
-  bool? confirmDelete = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Potvrda brisanja'),
-      content: Text(
-          'Da li ste sigurni da želite da uklonite ovog profesora iz škole?'),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
-          child: Text('Odustani'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, true),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.red,
+    bool? confirmDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Potvrda brisanja'),
+        content: Text(
+            'Da li ste sigurni da želite da uklonite ovog profesora iz škole?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            style: ElevatedButton.styleFrom(foregroundColor: Colors.black),
+            child: Text('Odustani'),
           ),
-          child: Text('Obriši'),
-        ),
-      ],
-    ),
-  );
-
-  if (confirmDelete == true) {
-    try {
-      if (profesor.korisnikId != null) {
-        await _userProvider.delete(profesor.korisnikId ?? 0);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Uspješno ste izbrisali profesora iz škole."),
-            backgroundColor: Colors.green,
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.red,
+            ),
+            child: Text('Obriši'),
           ),
-        );
-        setState(() {
-          _students.remove(profesor);
-        });
-        await _fetchDepartmentsAndInitialize(
-            schoolID: _selectedSchool?.skolaID);
+        ],
+      ),
+    );
+
+    if (confirmDelete == true) {
+      try {
+        if (profesor.korisnikId != null) {
+          await _userProvider.delete(profesor.korisnikId ?? 0);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Uspješno ste izbrisali profesora iz škole."),
+              backgroundColor: Colors.green,
+            ),
+          );
+          setState(() {
+            _students.remove(profesor);
+          });
+          await _fetchDepartmentsAndInitialize(
+              schoolID: _selectedSchool?.skolaID);
+        }
+      } on FormatException catch (e) {
+        if (e.source.contains(
+            "Ne možete obrisati profesor koji predaju u odjeljenju.")) {
+          _showErrorDialog(
+              'Ne možete obrisati profesor koji predaju u odjeljenju.');
+        } else {
+          _showErrorDialog('Došlo je do greške u formatu odgovora.');
+        }
+        print(e.toString());
+      } on Exception catch (e) {
+        _showErrorDialog('${e.toString()}');
+        print(e.toString());
+      } catch (e) {
+        _showErrorDialog('Došlo je do neočekivane greške.');
       }
-    } on FormatException catch (e) {
-      if (e.source.contains(
-          "Ne možete obrisati profesor koji predaju u odjeljenju.")) {
-        _showErrorDialog(
-            'Ne možete obrisati profesor koji predaju u odjeljenju.');
-      } else {
-        _showErrorDialog('Došlo je do greške u formatu odgovora.');
-      }
-      print(e.toString());
-    } on Exception catch (e) {
-      _showErrorDialog('${e.toString()}');
-      print(e.toString());
-    } catch (e) {
-      _showErrorDialog('Došlo je do neočekivane greške.');
     }
   }
-}
 
   void _showErrorDialog(String message) {
     showDialog(
@@ -397,7 +398,7 @@ class _ProfesorDetailScreenState extends State<ProfesorDetailScreen> {
         Padding(
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
           child: ElevatedButton(
-              onPressed: () => _showAddStudentDialog(context),
+              onPressed: () => _showAddProfesorDialog(context),
               child: Text("Dodaj profesora"),
               style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white, backgroundColor: Colors.blue)),
@@ -467,6 +468,14 @@ class _ProfesorDetailScreenState extends State<ProfesorDetailScreen> {
               ),
             ),
           ),
+          DataColumn(
+            label: Expanded(
+              child: Text(
+                "",
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ),
+          ),
         ],
         rows: _students.map((profesor) {
           Department? assignedDepartment = _departments.firstWhere(
@@ -496,11 +505,22 @@ class _ProfesorDetailScreenState extends State<ProfesorDetailScreen> {
               ),
               DataCell(
                 Tooltip(
+                  message: "Uređivanje profesora",
+                  child: IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      _showEditProfesorDialog(context, profesor);
+                    },
+                  ),
+                ),
+              ),
+              DataCell(
+                Tooltip(
                   message: "Brisanje profesora",
                   child: IconButton(
                     icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
-                      _confirmDelete(profesor);
+                      _showEditProfesorDialog(context, profesor);
                     },
                   ),
                 ),
@@ -512,7 +532,213 @@ class _ProfesorDetailScreenState extends State<ProfesorDetailScreen> {
     );
   }
 
-  void _showAddStudentDialog(BuildContext context) {
+  void _showEditProfesorDialog(BuildContext context, User student) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final _formKey = GlobalKey<FormState>();
+        final _nameController = TextEditingController(text: student.ime);
+        final _surnameController = TextEditingController(text: student.prezime);
+        final _emailController = TextEditingController(text: student.email);
+        final _phoneController = TextEditingController(text: student.telefon);
+        final _usernameController =
+            TextEditingController(text: student.korisnickoIme);
+        final _passwordController = TextEditingController();
+        final _passwordConfirmController = TextEditingController();
+        final userProvider = context.read<UserProvider>();
+        final userRolesProvider = context.read<UserRolesProvider>();
+
+        String? _validateName(String? value) {
+          final regex = RegExp(r'^[A-ZŠĐČĆŽ][a-zšđčćž]*$');
+          if (value == null || value.isEmpty) {
+            return "Polje je obavezno";
+          }
+          if (!regex.hasMatch(value)) {
+            return "Morate početi ime velikim slovom, a ostala slova moraju biti mala. Nisu dozvoljeni brojevi i specijalni karakteri.";
+          }
+          if (value.length < 3) {
+            return "Polje mora imati najmanje 3 karaktera";
+          }
+          return null;
+        }
+
+        String? _validateSurname(String? value) {
+          final regex = RegExp(r'^[A-ZŠĐČĆŽ][a-zšđčćž]*$');
+          if (value == null || value.isEmpty) {
+            return "Polje je obavezno";
+          }
+          if (!regex.hasMatch(value)) {
+            return "Morate početi prezime velikim slovom, a ostala slova moraju biti mala. Nisu dozvoljeni brojevi i specijalni karakteri.";
+          }
+          if (value.length < 3) {
+            return "Polje mora imati najmanje 3 karaktera";
+          }
+          return null;
+        }
+
+        String? _validateEmail(String? value) {
+          if (value == null || value.isEmpty) {
+            return "Email je obavezan.";
+          }
+          final emailRegex = RegExp(
+              r'^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@(gmail|outlook|hotmail)\.com$');
+          if (!emailRegex.hasMatch(value)) {
+            return "Email mora biti u formatu ime.prezime@gmail.com, outlook.com ili hotmail.com.";
+          }
+          return null;
+        }
+
+        String? _validatePhone(String? value) {
+          final phoneRegex = RegExp(r'^\d{3} \d{3} \d{3}$');
+          if (value == null || value.isEmpty) {
+            return "Unesite broj telefona";
+          }
+          if (!phoneRegex.hasMatch(value)) {
+            return "Telefon mora biti u formatu 000 000 000";
+          }
+          return null;
+        }
+
+        String? _validateUsername(String? value) {
+          final regex = RegExp(r'^[a-zšđčćž]+(\d{1,2})?$');
+          if (value == null || value.isEmpty) {
+            return "Polje je obavezno";
+          }
+          if (!regex.hasMatch(value)) {
+            return "Korisničko ime mora sadržati samo mala slova i opcionalno jednocifreni ili dvocifreni broj na kraju.";
+          }
+          if (value.length < 3) {
+            return "Polje mora imati najmanje 3 karaktera";
+          }
+          return null;
+        }
+
+        return AlertDialog(
+          title: Text("Uredi profesora"),
+          content: SizedBox(
+            width: 600,
+            height: 200,
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                              controller: _nameController,
+                              decoration: InputDecoration(
+                                  labelText: "Ime", errorMaxLines: 3),
+                              validator: _validateName),
+                        ),
+                        SizedBox(width: 35.0),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _surnameController,
+                            decoration: InputDecoration(
+                                labelText: "Prezime", errorMaxLines: 3),
+                            validator: _validateSurname,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(labelText: "Email"),
+                      validator: _validateEmail,
+                      enabled: false,
+                    ),
+                    SizedBox(height: 16.0),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _phoneController,
+                            decoration: InputDecoration(labelText: "Telefon"),
+                            validator: _validatePhone,
+                            enabled: false,
+                          ),
+                        ),
+                        SizedBox(width: 35.0),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _usernameController,
+                            decoration: InputDecoration(
+                                labelText: "Korisničko ime", errorMaxLines: 3),
+                            validator: _validateUsername,
+                            enabled: false,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text("Otkaži"),
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.white)),
+            SizedBox(width: 8.0),
+            ElevatedButton(
+              onPressed: () async {
+                if (_formKey.currentState?.validate() ?? false) {
+                  try {
+                    final updatedUser = {
+                      "ime": _nameController.text.trim(),
+                      "prezime": _surnameController.text.trim(),
+                      "email": _emailController.text.trim(),
+                      "telefon": _phoneController.text.trim(),
+                      "korisnickoIme": _usernameController.text.trim(),
+                    };
+
+                    await userProvider.Update(
+                        student.korisnikId ?? 0, updatedUser);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Učenik uspješno ažuriran!"),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+
+                    _fetchUsers();
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProfesorDetailScreen()),
+                    );
+                  } catch (e) {
+                    print("Greska kod azuriranja ucenika: ${e}");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Greška prilikom ažuriranja učenika: $e"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              },
+              child: Text("Sačuvaj"),
+              style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.green),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showAddProfesorDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -757,14 +983,14 @@ class _ProfesorDetailScreenState extends State<ProfesorDetailScreen> {
                       ),
                     );
                     await _fetchDepartmentsAndInitialize(
-                      schoolID: _selectedSchool?.skolaID);
+                        schoolID: _selectedSchool?.skolaID);
                     await _fetchUsers();
 
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => ProfesorDetailScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => ProfesorDetailScreen()),
                     );
-
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
