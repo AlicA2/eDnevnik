@@ -15,6 +15,7 @@ namespace eDnevnik.Model.Models
         public int PredmetID { get; set; }
         public int SkolaID { get; set; }
         public int? ProfesorID { get; set; }
+        public int SkolskaGodinaID { get; set; }
         public virtual ICollection<Casovi> Casovi { get; set; } = new List<Casovi>();
     }
 }

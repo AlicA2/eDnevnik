@@ -15,6 +15,7 @@ AnnualPlanProgram _$AnnualPlanProgramFromJson(Map<String, dynamic> json) =>
       (json['odjeljenjeID'] as num?)?.toInt(),
       (json['skolaID'] as num?)?.toInt(),
       (json['profesorID'] as num?)?.toInt(),
+      (json['skolskaGodinaID'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$AnnualPlanProgramToJson(AnnualPlanProgram instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$AnnualPlanProgramToJson(AnnualPlanProgram instance) =>
       'odjeljenjeID': instance.odjeljenjeID,
       'skolaID': instance.skolaID,
       'profesorID': instance.profesorID,
+      'skolskaGodinaID': instance.skolskaGodinaID,
     };

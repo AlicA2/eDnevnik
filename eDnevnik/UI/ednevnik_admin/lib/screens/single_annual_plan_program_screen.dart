@@ -1,12 +1,14 @@
 import 'package:ednevnik_admin/models/annual_plan_program.dart';
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/school.dart';
+import 'package:ednevnik_admin/models/school_year.dart';
 import 'package:ednevnik_admin/models/subject.dart';
 import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
 import 'package:ednevnik_admin/providers/classes_provider.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
+import 'package:ednevnik_admin/providers/school_year_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
@@ -35,22 +37,26 @@ class _SingleAnnualPlanProgramScreenState
   late SchoolProvider _schoolProvider;
   late ClassesProvider _classProvider;
   late UserProvider _usersProvider;
+  late SchoolYearProvider _schoolYearProvider;
 
   Department? _selectedDepartment;
   Subject? _selectedSubject;
   School? _selectedSchool;
   User? _selectedProfesor;
+  SchoolYear? _selectedSchoolYear;
 
   int? _selectedProfesorID;
   int? _selectedDepartmentID;
   int? _selectedSchoolID;
   int? _selectedSubjectID;
+  int? _selectedSchoolYearID;
   User? loggedInUser;
 
   List<Department> _departments = [];
   List<Subject> _subjects = [];
   List<School> _schools = [];
   List<User> _profesor = [];
+  List<SchoolYear> _schoolYears = [];
 
   @override
   void initState() {
@@ -61,9 +67,37 @@ class _SingleAnnualPlanProgramScreenState
     _schoolProvider = context.read<SchoolProvider>();
     _classProvider = context.read<ClassesProvider>();
     _usersProvider = context.read<UserProvider>();
+    _schoolYearProvider = context.read<SchoolYearProvider>();
 
     _fetchSchools();
     _fetchUsers();
+    _fetchSchoolYears();
+  }
+
+  Future<void> _fetchSchoolYears() async {
+    try {
+      var schoolYearData = await _schoolYearProvider.get();
+      if (mounted) {
+        setState(() {
+          _schoolYears = schoolYearData.result;
+
+          if (_schoolYears.isEmpty) {
+            _selectedSchoolYear = null;
+          } else {
+            _selectedSchoolYear = widget.planProgram != null
+                ? _schoolYears.firstWhere(
+                    (year) =>
+                        year.skolskaGodinaID ==
+                        widget.planProgram?.skolskaGodinaID,
+                    orElse: () => SchoolYear(),
+                  )
+                : null;
+          }
+        });
+      }
+    } catch (e) {
+      _showErrorDialog("Failed to load school years: $e");
+    }
   }
 
   Future<void> _fetchUsers() async {
@@ -243,7 +277,6 @@ class _SingleAnnualPlanProgramScreenState
                                   .substring("Plan i program za ".length,
                                       val.length - 2)
                                   .trim();
-
                               if (subjectPart.isNotEmpty &&
                                   !RegExp(r'^[A-Z].*').hasMatch(subjectPart)) {
                                 return 'Predmet mora početi velikim slovom';
@@ -309,6 +342,33 @@ class _SingleAnnualPlanProgramScreenState
                             child: Text('${profesor.ime} ${profesor.prezime}'),
                           );
                         }).toList(),
+                      ),
+                      SizedBox(height: 20),
+                      FormBuilderDropdown<SchoolYear>(
+                        name: 'schoolYear',
+                        decoration: InputDecoration(labelText: 'Izaberite školsku godinu'),
+                        initialValue: _selectedSchoolYear,
+                        validator: (value) {
+                          if (!isEditMode && _schoolYears.isNotEmpty && value == null) {
+                            return 'Školska godina je obavezna';
+                          }
+                          return null;
+                        },
+                        onChanged: isEditMode
+                            ? null
+                            : (SchoolYear? newValue) {
+                                setState(() {
+                                  _selectedSchoolYear = newValue;
+                                  _selectedSchoolYearID = newValue?.skolskaGodinaID;
+                                });
+                              },
+                        items: _schoolYears.map((SchoolYear year) {
+                          return DropdownMenuItem<SchoolYear>(
+                            value: year,
+                            child: Text(year.naziv ?? ""),
+                          );
+                        }).toList(),
+                        enabled: !isEditMode,
                       ),
                       SizedBox(height: 20),
                       FormBuilderDropdown<Department>(
@@ -488,6 +548,7 @@ class _SingleAnnualPlanProgramScreenState
       formValues['predmetID'] = _selectedSubject?.predmetID;
       formValues['odjeljenjeID'] = _selectedDepartment?.odjeljenjeID;
       formValues['profesorID'] = _selectedProfesor?.korisnikId;
+      formValues['skolskaGodinaID'] = _selectedSchoolYear?.skolskaGodinaID;
 
       try {
         if (widget.planProgram == null) {

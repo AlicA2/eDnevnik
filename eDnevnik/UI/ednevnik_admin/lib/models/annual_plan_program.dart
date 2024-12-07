@@ -12,8 +12,9 @@ class AnnualPlanProgram{
   int? odjeljenjeID;
   int? skolaID;
   int? profesorID;
+  int? skolskaGodinaID;
 
-  AnnualPlanProgram(this.godisnjiPlanProgramID,this.brojCasova,this.naziv,this.predmetID, this.odjeljenjeID,this.skolaID,this.profesorID);
+  AnnualPlanProgram(this.godisnjiPlanProgramID,this.brojCasova,this.naziv,this.predmetID, this.odjeljenjeID,this.skolaID,this.profesorID,this.skolskaGodinaID);
 
     /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.

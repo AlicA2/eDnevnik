@@ -59,6 +59,10 @@ namespace eDnevnik.Services.Service
                 {
                     query = query.Where(x => x.GodisnjiPlanProgramID == search.GodisnjiPlanProgramID.Value);
                 }
+                if (search.SkolskaGodinaID.HasValue)
+                {
+                    query = query.Where(x => x.SkolskaGodinaID == search.SkolskaGodinaID.Value);
+                }
             }
             return base.AddFilter(query, search);
         }
