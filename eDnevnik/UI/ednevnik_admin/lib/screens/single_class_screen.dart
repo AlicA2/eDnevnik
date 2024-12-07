@@ -240,10 +240,8 @@ String? _validateOpis(String? value) {
       var formValues =
           Map<String, dynamic>.from(_formKey.currentState?.value ?? {});
       formValues['godisnjiPlanProgramID'] = widget.annualPlanProgramID;
-      print('Form values to be sent to backend: $formValues');
       try {
         if (widget.classes == null) {
-          print(formValues);
           await _classProvider.Insert(formValues);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

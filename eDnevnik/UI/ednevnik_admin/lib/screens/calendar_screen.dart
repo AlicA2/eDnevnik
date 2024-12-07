@@ -31,11 +31,16 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   User? loggedInUser;
+  List<User> _profesors = [];
+  User? _selectedProfesor;
+
+  User _allProfesorsOption = User(-1,"Svi profesori","","","","","","",[],[],null);
 
   late ClassesProvider _classesProvider;
   late SchoolProvider _schoolProvider;
   late AnnualPlanProgramProvider _annualPlanProgramProvider;
   late DepartmentSubjectProvider _departmentSubjectProvider;
+  late UserProvider _userProvider;
 
   List<DepartmentSubject> _departmentSubjects = [];
   List<AnnualPlanProgram> _annualPlanPrograms = [];
@@ -52,6 +57,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     _classesProvider = context.read<ClassesProvider>();
     _annualPlanProgramProvider = context.read<AnnualPlanProgramProvider>();
     _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
+    _userProvider = context.read<UserProvider>();
     _fetchSchools();
   }
 
@@ -79,28 +85,94 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     }
   }
 
-  Future<void> _fetchClassess() async {
-    if (_selectedSchool == null) return;
+  Future<void> _fetchProfesors() async {
+  if (_annualPlanPrograms.isEmpty) return;
 
-    try {
-      var classesResponse = await _classesProvider.get(filter: {
-        'SkolaID': _selectedSchool?.skolaID,
-        // 'ProfesorID': loggedInUser?.korisnikId,
+  try {
+    Set<int> profesorIds = _annualPlanPrograms
+        .map((program) => program.profesorID)
+        .whereType<int>()
+        .toSet();
+    print(profesorIds);
+
+    List<User> fetchedProfesors = [];
+    for (int id in profesorIds) {
+      var response = await context.read<UserProvider>().get(filter: {
+        'KorisnikID': id,
       });
 
-      if (mounted) {
-        setState(() {
-          _classes = classesResponse.result
-              .where((classItem) => classItem.datumOdrzavanjaCasa != null)
-              .toList();
-
-          _groupClassesByDate();
-        });
+      if (response.result.isNotEmpty) {
+        fetchedProfesors.add(response.result.first);
       }
-    } catch (e) {
-      print("Failed to fetch classes: $e");
     }
+
+    print("Profesori s providera: $fetchedProfesors");
+
+    if (mounted) {
+      setState(() {
+        _profesors = [_allProfesorsOption, ...fetchedProfesors];
+        _selectedProfesor = _allProfesorsOption;
+      });
+    }
+  } catch (e) {
+    print("Failed to fetch Profesors: $e");
   }
+}
+
+Widget _buildProfesorDropdown() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      Container(
+        width: 180,
+        child: DropdownButton<User>(
+          value: _selectedProfesor,
+          items: _profesors.map((profesor) {
+            return DropdownMenuItem<User>(
+              value: profesor,
+              child: Text("${profesor.ime} ${profesor.prezime}"),
+            );
+          }).toList(),
+          onChanged: (User? newValue) {
+            setState(() {
+              _selectedProfesor = newValue;
+            });
+            _fetchClassess();
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+
+  Future<void> _fetchClassess() async {
+  if (_selectedSchool == null) return;
+
+  try {
+    Map<String, dynamic> filter = {
+      'SkolaID': _selectedSchool?.skolaID,
+    };
+
+    if (_selectedProfesor != null && _selectedProfesor != _allProfesorsOption) {
+      filter['ProfesorID'] = _selectedProfesor?.korisnikId;
+    }
+
+    var classesResponse = await _classesProvider.get(filter: filter);
+
+    if (mounted) {
+      setState(() {
+        _classes = classesResponse.result
+            .where((classItem) => classItem.datumOdrzavanjaCasa != null)
+            .toList();
+
+        _groupClassesByDate();
+      });
+    }
+  } catch (e) {
+    print("Failed to fetch classes: $e");
+  }
+}
 
   Future<void> _fetchAnnualPlanPrograms() async {
     if (_selectedSchool == null || loggedInUser == null) return;
@@ -116,6 +188,7 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
       });
 
       await _fetchDepartmentSubjects();
+      await _fetchProfesors();
     } catch (e) {
       print("Failed to fetch Annual Plan Programs: $e");
     }
@@ -481,29 +554,35 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   Widget _buildScreenName() {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(5),
-                topLeft: Radius.circular(20),
-                topRight: Radius.elliptical(5, 5),
-                bottomRight: Radius.circular(30.0),
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(5),
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.elliptical(5, 5),
+                    bottomRight: Radius.circular(30.0),
+                  ),
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "Kalendar",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              "Kalendar",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+              Expanded(child: _buildSchoolDropdown()),
+            ],
           ),
-          Expanded(child: _buildSchoolDropdown()),
+          SizedBox(height: 16),
+          _buildProfesorDropdown(),
         ],
       ),
     );
