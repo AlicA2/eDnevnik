@@ -16,5 +16,6 @@ namespace eDnevnik.Model.SearchObjects
         public bool? IsOdrzan { get; set; }
         public int? ProfesorID { get; set; }
         public int? OdjeljenjeID { get; set; }
+        public int? SkolskaGodinaID { get; set; }
     }
 }

@@ -206,7 +206,6 @@ class _YearlyPlanAndProgramDetailScreenState
       var filter = {
         'naziv': _nazivController.text,
         'SkolaID': _selectedSchool?.skolaID,
-        // 'ProfesorID': loggedInUser?.korisnikId
       };
 
       if (_selectedDepartment != null &&
@@ -401,20 +400,19 @@ class _YearlyPlanAndProgramDetailScreenState
           SizedBox(width: 10),
           Expanded(
             child: DropdownButton<SchoolYear>(
-  value: _selectedSchoolYear,
-  onChanged: (SchoolYear? newValue) {
-    setState(() {
-      _selectedSchoolYear = newValue;
-    });
-  },
-  items: _schoolYears.map((SchoolYear year) {
-    return DropdownMenuItem<SchoolYear>(
-      value: year,
-      child: Text(year.naziv ?? ""),
-    );
-  }).toList(),
-),
-
+              value: _selectedSchoolYear,
+              onChanged: (SchoolYear? newValue) {
+                setState(() {
+                  _selectedSchoolYear = newValue;
+                });
+              },
+              items: _schoolYears.map((SchoolYear year) {
+                return DropdownMenuItem<SchoolYear>(
+                  value: year,
+                  child: Text(year.naziv ?? ""),
+                );
+              }).toList(),
+            ),
           ),
           SizedBox(width: 10),
           ElevatedButton(

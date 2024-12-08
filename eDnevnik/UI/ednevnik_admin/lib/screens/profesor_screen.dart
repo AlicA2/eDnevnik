@@ -413,7 +413,7 @@ class _ProfesorDetailScreenState extends State<ProfesorDetailScreen> {
       items: [
         DropdownMenuItem<School?>(
           value: null,
-          child: Text("Svi profesori"),
+          child: Text("Svi profesori iz različitih škola"),
         ),
         ..._schools.map((school) {
           return DropdownMenuItem<School?>(

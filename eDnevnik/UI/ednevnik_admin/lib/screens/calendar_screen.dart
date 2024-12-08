@@ -1,5 +1,7 @@
 import 'package:ednevnik_admin/models/department_subject.dart';
+import 'package:ednevnik_admin/models/school_year.dart';
 import 'package:ednevnik_admin/providers/department_subject_provider.dart';
+import 'package:ednevnik_admin/providers/school_year_provider.dart';
 import 'package:ednevnik_admin/screens/classes_student_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -34,21 +36,28 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   List<User> _profesors = [];
   User? _selectedProfesor;
 
-  User _allProfesorsOption = User(-1,"Svi profesori","","","","","","",[],[],null);
+  User _allProfesorsOption =
+      User(null, "Svi profesori", "", "", "", "", "", "", [], [], null);
 
   late ClassesProvider _classesProvider;
   late SchoolProvider _schoolProvider;
   late AnnualPlanProgramProvider _annualPlanProgramProvider;
   late DepartmentSubjectProvider _departmentSubjectProvider;
   late UserProvider _userProvider;
+  late SchoolYearProvider _schoolYearProvider;
 
   List<DepartmentSubject> _departmentSubjects = [];
   List<AnnualPlanProgram> _annualPlanPrograms = [];
   List<Classes> _filteredClasses = [];
+  List<SchoolYear> _schoolYears = [];
+
   AnnualPlanProgram? _selectedAnnualPlanProgram;
   Classes? _selectedClass;
+  SchoolYear? _selectedSchoolYear;
 
   Map<DateTime, List<Classes>> _groupedClasses = {};
+
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -58,6 +67,9 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
     _annualPlanProgramProvider = context.read<AnnualPlanProgramProvider>();
     _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
     _userProvider = context.read<UserProvider>();
+    _schoolYearProvider = context.read<SchoolYearProvider>();
+
+    _fetchSchoolYears();
     _fetchSchools();
   }
 
@@ -65,6 +77,23 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     loggedInUser = context.watch<UserProvider>().loggedInUser;
+  }
+
+  Future<void> _fetchSchoolYears() async {
+    try {
+      var schoolYearsData = await _schoolYearProvider.get();
+      if (mounted) {
+        setState(() {
+          _schoolYears = [
+            SchoolYear(skolskaGodinaID: null, naziv: "Sve godine"),
+            ...schoolYearsData.result,
+          ];
+          _selectedSchoolYear = _schoolYears.first;
+        });
+      }
+    } catch (e) {
+      print("Failed to load school years: $e");
+    }
   }
 
   Future<void> _fetchSchools() async {
@@ -86,109 +115,132 @@ class _CalendarDetailScreenState extends State<CalendarDetailScreen> {
   }
 
   Future<void> _fetchProfesors() async {
-  if (_annualPlanPrograms.isEmpty) return;
+    if (_annualPlanPrograms.isEmpty) {
+      return;
+    }
 
-  try {
-    Set<int> profesorIds = _annualPlanPrograms
-        .map((program) => program.profesorID)
-        .whereType<int>()
-        .toSet();
-    print(profesorIds);
+    setState(() {
+      _isLoading = true;
+      _profesors = [];
+    });
 
-    List<User> fetchedProfesors = [];
-    for (int id in profesorIds) {
-      var response = await context.read<UserProvider>().get(filter: {
-        'KorisnikID': id,
-      });
+    try {
+      List<int> profesorIds = [];
 
-      if (response.result.isNotEmpty) {
-        fetchedProfesors.add(response.result.first);
+      for (var program in _annualPlanPrograms) {
+        if (program.profesorID != null) {
+          profesorIds.add(program.profesorID!);
+        }
       }
-    }
 
-    print("Profesori s providera: $fetchedProfesors");
+      profesorIds = List.from(profesorIds.toSet());
+      List<User> fetchedProfesors = [];
+      for (int id in profesorIds) {
+        var response = await _userProvider.get(filter: {'KorisnikID': id});
+        if (response.result.isNotEmpty) {
+          fetchedProfesors.add(response.result.first);
+        }
+      }
 
-    if (mounted) {
+      if (mounted) {
+        setState(() {
+          _profesors = [_allProfesorsOption, ...fetchedProfesors];
+          _selectedProfesor = _profesors.isNotEmpty ? _profesors.first : null;
+        });
+      }
+    } catch (e) {
+      print("Error fetching professors: $e");
+    } finally {
       setState(() {
-        _profesors = [_allProfesorsOption, ...fetchedProfesors];
-        _selectedProfesor = _allProfesorsOption;
+        _isLoading = false;
       });
     }
-  } catch (e) {
-    print("Failed to fetch Profesors: $e");
   }
-}
 
-Widget _buildProfesorDropdown() {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.end,
-    children: [
-      Container(
-        width: 180,
-        child: DropdownButton<User>(
-          value: _selectedProfesor,
-          items: _profesors.map((profesor) {
-            return DropdownMenuItem<User>(
-              value: profesor,
-              child: Text("${profesor.ime} ${profesor.prezime}"),
-            );
-          }).toList(),
-          onChanged: (User? newValue) {
-            setState(() {
-              _selectedProfesor = newValue;
-            });
-            _fetchClassess();
-          },
+  Widget _buildProfesorDropdown() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          width: 180,
+          child: DropdownButton<SchoolYear>(
+            value: _selectedSchoolYear,
+            onChanged: (SchoolYear? newValue) {
+              setState(() {
+                _selectedSchoolYear = newValue;
+                _fetchClassess();
+              });
+            },
+            items: _schoolYears.map((SchoolYear year) {
+              return DropdownMenuItem<SchoolYear>(
+                value: year,
+                child: Text(year.naziv ?? ""),
+              );
+            }).toList(),
+          ),
         ),
-      ),
-    ],
-  );
-}
-
+        SizedBox(
+          width: 16,
+        ),
+        Container(
+          width: 180,
+          child: DropdownButton<User>(
+            value: _selectedProfesor,
+            items: _profesors.map((profesor) {
+              return DropdownMenuItem<User>(
+                value: profesor,
+                child: Text("${profesor.ime} ${profesor.prezime}"),
+              );
+            }).toList(),
+            onChanged: (User? newValue) {
+              setState(() {
+                _selectedProfesor = newValue;
+              });
+              _fetchClassess();
+            },
+          ),
+        ),
+      ],
+    );
+  }
 
   Future<void> _fetchClassess() async {
-  if (_selectedSchool == null) return;
+    if (_selectedSchool == null) return;
 
-  try {
-    Map<String, dynamic> filter = {
-      'SkolaID': _selectedSchool?.skolaID,
-    };
-
-    if (_selectedProfesor != null && _selectedProfesor != _allProfesorsOption) {
-      filter['ProfesorID'] = _selectedProfesor?.korisnikId;
-    }
-
-    var classesResponse = await _classesProvider.get(filter: filter);
-
-    if (mounted) {
-      setState(() {
-        _classes = classesResponse.result
-            .where((classItem) => classItem.datumOdrzavanjaCasa != null)
-            .toList();
-
-        _groupClassesByDate();
+    try {
+      var classesResponse = await _classesProvider.get(filter: {
+        'SkolaID': _selectedSchool?.skolaID,
+        'ProfesorID': _selectedProfesor?.korisnikId,
+        'SkolskaGodinaID': _selectedSchoolYear?.skolskaGodinaID
       });
+
+      if (mounted) {
+        setState(() {
+          _classes = classesResponse.result
+              .where((classItem) => classItem.datumOdrzavanjaCasa != null)
+              .toList();
+
+          _groupClassesByDate();
+        });
+      }
+    } catch (e) {
+      print("Failed to fetch classes: $e");
     }
-  } catch (e) {
-    print("Failed to fetch classes: $e");
   }
-}
 
   Future<void> _fetchAnnualPlanPrograms() async {
-    if (_selectedSchool == null || loggedInUser == null) return;
+    if (_selectedSchool == null) return;
 
     try {
       var annualPlanResponse = await _annualPlanProgramProvider.get(filter: {
         'SkolaID': _selectedSchool!.skolaID,
-        // 'ProfesorID': loggedInUser!.korisnikId,
       });
 
       setState(() {
         _annualPlanPrograms = annualPlanResponse.result;
       });
 
-      await _fetchDepartmentSubjects();
-      await _fetchProfesors();
+      _fetchProfesors();
     } catch (e) {
       print("Failed to fetch Annual Plan Programs: $e");
     }
@@ -207,17 +259,6 @@ Widget _buildProfesorDropdown() {
 
       return false;
     }).toList();
-  }
-
-  Future<void> _fetchDepartmentSubjects() async {
-    try {
-      var departmentSubjectResponse = await _departmentSubjectProvider.get();
-      setState(() {
-        _departmentSubjects = departmentSubjectResponse.result;
-      });
-    } catch (e) {
-      print("Failed to fetch DepartmentSubjects: $e");
-    }
   }
 
   Future<void> _fetchClasses(BuildContext dialogContext) async {
@@ -242,6 +283,115 @@ Widget _buildProfesorDropdown() {
     } catch (e) {
       print("Failed to fetch classes: $e");
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MasterScreenWidget(
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Color(0xFFF7F2FA),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: _isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _buildScreenName(),
+                          SizedBox(height: 16.0),
+                          _buildCalendar(),
+                          SizedBox(height: 20),
+                          if (_selectedDay != null) _buildSelectedClasses(),
+                          SizedBox(height: 20),
+                          _buildAddClassesButton(),
+                        ],
+                      ),
+                    ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildScreenName() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(5),
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.elliptical(5, 5),
+                    bottomRight: Radius.circular(30.0),
+                  ),
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "Kalendar",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Expanded(child: _buildSchoolDropdown()),
+            ],
+          ),
+          SizedBox(height: 16),
+          _buildProfesorDropdown(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSchoolDropdown() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          width: 210,
+          child: DropdownButton<School>(
+            value: _selectedSchool,
+            items: _schools.map((school) {
+              return DropdownMenuItem<School>(
+                value: school,
+                child: Text(school.naziv ?? "N/A"),
+              );
+            }).toList(),
+            onChanged: (School? newValue) {
+              if (newValue == null || newValue == _selectedSchool) return;
+
+              setState(() {
+                _selectedSchool = newValue;
+                _profesors = [];
+                _selectedProfesor = null;
+              });
+
+              _fetchAnnualPlanPrograms().then((_) => _fetchProfesors());
+              _fetchClassess();
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   void _groupClassesByDate() {
@@ -493,16 +643,23 @@ Widget _buildProfesorDropdown() {
       try {
         await _classesProvider.Update(
             _selectedClass!.casoviID ?? 0, requestBody);
-
         setState(() {
           if (_groupedClasses[classDateTime] == null) {
             _groupedClasses[classDateTime] = [];
           }
 
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Uspješno ste dodali čas u kalendar."),
+              backgroundColor: Colors.green,
+            ),
+          );
+
           Classes updatedClass = _selectedClass!;
           updatedClass.datumOdrzavanjaCasa = classDateTime;
 
           _groupedClasses[classDateTime]?.add(updatedClass);
+          print("Class provider Update : ${updatedClass}");
 
           _selectedDay = classDateTime;
           _fetchClassess();
@@ -513,105 +670,6 @@ Widget _buildProfesorDropdown() {
     } else {
       print("No class or program selected to update.");
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MasterScreenWidget(
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Color(0xFFF7F2FA),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.0),
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildScreenName(),
-                    SizedBox(height: 16.0),
-                    _buildCalendar(),
-                    SizedBox(height: 20),
-                    if (_selectedDay != null) _buildSelectedClasses(),
-                    SizedBox(height: 20),
-                    _buildAddClassesButton(),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildScreenName() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(5),
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.elliptical(5, 5),
-                    bottomRight: Radius.circular(30.0),
-                  ),
-                ),
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "Kalendar",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Expanded(child: _buildSchoolDropdown()),
-            ],
-          ),
-          SizedBox(height: 16),
-          _buildProfesorDropdown(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSchoolDropdown() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Container(
-          width: 210,
-          child: DropdownButton<School>(
-            value: _selectedSchool,
-            items: _schools.map((school) {
-              return DropdownMenuItem<School>(
-                value: school,
-                child: Text(school.naziv ?? "N/A"),
-              );
-            }).toList(),
-            onChanged: (School? newValue) {
-              setState(() {
-                _selectedSchool = newValue;
-                _fetchAnnualPlanPrograms();
-              });
-            },
-          ),
-        ),
-      ],
-    );
   }
 
   Widget _buildCalendar() {
@@ -751,6 +809,12 @@ Widget _buildProfesorDropdown() {
               ),
               ElevatedButton(
                 onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Uspješno ste obrisali čas iz kalendara."),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
                   Navigator.of(context).pop(true);
                 },
                 style: ElevatedButton.styleFrom(
@@ -781,12 +845,11 @@ Widget _buildProfesorDropdown() {
 
       await _classesProvider.Update(classItem.casoviID ?? 0, requestBody);
       ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  "Uspješno ste izbrisali čas iz kalendara."),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
+        SnackBar(
+          content: Text("Uspješno ste izbrisali čas iz kalendara."),
+          backgroundColor: Colors.green,
+        ),
+      );
       setState(() {
         _classes.removeWhere(
             (existingClass) => existingClass.casoviID == classItem.casoviID);
