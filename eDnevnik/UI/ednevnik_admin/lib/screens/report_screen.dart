@@ -1,27 +1,24 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/department_subject.dart';
 import 'package:ednevnik_admin/models/final_grade.dart';
-import 'package:ednevnik_admin/providers/final_grade_provider.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:ednevnik_admin/models/school.dart';
+import 'package:ednevnik_admin/models/user.dart';
+import 'package:ednevnik_admin/providers/annual_plan_program_provider.dart';
+import 'package:ednevnik_admin/providers/classes_provider.dart';
+import 'package:ednevnik_admin/providers/classes_students_provider.dart';
+import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
-import 'package:ednevnik_admin/models/department.dart';
-import 'package:ednevnik_admin/models/grade.dart';
-import 'package:ednevnik_admin/models/school.dart';
-import 'package:ednevnik_admin/models/subject.dart';
-import 'package:ednevnik_admin/models/user.dart';
 import 'package:ednevnik_admin/providers/department_provider.dart';
-import 'package:ednevnik_admin/providers/grade_provider.dart';
-import 'package:ednevnik_admin/providers/school_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
+import 'package:ednevnik_admin/providers/school_provider.dart';
+import 'package:ednevnik_admin/providers/grade_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/providers/department_subject_provider.dart';
-import 'package:ednevnik_admin/widgets/master_screen.dart';
+import 'package:ednevnik_admin/providers/final_grade_provider.dart';
 
 class ReportDetailScreen extends StatefulWidget {
   const ReportDetailScreen({Key? key}) : super(key: key);
@@ -38,29 +35,23 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
   late UserProvider _userProvider;
   late DepartmentSubjectProvider _departmentSubjectProvider;
   late FinalGradeProvider _finalGradeProvider;
+  late ClassesProvider _classesProvider;
+  late ClassesStudentsProvider _classesStudentsProvider;
+  late AnnualPlanProgramProvider _annualPlanProgramProvider;
 
-  Department? _selectedDepartment;
-  DepartmentSubject? _selectedSubject;
-  School? _selectedSchool;
-  User? _selectedUser;
-  bool _isLoading = false;
-  Map<int, User> _users = {};
-
-  List<FinalGrade> _finalGrades = [];
+  List<School> _schools = [];
   List<Department> _departments = [];
   List<DepartmentSubject> _subjects = [];
-  List<School> _schools = [];
-  List<Grade> _grades = [];
   Map<int, String> _subjectNames = {};
 
-  Timer? _debounce;
+  School? _selectedSchool;
+  Department? _selectedDepartment;
+  DepartmentSubject? _selectedSubject;
+  User? _selectedUser;
 
-  void _onDropdownChanged(VoidCallback fetchFunction) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
-      fetchFunction();
-    });
-  }
+  List<Map<String, dynamic>> userGrades = [];
+
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -72,6 +63,9 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     _userProvider = context.read<UserProvider>();
     _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
     _finalGradeProvider = context.read<FinalGradeProvider>();
+    _classesProvider = context.read<ClassesProvider>();
+    _classesStudentsProvider = context.read<ClassesStudentsProvider>();
+    _annualPlanProgramProvider = context.read<AnnualPlanProgramProvider>();
 
     _initializeData();
   }
@@ -80,31 +74,16 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     setState(() {
       _isLoading = true;
     });
+
     try {
       await _fetchSchools();
+      await fetchFinalGrades();
     } catch (e) {
       print(e);
     } finally {
       setState(() {
         _isLoading = false;
       });
-    }
-  }
-
-  Future<void> _fetchFinalGrades(int predmetID, int korisnikID) async {
-    try {
-      var finalGrades = await _finalGradeProvider.get(filter: {
-        'PredmetID': predmetID,
-        'KorisnikID': korisnikID,
-      });
-
-      if (finalGrades.result.isNotEmpty) {
-        setState(() {
-          _finalGrades = finalGrades.result;
-        });
-      }
-    } catch (e) {
-      print("Error fetching final grades: $e");
     }
   }
 
@@ -175,66 +154,164 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       setState(() {
         _subjects = departmentSubjects;
         _subjectNames = subjectNames;
-        _selectedSubject = _subjects.isNotEmpty ? _subjects.first : null;
+        _selectedSubject = null;
       });
 
-      if (_selectedSubject != null) {
-        await _fetchGrades();
-      }
+      if (_selectedSubject != null) {}
     } catch (e) {
       print("Error fetching department subjects: $e");
     }
   }
 
-  Future<void> _fetchGrades() async {
-    setState(() {
-      _isLoading = true;
-    });
+  Future<void> fetchFinalGrades() async {
     try {
-      if (_selectedSubject != null) {
-        var grades = await _gradeProvider.get(filter: {
+      List<int?> korisnikIDs = [];
+      if (_selectedUser == null) {
+        korisnikIDs = _selectedDepartment?.ucenici
+                ?.map((user) => user.korisnikId)
+                .toList() ??
+            [];
+      } else {
+        korisnikIDs = [_selectedUser!.korisnikId];
+      }
+
+      List<Map<String, dynamic>> fetchedGrades = [];
+
+      if (_selectedSubject == null) {
+        for (var korisnikID in korisnikIDs) {
+          var data = await _finalGradeProvider.get(filter: {
+            'KorisnikID': korisnikID,
+          });
+
+          final user = _selectedDepartment?.ucenici
+              ?.firstWhere((u) => u.korisnikId == korisnikID);
+          final userName =
+              "${user?.ime ?? 'Unknown'} ${user?.prezime ?? 'Unknown'}";
+
+          for (var grade in data.result) {
+            final subjectName =
+                _subjectNames[grade.predmetID] ?? "Unknown Subject";
+            fetchedGrades.add({
+              "userName": userName,
+              "predmet": subjectName,
+              "vrijednostZakljucneOcjene":
+                  grade.vrijednostZakljucneOcjene ?? 0.0,
+              "korisnikID": korisnikID,
+              "predmetID": grade.predmetID,
+            });
+          }
+        }
+      } else if (_selectedUser != null && _selectedSubject != null) {
+        var data = await _finalGradeProvider.get(filter: {
+          'KorisnikID': _selectedUser!.korisnikId,
           'PredmetID': _selectedSubject!.predmetID,
-          'KorisnikID': _selectedUser?.korisnikId,
-        });
-        setState(() {
-          _grades = grades.result;
         });
 
-        await _fetchUsers();
+        final userName =
+            "${_selectedUser!.ime ?? 'Unknown'} ${_selectedUser!.prezime ?? 'Unknown'}";
+        final subjectName =
+            _subjectNames[_selectedSubject!.predmetID] ?? "Unknown Subject";
+
+        for (var grade in data.result) {
+          fetchedGrades.add({
+            "userName": userName,
+            "predmet": subjectName,
+            "vrijednostZakljucneOcjene": grade.vrijednostZakljucneOcjene ?? 0.0,
+            "korisnikID": _selectedUser!.korisnikId,
+            "predmetID": grade.predmetID,
+          });
+        }
+      } else {
+        for (var korisnikID in korisnikIDs) {
+          var data = await _finalGradeProvider.get(filter: {
+            'KorisnikID': korisnikID,
+            'PredmetID': _selectedSubject!.predmetID,
+          });
+
+          final user = _selectedDepartment?.ucenici
+              ?.firstWhere((u) => u.korisnikId == korisnikID);
+          final userName =
+              "${user?.ime ?? 'Unknown'} ${user?.prezime ?? 'Unknown'}";
+
+          for (var grade in data.result) {
+            final subjectName =
+                _subjectNames[grade.predmetID] ?? "Unknown Subject";
+            fetchedGrades.add({
+              "userName": userName,
+              "predmet": subjectName,
+              "vrijednostZakljucneOcjene":
+                  grade.vrijednostZakljucneOcjene ?? 0.0,
+              "korisnikID": korisnikID,
+              "predmetID": grade.predmetID,
+            });
+          }
+        }
       }
-    } catch (e) {
-      print(e);
-    } finally {
+
       setState(() {
-        _isLoading = false;
+        userGrades = fetchedGrades;
       });
+    } catch (e) {
+      print("Error fetching final grades: $e");
     }
   }
 
-  Future<void> _fetchUsers() async {
-    setState(() {
-      _isLoading = true;
-    });
+  Future<double> _fetchAttendance(int? korisnikID, int? predmetID) async {
+    if (korisnikID == null || predmetID == null) {
+      return 0.0;
+    }
+
     try {
-      if (_selectedUser == null) {
-        Map<int, User> fetchedUsers = {};
-        for (Grade grade in _grades) {
-          if (grade.korisnikID != null &&
-              !_users.containsKey(grade.korisnikID!)) {
-            User user = await _userProvider.getById(grade.korisnikID!);
-            fetchedUsers[grade.korisnikID!] = user;
+      final annualPlanResponse = await _annualPlanProgramProvider.get(filter: {
+        'PredmetID': predmetID,
+      });
+
+      if (annualPlanResponse.result == null ||
+          annualPlanResponse.result.isEmpty) {
+        return 0.0;
+      }
+
+      final annualPlanProgram = annualPlanResponse.result.first;
+      final godisnjiPlanProgramID = annualPlanProgram.godisnjiPlanProgramID;
+
+      final classesResponse = await _classesProvider.get(filter: {
+        'GodisnjiPlanProgramID': godisnjiPlanProgramID,
+      });
+
+      if (classesResponse.result == null || classesResponse.result.isEmpty) {
+        return 0.0;
+      }
+
+      final classes = classesResponse.result
+          .where((classItem) => classItem.isOdrzan == true)
+          .toList();
+      final totalClasses = classes.length;
+
+      if (totalClasses == 0) {
+        return 0.0;
+      }
+
+      int attendedClasses = 0;
+
+      for (var classItem in classes) {
+        final attendanceResponse = await _classesStudentsProvider.get(filter: {
+          'CasoviID': classItem.casoviID,
+          'UcenikID': korisnikID,
+        });
+
+        if (attendanceResponse.result != null) {
+          bool isPresent = attendanceResponse.result
+              .any((student) => student.isPrisutan == true);
+          if (isPresent) {
+            attendedClasses++;
           }
         }
-        setState(() {
-          _users.addAll(fetchedUsers);
-        });
       }
+
+      final attendancePercentage = (attendedClasses / totalClasses) * 100;
+      return attendancePercentage;
     } catch (e) {
-      print(e);
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      return 0.0;
     }
   }
 
@@ -263,15 +340,304 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
                     SizedBox(height: 16.0),
                     _buildSearch(),
                     SizedBox(height: 20),
-                    _isLoading
-                        ? Center(child: CircularProgressIndicator())
-                        : _buildContent(),
+                    SingleChildScrollView(
+                        child: _isLoading
+                            ? Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : _buildDataTable())
                   ],
                 ),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDataTable() {
+    if (userGrades.isEmpty) {
+      return const Center(
+          child: Text(
+              "Trenutno nema podataka, pritisnite dugme 'Pretraga' ukoliko već niste to uradili."));
+    }
+
+    List<DataRow> rows = userGrades.map((grade) {
+      final korisnikID = grade["korisnikID"] as int?;
+      final predmetID = grade["predmetID"] as int?;
+
+      return DataRow(
+        cells: [
+          DataCell(Text(grade["userName"] ?? "Unknown User")),
+          DataCell(Text(grade["predmet"] ?? "Unknown Subject")),
+          DataCell(Text(grade["vrijednostZakljucneOcjene"].toString())),
+          DataCell(
+            FutureBuilder<double>(
+              future: _fetchAttendance(korisnikID, predmetID),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+                if (snapshot.hasError) {
+                  return const Text("Error");
+                }
+
+                final attendance = snapshot.data ?? 0.0;
+                return Text("${attendance.toStringAsFixed(1)}%");
+              },
+            ),
+          ),
+          DataCell(
+            IconButton(
+              icon: const Icon(Icons.comment, color: Colors.blue),
+              onPressed: () {
+                _showCommentsDialog(korisnikID);
+              },
+            ),
+          ),
+        ],
+      );
+    }).toList();
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
+        columns: const [
+          DataColumn(
+            label: Text(
+              "Ime i prezime",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              "Predmet",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              "Zaključna ocjena",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              "Prisustvo",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          DataColumn(
+            label: Text(
+              "Komentari",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+        rows: rows,
+      ),
+    );
+  }
+
+  Future<void> _showCommentsDialog(int? korisnikID) async {
+    if (korisnikID == null) {
+      return;
+    }
+
+    try {
+      final data = await _gradeProvider.get(filter: {'KorisnikID': korisnikID});
+      final comments = data.result;
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Komentari"),
+            content: SizedBox(
+              width: double.minPositive,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: comments.map<Widget>((comment) {
+                    String formattedDate = comment.datum != null
+                        ? DateFormat('dd/MM/yyyy').format(comment.datum!)
+                        : 'N/A';
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                "Datum: ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(formattedDate),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                "Ocjena: ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text("${comment.vrijednostOcjene ?? 'N/A'}"),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                "Komentar: ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Expanded(
+                                child: Text(comment.komentar ?? 'N/A'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black),
+                child: const Text("Zatvori"),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      print("Error fetching comments: $e");
+    }
+  }
+
+  Widget _buildSearch() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: DropdownButton<School>(
+              hint: Text("Izaberite školu"),
+              value: _selectedSchool,
+              items: _schools.map((school) {
+                return DropdownMenuItem<School>(
+                  value: school,
+                  child: Text(school.naziv ?? "N/A"),
+                );
+              }).toList(),
+              onChanged: (School? newValue) {
+                setState(() {
+                  _selectedSchool = newValue;
+                  _fetchDepartments();
+                });
+              },
+            ),
+          ),
+          SizedBox(width: 40),
+          Expanded(
+            child: DropdownButton<Department>(
+              hint: Text("Izaberite odjeljenje"),
+              value: _selectedDepartment,
+              onChanged: (Department? newValue) async {
+                setState(() {
+                  _selectedDepartment = newValue;
+                });
+                await _fetchDepartmentSubjects();
+              },
+              items: _departments.map((Department department) {
+                return DropdownMenuItem<Department>(
+                  value: department,
+                  child: Text(department.nazivOdjeljenja ?? ""),
+                );
+              }).toList(),
+            ),
+          ),
+          SizedBox(width: 40),
+          Expanded(
+            child: DropdownButton<DepartmentSubject>(
+              hint: Text("Izaberite predmet"),
+              value: _selectedSubject,
+              onChanged: (DepartmentSubject? newValue) {
+                setState(() {
+                  _selectedSubject = newValue;
+                });
+              },
+              items: [
+                DropdownMenuItem<DepartmentSubject>(
+                  value: null,
+                  child: Text("Svi predmeti"),
+                ),
+                ..._subjects.map((DepartmentSubject departmentSubject) {
+                  return DropdownMenuItem<DepartmentSubject>(
+                    value: departmentSubject,
+                    child: Text(
+                      _subjectNames[departmentSubject.predmetID] ?? "N/A",
+                    ),
+                  );
+                }).toList(),
+              ],
+            ),
+          ),
+          SizedBox(width: 40),
+          Expanded(
+            child: DropdownButton<User>(
+              hint: Text("Izaberite učenika"),
+              value: _selectedUser,
+              onChanged: (User? newValue) async {
+                setState(() {
+                  _selectedUser = newValue;
+                });
+              },
+              items: [
+                DropdownMenuItem<User>(
+                  value: null,
+                  child: Text("Svi učenici"),
+                ),
+                ...?_selectedDepartment?.ucenici?.map((User user) {
+                  return DropdownMenuItem<User>(
+                    value: user,
+                    child: Text('${user.ime ?? ''} ${user.prezime ?? ''}'),
+                  );
+                }).toList(),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 40,
+          ),
+          Center(
+            child: ElevatedButton(
+              onPressed: () async {
+                await fetchFinalGrades();
+              },
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              child: const Text(
+                "Pretraga",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -306,7 +672,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         Padding(
           padding: const EdgeInsets.only(right: 16.0),
           child: ElevatedButton.icon(
-            onPressed: _generatePDFReport,
+            onPressed: () => print("PDF"),
             icon: Icon(Icons.print),
             label: Text("Printaj izvještaj"),
             style: ElevatedButton.styleFrom(
@@ -323,480 +689,26 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       ],
     );
   }
+}
 
-  Widget _buildSearch() {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: DropdownButton<School>(
-              hint: Text("Izaberite školu"),
-              value: _selectedSchool,
-              items: _schools.map((school) {
-                return DropdownMenuItem<School>(
-                  value: school,
-                  child: Text(school.naziv ?? "N/A"),
-                );
-              }).toList(),
-              onChanged: (School? newValue) {
-                setState(() {
-                  _selectedSchool = newValue;
-                  _selectedDepartment = null;
-                  _selectedSubject = null;
-                  _selectedUser = null;
-                });
-                _onDropdownChanged(() async {
-                  await _fetchDepartmentSubjects();
-                  await _fetchDepartments();
-                  await _fetchGrades();
-                });
-              },
-            ),
-          ),
-          SizedBox(width: 40),
-          Expanded(
-            child: DropdownButton<Department>(
-              hint: Text("Izaberite odjeljenje"),
-              value: _selectedDepartment,
-              onChanged: (Department? newValue) async {
-                setState(() {
-                  _selectedDepartment = newValue;
-                  _selectedUser = null;
-                });
-                await _fetchDepartmentSubjects();
-                await _fetchGrades();
-              },
-              items: _departments.map((Department department) {
-                return DropdownMenuItem<Department>(
-                  value: department,
-                  child: Text(department.nazivOdjeljenja ?? ""),
-                );
-              }).toList(),
-            ),
-          ),
-          SizedBox(width: 40),
-          Expanded(
-            child: DropdownButton<DepartmentSubject>(
-              hint: Text("Izaberite predmet"),
-              value: _selectedSubject,
-              onChanged: (DepartmentSubject? newValue) async {
-                setState(() {
-                  _selectedSubject = newValue;
-                  _selectedUser = null;
-                });
-                await _fetchGrades();
-              },
-              items: _subjects.map((DepartmentSubject departmentSubject) {
-                return DropdownMenuItem<DepartmentSubject>(
-                  value: departmentSubject,
-                  child:
-                      Text(_subjectNames[departmentSubject.predmetID] ?? "N/A"),
-                );
-              }).toList(),
-            ),
-          ),
-          SizedBox(width: 40),
-          Expanded(
-            child: DropdownButton<User>(
-              hint: Text("Izaberite učenika"),
-              value: _selectedUser,
-              onChanged: (User? newValue) async {
-                setState(() {
-                  _selectedUser = newValue;
-                  _isLoading = true;
-                });
-                await _fetchGrades();
-                setState(() {
-                  _isLoading = false;
-                });
-              },
-              items: [
-                DropdownMenuItem<User>(
-                  value: null,
-                  child: Text("Svi učenici"),
-                ),
-                ...?_selectedDepartment?.ucenici?.map((User user) {
-                  return DropdownMenuItem<User>(
-                    value: user,
-                    child: Text('${user.ime ?? ''} ${user.prezime ?? ''}'),
-                  );
-                }).toList(),
-              ],
-            ),
+void _showErrorDialog(BuildContext context, String title, String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("OK"),
+            style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black, backgroundColor: Colors.white),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildContent() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 2,
-          child: _buildChart(),
-        ),
-        SizedBox(width: 20),
-        Expanded(
-          flex: 1,
-          child: _buildUserDetails(),
-        ),
-      ],
-    );
-  }
-
-  Future<double> _calculateZakljucnaOcjena(
-      int korisnikID, int predmetID) async {
-    var finalGrades = await _finalGradeProvider.get(filter: {
-      'PredmetID': predmetID,
-      'KorisnikID': korisnikID,
-    });
-
-    if (finalGrades.result.isEmpty) return 0.0;
-
-    double sum = finalGrades.result.fold(
-        0.0,
-        (prev, element) =>
-            prev + (element.vrijednostZakljucneOcjene?.toDouble() ?? 0.0));
-    double average = sum / finalGrades.result.length;
-
-    return average;
-  }
-
-  Widget _buildUserDetails() {
-    List<User> filteredUsers =
-        _selectedUser == null ? _users.values.toList() : [_selectedUser!];
-
-    if (filteredUsers.isEmpty || _selectedSubject == null) {
-      return Center(
-        child: Text(
-          "Nema zaključnih ocjena za pregled.",
-          style: TextStyle(fontSize: 16, color: Colors.black),
-          textAlign: TextAlign.center,
-        ),
       );
-    }
-
-    return FutureBuilder<List<double>>(
-      future: Future.wait(
-        filteredUsers.map((user) => _calculateZakljucnaOcjena(
-            user.korisnikId!, _selectedSubject!.predmetID!)),
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError || snapshot.data == null) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else {
-          final grades = snapshot.data!;
-          final usersWithGrades = [
-            for (int i = 0; i < filteredUsers.length; i++)
-              if (grades[i] > 0.0) MapEntry(filteredUsers[i], grades[i])
-          ];
-
-          if (usersWithGrades.isEmpty) {
-            return Center(
-              child: Text(
-                "Kako nema ocjena za učenike, tako nema i zaključnih ocjena.",
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-                textAlign: TextAlign.center,
-              ),
-            );
-          }
-
-          return ListView(
-            shrinkWrap: true,
-            children: usersWithGrades.map((entry) {
-              final user = entry.key;
-              final finalGrade = entry.value;
-              return Card(
-                child: ListTile(
-                  title: Text('${user.ime} ${user.prezime}'),
-                  subtitle: Text(
-                      'Zaključna ocjena: ${finalGrade.toStringAsFixed(2)}'),
-                ),
-              );
-            }).toList(),
-          );
-        }
-      },
-    );
-  }
-
-  Widget _buildChart() {
-    try {
-      if (_subjects.isEmpty) {
-        return Center(child: Text("Nema dostupnih ocjena na pregled"));
-      }
-
-      return Container(
-        height: 300,
-        padding: EdgeInsets.all(16.0),
-        child: BarChart(
-          BarChartData(
-            alignment: BarChartAlignment.spaceAround,
-            minY: 1,
-            maxY: 5,
-            barGroups: _buildBarGroups(),
-            borderData: FlBorderData(show: false),
-            titlesData: FlTitlesData(
-              bottomTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  getTitlesWidget: (value, meta) =>
-                      _buildBottomTitles(value, meta),
-                ),
-              ),
-              leftTitles: AxisTitles(
-                sideTitles: SideTitles(
-                  showTitles: true,
-                  interval: 1,
-                  getTitlesWidget: (value, meta) {
-                    return Text(
-                      value.toInt().toString(),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    } catch (e) {
-      print('Error in _buildChart: $e');
-      return Center(
-          child: Text("Došlo je do greške prilikom učitavanja podataka"));
-    }
-  }
-
-  List<BarChartGroupData> _buildBarGroups() {
-    if (_grades.isEmpty || _users.isEmpty) {
-      return [];
-    }
-
-    Map<int, List<Grade>> groupedGrades = {};
-    for (var grade in _grades) {
-      if (groupedGrades.containsKey(grade.korisnikID)) {
-        groupedGrades[grade.korisnikID!]!.add(grade);
-      } else {
-        groupedGrades[grade.korisnikID!] = [grade];
-      }
-    }
-
-    return groupedGrades.entries
-        .map((entry) {
-          int userId = entry.key;
-          List<Grade> grades = entry.value;
-
-          List<BarChartRodData> barRods = [];
-
-          for (int i = 0; i < grades.length; i++) {
-            var grade = grades[i];
-            double gradeValue =
-                (grade.vrijednostOcjene?.toDouble() ?? 0.0).clamp(1.0, 5.0);
-
-            barRods.add(BarChartRodData(
-              toY: gradeValue,
-              color: Colors.blue,
-              width: 20.0,
-              borderSide: BorderSide(
-                color: Colors.blue,
-              ),
-            ));
-          }
-
-          if (barRods.isEmpty) {
-            return null;
-          }
-
-          return BarChartGroupData(
-            x: userId,
-            barRods: barRods,
-            showingTooltipIndicators: [],
-          );
-        })
-        .whereType<BarChartGroupData>()
-        .toList();
-  }
-
-  Widget _buildBottomTitles(double value, TitleMeta meta) {
-    final userId = value.toInt();
-    final userName = _users[userId]?.ime ?? 'N/A';
-
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: Container(
-        height: 40,
-        alignment: Alignment.center,
-        child: Text(
-          userName,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.black,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
-  Future<String> _fetchSubjectName(int predmetID) async {
-    try {
-      final subject = await _subjectProvider.getById(predmetID);
-      return subject.naziv ?? "N/A";
-    } catch (e) {
-      print("Error fetching subject name: $e");
-      return "N/A";
-    }
-  }
-
-  void _generatePDFReport() async {
-    final pdf = pw.Document();
-    final dateFormat = DateFormat('dd.MM.yyyy');
-    final now = DateTime.now();
-    final timestamp = DateFormat('yyyyMMdd_HHmmss').format(now);
-
-    final schoolName = replaceSpecialChars(_selectedSchool?.naziv ?? "N/A");
-    final departmentName =
-        replaceSpecialChars(_selectedDepartment?.nazivOdjeljenja ?? "N/A");
-    final subjectName = _selectedSubject != null
-        ? await _fetchSubjectName(_selectedSubject!.predmetID!)
-        : "N/A";
-
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Center(
-            child: pw.Column(
-              mainAxisSize: pw.MainAxisSize.min,
-              crossAxisAlignment: pw.CrossAxisAlignment.center,
-              children: [
-                pw.Text(
-                  replaceSpecialChars('Izvještaj o ocjenama'),
-                  style: pw.TextStyle(
-                    fontSize: 24,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColors.blue800,
-                  ),
-                ),
-                pw.SizedBox(height: 20),
-                pw.Text(
-                  'kola: $schoolName',
-                  style: pw.TextStyle(fontSize: 16, color: PdfColors.black),
-                ),
-                pw.Text(
-                  'Odjeljenje: $departmentName',
-                  style: pw.TextStyle(fontSize: 16, color: PdfColors.black),
-                ),
-                pw.Text(
-                  'Predmet: $subjectName',
-                  style: pw.TextStyle(fontSize: 16, color: PdfColors.black),
-                ),
-                pw.SizedBox(height: 10),
-                pw.Text(
-                  'Izvjestaj generisan na datum: ${dateFormat.format(now)}',
-                  style: pw.TextStyle(
-                    fontSize: 16,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColors.grey900,
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                replaceSpecialChars('Ocjene učenika'),
-                style: pw.TextStyle(
-                  fontSize: 18,
-                  fontWeight: pw.FontWeight.bold,
-                  color: PdfColors.black,
-                ),
-              ),
-              pw.SizedBox(height: 10),
-              pw.Table.fromTextArray(
-                headers: [
-                  replaceSpecialChars('Učenik'),
-                  replaceSpecialChars('Datum'),
-                  replaceSpecialChars('Ocjena')
-                ],
-                data: _grades.map((grade) {
-                  final user = _users[grade.korisnikID];
-                  final userName =
-                      '${replaceSpecialChars(user?.ime ?? '')} ${replaceSpecialChars(user?.prezime ?? '')}';
-                  final gradeDate =
-                      dateFormat.format(grade.datum ?? DateTime.now());
-                  final gradeValue = grade.vrijednostOcjene?.toString() ?? '';
-
-                  return [userName, gradeDate, gradeValue];
-                }).toList(),
-                border: pw.TableBorder.all(),
-                cellStyle: pw.TextStyle(fontSize: 12),
-                headerStyle: pw.TextStyle(
-                  fontSize: 14,
-                  fontWeight: pw.FontWeight.bold,
-                  color: PdfColors.blue900,
-                ),
-                headerDecoration: pw.BoxDecoration(
-                  color: PdfColors.grey300,
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-
-    final result = await FilePicker.platform.saveFile(
-      dialogTitle: 'Odaberite mjesto za spremanje PDF-a',
-      fileName: 'izvještaj_$timestamp.pdf',
-    );
-
-    if (result != null) {
-      final outputFile = File(result);
-      await outputFile.writeAsBytes(await pdf.save());
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('PDF je uspješno spremljen: ${outputFile.path}'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Spremanje PDF-a nije uspjelo.'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    }
-  }
-
-  String replaceSpecialChars(String input) {
-    return input
-        .replaceAll('š', 's')
-        .replaceAll('č', 'c')
-        .replaceAll('ć', 'c')
-        .replaceAll('đ', 'd')
-        .replaceAll('ž', 'z')
-        .replaceAll('Đ', 'D')
-        .replaceAll('Ć', 'C')
-        .replaceAll('Č', 'C')
-        .replaceAll('Š', 'S')
-        .replaceAll('Ž', 'Z');
-  }
+    },
+  );
 }
