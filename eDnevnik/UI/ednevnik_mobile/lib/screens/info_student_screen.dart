@@ -189,8 +189,16 @@ class _InfoStudentDetailScreenState extends State<InfoStudentDetailScreen> {
               body: Column(
                 children: grades.map((grade) {
                   return ListTile(
-                    title: Text("Datum: ${grade.datum?.toLocal().toString().split(' ')[0] ?? 'N/A'}"),
-                    subtitle: Text("Ocjena: ${grade.vrijednostOcjene ?? 'N/A'}"),
+                    title: Text(
+                      "Datum: ${grade.datum?.toLocal().toString().split(' ')[0] ?? 'N/A'}",
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Ocjena: ${grade.vrijednostOcjene ?? 'N/A'}"),
+                        Text("Komentar: ${grade.komentar ?? 'Nema komentara'}"),
+                      ],
+                    ),
                   );
                 }).toList(),
               ),
@@ -201,4 +209,5 @@ class _InfoStudentDetailScreenState extends State<InfoStudentDetailScreen> {
       ),
     );
   }
+
 }

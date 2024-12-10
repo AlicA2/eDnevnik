@@ -126,7 +126,6 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
     }
   }
 
-
   Future<void> _fetchClassesStudents() async {
     try {
       var response = await _classesStudentsProvider.get(filter: {
@@ -144,23 +143,22 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
   }
 
   Future<void> _insertClassesStudents(List<User> ucenici) async {
-  for (var ucenik in ucenici) {
-    try {
-      var request = {
-        'casoviID': widget.casoviID,
-        'ucenikID': ucenik.korisnikId,
-        'ime': ucenik.ime,
-        'prezime': ucenik.prezime,
-        'isPrisutan': false,
-      };
+    for (var ucenik in ucenici) {
+      try {
+        var request = {
+          'casoviID': widget.casoviID,
+          'ucenikID': ucenik.korisnikId,
+          'ime': ucenik.ime,
+          'prezime': ucenik.prezime,
+          'isPrisutan': false,
+        };
 
-      await _classesStudentsProvider.Insert(request);
-    } catch (e) {
-      print("Failed to insert ClassesStudent: $e");
+        await _classesStudentsProvider.Insert(request);
+      } catch (e) {
+        print("Failed to insert ClassesStudent: $e");
+      }
     }
   }
-}
-
 
   Future<void> _updateClassOdrzan(bool value) async {
     setState(() {
@@ -180,12 +178,11 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
       try {
         await _classesProvider.Update(widget.casoviID!, updateRequest);
         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  "Uspješno ste ažurirali čas."),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
+          SnackBar(
+            content: Text("Uspješno ste ažurirali čas."),
+            backgroundColor: Colors.green,
+          ),
+        );
         print("Class updated successfully!");
       } catch (e) {
         print("Failed to update class: $e");
@@ -220,12 +217,11 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
         student.zakljucan = true;
 
         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  "Uspješno ste ažurirali čas."),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
+          SnackBar(
+            content: Text("Uspješno ste ažurirali čas."),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
 
       setState(() {
@@ -261,15 +257,18 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
                         children: [
                           _buildScreenName(),
                           SizedBox(height: 16.0),
-                           (_classesStudentsList == null || _classesStudentsList!.isEmpty)
-                  ? Center(
-                      child: Text(
-                        'Nema učenika u odjeljenju!',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  : _buildClassesStudentsTable(_classesStudentsList!),
+                          (_classesStudentsList == null ||
+                                  _classesStudentsList!.isEmpty)
+                              ? Center(
+                                  child: Text(
+                                    'Nema učenika u odjeljenju!',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              : _buildClassesStudentsTable(
+                                  _classesStudentsList!),
                           SizedBox(height: 16.0),
                           if (_isOdrzan == true && !_isSubmitted)
                             _buildAddPresenceButton(),
@@ -303,178 +302,192 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
   }
 
   Widget _buildScreenName() {
-  bool allStudentsLocked = _classesStudentsList?.every((student) => student.zakljucan == true) ?? false;
+    bool allStudentsLocked =
+        _classesStudentsList?.every((student) => student.zakljucan == true) ??
+            false;
 
-  return Align(
-    alignment: Alignment.centerLeft,
-    child: Row(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(5),
-              topLeft: Radius.circular(20),
-              topRight: Radius.elliptical(5, 5),
-              bottomRight: Radius.circular(30.0),
-            ),
-          ),
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            "Održani časovi",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        Spacer(),
-        Column(
-          children: [
-            _buildConfirmationRow(),
-            Row(
-              children: [
-                Checkbox(
-                  value: _allPresent,
-                  onChanged: (_isOdrzan == true && !_isSubmitted && !allStudentsLocked)
-                      ? (value) {
-                          _toggleAllPresent(value ?? false);
-                        }
-                      : null,
-                ),
-                Text(
-                  "Svi prisutni",
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-}
-
-
-  Widget _buildConfirmationRow() {
-  bool allStudentsLocked = _classesStudentsList?.every((student) => student.zakljucan == true) ?? false;
-
-  return Padding(
-    padding: const EdgeInsets.only(left: 16.0, right: 16),
-    child: Row(
-      children: [
-        Text(
-          "Da li je čas održan: ",
-          style: TextStyle(
-            fontSize: 16,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-          child: Row(
-            children: [
-              ElevatedButton(
-                onPressed:
-                    (_classesStudentsList == null || _classesStudentsList!.isEmpty || _isSubmitted || allStudentsLocked)
-                        ? null
-                        : () => _updateClassOdrzan(true),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      (_isOdrzan == true) ? Colors.green : Colors.grey,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text('Da'),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(5),
+                topLeft: Radius.circular(20),
+                topRight: Radius.elliptical(5, 5),
+                bottomRight: Radius.circular(30.0),
               ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed:
-                    (_classesStudentsList == null || _classesStudentsList!.isEmpty || _isSubmitted || allStudentsLocked)
-                        ? null
-                        : () => _updateClassOdrzan(false),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      (_isOdrzan == false) ? Colors.red : Colors.grey,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              "Održani časovi",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Spacer(),
+          Column(
+            children: [
+              _buildConfirmationRow(),
+              Row(
+                children: [
+                  Checkbox(
+                    value: _allPresent,
+                    onChanged: (_isOdrzan == true &&
+                            !_isSubmitted &&
+                            !allStudentsLocked)
+                        ? (value) {
+                            _toggleAllPresent(value ?? false);
+                          }
+                        : null,
                   ),
-                ),
-                child: Text('Ne'),
+                  Text(
+                    "Svi prisutni",
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConfirmationRow() {
+    bool allStudentsLocked =
+        _classesStudentsList?.every((student) => student.zakljucan == true) ??
+            false;
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, right: 16),
+      child: Row(
+        children: [
+          Text(
+            "Da li je čas održan: ",
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            child: Row(
+              children: [
+                ElevatedButton(
+                  onPressed: (_classesStudentsList == null ||
+                          _classesStudentsList!.isEmpty ||
+                          _isSubmitted ||
+                          allStudentsLocked)
+                      ? null
+                      : () => _updateClassOdrzan(true),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        (_isOdrzan == true) ? Colors.green : Colors.grey,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('Da'),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: (_classesStudentsList == null ||
+                          _classesStudentsList!.isEmpty ||
+                          _isSubmitted ||
+                          allStudentsLocked)
+                      ? null
+                      : () => _updateClassOdrzan(false),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        (_isOdrzan == false) ? Colors.red : Colors.grey,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('Ne'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildClassesStudentsTable(List<ClassesStudents> classesStudents) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: DataTable(
-      columns: const [
-        DataColumn(label: Text('Ime')),
-        DataColumn(label: Text('Prezime')),
-        DataColumn(label: Text('Prisutan')),
-      ],
-      rows: classesStudents.map((classStudent) {
-        var ime = classStudent.ime;
-        var prezime = classStudent.prezime;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DataTable(
+        columns: const [
+          DataColumn(label: Text('Ime')),
+          DataColumn(label: Text('Prezime')),
+          DataColumn(label: Text('Prisutan')),
+        ],
+        rows: classesStudents.map((classStudent) {
+          var ime = classStudent.ime;
+          var prezime = classStudent.prezime;
 
-        if ((ime == null || prezime == null) && _fetchedDepartment != null) {
-          var user = _fetchedDepartment?.ucenici?.firstWhere(
-            (u) => u.korisnikId == classStudent.ucenikID,
-            orElse: () => User(null,null,null,null,null,null,null,null,null,null,null),
+          if ((ime == null || prezime == null) && _fetchedDepartment != null) {
+            var user = _fetchedDepartment?.ucenici?.firstWhere(
+              (u) => u.korisnikId == classStudent.ucenikID,
+              orElse: () => User(null, null, null, null, null, null, null, null,
+                  null, null, null),
+            );
+            ime ??= user?.ime;
+            prezime ??= user?.prezime;
+          }
+
+          return DataRow(cells: [
+            DataCell(Text(ime ?? 'N/A')),
+            DataCell(Text(prezime ?? 'N/A')),
+            DataCell(
+              Checkbox(
+                value: classStudent.isPrisutan,
+                onChanged: (_isOdrzan == true &&
+                        !_isSubmitted &&
+                        classStudent.zakljucan != true)
+                    ? (value) {
+                        _toggleStudentPresent(
+                            classStudent.ucenikID!, value ?? false);
+                      }
+                    : null,
+              ),
+            ),
+          ]);
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildAddPresenceButton() {
+    bool allStudentsLocked =
+        _classesStudentsList?.every((student) => student.zakljucan == true) ??
+            true;
+
+    return (_classesStudentsList == null ||
+            _classesStudentsList!.isEmpty ||
+            allStudentsLocked ||
+            !_isOdrzan!)
+        ? SizedBox()
+        : ElevatedButton(
+            onPressed: _isSubmitted ? null : _updateStudentsPresenceAndLock,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: _isSubmitted ? Colors.grey : Colors.blue,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: Text('Dodaj prisustvo'),
           );
-          ime ??= user?.ime;
-          prezime ??= user?.prezime;
-        }
-
-        return DataRow(cells: [
-          DataCell(Text(ime ?? 'N/A')),
-          DataCell(Text(prezime ?? 'N/A')),
-          DataCell(
-            Checkbox(
-              value: classStudent.isPrisutan,
-              onChanged: (_isOdrzan == true &&
-                      !_isSubmitted &&
-                      classStudent.zakljucan != true)
-                  ? (value) {
-                      _toggleStudentPresent(
-                          classStudent.ucenikID!, value ?? false);
-                    }
-                  : null,
-            ),
-          ),
-        ]);
-      }).toList(),
-    ),
-  );
-}
-
-
- Widget _buildAddPresenceButton() {
-  bool allStudentsLocked = _classesStudentsList?.every((student) => student.zakljucan == true) ?? true;
-
-  return (_classesStudentsList == null || _classesStudentsList!.isEmpty || allStudentsLocked || !_isOdrzan!)
-      ? SizedBox()
-      : ElevatedButton(
-          onPressed: _isSubmitted ? null : _updateStudentsPresenceAndLock,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _isSubmitted ? Colors.grey : Colors.blue,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          child: Text('Dodaj prisustvo'),
-        );
-}
+  }
 }

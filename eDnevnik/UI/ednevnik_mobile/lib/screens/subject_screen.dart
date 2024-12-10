@@ -2,6 +2,7 @@ import 'package:ednevnik_admin/models/result.dart';
 import 'package:ednevnik_admin/models/school.dart';
 import 'package:ednevnik_admin/models/subject.dart';
 import 'package:ednevnik_admin/providers/school_provider.dart';
+import 'package:ednevnik_admin/providers/school_year_provider.dart';
 import 'package:ednevnik_admin/providers/subject_provider.dart';
 import 'package:ednevnik_admin/widgets/master_screen.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,10 @@ import 'package:provider/provider.dart';
 
 import '../models/department_subject.dart';
 import '../models/user.dart';
+import '../models/user_detail.dart';
 import '../providers/department_provider.dart';
 import '../providers/department_subject_provider.dart';
+import '../providers/user_detail_provider.dart';
 import '../providers/user_provider.dart';
 
 class SubjectDetailScreen extends StatefulWidget {
@@ -26,13 +29,22 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
   late SchoolProvider _schoolProvider;
   late DepartmentProvider _departmentProvider;
   late DepartmentSubjectProvider _departmentSubjectProvider;
+  late UserDetailProvider _userDetailProvider;
+  late SchoolYearProvider _schoolYearProvider;
+
+  String? godinaUpisaNaziv;
+  String? upisanaSkolskaGodinaNaziv;
+
+  SearchResult<UserDetail>? userDetail;
   School? _selectedSchool;
   List<School> _schools = [];
   User? loggedInUser;
-  TextEditingController _ftsController = TextEditingController();
+
   late int? userDepartment;
   List<DepartmentSubject> _departmentSubjects = [];
   int? _schoolIDFromDepartment;
+
+  late Future<void> _initialLoadFuture;
 
   @override
   void initState() {
@@ -41,8 +53,55 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
     _schoolProvider = context.read<SchoolProvider>();
     _departmentProvider = context.read<DepartmentProvider>();
     _departmentSubjectProvider = context.read<DepartmentSubjectProvider>();
+    _userDetailProvider = context.read<UserDetailProvider>();
+    _schoolYearProvider = context.read<SchoolYearProvider>();
 
-    _fetchDepartments();
+    _initialLoadFuture = _initializeData();
+
+  }
+
+  Future<void> _initializeData() async {
+    loggedInUser = context.read<UserProvider>().loggedInUser;
+
+    if (loggedInUser != null) {
+      await _fetchUserDetails();
+      await _fetchSchoolYearNames();
+      await _fetchDepartments();
+    } else {
+      throw Exception("Logged-in user is null.");
+    }
+  }
+
+  Future<void> _fetchSchoolYearNames() async {
+    try {
+      if (userDetail?.result.isNotEmpty ?? false) {
+        UserDetail detail = userDetail!.result.first;
+
+        if (detail.godinaUpisaID != null) {
+          var godinaUpisa = await _schoolYearProvider.get(filter: {
+            'SkolskaGodinaID': detail.godinaUpisaID,
+          });
+
+          if (godinaUpisa.result.isNotEmpty) {
+            godinaUpisaNaziv = godinaUpisa.result.first.naziv;
+          }
+        }
+
+        if (detail.upisanaSkolskaGodinaID != null) {
+          var upisanaGodina = await _schoolYearProvider.get(filter: {
+            'SkolskaGodinaID': detail.upisanaSkolskaGodinaID,
+          });
+
+          if (upisanaGodina.result.isNotEmpty) {
+            upisanaSkolskaGodinaNaziv = upisanaGodina.result.first.naziv;
+          }
+        }
+
+        setState(() {});
+      }
+    } catch (e) {
+      print("Error fetching school year names: $e");
+    }
   }
 
   @override
@@ -50,6 +109,32 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
     super.didChangeDependencies();
     loggedInUser = context.watch<UserProvider>().loggedInUser;
   }
+
+  Future<void> _fetchUserDetails() async {
+    try {
+      if (loggedInUser != null) {
+        print('Fetching user details for KorisnikID: ${loggedInUser!.korisnikId}');
+        var detail = await _userDetailProvider.get(filter: {'KorisnikID': loggedInUser!.korisnikId});
+
+        if (detail.result.isEmpty) {
+          print('No user detail found for the given KorisnikID.');
+        } else {
+          print('Fetched User Details: ${detail.result}');
+        }
+
+        if (mounted) {
+          setState(() {
+            userDetail = detail;
+          });
+        }
+      } else {
+        print('Cannot fetch user details. loggedInUser is null.');
+      }
+    } catch (e) {
+      print('Error fetching user details: $e');
+    }
+  }
+
 
   Future<void> _fetchDepartments() async {
     try {
@@ -166,11 +251,54 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
             child: Column(
               children: [
                 _buildScreenName(),
-                SizedBox(height: 16.0),
+                SizedBox(height: 8.0),
+                _buildUserDetailsSection(),
+                SizedBox(height: 8.0),
                 Expanded(child: _buildDataListView()),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserDetailsSection() {
+    if (userDetail == null || userDetail!.result.isEmpty) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    UserDetail detail = userDetail!.result.first;
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4.0,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Detalji o učeniku',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text('Obnavlja godinu: ${detail.obnavljaGodinu == true ? "Da" : "Ne"}'),
+            Text('Prosječna ocjena: ${detail.prosjecnaOcjena?.toStringAsFixed(2) ?? "N/A"}'),
+            Text('Godina upisa: ${godinaUpisaNaziv ?? "N/A"}'),
+            Text('Upisana školska godina: ${upisanaSkolskaGodinaNaziv ?? "N/A"}'),
+          ],
         ),
       ),
     );
@@ -230,7 +358,7 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
                       ),
                     ),
                     TextSpan(
-                      text: ' u eDnevnik. Ovdje možete vidjeti vaše predmete za ovu akademsku godinu.',
+                      text: ' u eDnevnik. Ovdje možete vidjeti vaše predmete i informacije za ovu akademsku godinu.',
                     ),
                   ],
                 ),
@@ -242,7 +370,6 @@ class _SubjectDetailScreenState extends State<SubjectDetailScreen> {
       ),
     );
   }
-
 
   Widget _buildSchoolDropdown() {
     return Row(
