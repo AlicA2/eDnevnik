@@ -144,20 +144,23 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
   }
 
   Future<void> _insertClassesStudents(List<User> ucenici) async {
-    for (var ucenik in ucenici) {
-      try {
-        var request = {
-          'casoviID': widget.casoviID,
-          'ucenikID': ucenik.korisnikId,
-          'isPrisutan': false
-        };
+  for (var ucenik in ucenici) {
+    try {
+      var request = {
+        'casoviID': widget.casoviID,
+        'ucenikID': ucenik.korisnikId,
+        'ime': ucenik.ime,
+        'prezime': ucenik.prezime,
+        'isPrisutan': false,
+      };
 
-        await _classesStudentsProvider.Insert(request);
-      } catch (e) {
-        print("Failed to insert ClassesStudent: $e");
-      }
+      await _classesStudentsProvider.Insert(request);
+    } catch (e) {
+      print("Failed to insert ClassesStudent: $e");
     }
   }
+}
+
 
   Future<void> _updateClassOdrzan(bool value) async {
     setState(() {
@@ -413,41 +416,49 @@ class _ClassesHeldDetailScreenState extends State<ClassesHeldDetailScreen> {
 }
 
   Widget _buildClassesStudentsTable(List<ClassesStudents> classesStudents) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: DataTable(
-        columns: const [
-          DataColumn(label: Text('Ime')),
-          DataColumn(label: Text('Prezime')),
-          DataColumn(label: Text('Prisutan')),
-        ],
-        rows: classesStudents.map((classStudent) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: DataTable(
+      columns: const [
+        DataColumn(label: Text('Ime')),
+        DataColumn(label: Text('Prezime')),
+        DataColumn(label: Text('Prisutan')),
+      ],
+      rows: classesStudents.map((classStudent) {
+        var ime = classStudent.ime;
+        var prezime = classStudent.prezime;
+
+        if ((ime == null || prezime == null) && _fetchedDepartment != null) {
           var user = _fetchedDepartment?.ucenici?.firstWhere(
             (u) => u.korisnikId == classStudent.ucenikID,
-            orElse: () => User(null, null, null, null, null, null, null, null,
-                null, null, null),
+            orElse: () => User(null,null,null,null,null,null,null,null,null,null,null),
           );
-          return DataRow(cells: [
-            DataCell(Text(user?.ime ?? '')),
-            DataCell(Text(user?.prezime ?? '')),
-            DataCell(
-              Checkbox(
-                value: classStudent.isPrisutan,
-                onChanged: (_isOdrzan == true &&
-                        !_isSubmitted &&
-                        classStudent.zakljucan != true)
-                    ? (value) {
-                        _toggleStudentPresent(
-                            classStudent.ucenikID!, value ?? false);
-                      }
-                    : null,
-              ),
+          ime ??= user?.ime;
+          prezime ??= user?.prezime;
+        }
+
+        return DataRow(cells: [
+          DataCell(Text(ime ?? 'N/A')),
+          DataCell(Text(prezime ?? 'N/A')),
+          DataCell(
+            Checkbox(
+              value: classStudent.isPrisutan,
+              onChanged: (_isOdrzan == true &&
+                      !_isSubmitted &&
+                      classStudent.zakljucan != true)
+                  ? (value) {
+                      _toggleStudentPresent(
+                          classStudent.ucenikID!, value ?? false);
+                    }
+                  : null,
             ),
-          ]);
-        }).toList(),
-      ),
-    );
-  }
+          ),
+        ]);
+      }).toList(),
+    ),
+  );
+}
+
 
  Widget _buildAddPresenceButton() {
   bool allStudentsLocked = _classesStudentsList?.every((student) => student.zakljucan == true) ?? true;

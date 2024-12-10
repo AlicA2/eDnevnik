@@ -10,6 +10,8 @@ namespace eDnevnik.Model.Requests
     {
         public int CasoviID { get; set; }
         public int UcenikID { get; set; }
+        public string? Ime { get; set; }
+        public string? Prezime { get; set; }
         public bool IsPrisutan { get; set; }
     }
 }

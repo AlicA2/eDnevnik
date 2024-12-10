@@ -13,6 +13,8 @@ ClassesStudents _$ClassesStudentsFromJson(Map<String, dynamic> json) =>
       (json['ucenikID'] as num?)?.toInt(),
       json['isPrisutan'] as bool?,
       json['zakljucan'] as bool?,
+      json['ime'] as String?,
+      json['prezime'] as String?,
     );
 
 Map<String, dynamic> _$ClassesStudentsToJson(ClassesStudents instance) =>
@@ -20,6 +22,8 @@ Map<String, dynamic> _$ClassesStudentsToJson(ClassesStudents instance) =>
       'casoviUceniciID': instance.casoviUceniciID,
       'casoviID': instance.casoviID,
       'ucenikID': instance.ucenikID,
+      'ime': instance.ime,
+      'prezime': instance.prezime,
       'isPrisutan': instance.isPrisutan,
       'zakljucan': instance.zakljucan,
     };

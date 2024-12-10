@@ -8,9 +8,11 @@ class ClassesStudents{
   int? casoviUceniciID;
   int? casoviID;
   int? ucenikID;
+  String? ime;
+  String? prezime;
   bool? isPrisutan;
   bool? zakljucan;
-  ClassesStudents(this.casoviUceniciID,this.casoviID,this.ucenikID,this.isPrisutan,this.zakljucan);
+  ClassesStudents(this.casoviUceniciID,this.casoviID,this.ucenikID,this.isPrisutan,this.zakljucan,this.ime,this.prezime);
 
     /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$UserFromJson()` constructor.
