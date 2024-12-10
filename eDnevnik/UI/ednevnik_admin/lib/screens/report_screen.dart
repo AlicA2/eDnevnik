@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:ednevnik_admin/models/department.dart';
 import 'package:ednevnik_admin/models/department_subject.dart';
 import 'package:ednevnik_admin/models/final_grade.dart';
@@ -19,6 +20,9 @@ import 'package:ednevnik_admin/providers/grade_provider.dart';
 import 'package:ednevnik_admin/providers/user_provider.dart';
 import 'package:ednevnik_admin/providers/department_subject_provider.dart';
 import 'package:ednevnik_admin/providers/final_grade_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:file_picker/file_picker.dart';
 
 class ReportDetailScreen extends StatefulWidget {
   const ReportDetailScreen({Key? key}) : super(key: key);
@@ -672,7 +676,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
         Padding(
           padding: const EdgeInsets.only(right: 16.0),
           child: ElevatedButton.icon(
-            onPressed: () => print("PDF"),
+            onPressed: _isLoading ? null : _generatePDFReport,
             icon: Icon(Icons.print),
             label: Text("Printaj izvještaj"),
             style: ElevatedButton.styleFrom(
@@ -689,6 +693,173 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
       ],
     );
   }
+
+   Future<String> _fetchSubjectName(int predmetID) async {
+    try {
+      final subject = await _subjectProvider.getById(predmetID);
+      return subject.naziv ?? "N/A";
+    } catch (e) {
+      print("Error fetching subject name: $e");
+      return "N/A";
+    }
+  }
+
+  void _generatePDFReport() async {
+  final pdf = pw.Document();
+  final dateFormat = DateFormat('dd.MM.yyyy');
+  final now = DateTime.now();
+  final timestamp = DateFormat('yyyyMMdd_HHmmss').format(now);
+
+  final schoolName = replaceSpecialChars(_selectedSchool?.naziv ?? "N/A");
+  final departmentName =
+      replaceSpecialChars(_selectedDepartment?.nazivOdjeljenja ?? "N/A");
+  final subjectName = _selectedSubject != null
+      ? replaceSpecialChars(await _fetchSubjectName(_selectedSubject!.predmetID!))
+      : "N/A";
+
+  final attendanceData = await Future.wait(userGrades.map((grade) async {
+    final korisnikID = grade['korisnikID'] as int?;
+    final predmetID = grade['predmetID'] as int?;
+    final imePrezime = grade['userName'] ?? 'N/A';
+    final predmet = grade['predmet'] ?? 'N/A';
+    final zakljucnaOcjena =
+        grade['vrijednostZakljucneOcjene']?.toString() ?? '0.0';
+
+    double attendance = 0.0;
+    if (korisnikID != null && predmetID != null) {
+      attendance = await _fetchAttendance(korisnikID, predmetID);
+    }
+
+    return [
+      replaceSpecialChars(imePrezime),
+      replaceSpecialChars(predmet),
+      zakljucnaOcjena,
+      '${attendance.toStringAsFixed(1)}%'
+    ];
+  }).toList());
+
+  pdf.addPage(
+    pw.Page(
+      build: (pw.Context context) {
+        return pw.Center(
+          child: pw.Column(
+            mainAxisSize: pw.MainAxisSize.min,
+            crossAxisAlignment: pw.CrossAxisAlignment.center,
+            children: [
+              pw.Text(
+                replaceSpecialChars('Izvjestaj o ocjenama i prisustvu'),
+                style: pw.TextStyle(
+                  fontSize: 24,
+                  fontWeight: pw.FontWeight.bold,
+                  color: PdfColors.blue800,
+                ),
+              ),
+              pw.SizedBox(height: 20),
+              pw.Text(
+                'Skola: $schoolName',
+                style: pw.TextStyle(fontSize: 16, color: PdfColors.black),
+              ),
+              pw.Text(
+                'Odjeljenje: $departmentName',
+                style: pw.TextStyle(fontSize: 16, color: PdfColors.black),
+              ),
+              pw.Text(
+                'Predmet: $subjectName',
+                style: pw.TextStyle(fontSize: 16, color: PdfColors.black),
+              ),
+              pw.SizedBox(height: 10),
+              pw.Text(
+                'Izvjestaj generisan na datum: ${dateFormat.format(now)}',
+                style: pw.TextStyle(
+                  fontSize: 16,
+                  fontWeight: pw.FontWeight.bold,
+                  color: PdfColors.grey900,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    ),
+  );
+
+  pdf.addPage(
+    pw.Page(
+      build: (pw.Context context) {
+        return pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Text(
+              replaceSpecialChars('Podaci o ucenicima'),
+              style: pw.TextStyle(
+                fontSize: 18,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.black,
+              ),
+            ),
+            pw.SizedBox(height: 10),
+            pw.Table.fromTextArray(
+              headers: [
+                replaceSpecialChars('Ime i Prezime'),
+                replaceSpecialChars('Predmet'),
+                replaceSpecialChars('Zakljucna Ocjena'),
+                replaceSpecialChars('Prisustvo (%)')
+              ],
+              data: attendanceData,
+              border: pw.TableBorder.all(),
+              cellStyle: pw.TextStyle(fontSize: 12),
+              headerStyle: pw.TextStyle(
+                fontSize: 14,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blue900,
+              ),
+              headerDecoration: pw.BoxDecoration(
+                color: PdfColors.grey300,
+              ),
+            ),
+          ],
+        );
+      },
+    ),
+  );
+
+  final result = await FilePicker.platform.saveFile(
+    dialogTitle: 'Odaberite mjesto za spremanje PDF-a',
+    fileName: 'izvještaj_$timestamp.pdf',
+  );
+
+  if (result != null) {
+    final outputFile = File(result);
+    await outputFile.writeAsBytes(await pdf.save());
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('PDF je uspješno spremljen: ${outputFile.path}'),
+        backgroundColor: Colors.green,
+      ),
+    );
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Spremanje PDF-a nije uspjelo.'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+}
+
+String replaceSpecialChars(String input) {
+  return input
+      .replaceAll('š', 's')
+      .replaceAll('č', 'c')
+      .replaceAll('ć', 'c')
+      .replaceAll('đ', 'd')
+      .replaceAll('ž', 'z')
+      .replaceAll('Đ', 'D')
+      .replaceAll('Ć', 'C')
+      .replaceAll('Č', 'C')
+      .replaceAll('Š', 'S')
+      .replaceAll('Ž', 'Z');
+}
 }
 
 void _showErrorDialog(BuildContext context, String title, String message) {
