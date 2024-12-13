@@ -1314,7 +1314,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         : "N/A";
 
     final studyYear = userDetail?.godinaStudija?.toString() ?? "N/A";
-    final medianGrade = userDetail?.prosjecnaOcjena?.toString() ?? "N/A";
+    final medianGrade = userDetail?.prosjecnaOcjena?.toString() ?? "0";
 
     showDialog(
       context: context,

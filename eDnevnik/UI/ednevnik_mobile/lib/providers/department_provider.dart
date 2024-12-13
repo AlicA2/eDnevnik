@@ -12,7 +12,7 @@ import 'package:http/http.dart';
 class DepartmentProvider extends BaseProvider<Department> {
   DepartmentProvider() : super("Odjeljenje");
   static const String _baseUrl = String.fromEnvironment("baseUrl",
-      defaultValue: "https://10.0.2.2:7260/");
+      defaultValue: "http://10.0.2.2:7260/");
   static const String _endpoint = "Odjeljenje";
 
   @override

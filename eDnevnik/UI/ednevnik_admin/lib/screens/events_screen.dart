@@ -25,6 +25,8 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   School? _selectedSchool;
   List<Events> _eventsList = [];
 
+  bool _isLoading = true;
+
   late SchoolProvider _schoolProvider;
   late EventsProvider _eventsProvider;
 
@@ -46,6 +48,9 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   }
 
   Future<void> _fetchSchools() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       var schools = await _schoolProvider.get();
       if (mounted) {
@@ -55,26 +60,34 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
             _selectedSchool = _schools.first;
             _fetchEvents();
           }
+          _isLoading = false;
         });
       }
     } catch (e) {
-      setState(() {});
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
   Future<void> _fetchEvents() async {
     if (_selectedSchool != null) {
+      setState(() {
+        _isLoading = true;
+      });
       try {
         var events = await _eventsProvider
             .get(filter: {'SkolaID': _selectedSchool?.skolaID});
         if (mounted) {
           setState(() {
             _eventsList = events.result;
+            _isLoading = false;
           });
         }
       } catch (e) {
         setState(() {
           _eventsList = [];
+          _isLoading = false;
         });
       }
     }
@@ -96,7 +109,11 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
               children: [
                 _buildScreenHeader(),
                 SizedBox(height: 16.0),
-                Expanded(child: _buildEventCards()),
+                Expanded(
+                  child: _isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : _buildEventCards(),
+                ),
                 SizedBox(height: 16),
                 _buildActionButtons(),
               ],
@@ -162,34 +179,37 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
                         ),
                         Row(
                           children: [
-                           isActive
-            ? IconButton(
-                icon: Icon(Icons.edit, color: Colors.grey),
-                onPressed: null,
-              )
-            : Tooltip(
-                message: "Uređivanje događaja",
-                child: IconButton(
-                  icon: Icon(Icons.edit, color: Colors.blue),
-                  onPressed: () {
-                    _showEditEventDialog(event);
-                  },
-                ),
-              ),
-        isActive
-            ? IconButton(
-                icon: Icon(Icons.delete, color: Colors.grey),
-                onPressed: null,
-              )
-            : Tooltip(
-                message: "Brisanje događaja",
-                child: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () {
-                    _confirmDeleteEvent(event);
-                  },
-                ),
-              ),
+                            isActive
+                                ? IconButton(
+                                    icon: Icon(Icons.edit, color: Colors.grey),
+                                    onPressed: null,
+                                  )
+                                : Tooltip(
+                                    message: "Uređivanje događaja",
+                                    child: IconButton(
+                                      icon:
+                                          Icon(Icons.edit, color: Colors.blue),
+                                      onPressed: () {
+                                        _showEditEventDialog(event);
+                                      },
+                                    ),
+                                  ),
+                            isActive
+                                ? IconButton(
+                                    icon:
+                                        Icon(Icons.delete, color: Colors.grey),
+                                    onPressed: null,
+                                  )
+                                : Tooltip(
+                                    message: "Brisanje događaja",
+                                    child: IconButton(
+                                      icon:
+                                          Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () {
+                                        _confirmDeleteEvent(event);
+                                      },
+                                    ),
+                                  ),
                           ],
                         ),
                       ],
@@ -238,84 +258,84 @@ class _EventsDetailScreenState extends State<EventsDetailScreen> {
   }
 
   Widget _buildActionButtons2(Events event, bool isActive, bool isDraft) {
-  return Column(
-    children: [
-      SizedBox(
-        width: double.infinity,
-        child: isDraft
-            ? Tooltip(
-                message: "Aktiviraj događaj",
-                child: ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await _eventsProvider.activate(event.dogadjajId!);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Događaj uspješno aktiviran"),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                      _fetchEvents();
-                    } catch (e) {
-                      _showErrorDialog("Error activating event: $e");
-                    }
-                  },
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: isDraft
+              ? Tooltip(
+                  message: "Aktiviraj događaj",
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        await _eventsProvider.activate(event.dogadjajId!);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Događaj uspješno aktiviran"),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        _fetchEvents();
+                      } catch (e) {
+                        _showErrorDialog("Error activating event: $e");
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text("Aktiviraj Događaj"),
+                  ),
+                )
+              : ElevatedButton(
+                  onPressed: null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Colors.grey,
                     foregroundColor: Colors.white,
                   ),
                   child: Text("Aktiviraj Događaj"),
                 ),
-              )
-            : ElevatedButton(
-                onPressed: null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                  foregroundColor: Colors.white,
-                ),
-                child: Text("Aktiviraj Događaj"),
-              ),
-      ),
-      SizedBox(height: 8),
-      SizedBox(
-        width: double.infinity,
-        child: isActive
-            ? Tooltip(
-                message: "Sakrij događaj",
-                child: ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await _eventsProvider.hide(event.dogadjajId!);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Događaj uspješno sakriven"),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                      _fetchEvents();
-                    } catch (e) {
-                      _showErrorDialog("Error hiding event: $e");
-                    }
-                  },
+        ),
+        SizedBox(height: 8),
+        SizedBox(
+          width: double.infinity,
+          child: isActive
+              ? Tooltip(
+                  message: "Sakrij događaj",
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        await _eventsProvider.hide(event.dogadjajId!);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Događaj uspješno sakriven"),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        _fetchEvents();
+                      } catch (e) {
+                        _showErrorDialog("Error hiding event: $e");
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text("Sakrij Događaj"),
+                  ),
+                )
+              : ElevatedButton(
+                  onPressed: null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
+                    backgroundColor: Colors.grey,
                     foregroundColor: Colors.white,
                   ),
                   child: Text("Sakrij Događaj"),
                 ),
-              )
-            : ElevatedButton(
-                onPressed: null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                  foregroundColor: Colors.white,
-                ),
-                child: Text("Sakrij Događaj"),
-              ),
-      ),
-    ],
-  );
-}
+        ),
+      ],
+    );
+  }
 
   Future<void> _showEditEventDialog(Events event) {
     String? errorMessage;
@@ -929,22 +949,21 @@ String? _validateOpis(String? value) {
   }
 
   final sentences = value.split('. ');
-    for (var i = 0; i < sentences.length; i++) {
-      var sentence = sentences[i].trim();
+  for (var i = 0; i < sentences.length; i++) {
+    var sentence = sentences[i].trim();
 
-      if (sentence.isNotEmpty && !RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(sentence)) {
-        return 'Svaka rečenica mora početi velikim slovom.';
-      }
-
-      if (i == sentences.length - 1 && !sentence.endsWith('.')) {
-        return 'Opis mora završiti sa tačkom.';
-      }
-
-      if (i < sentences.length - 1 && sentence.endsWith('.')) {
-        return 'Samo zadnja rečenica može završavati sa tačkom.';
-      }
+    if (sentence.isNotEmpty && !RegExp(r'^[A-ZŽĐŠĆČ]').hasMatch(sentence)) {
+      return 'Svaka rečenica mora početi velikim slovom.';
     }
+
+    if (i == sentences.length - 1 && !sentence.endsWith('.')) {
+      return 'Opis mora završiti sa tačkom.';
+    }
+
+    if (i < sentences.length - 1 && sentence.endsWith('.')) {
+      return 'Samo zadnja rečenica može završavati sa tačkom.';
+    }
+  }
 
   return null;
 }
-

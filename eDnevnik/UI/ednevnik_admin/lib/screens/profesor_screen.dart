@@ -495,11 +495,13 @@ class _ProfesorDetailScreenState extends State<ProfesorDetailScreen> {
             cells: [
               DataCell(Text("${profesor.ime} ${profesor.prezime}")),
               DataCell(
-                Text(
-                  departmentStatus,
-                  style: TextStyle(
-                    color:
-                        assignedDepartment != null ? Colors.black : Colors.red,
+                Center(
+                  child: Text(
+                    departmentStatus,
+                    style: TextStyle(
+                      color:
+                          assignedDepartment != null ? Colors.black : Colors.red,
+                    ),
                   ),
                 ),
               ),

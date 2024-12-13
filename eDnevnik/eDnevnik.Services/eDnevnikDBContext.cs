@@ -26,6 +26,12 @@ namespace eDnevnik.Services
 
         public eDnevnikDBContext(DbContextOptions<eDnevnikDBContext> options):base(options)
     { }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+
+            base.OnConfiguring(optionsBuilder);
+        }
 
         protected override void OnModelCreating (ModelBuilder modelBuilder)
         {

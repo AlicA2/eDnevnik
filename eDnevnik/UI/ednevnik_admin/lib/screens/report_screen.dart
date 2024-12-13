@@ -396,7 +396,7 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
             IconButton(
               icon: const Icon(Icons.comment, color: Colors.blue),
               onPressed: () {
-                _showCommentsDialog(korisnikID);
+                _showCommentsDialog(korisnikID, predmetID);
               },
             ),
           ),
@@ -444,13 +444,13 @@ class _ReportDetailScreenState extends State<ReportDetailScreen> {
     );
   }
 
-  Future<void> _showCommentsDialog(int? korisnikID) async {
+  Future<void> _showCommentsDialog(int? korisnikID, int? predmetID) async {
     if (korisnikID == null) {
       return;
     }
 
     try {
-      final data = await _gradeProvider.get(filter: {'KorisnikID': korisnikID});
+      final data = await _gradeProvider.get(filter: {'KorisnikID': korisnikID, 'PredmetID': predmetID});
       final comments = data.result;
 
       showDialog(

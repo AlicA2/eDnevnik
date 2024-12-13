@@ -49,11 +49,50 @@ namespace eDnevnik.Services
         }
         private void SeedKorisnikDetalji(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<KorisnikDetalji>().HasData(
+            modelBuilder.Entity<KorisnikDetalji>().HasData(
+                new KorisnikDetalji { KorisnikDetaljiID = 1, KorisnikID = 15, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 3.04m },
+                new KorisnikDetalji { KorisnikDetaljiID = 2, KorisnikID = 16, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 2.9m },
+                new KorisnikDetalji { KorisnikDetaljiID = 3, KorisnikID = 17, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 2.5m },
+                new KorisnikDetalji { KorisnikDetaljiID = 4, KorisnikID = 18, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 4m },
+                new KorisnikDetalji { KorisnikDetaljiID = 5, KorisnikID = 19, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 3.70m },
+                new KorisnikDetalji { KorisnikDetaljiID = 6, KorisnikID = 42, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 7, KorisnikID = 43, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 8, KorisnikID = 44, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 9, KorisnikID = 45, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 10, KorisnikID = 46, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
 
-            //);
+                new KorisnikDetalji { KorisnikDetaljiID = 11, KorisnikID = 20, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 3 },
+                new KorisnikDetalji { KorisnikDetaljiID = 12, KorisnikID = 21, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 2 },
+                new KorisnikDetalji { KorisnikDetaljiID = 13, KorisnikID = 22, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 5 },
+                new KorisnikDetalji { KorisnikDetaljiID = 14, KorisnikID = 23, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 4 },
+                new KorisnikDetalji { KorisnikDetaljiID = 15, KorisnikID = 24, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 3 },
+                new KorisnikDetalji { KorisnikDetaljiID = 16, KorisnikID = 25, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 5 },
+                new KorisnikDetalji { KorisnikDetaljiID = 17, KorisnikID = 26, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 2 },
+                new KorisnikDetalji { KorisnikDetaljiID = 18, KorisnikID = 27, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 4 },
+                new KorisnikDetalji { KorisnikDetaljiID = 19, KorisnikID = 28, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 3 },
+                new KorisnikDetalji { KorisnikDetaljiID = 20, KorisnikID = 29, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 4 },
+                new KorisnikDetalji { KorisnikDetaljiID = 21, KorisnikID = 30, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 5 },
+                new KorisnikDetalji { KorisnikDetaljiID = 22, KorisnikID = 31, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 23, KorisnikID = 32, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 24, KorisnikID = 33, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 25, KorisnikID = 34, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+
+                new KorisnikDetalji { KorisnikDetaljiID = 26, KorisnikID = 35, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 27, KorisnikID = 36, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 28, KorisnikID = 37, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 29, KorisnikID = 38, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 30, KorisnikID = 39, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 31, KorisnikID = 40, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 32, KorisnikID = 41, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 33, KorisnikID = 47, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 34, KorisnikID = 48, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 35, KorisnikID = 49, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+
+                new KorisnikDetalji { KorisnikDetaljiID = 36, KorisnikID = 50, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 },
+                new KorisnikDetalji { KorisnikDetaljiID = 37, KorisnikID = 51, GodinaStudija = 1, GodinaUpisaID = 1, UpisanaSkolskaGodinaID = 1, ObnavljaGodinu = false, ProsjecnaOcjena = 0 }
+
+            );
         }
-
         private void SeedSkolskaGodina(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SkolskaGodina>().HasData(
@@ -123,13 +162,13 @@ namespace eDnevnik.Services
                     ZakljucnaOcjenaID = 1,
                     KorisnikID = 15,
                     PredmetID = 1,
-                    vrijednostZakljucneOcjene = 5
+                    vrijednostZakljucneOcjene = 2.8m
                 },
                 new ZakljucnaOcjena
                 {
                     ZakljucnaOcjenaID = 2,
                     KorisnikID = 16,
-                    PredmetID = 2,
+                    PredmetID = 3,
                     vrijednostZakljucneOcjene = 4
                 },
                 new ZakljucnaOcjena
@@ -137,13 +176,13 @@ namespace eDnevnik.Services
                     ZakljucnaOcjenaID = 3,
                     KorisnikID = 17,
                     PredmetID = 3,
-                    vrijednostZakljucneOcjene = 3
+                    vrijednostZakljucneOcjene = 2.5m
                 },
                 new ZakljucnaOcjena
                 {
                     ZakljucnaOcjenaID = 4,
                     KorisnikID = 18,
-                    PredmetID = 4,
+                    PredmetID = 3,
                     vrijednostZakljucneOcjene = 5
                 },
                 new ZakljucnaOcjena
@@ -151,7 +190,7 @@ namespace eDnevnik.Services
                     ZakljucnaOcjenaID = 5,
                     KorisnikID = 19,
                     PredmetID = 1,
-                    vrijednostZakljucneOcjene = 4
+                    vrijednostZakljucneOcjene = 2.5m
                 },
                 new ZakljucnaOcjena
                 {
@@ -164,21 +203,21 @@ namespace eDnevnik.Services
                 {
                     ZakljucnaOcjenaID = 7,
                     KorisnikID = 21,
-                    PredmetID = 3,
+                    PredmetID = 4,
                     vrijednostZakljucneOcjene = 2
                 },
                 new ZakljucnaOcjena
                 {
                     ZakljucnaOcjenaID = 8,
                     KorisnikID = 22,
-                    PredmetID = 4,
+                    PredmetID = 6,
                     vrijednostZakljucneOcjene = 5
                 },
                 new ZakljucnaOcjena
                 {
                     ZakljucnaOcjenaID = 9,
                     KorisnikID = 23,
-                    PredmetID = 1,
+                    PredmetID = 8,
                     vrijednostZakljucneOcjene = 4
                 },
                 new ZakljucnaOcjena
@@ -229,6 +268,146 @@ namespace eDnevnik.Services
                     KorisnikID = 30,
                     PredmetID = 4,
                     vrijednostZakljucneOcjene = 5
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 17,
+                    KorisnikID = 15,
+                    PredmetID = 3,
+                    vrijednostZakljucneOcjene = 3.4m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 18,
+                    KorisnikID = 15,
+                    PredmetID = 5,
+                    vrijednostZakljucneOcjene = 3m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 19,
+                    KorisnikID = 15,
+                    PredmetID = 7,
+                    vrijednostZakljucneOcjene = 3m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 20,
+                    KorisnikID = 15,
+                    PredmetID = 9,
+                    vrijednostZakljucneOcjene = 3m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 21,
+                    KorisnikID = 23,
+                    PredmetID = 1,
+                    vrijednostZakljucneOcjene = 4m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 22,
+                    KorisnikID = 22,
+                    PredmetID = 3,
+                    vrijednostZakljucneOcjene = 5m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 23,
+                    KorisnikID = 21,
+                    PredmetID = 3,
+                    vrijednostZakljucneOcjene = 2m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 24,
+                    KorisnikID = 16,
+                    PredmetID = 9,
+                    vrijednostZakljucneOcjene = 4m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 25,
+                    KorisnikID = 16,
+                    PredmetID = 1,
+                    vrijednostZakljucneOcjene = 2m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 26,
+                    KorisnikID = 16,
+                    PredmetID = 5,
+                    vrijednostZakljucneOcjene = 1.5m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 27,
+                    KorisnikID = 16,
+                    PredmetID = 7,
+                    vrijednostZakljucneOcjene = 3m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 28,
+                    KorisnikID = 17,
+                    PredmetID = 1,
+                    vrijednostZakljucneOcjene = 3m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 29,
+                    KorisnikID = 17,
+                    PredmetID = 5,
+                    vrijednostZakljucneOcjene = 2m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 30,
+                    KorisnikID = 17,
+                    PredmetID = 7,
+                    vrijednostZakljucneOcjene = 2.5m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 31,
+                    KorisnikID = 18,
+                    PredmetID = 1,
+                    vrijednostZakljucneOcjene = 3m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 32,
+                    KorisnikID = 18,
+                    PredmetID = 5,
+                    vrijednostZakljucneOcjene = 4m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 33,
+                    KorisnikID = 18,
+                    PredmetID = 7,
+                    vrijednostZakljucneOcjene = 4m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 34,
+                    KorisnikID = 19,
+                    PredmetID = 3,
+                    vrijednostZakljucneOcjene = 5m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 35,
+                    KorisnikID = 19,
+                    PredmetID = 5,
+                    vrijednostZakljucneOcjene = 5m
+                },
+                new ZakljucnaOcjena
+                {
+                    ZakljucnaOcjenaID = 36,
+                    KorisnikID = 19,
+                    PredmetID = 7,
+                    vrijednostZakljucneOcjene = 2.33m
                 }
             );
         }
@@ -461,20 +640,20 @@ namespace eDnevnik.Services
         private void SeedCasoviUcenici(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CasoviUcenici>().HasData(
-                new CasoviUcenici { CasoviUceniciID = 1, CasoviID = 1, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
-                new CasoviUcenici { CasoviUceniciID = 2, CasoviID = 1, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 3, CasoviID = 1, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 4, CasoviID = 1, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
+                new CasoviUcenici { CasoviUceniciID = 1, CasoviID = 1, UcenikID = 15, IsPrisutan = false, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
+                new CasoviUcenici { CasoviUceniciID = 2, CasoviID = 1, UcenikID = 16, IsPrisutan = false, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
+                new CasoviUcenici { CasoviUceniciID = 3, CasoviID = 1, UcenikID = 17, IsPrisutan = false, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
+                new CasoviUcenici { CasoviUceniciID = 4, CasoviID = 1, UcenikID = 18, IsPrisutan = false, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
                 new CasoviUcenici { CasoviUceniciID = 5, CasoviID = 1, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 6, CasoviID = 1, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
+                new CasoviUcenici { CasoviUceniciID = 6, CasoviID = 1, UcenikID = 42, IsPrisutan = false, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
                 new CasoviUcenici { CasoviUceniciID = 7, CasoviID = 1, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
                 new CasoviUcenici { CasoviUceniciID = 8, CasoviID = 1, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
                 new CasoviUcenici { CasoviUceniciID = 9, CasoviID = 1, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
                 new CasoviUcenici { CasoviUceniciID = 10, CasoviID = 1, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" },
 
-                new CasoviUcenici { CasoviUceniciID = 11, CasoviID = 2, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
+                new CasoviUcenici { CasoviUceniciID = 11, CasoviID = 2, UcenikID = 15, IsPrisutan = false, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
                 new CasoviUcenici { CasoviUceniciID = 12, CasoviID = 2, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 13, CasoviID = 2, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
+                new CasoviUcenici { CasoviUceniciID = 13, CasoviID = 2, UcenikID = 17, IsPrisutan = false, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
                 new CasoviUcenici { CasoviUceniciID = 14, CasoviID = 2, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
                 new CasoviUcenici { CasoviUceniciID = 15, CasoviID = 2, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
                 new CasoviUcenici { CasoviUceniciID = 16, CasoviID = 2, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
@@ -485,148 +664,50 @@ namespace eDnevnik.Services
 
                 new CasoviUcenici { CasoviUceniciID = 21, CasoviID = 3, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
                 new CasoviUcenici { CasoviUceniciID = 22, CasoviID = 3, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 23, CasoviID = 3, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
+                new CasoviUcenici { CasoviUceniciID = 23, CasoviID = 3, UcenikID = 17, IsPrisutan = false, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
                 new CasoviUcenici { CasoviUceniciID = 24, CasoviID = 3, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 25, CasoviID = 3, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
+                new CasoviUcenici { CasoviUceniciID = 25, CasoviID = 3, UcenikID = 19, IsPrisutan = false, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
                 new CasoviUcenici { CasoviUceniciID = 26, CasoviID = 3, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 27, CasoviID = 3, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
+                new CasoviUcenici { CasoviUceniciID = 27, CasoviID = 3, UcenikID = 43, IsPrisutan = false, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
                 new CasoviUcenici { CasoviUceniciID = 28, CasoviID = 3, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 29, CasoviID = 3, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 30, CasoviID = 3, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" },
-
-                new CasoviUcenici { CasoviUceniciID = 31, CasoviID = 4, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
-                new CasoviUcenici { CasoviUceniciID = 32, CasoviID = 4, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 33, CasoviID = 4, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 34, CasoviID = 4, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 35, CasoviID = 4, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 36, CasoviID = 4, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 37, CasoviID = 4, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
-                new CasoviUcenici { CasoviUceniciID = 38, CasoviID = 4, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 39, CasoviID = 4, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 40, CasoviID = 4, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" },
-
-                new CasoviUcenici { CasoviUceniciID = 41, CasoviID = 5, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
-                new CasoviUcenici { CasoviUceniciID = 42, CasoviID = 5, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 43, CasoviID = 5, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 44, CasoviID = 5, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 45, CasoviID = 5, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 46, CasoviID = 5, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 47, CasoviID = 5, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
-                new CasoviUcenici { CasoviUceniciID = 48, CasoviID = 5, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 49, CasoviID = 5, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 50, CasoviID = 5, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" },
-
-                new CasoviUcenici { CasoviUceniciID = 51, CasoviID = 6, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
-                new CasoviUcenici { CasoviUceniciID = 52, CasoviID = 6, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 53, CasoviID = 6, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 54, CasoviID = 6, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 55, CasoviID = 6, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 56, CasoviID = 6, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 57, CasoviID = 6, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
-                new CasoviUcenici { CasoviUceniciID = 58, CasoviID = 6, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 59, CasoviID = 6, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 60, CasoviID = 6, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" },
-
-                new CasoviUcenici { CasoviUceniciID = 61, CasoviID = 7, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "" },
-                new CasoviUcenici { CasoviUceniciID = 62, CasoviID = 7, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 63, CasoviID = 7, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 64, CasoviID = 7, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 65, CasoviID = 7, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 66, CasoviID = 7, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 67, CasoviID = 7, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
-                new CasoviUcenici { CasoviUceniciID = 68, CasoviID = 7, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 69, CasoviID = 7, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 70, CasoviID = 7, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" },
-
-                new CasoviUcenici { CasoviUceniciID = 71, CasoviID = 8, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
-                new CasoviUcenici { CasoviUceniciID = 72, CasoviID = 8, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 73, CasoviID = 8, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 74, CasoviID = 8, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 75, CasoviID = 8, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 76, CasoviID = 8, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 77, CasoviID = 8, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
-                new CasoviUcenici { CasoviUceniciID = 78, CasoviID = 8, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 79, CasoviID = 8, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 80, CasoviID = 8, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" },
-
-                new CasoviUcenici { CasoviUceniciID = 81, CasoviID = 9, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
-                new CasoviUcenici { CasoviUceniciID = 82, CasoviID = 9, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 83, CasoviID = 9, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 84, CasoviID = 9, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 85, CasoviID = 9, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 86, CasoviID = 9, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 87, CasoviID = 9, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
-                new CasoviUcenici { CasoviUceniciID = 88, CasoviID = 9, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 89, CasoviID = 9, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 90, CasoviID = 9, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" },
-
-                new CasoviUcenici { CasoviUceniciID = 91, CasoviID = 10, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
-                new CasoviUcenici { CasoviUceniciID = 92, CasoviID = 10, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 93, CasoviID = 10, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 94, CasoviID = 10, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 95, CasoviID = 10, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 96, CasoviID = 10, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 97, CasoviID = 10, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
-                new CasoviUcenici { CasoviUceniciID = 98, CasoviID = 10, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 99, CasoviID = 10, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 100, CasoviID = 10, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" },
-
-                new CasoviUcenici { CasoviUceniciID = 101, CasoviID = 11, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
-                new CasoviUcenici { CasoviUceniciID = 102, CasoviID = 11, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 103, CasoviID = 11, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 104, CasoviID = 11, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 105, CasoviID = 11, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 106, CasoviID = 11, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 107, CasoviID = 11, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
-                new CasoviUcenici { CasoviUceniciID = 108, CasoviID = 11, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 109, CasoviID = 11, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 110, CasoviID = 11, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" },
-
-                new CasoviUcenici { CasoviUceniciID = 111, CasoviID = 12, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
-                new CasoviUcenici { CasoviUceniciID = 112, CasoviID = 12, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 113, CasoviID = 12, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 114, CasoviID = 12, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 115, CasoviID = 12, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 116, CasoviID = 12, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 117, CasoviID = 12, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
-                new CasoviUcenici { CasoviUceniciID = 118, CasoviID = 12, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 119, CasoviID = 12, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 120, CasoviID = 12, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" },
-
-                new CasoviUcenici { CasoviUceniciID = 121, CasoviID = 13, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
-                new CasoviUcenici { CasoviUceniciID = 122, CasoviID = 13, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 123, CasoviID = 13, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 124, CasoviID = 13, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 125, CasoviID = 13, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 126, CasoviID = 13, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 127, CasoviID = 13, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
-                new CasoviUcenici { CasoviUceniciID = 128, CasoviID = 13, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 129, CasoviID = 13, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 130, CasoviID = 13, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" },
-
-                new CasoviUcenici { CasoviUceniciID = 131, CasoviID = 14, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
-                new CasoviUcenici { CasoviUceniciID = 132, CasoviID = 14, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 133, CasoviID = 14, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 134, CasoviID = 14, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 135, CasoviID = 14, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 136, CasoviID = 14, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 137, CasoviID = 14, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
-                new CasoviUcenici { CasoviUceniciID = 138, CasoviID = 14, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 139, CasoviID = 14, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 140, CasoviID = 14, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "sara", Prezime = "Bulić" },
-
-                new CasoviUcenici { CasoviUceniciID = 141, CasoviID = 15, UcenikID = 15, IsPrisutan = true, zakljucan = true, Ime = "Amel", Prezime = "Musić" },
-                new CasoviUcenici { CasoviUceniciID = 142, CasoviID = 15, UcenikID = 16, IsPrisutan = true, zakljucan = true, Ime = "Dragi", Prezime = "Tiro" },
-                new CasoviUcenici { CasoviUceniciID = 143, CasoviID = 15, UcenikID = 17, IsPrisutan = true, zakljucan = true, Ime = "Adil", Prezime = "Joldić" },
-                new CasoviUcenici { CasoviUceniciID = 144, CasoviID = 15, UcenikID = 18, IsPrisutan = true, zakljucan = true, Ime = "Lejla", Prezime = "Jazvin" },
-                new CasoviUcenici { CasoviUceniciID = 145, CasoviID = 15, UcenikID = 19, IsPrisutan = true, zakljucan = true, Ime = "Elmir", Prezime = "Babović" },
-                new CasoviUcenici { CasoviUceniciID = 146, CasoviID = 15, UcenikID = 42, IsPrisutan = true, zakljucan = true, Ime = "Maida", Prezime = "Sulejmanović" },
-                new CasoviUcenici { CasoviUceniciID = 147, CasoviID = 15, UcenikID = 43, IsPrisutan = true, zakljucan = true, Ime = "Mirela", Prezime = "Bajramović" },
-                new CasoviUcenici { CasoviUceniciID = 148, CasoviID = 15, UcenikID = 44, IsPrisutan = true, zakljucan = true, Ime = "Filip", Prezime = "Lukić" },
-                new CasoviUcenici { CasoviUceniciID = 149, CasoviID = 15, UcenikID = 45, IsPrisutan = true, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
-                new CasoviUcenici { CasoviUceniciID = 150, CasoviID = 15, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" }
-
+                new CasoviUcenici { CasoviUceniciID = 29, CasoviID = 3, UcenikID = 45, IsPrisutan = false, zakljucan = true, Ime = "Mirza", Prezime = "Redžović" },
+                new CasoviUcenici { CasoviUceniciID = 30, CasoviID = 3, UcenikID = 46, IsPrisutan = true, zakljucan = true, Ime = "Sara", Prezime = "Bulić" }
             );
+            var casoviUceniciData = new List<CasoviUcenici>();
+            int casoviUceniciID = 31;
+
+            var students = new[]
+            {
+                new { UcenikID = 15, Ime = "Amel", Prezime = "Musić" },
+                new { UcenikID = 16, Ime = "Dragi", Prezime = "Tiro" },
+                new { UcenikID = 17, Ime = "Adil", Prezime = "Joldić" },
+                new { UcenikID = 18, Ime = "Lejla", Prezime = "Jazvin" },
+                new { UcenikID = 19, Ime = "Elmir", Prezime = "Babović" },
+                new { UcenikID = 42, Ime = "Maida", Prezime = "Sulejmanović" },
+                new { UcenikID = 43, Ime = "Mirela", Prezime = "Bajramović" },
+                new { UcenikID = 44, Ime = "Filip", Prezime = "Lukić" },
+                new { UcenikID = 45, Ime = "Mirza", Prezime = "Redžović" },
+                new { UcenikID = 46, Ime = "Sara", Prezime = "Bulić" },
+            };
+
+            for (int casoviID = 4; casoviID <= 139; casoviID++)
+            {
+                foreach (var student in students)
+                {
+                    casoviUceniciData.Add(new CasoviUcenici
+                    {
+                        CasoviUceniciID = casoviUceniciID++,
+                        CasoviID = casoviID,
+                        UcenikID = student.UcenikID,
+                        IsPrisutan = true,
+                        zakljucan = true,
+                        Ime = student.Ime,
+                        Prezime = student.Prezime
+                    });
+                }
+            }
+
+            modelBuilder.Entity<CasoviUcenici>().HasData(casoviUceniciData);
         }
         private void SeedCasovi(ModelBuilder modelBuilder)
         {
@@ -636,60 +717,162 @@ namespace eDnevnik.Services
                 new Casovi { CasoviID = 3, NazivCasa = "Geometrijski Oblici", Opis = "Proučavanje geometrijskih figura", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 10, 7, 9, 0, 0), IsOdrzan = true },
                 new Casovi { CasoviID = 4, NazivCasa = "Trigonometrijske Funkcije", Opis = "Učenje o trigonometrijskim funkcijama", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 10, 9, 10, 0, 0), IsOdrzan = true },
                 new Casovi { CasoviID = 5, NazivCasa = "Statistički Metodi", Opis = "Osnovni principi statističke analize", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 10, 14, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 6, NazivCasa = "Integralni Račun", Opis = "Osnovni principi integralnog računa", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 10, 16, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 7, NazivCasa = "Derivacije", Opis = "Uvod u derivacije i njihove primene", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 10, 21, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 8, NazivCasa = "Matematička Logika", Opis = "Osnove matematičke logike", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 10, 23, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 9, NazivCasa = "Sistemi Jednačina", Opis = "Rešavanje sistema linearnih jednačina", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 10, 28, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 10, NazivCasa = "Funkcije i Grafici", Opis = "Analiza funkcija i njihovih grafika", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 10, 30, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 11, NazivCasa = "Verovatnoća", Opis = "Uvod u teoriju verovatnoće", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 11, 4, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 12, NazivCasa = "Numeričke Metode", Opis = "Primena numeričkih metoda u matematici", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 11, 6, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 13, NazivCasa = "Linearne Transformacije", Opis = "Osnovni koncepti linearnih transformacija", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 11, 11, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 14, NazivCasa = "Kompleksni Brojevi", Opis = "Osnovne operacije sa kompleksnim brojevima", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 11, 13, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 15, NazivCasa = "Teorija Skupova", Opis = "Osnovni pojmovi teorije skupova", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 11, 18, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 16, NazivCasa = "Vektorske Analize", Opis = "Uvod u vektorske analize", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 11, 20, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 17, NazivCasa = "Diferencijalne Jednačine", Opis = "Osnovne metode za rešavanje diferencijalnih jednačina", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 11, 25, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 18, NazivCasa = "Kombinatorika", Opis = "Osnovni principi kombinatorike", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 11, 27, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 19, NazivCasa = "Diskretna Matematika", Opis = "Osnovne teme diskretne matematike", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 12, 2, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 20, NazivCasa = "Teorija Brojeva", Opis = "Osnovni principi teorije brojeva", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 12, 4, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 21, NazivCasa = "Optimizacija", Opis = "Uvod u metode optimizacije", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 12, 9, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 22, NazivCasa = "Matematičko Modelovanje", Opis = "Primena matematičkog modelovanja u rešavanju problema", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 12, 11, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 23, NazivCasa = "Teorija Grafova", Opis = "Osnovni principi teorije grafova", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 12, 16, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 24, NazivCasa = "Rekurzivni Algoritmi", Opis = "Uvod u rekurzivne algoritme", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 12, 18, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 25, NazivCasa = "Matematička Ekonomija", Opis = "Primena matematike u ekonomiji", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 12, 23, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 26, NazivCasa = "Linearna Algebra", Opis = "Napredne teme linearne algebre", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 12, 25, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 27, NazivCasa = "Zaključivanje ocjena", Opis = "Zaključivanje ocjena", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 12, 27, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 28, NazivCasa = "Zaključivanje ocjena zadnji dan", Opis = "Zaključivanje ocjena zadnji dan", GodisnjiPlanProgramID = 1, DatumOdrzavanjaCasa = new DateTime(2024, 12, 30, 9, 0, 0), IsOdrzan = true },
 
-                new Casovi { CasoviID = 6, NazivCasa = "Uvod u Fiziku", Opis = "Osnovni principi fizičkih zakona", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 9, 30, 10, 0, 0), IsOdrzan = true },
-                new Casovi { CasoviID = 7, NazivCasa = "Pokret i Kretanje", Opis = "Analiza pokreta objekata", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 2, 11, 0, 0), IsOdrzan = true },
-                new Casovi { CasoviID = 8, NazivCasa = "Osnovi Dinamike", Opis = "Proučavanje sila i njihovih efekata", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 7, 10, 0, 0), IsOdrzan = true },
-                new Casovi { CasoviID = 9, NazivCasa = "Termodinamički Procesi", Opis = "Osnovni koncepti termodinamike", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 9, 11, 0, 0), IsOdrzan = true },
-                new Casovi { CasoviID = 10, NazivCasa = "Uvod u Optiku", Opis = "Proučavanje svetlosti i njene interakcije", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 14, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 29, NazivCasa = "Uvod u Fiziku", Opis = "Osnovni principi fizičkih zakona", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 9, 30, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 30, NazivCasa = "Pokret i Kretanje", Opis = "Analiza pokreta objekata", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 2, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 31, NazivCasa = "Osnovi Dinamike", Opis = "Proučavanje sila i njihovih efekata", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 7, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 32, NazivCasa = "Termodinamički Procesi", Opis = "Osnovni koncepti termodinamike", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 9, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 33, NazivCasa = "Uvod u Optiku", Opis = "Proučavanje svetlosti i njene interakcije", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 14, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 34, NazivCasa = "Elektricitet i Magnetizam", Opis = "Osnove elektriciteta i magnetizma", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 16, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 35, NazivCasa = "Elektromagnetski Talasi", Opis = "Proučavanje elektromagnetnih talasa", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 21, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 36, NazivCasa = "Atomi i Molekuli", Opis = "Osnovne strukture materije", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 23, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 37, NazivCasa = "Kvantna Teorija", Opis = "Uvod u kvantnu mehaniku", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 28, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 38, NazivCasa = "Specijalna Relativnost", Opis = "Pojmovi iz specijalne teorije relativnosti", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 10, 30, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 39, NazivCasa = "Osnovi Astronomije", Opis = "Proučavanje nebeskih tela", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 11, 4, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 40, NazivCasa = "Kosmologija", Opis = "Struktura i evolucija svemira", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 11, 6, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 41, NazivCasa = "Zvuk i Akustika", Opis = "Osnovni principi zvuka", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 11, 11, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 42, NazivCasa = "Gravitacija", Opis = "Teorije gravitacije i njeni efekti", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 11, 13, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 43, NazivCasa = "Mehanički Talasi", Opis = "Proučavanje talasa u mehaničkim sistemima", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 11, 18, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 44, NazivCasa = "Radioaktivnost", Opis = "Osnovni koncepti radioaktivnosti", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 11, 20, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 45, NazivCasa = "Nuklearna Fuzija", Opis = "Procesi u nuklearnoj fuziji", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 11, 25, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 46, NazivCasa = "Optički Instrumenti", Opis = "Različiti tipi optičkih instrumenata", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 11, 27, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 47, NazivCasa = "Mehanika Fluida", Opis = "Proučavanje tečnosti u pokretu", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 12, 2, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 48, NazivCasa = "Osnovi Elektrotehnike", Opis = "Principi rada električnih kola", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 12, 4, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 49, NazivCasa = "Termodinamika i Energija", Opis = "Energetski procesi u termodinamici", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 12, 9, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 50, NazivCasa = "Laseri", Opis = "Principi rada i primena lasera", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 12, 11, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 51, NazivCasa = "Elektrostatika", Opis = "Sile i polja u elektrostatici", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 12, 16, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 52, NazivCasa = "Osnovi Biomehanike", Opis = "Fizika u biološkim sistemima", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 12, 18, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 53, NazivCasa = "Osnovi Hemijske Fizike", Opis = "Interakcije u hemijskim procesima", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 12, 23, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 54, NazivCasa = "Fizika Materijala", Opis = "Osnovni koncepti u fizici materijala", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 12, 25, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 55, NazivCasa = "Zaključivanje ocjena", Opis = "Zaključivanje ocjena", GodisnjiPlanProgramID = 2, DatumOdrzavanjaCasa = new DateTime(2024, 12, 30, 10, 0, 0), IsOdrzan = true },
 
-                new Casovi { CasoviID = 11, NazivCasa = "Uvod u Hemiju", Opis = "Osnovni pojmovi i definicije hemije", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 1, 9, 0, 0), IsOdrzan = true },
-                new Casovi { CasoviID = 12, NazivCasa = "Hemijske Reakcije", Opis = "Osnovne vrste hemijskih reakcija", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 3, 10, 0, 0), IsOdrzan = true },
-                new Casovi { CasoviID = 13, NazivCasa = "Osnovi Organske Hemije", Opis = "Učenje o organskim spojevima", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 8, 9, 0, 0), IsOdrzan = true },
-                new Casovi { CasoviID = 14, NazivCasa = "Neorganska Hemija", Opis = "Osnovni principi neorganske hemije", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 10, 10, 0, 0), IsOdrzan = true },
-                new Casovi { CasoviID = 15, NazivCasa = "Analitička Hemija", Opis = "Tehnike analize hemijskih supstanci", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 15, 9, 0, 0), IsOdrzan = true },
 
-                new Casovi { CasoviID = 16, NazivCasa = "Osnovi Računara", Opis = "Uvod u strukturu računara", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 1, 10, 0, 0), IsOdrzan = false },
-                new Casovi { CasoviID = 17, NazivCasa = "Osnove Programiranja", Opis = "Osnovni koncepti programiranja", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 3, 11, 0, 0), IsOdrzan = false },
-                new Casovi { CasoviID = 18, NazivCasa = "Baze Podataka", Opis = "Principi upravljanja podacima", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 8, 10, 0, 0), IsOdrzan = false },
-                new Casovi { CasoviID = 19, NazivCasa = "Web Razvoj", Opis = "Osnove web tehnologija", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 10, 11, 0, 0), IsOdrzan = false },
-                new Casovi { CasoviID = 20, NazivCasa = "Uvod u Softverski Inženjering", Opis = "Osnovni principi razvoja softvera", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 15, 10, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 56, NazivCasa = "Uvod u Hemiju", Opis = "Osnovni pojmovi i definicije hemije", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 1, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 57, NazivCasa = "Hemijske Reakcije", Opis = "Osnovne vrste hemijskih reakcija", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 3, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 58, NazivCasa = "Osnovi Organske Hemije", Opis = "Učenje o organskim spojevima", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 8, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 59, NazivCasa = "Neorganska Hemija", Opis = "Osnovni principi neorganske hemije", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 10, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 60, NazivCasa = "Analitička Hemija", Opis = "Tehnike analize hemijskih supstanci", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 15, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 61, NazivCasa = "Kataliza u Hemiji", Opis = "Osnovni principi katalize u hemijskim reakcijama", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 17, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 62, NazivCasa = "Termodinamika", Opis = "Principi termodinamike u hemiji", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 22, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 63, NazivCasa = "Hemija Ugljen-dioksida", Opis = "Učenje o hemijskim svojstvima ugljen-dioksida", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 24, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 64, NazivCasa = "Elektrohemija", Opis = "Osnovni pojmovi i primene elektrohemije", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 29, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 65, NazivCasa = "Struktura Molekula", Opis = "Osnovi molekulske strukture u hemiji", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 10, 31, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 66, NazivCasa = "Spektroskopija", Opis = "Tehnike spektroskopije u analizi materijala", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 11, 5, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 67, NazivCasa = "Polimerizacija", Opis = "Osnovni procesi polimerizacije", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 11, 7, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 68, NazivCasa = "Hemija Vode", Opis = "Studija hemijskih svojstava vode", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 11, 12, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 69, NazivCasa = "Hemija Biohemijskih Spojeva", Opis = "Osnovi biohemije i njen uticaj na život", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 11, 14, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 70, NazivCasa = "Hemija Ljudi i Životne Sredine", Opis = "Uticaj hemije na ljude i životnu sredinu", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 11, 19, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 71, NazivCasa = "Fizikalna Hemija", Opis = "Principi fizikalne hemije u industriji", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 11, 21, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 72, NazivCasa = "Hemične Proizvodi", Opis = "Hemijski proizvodi i njihova upotreba", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 11, 26, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 73, NazivCasa = "Farmaceutska Hemija", Opis = "Razumevanje farmaceutske hemije u proizvodnji lekova", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 11, 28, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 74, NazivCasa = "Hemija Zagađenja", Opis = "Studija hemijskog zagađenja i njegovih efekata", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 12, 3, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 75, NazivCasa = "Ekološka Hemija", Opis = "Principi ekološke hemije i zaštite životne sredine", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 12, 5, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 76, NazivCasa = "Zeleni Reakcijski Procesi", Opis = "Razumevanje zelenih hemijskih procesa u industriji", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 12, 10, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 77, NazivCasa = "Hemija Ugljen-dioksida u Industriji", Opis = "Upotreba ugljen-dioksida u industrijskim procesima", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 12, 12, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 78, NazivCasa = "Hemijska Analiza Materijala", Opis = "Tehnike analize materijala u industriji", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 12, 17, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 79, NazivCasa = "Praktikum u Hemiji", Opis = "Laboratorijski rad u hemiji", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 12, 19, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 80, NazivCasa = "Primena Hemije u Poljoprivredi", Opis = "Hemija u poljoprivrednoj industriji", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 12, 24, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 81, NazivCasa = "Tehnike Sintesije Hemijskih Spojeva", Opis = "Osnovne tehnike sinteze hemijskih spojeva", GodisnjiPlanProgramID = 3, DatumOdrzavanjaCasa = new DateTime(2024, 12, 26, 9, 0, 0), IsOdrzan = true },
 
-                new Casovi { CasoviID = 21, NazivCasa = "Osnovi Engleskog Jezika", Opis = "Uvod u engleski jezik", GodisnjiPlanProgramID = 5 },
-                new Casovi { CasoviID = 22, NazivCasa = "Gramatika Engleskog", Opis = "Osnovni principi engleske gramatike", GodisnjiPlanProgramID = 5 },
-                new Casovi { CasoviID = 23, NazivCasa = "Vežbe Konverzacije", Opis = "Praktikovanje engleskog jezika", GodisnjiPlanProgramID = 5 },
-                new Casovi { CasoviID = 24, NazivCasa = "Slušanje i Razumevanje", Opis = "Vežbe slušanja na engleskom jeziku", GodisnjiPlanProgramID = 5 },
-                new Casovi { CasoviID = 25, NazivCasa = "Vežbe Pisanja", Opis = "Razvijanje veština pisanja na engleskom jeziku", GodisnjiPlanProgramID = 5 },
+                new Casovi { CasoviID = 82, NazivCasa = "Osnovi Računara", Opis = "Uvod u strukturu računara", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 1, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 83, NazivCasa = "Osnove Programiranja", Opis = "Osnovni koncepti programiranja", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 4, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 84, NazivCasa = "Baze Podataka", Opis = "Principi upravljanja podacima", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 8, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 85, NazivCasa = "Web Razvoj", Opis = "Osnove web tehnologija", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 11, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 86, NazivCasa = "Uvod u Softverski Inženjering", Opis = "Osnovni principi razvoja softvera", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 15, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 87, NazivCasa = "Računarske Mreže", Opis = "Osnovni principi računarskih mreža", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 18, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 88, NazivCasa = "Operativni Sistemi", Opis = "Osnovi operativnih sistema", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 22, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 89, NazivCasa = "Algoritmi i Strukture Podataka", Opis = "Osnovne tehnike u algoritmima i strukturama podataka", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 25, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 90, NazivCasa = "Digitalni Dizajn", Opis = "Osnove digitalnog dizajna u računarstvu", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 10, 29, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 91, NazivCasa = "Uvod u Veštačku Inteligenciju", Opis = "Osnovni principi veštačke inteligencije", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 11, 1, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 92, NazivCasa = "Računarske Arhitekture", Opis = "Osnovni principi računarskih arhitektura", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 11, 5, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 93, NazivCasa = "Uvod u Mobilne Aplikacije", Opis = "Razvoj mobilnih aplikacija i platformi", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 11, 8, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 94, NazivCasa = "Računarski Programi", Opis = "Kreiranje računarskih programa", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 11, 12, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 95, NazivCasa = "Uvod u Sisteme za Upravljanje Podacima", Opis = "Osnovni principi sistema za upravljanje podacima", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 11, 15, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 96, NazivCasa = "Razvoj Web Aplikacija", Opis = "Tehnike za razvoj web aplikacija", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 11, 19, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 97, NazivCasa = "Analiza Podataka", Opis = "Osnovne tehnike analize podataka", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 11, 22, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 98, NazivCasa = "Računarski Sigurnost", Opis = "Principi računarske sigurnosti i zaštite podataka", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 11, 26, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 99, NazivCasa = "Internet Of Things", Opis = "Razumevanje Internet of Things (IoT)", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 11, 29, 9, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 100, NazivCasa = "Tehnologija Umetničkog Računara", Opis = "Primene računara u umetnosti i dizajnu", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 12, 3, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 101, NazivCasa = "Računarske Igre", Opis = "Osnovni principi razvoja računarskih igara", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 12, 6, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 102, NazivCasa = "Uvod u Cloud Računanje", Opis = "Razumevanje cloud računanja i servisa", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 12, 10, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 103, NazivCasa = "Razvoj i Programiranje Video Igra", Opis = "Osnovne tehnike za razvoj video igara", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 12, 13, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 104, NazivCasa = "Računarska Vizualizacija Podataka", Opis = "Tehnike vizualizacije podataka koristeći računare", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 12, 17, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 105, NazivCasa = "Uvod u Blockchain Tehnologiju", Opis = "Principi blockchain tehnologije i njen uticaj", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 12, 20, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 106, NazivCasa = "Uvod u Digitalnu Transformaciju", Opis = "Digitalna transformacija u poslovnim i industrijskim procesima", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 12, 24, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 107, NazivCasa = "Računarske Nauke i Inženjering", Opis = "Povezivanje računarskih nauka i inženjeringa u industriji", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 12, 27, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 108, NazivCasa = "Zaključivanje ocjena", Opis = "Zaključivanje ocjena", GodisnjiPlanProgramID = 4, DatumOdrzavanjaCasa = new DateTime(2024, 12, 31, 11, 0, 0), IsOdrzan = true },
 
-                new Casovi { CasoviID = 26, NazivCasa = "Napredna Matematika", Opis = "Uvod u složenije matematičke koncepte", GodisnjiPlanProgramID = 6 },
-                new Casovi { CasoviID = 27, NazivCasa = "Algebra II", Opis = "Napredni algebarski koncepti", GodisnjiPlanProgramID = 6 },
-                new Casovi { CasoviID = 28, NazivCasa = "Geometrijski Principi", Opis = "Napredne geometrijske analize", GodisnjiPlanProgramID = 6 },
-                new Casovi { CasoviID = 29, NazivCasa = "Trigonometrijske Teorije", Opis = "Složeniji koncepti trigonometrije", GodisnjiPlanProgramID = 6 },
-                new Casovi { CasoviID = 30, NazivCasa = "Statistika II", Opis = "Napredni statistički modeli", GodisnjiPlanProgramID = 6 },
+                new Casovi { CasoviID = 109, NazivCasa = "Osnovi Engleskog Jezika", Opis = "Uvod u engleski jezik", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 10, 4, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 110, NazivCasa = "Gramatika Engleskog", Opis = "Osnovni principi engleske gramatike", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 10, 4, 12, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 111, NazivCasa = "Vežbe Konverzacije", Opis = "Praktikovanje engleskog jezika", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 10, 11, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 112, NazivCasa = "Slušanje i Razumevanje", Opis = "Vežbe slušanja na engleskom jeziku", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 10, 11, 12, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 113, NazivCasa = "Vežbe Pisanja", Opis = "Razvijanje veština pisanja na engleskom jeziku", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 10, 18, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 114, NazivCasa = "Engleski za Početnike", Opis = "Osnovne fraze i vokabular", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 10, 18, 12, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 115, NazivCasa = "Engleski za Napredne", Opis = "Kompleksniji jezički strukturi", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 10, 25, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 116, NazivCasa = "Engleski za Poslovnu Komunikaciju", Opis = "Praktična primena engleskog u poslovnom okruženju", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 10, 25, 12, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 117, NazivCasa = "Učenje Kroz Filmove", Opis = "Vežbe slušanja i razumevanja kroz filmove na engleskom", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 11, 1, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 118, NazivCasa = "Tehnička Engleski", Opis = "Učenje engleskog jezika u kontekstu tehnike", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 11, 1, 12, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 119, NazivCasa = "Engleski za Putovanja", Opis = "Praktične fraze za svakodnevnu komunikaciju", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 11, 8, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 120, NazivCasa = "Interaktivne Vežbe Engleskog", Opis = "Korišćenje online platformi za učenje engleskog", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 11, 8, 12, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 121, NazivCasa = "Prepoznavanje Akcenata", Opis = "Razumevanje različitih engleskih akcenata", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 11, 15, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 122, NazivCasa = "Razumevanje Pjesama", Opis = "Vežbe razumevanja pesama na engleskom jeziku", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 11, 15, 12, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 123, NazivCasa = "Poezija na Engleskom", Opis = "Čitanje i analiza engleske poezije", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 11, 22, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 124, NazivCasa = "Engleski za Turizam", Opis = "Korišćenje engleskog jezika u turizmu", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 11, 22, 12, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 125, NazivCasa = "Engleski za Kulinarske Struke", Opis = "Jezik koji se koristi u kulinarstvu", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 11, 29, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 126, NazivCasa = "Vežbe u Grupi", Opis = "Interaktivne vežbe sa grupama", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 11, 29, 12, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 127, NazivCasa = "Engleski za Decu", Opis = "Osnove engleskog jezika za decu", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 12, 5, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 128, NazivCasa = "Priprema za TOEFL", Opis = "Priprema za polaganje TOEFL ispita", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 12, 5, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 129, NazivCasa = "Engleski za Akademske Svrhe", Opis = "Priprema za akademske ispite na engleskom jeziku", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 12, 12, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 130, NazivCasa = "Frazni Glagoli", Opis = "Učenje fraznih glagola u engleskom jeziku", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 12, 12, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 131, NazivCasa = "Engleski za Turizam", Opis = "Jezik za turizam i putovanja", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 12, 19, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 132, NazivCasa = "Engleski za Poslovnu Komunikaciju", Opis = "Engleski jezik u poslovnom okruženju", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 12, 19, 11, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 133, NazivCasa = "Razumevanje Pjesama", Opis = "Vežbe razumevanja pesama na engleskom jeziku", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 12, 26, 10, 0, 0), IsOdrzan = true },
+                new Casovi { CasoviID = 134, NazivCasa = "Engleski za Zdravstvo", Opis = "Specifični engleski izrazi u zdravstvu", GodisnjiPlanProgramID = 5, DatumOdrzavanjaCasa = new DateTime(2024, 12, 26, 11, 0, 0), IsOdrzan = true },
 
-                new Casovi { CasoviID = 31, NazivCasa = "Napredna Fizika", Opis = "Složeniji principi fizike", GodisnjiPlanProgramID = 7 },
-                new Casovi { CasoviID = 32, NazivCasa = "Kinematika II", Opis = "Napredne analize pokreta", GodisnjiPlanProgramID = 7 },
-                new Casovi { CasoviID = 33, NazivCasa = "Dinamika II", Opis = "Proučavanje kompleksnih dinamika", GodisnjiPlanProgramID = 7 },
-                new Casovi { CasoviID = 34, NazivCasa = "Termodinamika II", Opis = "Napredni koncepti termodinamike", GodisnjiPlanProgramID = 7 },
-                new Casovi { CasoviID = 35, NazivCasa = "Optika II", Opis = "Složenije analize svetlosti", GodisnjiPlanProgramID = 7 },
+                new Casovi { CasoviID = 135, NazivCasa = "Napredna Matematika", Opis = "Uvod u složenije matematičke koncepte", GodisnjiPlanProgramID = 6, DatumOdrzavanjaCasa = new DateTime(2024, 12, 17, 11, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 136, NazivCasa = "Algebra II", Opis = "Napredni algebarski koncepti", GodisnjiPlanProgramID = 6, DatumOdrzavanjaCasa = new DateTime(2024, 12, 23, 11, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 137, NazivCasa = "Geometrijski Principi", Opis = "Napredne geometrijske analize", GodisnjiPlanProgramID = 6, DatumOdrzavanjaCasa = new DateTime(2024, 12, 2, 11, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 138, NazivCasa = "Zaključivanje ocjena", Opis = "Zaključivanje ocjena", GodisnjiPlanProgramID = 6, DatumOdrzavanjaCasa = new DateTime(2024, 12, 30, 11, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 139, NazivCasa = "Statistika II", Opis = "Napredni statistički modeli", GodisnjiPlanProgramID = 6, DatumOdrzavanjaCasa = new DateTime(2024, 12, 23, 12, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 140, NazivCasa = "Napredna Fizika", Opis = "Složeniji principi fizike", GodisnjiPlanProgramID = 7, DatumOdrzavanjaCasa = new DateTime(2024, 12, 13, 11, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 141, NazivCasa = "Kinematika II", Opis = "Napredne analize pokreta", GodisnjiPlanProgramID = 7, DatumOdrzavanjaCasa = new DateTime(2024, 12, 17, 12, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 142, NazivCasa = "Dinamika II", Opis = "Proučavanje kompleksnih dinamika", GodisnjiPlanProgramID = 7, DatumOdrzavanjaCasa = new DateTime(2024, 12, 26, 12, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 143, NazivCasa = "Termodinamika II", Opis = "Napredni koncepti termodinamike", GodisnjiPlanProgramID = 7, DatumOdrzavanjaCasa = new DateTime(2024, 12, 3, 12, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 144, NazivCasa = "Optika II", Opis = "Složenije analize svetlosti", GodisnjiPlanProgramID = 7, DatumOdrzavanjaCasa = new DateTime(2024, 12, 9, 9, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 145, NazivCasa = "Programiranje III", Opis = "Napredne tehnike programiranja", GodisnjiPlanProgramID = 9, DatumOdrzavanjaCasa = new DateTime(2024, 12, 10, 12, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 146, NazivCasa = "Baze Podataka II", Opis = "Napredni principi upravljanja podacima", GodisnjiPlanProgramID = 9, DatumOdrzavanjaCasa = new DateTime(2024, 12, 11, 12, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 147, NazivCasa = "Web Razvoj II", Opis = "Složeniji web projekti", GodisnjiPlanProgramID = 9, DatumOdrzavanjaCasa = new DateTime(2024, 12, 6, 12, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 148, NazivCasa = "Softverski Inženjering II", Opis = "Napredni principi razvoja softvera", GodisnjiPlanProgramID = 9, DatumOdrzavanjaCasa = new DateTime(2024, 12, 19, 12, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 149, NazivCasa = "Engleski za Napredne", Opis = "Napredni engleski jezik", GodisnjiPlanProgramID = 10, DatumOdrzavanjaCasa = new DateTime(2024, 12, 20, 11, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 150, NazivCasa = "Zaključivanje ocjena", Opis = "Zaključivanje ocjena", GodisnjiPlanProgramID = 10, DatumOdrzavanjaCasa = new DateTime(2024, 12, 31, 12, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 151, NazivCasa = "Konverzacija za Napredne", Opis = "Praktikovanje naprednog engleskog jezika", GodisnjiPlanProgramID = 10, DatumOdrzavanjaCasa = new DateTime(2024, 12, 20, 12, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 152, NazivCasa = "Slušanje za Napredne", Opis = "Vežbe slušanja na naprednom engleskom jeziku", GodisnjiPlanProgramID = 10, DatumOdrzavanjaCasa = new DateTime(2024, 12, 5, 12, 0, 0), IsOdrzan = false },
+                new Casovi { CasoviID = 153, NazivCasa = "Pisanje za Napredne", Opis = "Razvijanje veština pisanja na naprednom engleskom jeziku", GodisnjiPlanProgramID = 10, DatumOdrzavanjaCasa = new DateTime(2024, 12, 12, 12, 0, 0), IsOdrzan = false }
 
-                new Casovi { CasoviID = 36, NazivCasa = "Napredna Hemija", Opis = "Složeniji pojmovi hemije", GodisnjiPlanProgramID = 8 },
-                new Casovi { CasoviID = 37, NazivCasa = "Hemijske Reakcije II", Opis = "Dubinska analiza hemijskih reakcija", GodisnjiPlanProgramID = 8 },
-                new Casovi { CasoviID = 38, NazivCasa = "Organska Hemija II", Opis = "Napredne teme organske hemije", GodisnjiPlanProgramID = 8 },
-                new Casovi { CasoviID = 39, NazivCasa = "Neorganska Hemija II", Opis = "Složeniji principi neorganske hemije", GodisnjiPlanProgramID = 8 },
-                new Casovi { CasoviID = 40, NazivCasa = "Analitička Hemija II", Opis = "Napredne tehnike analize", GodisnjiPlanProgramID = 8 },
-
-                new Casovi { CasoviID = 41, NazivCasa = "Napredna Informatika", Opis = "Složeniji koncepti računarstva", GodisnjiPlanProgramID = 9 },
-                new Casovi { CasoviID = 42, NazivCasa = "Programiranje III", Opis = "Napredne tehnike programiranja", GodisnjiPlanProgramID = 9 },
-                new Casovi { CasoviID = 43, NazivCasa = "Baze Podataka II", Opis = "Napredni principi upravljanja podacima", GodisnjiPlanProgramID = 9 },
-                new Casovi { CasoviID = 44, NazivCasa = "Web Razvoj II", Opis = "Složeniji web projekti", GodisnjiPlanProgramID = 9 },
-                new Casovi { CasoviID = 45, NazivCasa = "Softverski Inženjering II", Opis = "Napredni principi razvoja softvera", GodisnjiPlanProgramID = 9 },
-
-                new Casovi { CasoviID = 46, NazivCasa = "Engleski za Napredne", Opis = "Napredni engleski jezik", GodisnjiPlanProgramID = 10 },
-                new Casovi { CasoviID = 47, NazivCasa = "Gramatika za Napredne", Opis = "Napredni koncepti engleske gramatike", GodisnjiPlanProgramID = 10 },
-                new Casovi { CasoviID = 48, NazivCasa = "Konverzacija za Napredne", Opis = "Praktikovanje naprednog engleskog jezika", GodisnjiPlanProgramID = 10 },
-                new Casovi { CasoviID = 49, NazivCasa = "Slušanje za Napredne", Opis = "Vežbe slušanja na naprednom engleskom jeziku", GodisnjiPlanProgramID = 10 },
-                new Casovi { CasoviID = 50, NazivCasa = "Pisanje za Napredne", Opis = "Razvijanje veština pisanja na naprednom engleskom jeziku", GodisnjiPlanProgramID = 10 });
+                );
         }
         private void SeedSkola(ModelBuilder modelBuilder)
         {
@@ -730,7 +913,7 @@ namespace eDnevnik.Services
                     VrijednostOcjene = 4,
                     Datum = new DateTime(2024, 10, 2, 10, 0, 0),
                     KorisnikID = 16,
-                    PredmetID = 2,
+                    PredmetID = 9,
                     Komentar = "Vrlo dobar."
                 },
                 new Ocjene
@@ -748,7 +931,7 @@ namespace eDnevnik.Services
                     VrijednostOcjene = 5,
                     Datum = new DateTime(2024, 10, 9, 10, 0, 0),
                     KorisnikID = 18,
-                    PredmetID = 4,
+                    PredmetID = 3,
                     Komentar = "Odličan uspjeh."
                 },
                 new Ocjene
@@ -858,59 +1041,481 @@ namespace eDnevnik.Services
                     KorisnikID = 30,
                     PredmetID = 4,
                     Komentar = "Izuzetan uspjeh."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 17,
+                    VrijednostOcjene = 2,
+                    Datum = new DateTime(2024, 10, 9, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 1,
+                    Komentar = "Dovoljan."
+                }, new Ocjene
+                {
+                    OcjenaID = 18,
+                    VrijednostOcjene = 3,
+                    Datum = new DateTime(2024, 10, 30, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 1,
+                    Komentar = "Vrlo dobar."
+                }, new Ocjene
+                {
+                    OcjenaID = 19,
+                    VrijednostOcjene = 3,
+                    Datum = new DateTime(2024, 11, 13, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 1,
+                    Komentar = "Vrlo dobar."
+                }, new Ocjene
+                {
+                    OcjenaID = 20,
+                    VrijednostOcjene = 1,
+                    Datum = new DateTime(2024, 12, 16, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 1,
+                    Komentar = "Nedovoljan."
+                }, new Ocjene
+                {
+                    OcjenaID = 21,
+                    VrijednostOcjene = 4,
+                    Datum = new DateTime(2024, 10, 7, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 3,
+                    Komentar = "Vrlo dobar."
+                }, new Ocjene
+                {
+                    OcjenaID = 22,
+                    VrijednostOcjene = 2,
+                    Datum = new DateTime(2024, 10, 28, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 3,
+                    Komentar = "Dovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 23,
+                    VrijednostOcjene = 5,
+                    Datum = new DateTime(2024, 11, 13, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 3,
+                    Komentar = "Odličan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 24,
+                    VrijednostOcjene = 5,
+                    Datum = new DateTime(2024, 11, 18, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 3,
+                    Komentar = "Odličan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 25,
+                    VrijednostOcjene = 1,
+                    Datum = new DateTime(2024, 10, 28, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 3,
+                    Komentar = "Nedovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 26,
+                    VrijednostOcjene = 3,
+                    Datum = new DateTime(2024, 10, 15, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 5,
+                    Komentar = "Dobro."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 27,
+                    VrijednostOcjene = 4,
+                    Datum = new DateTime(2024, 10, 29, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 5,
+                    Komentar = "Vrlo dobar."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 28,
+                    VrijednostOcjene = 5,
+                    Datum = new DateTime(2024, 11, 19, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 5,
+                    Komentar = "Odličan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 29,
+                    VrijednostOcjene = 2,
+                    Datum = new DateTime(2024, 12, 5, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 5,
+                    Komentar = "Dovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 30,
+                    VrijednostOcjene = 1,
+                    Datum = new DateTime(2024, 12, 24, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 5,
+                    Komentar = "Nedovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 31,
+                    VrijednostOcjene = 2,
+                    Datum = new DateTime(2024, 10, 18, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 7,
+                    Komentar = "Dovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 32,
+                    VrijednostOcjene = 3,
+                    Datum = new DateTime(2024, 11, 12, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 7,
+                    Komentar = "Dobro."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 33,
+                    VrijednostOcjene = 4,
+                    Datum = new DateTime(2024, 11, 29, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 7,
+                    Komentar = "Vrlo dobar."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 34,
+                    VrijednostOcjene = 1,
+                    Datum = new DateTime(2024, 12, 20, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 7,
+                    Komentar = "Nedovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 35,
+                    VrijednostOcjene = 5,
+                    Datum = new DateTime(2024, 12, 31, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 7,
+                    Komentar = "Odličan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 36,
+                    VrijednostOcjene = 3,
+                    Datum = new DateTime(2024, 10, 18, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 9,
+                    Komentar = "Dobro."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 37,
+                    VrijednostOcjene = 2,
+                    Datum = new DateTime(2024, 10, 25, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 9,
+                    Komentar = "Dovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 38,
+                    VrijednostOcjene = 4,
+                    Datum = new DateTime(2024, 11, 29, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 9,
+                    Komentar = "Vrlo dobar."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 39,
+                    VrijednostOcjene = 5,
+                    Datum = new DateTime(2024, 12, 19, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 9,
+                    Komentar = "Odličan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 40,
+                    VrijednostOcjene = 1,
+                    Datum = new DateTime(2024, 12, 26, 0, 0, 0),
+                    KorisnikID = 15,
+                    PredmetID = 9,
+                    Komentar = "Nedovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 41,
+                    VrijednostOcjene = 2,
+                    Datum = new DateTime(2024, 10, 9, 0, 0, 0),
+                    KorisnikID = 16,
+                    PredmetID = 1,
+                    Komentar = "Dovoljan."
+                }, new Ocjene
+                {
+                    OcjenaID = 42,
+                    VrijednostOcjene = 3,
+                    Datum = new DateTime(2024, 10, 30, 0, 0, 0),
+                    KorisnikID = 17,
+                    PredmetID = 1,
+                    Komentar = "Vrlo dobar."
+                }, new Ocjene
+                {
+                    OcjenaID = 43,
+                    VrijednostOcjene = 3,
+                    Datum = new DateTime(2024, 11, 13, 0, 0, 0),
+                    KorisnikID = 18,
+                    PredmetID = 1,
+                    Komentar = "Vrlo dobar."
+                }, new Ocjene
+                {
+                    OcjenaID = 44,
+                    VrijednostOcjene = 1,
+                    Datum = new DateTime(2024, 12, 16, 0, 0, 0),
+                    KorisnikID = 19,
+                    PredmetID = 1,
+                    Komentar = "Nedovoljan."
+                }, new Ocjene
+                {
+                    OcjenaID = 45,
+                    VrijednostOcjene = 4,
+                    Datum = new DateTime(2024, 10, 7, 0, 0, 0),
+                    KorisnikID = 16,
+                    PredmetID = 3,
+                    Komentar = "Vrlo dobar."
+                }, new Ocjene
+                {
+                    OcjenaID = 46,
+                    VrijednostOcjene = 2,
+                    Datum = new DateTime(2024, 10, 28, 0, 0, 0),
+                    KorisnikID = 17,
+                    PredmetID = 3,
+                    Komentar = "Dovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 47,
+                    VrijednostOcjene = 5,
+                    Datum = new DateTime(2024, 11, 13, 0, 0, 0),
+                    KorisnikID = 18,
+                    PredmetID = 3,
+                    Komentar = "Odličan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 48,
+                    VrijednostOcjene = 5,
+                    Datum = new DateTime(2024, 11, 18, 0, 0, 0),
+                    KorisnikID = 19,
+                    PredmetID = 3,
+                    Komentar = "Odličan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 49,
+                    VrijednostOcjene = 1,
+                    Datum = new DateTime(2024, 10, 28, 0, 0, 0),
+                    KorisnikID = 16,
+                    PredmetID = 5,
+                    Komentar = "Nedovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 50,
+                    VrijednostOcjene = 3,
+                    Datum = new DateTime(2024, 10, 15, 0, 0, 0),
+                    KorisnikID = 17,
+                    PredmetID = 5,
+                    Komentar = "Dobro."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 51,
+                    VrijednostOcjene = 4,
+                    Datum = new DateTime(2024, 10, 29, 0, 0, 0),
+                    KorisnikID = 18,
+                    PredmetID = 5,
+                    Komentar = "Vrlo dobar."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 52,
+                    VrijednostOcjene = 5,
+                    Datum = new DateTime(2024, 11, 19, 0, 0, 0),
+                    KorisnikID = 19,
+                    PredmetID = 5,
+                    Komentar = "Odličan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 53,
+                    VrijednostOcjene = 2,
+                    Datum = new DateTime(2024, 12, 5, 0, 0, 0),
+                    KorisnikID = 16,
+                    PredmetID = 5,
+                    Komentar = "Dovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 54,
+                    VrijednostOcjene = 1,
+                    Datum = new DateTime(2024, 12, 24, 0, 0, 0),
+                    KorisnikID = 17,
+                    PredmetID = 5,
+                    Komentar = "Nedovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 55,
+                    VrijednostOcjene = 2,
+                    Datum = new DateTime(2024, 10, 18, 0, 0, 0),
+                    KorisnikID = 18,
+                    PredmetID = 7,
+                    Komentar = "Dovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 56,
+                    VrijednostOcjene = 3,
+                    Datum = new DateTime(2024, 11, 12, 0, 0, 0),
+                    KorisnikID = 19,
+                    PredmetID = 7,
+                    Komentar = "Dobro."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 57,
+                    VrijednostOcjene = 4,
+                    Datum = new DateTime(2024, 11, 29, 0, 0, 0),
+                    KorisnikID = 16,
+                    PredmetID = 7,
+                    Komentar = "Vrlo dobar."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 58,
+                    VrijednostOcjene = 1,
+                    Datum = new DateTime(2024, 12, 20, 0, 0, 0),
+                    KorisnikID = 17,
+                    PredmetID = 7,
+                    Komentar = "Nedovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 59,
+                    VrijednostOcjene = 5,
+                    Datum = new DateTime(2024, 12, 31, 0, 0, 0),
+                    KorisnikID = 18,
+                    PredmetID = 7,
+                    Komentar = "Odličan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 60,
+                    VrijednostOcjene = 3,
+                    Datum = new DateTime(2024, 10, 18, 0, 0, 0),
+                    KorisnikID = 19,
+                    PredmetID = 7,
+                    Komentar = "Dobro."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 61,
+                    VrijednostOcjene = 2,
+                    Datum = new DateTime(2024, 10, 25, 0, 0, 0),
+                    KorisnikID = 16,
+                    PredmetID = 7,
+                    Komentar = "Dovoljan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 62,
+                    VrijednostOcjene = 4,
+                    Datum = new DateTime(2024, 11, 29, 0, 0, 0),
+                    KorisnikID = 17,
+                    PredmetID = 7,
+                    Komentar = "Vrlo dobar."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 63,
+                    VrijednostOcjene = 5,
+                    Datum = new DateTime(2024, 12, 19, 0, 0, 0),
+                    KorisnikID = 18,
+                    PredmetID = 7,
+                    Komentar = "Odličan."
+                },
+                new Ocjene
+                {
+                    OcjenaID = 64,
+                    VrijednostOcjene = 1,
+                    Datum = new DateTime(2024, 12, 26, 0, 0, 0),
+                    KorisnikID = 19,
+                    PredmetID = 7,
+                    Komentar = "Nedovoljan."
                 }
             );
         }
         private void SeedGodisnjiPlanProgram(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<GodisnjiPlanProgram>().HasData(
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 1, brojCasova = 5, Naziv = "Plan i program za Matematiku I", OdjeljenjeID = 1, PredmetID = 1, SkolaID = 1, ProfesorID = 69, SkolskaGodinaID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 2, brojCasova = 5, Naziv = "Plan i program za Fiziku I", OdjeljenjeID = 1, PredmetID = 3, SkolaID = 1, ProfesorID = 2, SkolskaGodinaID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 3, brojCasova = 5, Naziv = "Plan i program za Hemiju I", OdjeljenjeID = 1, PredmetID = 5, SkolaID = 1, ProfesorID = 3, SkolskaGodinaID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 4, brojCasova = 5, Naziv = "Plan i program za Informatiku I", OdjeljenjeID = 1, PredmetID = 7, SkolaID = 1, ProfesorID = 4, SkolskaGodinaID = 1 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 5, brojCasova = 5, Naziv = "Plan i program za Engleski I", OdjeljenjeID = 1, PredmetID = 9, SkolaID = 1, ProfesorID = 5, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 1, brojCasova = 28, Naziv = "Plan i program za Matematiku I", OdjeljenjeID = 1, PredmetID = 1, SkolaID = 1, ProfesorID = 69, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 2, brojCasova = 27, Naziv = "Plan i program za Fiziku I", OdjeljenjeID = 1, PredmetID = 3, SkolaID = 1, ProfesorID = 2, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 3, brojCasova = 26, Naziv = "Plan i program za Hemiju I", OdjeljenjeID = 1, PredmetID = 5, SkolaID = 1, ProfesorID = 3, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 4, brojCasova = 27, Naziv = "Plan i program za Informatiku I", OdjeljenjeID = 1, PredmetID = 7, SkolaID = 1, ProfesorID = 4, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 5, brojCasova = 26, Naziv = "Plan i program za Engleski I", OdjeljenjeID = 1, PredmetID = 9, SkolaID = 1, ProfesorID = 5, SkolskaGodinaID = 1 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 6, brojCasova = 5, Naziv = "Plan i program za Matematiku II", OdjeljenjeID = 4, PredmetID = 11, SkolaID = 1, ProfesorID = 69, SkolskaGodinaID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 7, brojCasova = 5, Naziv = "Plan i program za Fiziku II", OdjeljenjeID = 4, PredmetID = 12, SkolaID = 1, ProfesorID = 2, SkolskaGodinaID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 8, brojCasova = 5, Naziv = "Plan i program za Hemiju II", OdjeljenjeID = 4, PredmetID = 13, SkolaID = 1, ProfesorID = 3, SkolskaGodinaID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 9, brojCasova = 5, Naziv = "Plan i program za Informatiku II", OdjeljenjeID = 4, PredmetID = 14, SkolaID = 1, ProfesorID = 4, SkolskaGodinaID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 10, brojCasova = 5, Naziv = "Plan i program za Engleski II", OdjeljenjeID = 4, PredmetID = 15, SkolaID = 1, ProfesorID = 5, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 6, brojCasova = 10, Naziv = "Plan i program za Matematiku II", OdjeljenjeID = 2, PredmetID = 11, SkolaID = 1, ProfesorID = 69, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 7, brojCasova = 10, Naziv = "Plan i program za Fiziku II", OdjeljenjeID = 2, PredmetID = 12, SkolaID = 1, ProfesorID = 2, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 8, brojCasova = 10, Naziv = "Plan i program za Hemiju II", OdjeljenjeID = 2, PredmetID = 13, SkolaID = 1, ProfesorID = 3, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 9, brojCasova = 10, Naziv = "Plan i program za Informatiku II", OdjeljenjeID = 2, PredmetID = 14, SkolaID = 1, ProfesorID = 4, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 10, brojCasova = 10, Naziv = "Plan i program za Engleski II", OdjeljenjeID = 2, PredmetID = 15, SkolaID = 1, ProfesorID = 5, SkolskaGodinaID = 2 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 11, brojCasova = 5, Naziv = "Plan i program za Matematiku III", OdjeljenjeID = 6, PredmetID = 16, SkolaID = 1, ProfesorID = 6, SkolskaGodinaID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 12, brojCasova = 5, Naziv = "Plan i program za Fiziku III", OdjeljenjeID = 6, PredmetID = 17, SkolaID = 1, ProfesorID = 7, SkolskaGodinaID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 13, brojCasova = 5, Naziv = "Plan i program za Hemiju III", OdjeljenjeID = 6, PredmetID = 18, SkolaID = 1, ProfesorID = 8, SkolskaGodinaID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 14, brojCasova = 5, Naziv = "Plan i program za Informatiku III", OdjeljenjeID = 6, PredmetID = 19, SkolaID = 1, ProfesorID = 9, SkolskaGodinaID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 15, brojCasova = 5, Naziv = "Plan i program za Engleski III", OdjeljenjeID = 6, PredmetID = 20, SkolaID = 1, ProfesorID = 10, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 11, brojCasova = 10, Naziv = "Plan i program za Matematiku III", OdjeljenjeID = 3, PredmetID = 16, SkolaID = 1, ProfesorID = 6, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 12, brojCasova = 10, Naziv = "Plan i program za Fiziku III", OdjeljenjeID = 3, PredmetID = 17, SkolaID = 1, ProfesorID = 7, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 13, brojCasova = 10, Naziv = "Plan i program za Hemiju III", OdjeljenjeID = 3, PredmetID = 18, SkolaID = 1, ProfesorID = 8, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 14, brojCasova = 10, Naziv = "Plan i program za Informatiku III", OdjeljenjeID = 3, PredmetID = 19, SkolaID = 1, ProfesorID = 9, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 15, brojCasova = 10, Naziv = "Plan i program za Engleski III", OdjeljenjeID = 3, PredmetID = 20, SkolaID = 1, ProfesorID = 10, SkolskaGodinaID = 1 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 16, brojCasova = 5, Naziv = "Plan i program za Matematiku IV", OdjeljenjeID = 7, PredmetID = 21, SkolaID = 1, ProfesorID = 6, SkolskaGodinaID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 17, brojCasova = 5, Naziv = "Plan i program za Fiziku IV", OdjeljenjeID = 7, PredmetID = 22, SkolaID = 1, ProfesorID = 7, SkolskaGodinaID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 18, brojCasova = 5, Naziv = "Plan i program za Hemiju IV", OdjeljenjeID = 7, PredmetID = 23, SkolaID = 1, ProfesorID = 8, SkolskaGodinaID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 19, brojCasova = 5, Naziv = "Plan i program za Informatiku IV", OdjeljenjeID = 7, PredmetID = 24, SkolaID = 1, ProfesorID = 9, SkolskaGodinaID = 2 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 20, brojCasova = 5, Naziv = "Plan i program za Engleski IV", OdjeljenjeID = 7, PredmetID = 25, SkolaID = 1, ProfesorID = 10, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 16, brojCasova = 10, Naziv = "Plan i program za Matematiku IV", OdjeljenjeID = 4, PredmetID = 21, SkolaID = 1, ProfesorID = 6, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 17, brojCasova = 10, Naziv = "Plan i program za Fiziku IV", OdjeljenjeID = 4, PredmetID = 22, SkolaID = 1, ProfesorID = 7, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 18, brojCasova = 10, Naziv = "Plan i program za Hemiju IV", OdjeljenjeID = 4, PredmetID = 23, SkolaID = 1, ProfesorID = 8, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 19, brojCasova = 10, Naziv = "Plan i program za Informatiku IV", OdjeljenjeID = 4, PredmetID = 24, SkolaID = 1, ProfesorID = 9, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 20, brojCasova = 10, Naziv = "Plan i program za Engleski IV", OdjeljenjeID = 4, PredmetID = 25, SkolaID = 1, ProfesorID = 10, SkolskaGodinaID = 2 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 21, brojCasova = 5, Naziv = "Plan i program za Biologiju I", OdjeljenjeID = 8, PredmetID = 2, SkolaID = 2, ProfesorID = 11 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 22, brojCasova = 5, Naziv = "Plan i program za Fiziku I", OdjeljenjeID = 8, PredmetID = 4, SkolaID = 2, ProfesorID = 12 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 23, brojCasova = 5, Naziv = "Plan i program za Hemiju I", OdjeljenjeID = 8, PredmetID = 6, SkolaID = 2, ProfesorID = 13 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 24, brojCasova = 5, Naziv = "Plan i program za Informatiku I", OdjeljenjeID = 8, PredmetID = 8, SkolaID = 2, ProfesorID = 14 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 25, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku I", OdjeljenjeID = 8, PredmetID = 10, SkolaID = 2, ProfesorID = 61 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 21, brojCasova = 10, Naziv = "Plan i program za Biologiju I", OdjeljenjeID = 5, PredmetID = 2, SkolaID = 2, ProfesorID = 11, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 22, brojCasova = 10, Naziv = "Plan i program za Fiziku I", OdjeljenjeID = 5, PredmetID = 4, SkolaID = 2, ProfesorID = 12, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 23, brojCasova = 10, Naziv = "Plan i program za Hemiju I", OdjeljenjeID = 5, PredmetID = 6, SkolaID = 2, ProfesorID = 13, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 24, brojCasova = 10, Naziv = "Plan i program za Informatiku I", OdjeljenjeID = 5, PredmetID = 8, SkolaID = 2, ProfesorID = 14, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 25, brojCasova = 10, Naziv = "Plan i program za Elektrotehniku I", OdjeljenjeID = 5, PredmetID = 10, SkolaID = 2, ProfesorID = 61, SkolskaGodinaID = 1 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 26, brojCasova = 5, Naziv = "Plan i program za Biologiju II", OdjeljenjeID = 11, PredmetID = 26, SkolaID = 2, ProfesorID = 62 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 27, brojCasova = 5, Naziv = "Plan i program za Fiziku II", OdjeljenjeID = 11, PredmetID = 27, SkolaID = 2, ProfesorID = 63 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 28, brojCasova = 5, Naziv = "Plan i program za Hemiju II", OdjeljenjeID = 11, PredmetID = 28, SkolaID = 2, ProfesorID = 64 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 29, brojCasova = 5, Naziv = "Plan i program za Informatiku II", OdjeljenjeID = 11, PredmetID = 29, SkolaID = 2, ProfesorID = 65 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 30, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku II", OdjeljenjeID = 11, PredmetID = 30, SkolaID = 2, ProfesorID = 61 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 26, brojCasova = 10, Naziv = "Plan i program za Biologiju II", OdjeljenjeID = 6, PredmetID = 26, SkolaID = 2, ProfesorID = 62, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 27, brojCasova = 10, Naziv = "Plan i program za Fiziku II", OdjeljenjeID = 6, PredmetID = 27, SkolaID = 2, ProfesorID = 63, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 28, brojCasova = 10, Naziv = "Plan i program za Hemiju II", OdjeljenjeID = 6, PredmetID = 28, SkolaID = 2, ProfesorID = 64, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 29, brojCasova = 10, Naziv = "Plan i program za Informatiku II", OdjeljenjeID = 6, PredmetID = 29, SkolaID = 2, ProfesorID = 65, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 30, brojCasova = 10, Naziv = "Plan i program za Elektrotehniku II", OdjeljenjeID = 6, PredmetID = 30, SkolaID = 2, ProfesorID = 61, SkolskaGodinaID = 2 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 31, brojCasova = 5, Naziv = "Plan i program za Biologiju III", OdjeljenjeID = 13, PredmetID = 31, SkolaID = 2, ProfesorID = 66 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 32, brojCasova = 5, Naziv = "Plan i program za Fiziku III", OdjeljenjeID = 13, PredmetID = 32, SkolaID = 2, ProfesorID = 67 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 33, brojCasova = 5, Naziv = "Plan i program za Hemiju III", OdjeljenjeID = 13, PredmetID = 33, SkolaID = 2, ProfesorID = 68 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 34, brojCasova = 5, Naziv = "Plan i program za Informatiku III", OdjeljenjeID = 13, PredmetID = 34, SkolaID = 2, ProfesorID = 65 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 35, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku III", OdjeljenjeID = 13, PredmetID = 35, SkolaID = 2, ProfesorID = 61 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 31, brojCasova = 10, Naziv = "Plan i program za Biologiju III", OdjeljenjeID = 7, PredmetID = 31, SkolaID = 2, ProfesorID = 66, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 32, brojCasova = 10, Naziv = "Plan i program za Fiziku III", OdjeljenjeID = 7, PredmetID = 32, SkolaID = 2, ProfesorID = 67, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 33, brojCasova = 10, Naziv = "Plan i program za Hemiju III", OdjeljenjeID = 7, PredmetID = 33, SkolaID = 2, ProfesorID = 68, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 34, brojCasova = 10, Naziv = "Plan i program za Informatiku III", OdjeljenjeID = 7, PredmetID = 34, SkolaID = 2, ProfesorID = 65, SkolskaGodinaID = 1 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 35, brojCasova = 10, Naziv = "Plan i program za Elektrotehniku III", OdjeljenjeID = 7, PredmetID = 35, SkolaID = 2, ProfesorID = 61, SkolskaGodinaID = 1 },
 
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 36, brojCasova = 5, Naziv = "Plan i program za Biologiju IV", OdjeljenjeID = 14, PredmetID = 36, SkolaID = 2, ProfesorID = 66 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 37, brojCasova = 5, Naziv = "Plan i program za Fiziku IV", OdjeljenjeID = 14, PredmetID = 37, SkolaID = 2, ProfesorID = 67 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 38, brojCasova = 5, Naziv = "Plan i program za Hemiju IV", OdjeljenjeID = 14, PredmetID = 38, SkolaID = 2, ProfesorID = 68 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 39, brojCasova = 5, Naziv = "Plan i program za Informatiku IV", OdjeljenjeID = 14, PredmetID = 39, SkolaID = 2, ProfesorID = 65 },
-                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 40, brojCasova = 5, Naziv = "Plan i program za Elektrotehniku IV", OdjeljenjeID = 14, PredmetID = 40, SkolaID = 2, ProfesorID = 61 }
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 36, brojCasova = 10, Naziv = "Plan i program za Biologiju IV", OdjeljenjeID = 8, PredmetID = 36, SkolaID = 2, ProfesorID = 66, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 37, brojCasova = 10, Naziv = "Plan i program za Fiziku IV", OdjeljenjeID = 8, PredmetID = 37, SkolaID = 2, ProfesorID = 67, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 38, brojCasova = 10, Naziv = "Plan i program za Hemiju IV", OdjeljenjeID = 8, PredmetID = 38, SkolaID = 2, ProfesorID = 68, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 39, brojCasova = 10, Naziv = "Plan i program za Informatiku IV", OdjeljenjeID = 8, PredmetID = 39, SkolaID = 2, ProfesorID = 65, SkolskaGodinaID = 2 },
+                new GodisnjiPlanProgram { GodisnjiPlanProgramID = 40, brojCasova = 10, Naziv = "Plan i program za Elektrotehniku IV", OdjeljenjeID = 8, PredmetID = 40, SkolaID = 2, ProfesorID = 61, SkolskaGodinaID = 2 }
             );
         }
         private void SeedPoruke(ModelBuilder modelBuilder)
@@ -964,6 +1569,14 @@ namespace eDnevnik.Services
                     ProfesorID = 1,
                     UcenikID = 20,
                     SadrzajPoruke = "Obavezno se pripremite za predstojeći test.",
+                    DatumSlanja = DateTime.Now
+                },
+                new Poruke
+                {
+                    PorukaID = 7,
+                    ProfesorID = 1,
+                    UcenikID = 15,
+                    SadrzajPoruke = "Obraćam se povodom lekcije koju smo radili u petak.",
                     DatumSlanja = DateTime.Now
                 }
             );
@@ -1331,93 +1944,51 @@ namespace eDnevnik.Services
                 new Odjeljenje
                 {
                     OdjeljenjeID = 2,
-                    NazivOdjeljenja = "1B",
-                    SkolaID = 1,
-                    RazrednikID = 2
-                },
-                new Odjeljenje
-                {
-                    OdjeljenjeID = 3,
-                    NazivOdjeljenja = "1C",
-                    SkolaID = 1,
-                    RazrednikID = 3
-                },
-                new Odjeljenje
-                {
-                    OdjeljenjeID = 4,
-                    NazivOdjeljenja = "2A",
+                    NazivOdjeljenja = "2B",
                     SkolaID = 1,
                     RazrednikID = 4
                 },
                 new Odjeljenje
                 {
-                    OdjeljenjeID = 5,
-                    NazivOdjeljenja = "2B",
+                    OdjeljenjeID = 3,
+                    NazivOdjeljenja = "3C",
                     SkolaID = 1,
                     RazrednikID = 5
                 },
                 new Odjeljenje
                 {
-                    OdjeljenjeID = 6,
-                    NazivOdjeljenja = "3A",
+                    OdjeljenjeID = 4,
+                    NazivOdjeljenja = "4D",
                     SkolaID = 1,
                     RazrednikID = 6
                 },
                 new Odjeljenje
                 {
-                    OdjeljenjeID = 7,
-                    NazivOdjeljenja = "4A",
-                    SkolaID = 1,
-                    RazrednikID = 7
-                },
-                new Odjeljenje
-                {
-                    OdjeljenjeID = 8,
+                    OdjeljenjeID = 5,
                     NazivOdjeljenja = "1A",
                     SkolaID = 2,
                     RazrednikID = 8
                 },
                 new Odjeljenje
                 {
-                    OdjeljenjeID = 9,
-                    NazivOdjeljenja = "1B",
+                    OdjeljenjeID = 6,
+                    NazivOdjeljenja = "2B",
                     SkolaID = 2,
                     RazrednikID = 9
                 },
                 new Odjeljenje
                 {
-                    OdjeljenjeID = 10,
-                    NazivOdjeljenja = "1C",
+                    OdjeljenjeID = 7,
+                    NazivOdjeljenja = "3C",
                     SkolaID = 2,
                     RazrednikID = 10
                 },
                 new Odjeljenje
                 {
-                    OdjeljenjeID = 11,
-                    NazivOdjeljenja = "2A",
+                    OdjeljenjeID = 8,
+                    NazivOdjeljenja = "4D",
                     SkolaID = 2,
                     RazrednikID = 11
-                },
-                new Odjeljenje
-                {
-                    OdjeljenjeID = 12,
-                    NazivOdjeljenja = "2B",
-                    SkolaID = 2,
-                    RazrednikID = 12
-                },
-                new Odjeljenje
-                {
-                    OdjeljenjeID = 13,
-                    NazivOdjeljenja = "3A",
-                    SkolaID = 2,
-                    RazrednikID = 13
-                },
-                new Odjeljenje
-                {
-                    OdjeljenjeID = 14,
-                    NazivOdjeljenja = "4A",
-                    SkolaID = 2,
-                    RazrednikID = 14
                 }
             );
         }
@@ -1425,43 +1996,43 @@ namespace eDnevnik.Services
         {
             modelBuilder.Entity<OdjeljenjePredmet>().HasData(
                 new OdjeljenjePredmet { OdjeljenjePredmetID = 1, PredmetID = 1, OdjeljenjeID = 1 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 2, PredmetID = 1, OdjeljenjeID = 2 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 3, PredmetID = 1, OdjeljenjeID = 3 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 4, PredmetID = 3, OdjeljenjeID = 1 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 5, PredmetID = 3, OdjeljenjeID = 2 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 6, PredmetID = 3, OdjeljenjeID = 3 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 7, PredmetID = 5, OdjeljenjeID = 1 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 8, PredmetID = 5, OdjeljenjeID = 2 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 9, PredmetID = 5, OdjeljenjeID = 3 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 10, PredmetID = 7, OdjeljenjeID = 1 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 11, PredmetID = 7, OdjeljenjeID = 2 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 12, PredmetID = 7, OdjeljenjeID = 3 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 13, PredmetID = 9, OdjeljenjeID = 1 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 14, PredmetID = 9, OdjeljenjeID = 2 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 15, PredmetID = 9, OdjeljenjeID = 3 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 2, PredmetID = 3, OdjeljenjeID = 1 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 3, PredmetID = 5, OdjeljenjeID = 1 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 4, PredmetID = 7, OdjeljenjeID = 1 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 5, PredmetID = 9, OdjeljenjeID = 1 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 6, PredmetID = 11, OdjeljenjeID = 2 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 7, PredmetID = 12, OdjeljenjeID = 2 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 8, PredmetID = 13, OdjeljenjeID = 2 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 9, PredmetID = 14, OdjeljenjeID = 2 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 10, PredmetID = 15, OdjeljenjeID = 2 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 11, PredmetID = 16, OdjeljenjeID = 3 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 12, PredmetID = 17, OdjeljenjeID = 3 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 13, PredmetID = 18, OdjeljenjeID = 3 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 14, PredmetID = 19, OdjeljenjeID = 3 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 15, PredmetID = 20, OdjeljenjeID = 3 },
 
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 16, PredmetID = 11, OdjeljenjeID = 4 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 17, PredmetID = 11, OdjeljenjeID = 5 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 18, PredmetID = 12, OdjeljenjeID = 4 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 19, PredmetID = 12, OdjeljenjeID = 5 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 20, PredmetID = 13, OdjeljenjeID = 4 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 21, PredmetID = 13, OdjeljenjeID = 5 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 22, PredmetID = 14, OdjeljenjeID = 4 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 23, PredmetID = 14, OdjeljenjeID = 5 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 24, PredmetID = 15, OdjeljenjeID = 4 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 25, PredmetID = 15, OdjeljenjeID = 5 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 16, PredmetID = 21, OdjeljenjeID = 4 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 17, PredmetID = 22, OdjeljenjeID = 4 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 18, PredmetID = 23, OdjeljenjeID = 4 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 19, PredmetID = 24, OdjeljenjeID = 4 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 20, PredmetID = 25, OdjeljenjeID = 4 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 21, PredmetID = 2, OdjeljenjeID = 5 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 22, PredmetID = 4, OdjeljenjeID = 5 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 23, PredmetID = 6, OdjeljenjeID = 5 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 24, PredmetID = 8, OdjeljenjeID = 5 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 25, PredmetID = 10, OdjeljenjeID = 5 },
 
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 26, PredmetID = 16, OdjeljenjeID = 6 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 27, PredmetID = 17, OdjeljenjeID = 6 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 28, PredmetID = 18, OdjeljenjeID = 6 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 29, PredmetID = 19, OdjeljenjeID = 6 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 30, PredmetID = 20, OdjeljenjeID = 6 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 26, PredmetID = 26, OdjeljenjeID = 6 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 27, PredmetID = 27, OdjeljenjeID = 6 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 28, PredmetID = 28, OdjeljenjeID = 6 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 29, PredmetID = 29, OdjeljenjeID = 6 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 30, PredmetID = 30, OdjeljenjeID = 6 },
 
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 31, PredmetID = 21, OdjeljenjeID = 7 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 32, PredmetID = 22, OdjeljenjeID = 7 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 33, PredmetID = 23, OdjeljenjeID = 7 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 34, PredmetID = 24, OdjeljenjeID = 7 },
-                new OdjeljenjePredmet { OdjeljenjePredmetID = 35, PredmetID = 25, OdjeljenjeID = 7 }
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 31, PredmetID = 31, OdjeljenjeID = 7 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 32, PredmetID = 32, OdjeljenjeID = 7 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 33, PredmetID = 33, OdjeljenjeID = 7 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 34, PredmetID = 34, OdjeljenjeID = 7 },
+                new OdjeljenjePredmet { OdjeljenjePredmetID = 35, PredmetID = 35, OdjeljenjeID = 7 }
             );
         }
         private void SeedKorisniciUloge(ModelBuilder modelBuilder)
@@ -1594,7 +2165,7 @@ namespace eDnevnik.Services
                     Ime = "admin",
                     Prezime = "admin",
                     Email = "adminadmin@gmail.com",
-                    Telefon = "060000000",
+                    Telefon = "060 000 000",
                     KorisnickoIme = "admin",
                     LozinkaHash = "JfJzsL3ngGWki+Dn67C+8WLy73I=",
                     LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg==",
@@ -1605,78 +2176,78 @@ namespace eDnevnik.Services
                     Ime = "Amina",
                     Prezime = "Smajić",
                     Email = "amina.smajic@gmail.com",
-                    Telefon = "+38700000000",
+                    Telefon = "060 000 001",
                     KorisnickoIme = "amina",
                     LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=",
                     LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w=="
                 },
-                new Korisnik { KorisnikID = 3, Ime = "Tarik", Prezime = "Mehić", Email = "tarik.mehic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "tarik", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 4, Ime = "Denis", Prezime = "Musić", Email = "denis.music@gmail.com", Telefon = "060300400", KorisnickoIme = "denis", LozinkaHash = "JfJzsL3ngGWki+Dn67C+8WLy73I=", LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg==" },
-                new Korisnik { KorisnikID = 5, Ime = "Amar", Prezime = "Alić", Email = "amar.alic@gmail.com", Telefon = "+38700000001", KorisnickoIme = "amar", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 6, Ime = "Almir", Prezime = "Gogolo", Email = "almir.gogolo@gmail.com", Telefon = "+38700000002", KorisnickoIme = "almir", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 7, Ime = "Sefer", Prezime = "Seferović", Email = "sefer.seferovic@gmail.com", Telefon = "+38700000003", KorisnickoIme = "sefer", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 8, Ime = "Sinan", Prezime = "Ahmedovski", Email = "sinan.ahmedovski@gmail.com", Telefon = "+38700000004", KorisnickoIme = "sinan", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 9, Ime = "Iman", Prezime = "Gosto", Email = "iman.gosto@gmail.com", Telefon = "+38700000005", KorisnickoIme = "iman", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 10, Ime = "Imad", Prezime = "Alić", Email = "imad.alic@gmail.com", Telefon = "+38700000006", KorisnickoIme = "imad", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 11, Ime = "Benaid", Prezime = "Ahmetović", Email = "benaid.ahmetovic@gmail.com", Telefon = "+38700000007", KorisnickoIme = "benaid", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 12, Ime = "Azer", Prezime = "Sultanović", Email = "azer.sultanović@gmail.com", Telefon = "+38700000008", KorisnickoIme = "azer", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 13, Ime = "Goran", Prezime = "Škondrić", Email = "goran.skondric@gmail.com", Telefon = "+38700000009", KorisnickoIme = "goran", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 14, Ime = "Emina", Prezime = "Junuz", Email = "emina.junuz@gmail.com", Telefon = "+38700000010", KorisnickoIme = "emina", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 15, Ime = "Amel", Prezime = "Musić", Email = "student1@gmail.com", Telefon = "+38700000001", KorisnickoIme = "student1", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 16, Ime = "Dragi", Prezime = "Tiro", Email = "student2@gmail.com", Telefon = "+38700000002", KorisnickoIme = "student2", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 17, Ime = "Adil", Prezime = "Joldić", Email = "student3@gmail.com", Telefon = "+38700000003", KorisnickoIme = "student3", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 18, Ime = "Lejla", Prezime = "Jazvin", Email = "student4@gmail.com", Telefon = "+38700000004", KorisnickoIme = "student4", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 19, Ime = "Elmir", Prezime = "Babović", Email = "student5@gmail.com", Telefon = "+38700000005", KorisnickoIme = "student5", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 20, Ime = "Sanja", Prezime = "Kovač", Email = "student6@gmail.com", Telefon = "+38700000006", KorisnickoIme = "student6", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 21, Ime = "Faruk", Prezime = "Hasanović", Email = "student7@gmail.com", Telefon = "+38700000007", KorisnickoIme = "student7", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 22, Ime = "Amra", Prezime = "Smajović", Email = "student8@gmail.com", Telefon = "+38700000008", KorisnickoIme = "student8", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 23, Ime = "Nina", Prezime = "Hajrović", Email = "student9@gmail.com", Telefon = "+38700000009", KorisnickoIme = "student9", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 24, Ime = "Denis", Prezime = "Vuković", Email = "student10@gmail.com", Telefon = "+38700000010", KorisnickoIme = "student10", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
-                new Korisnik { KorisnikID = 25, Ime = "Emina", Prezime = "Avdić", Email = "student11@gmail.com", Telefon = "+38700000011", KorisnickoIme = "student11", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 3 },
-                new Korisnik { KorisnikID = 26, Ime = "Anja", Prezime = "Blagojević", Email = "student12@gmail.com", Telefon = "+38700000012", KorisnickoIme = "student12", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 3 },
-                new Korisnik { KorisnikID = 27, Ime = "Omer", Prezime = "Fetić", Email = "student13@gmail.com", Telefon = "+38700000013", KorisnickoIme = "student13", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 3 },
-                new Korisnik { KorisnikID = 28, Ime = "Lana", Prezime = "Hodžić", Email = "student14@gmail.com", Telefon = "+38700000014", KorisnickoIme = "student14", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 3 },
-                new Korisnik { KorisnikID = 29, Ime = "Tarik", Prezime = "Krajišnik", Email = "student15@gmail.com", Telefon = "+38700000015", KorisnickoIme = "student15", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 4 },
-                new Korisnik { KorisnikID = 30, Ime = "Iva", Prezime = "Milenić", Email = "student16@gmail.com", Telefon = "+38700000016", KorisnickoIme = "student16", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 4 },
-                new Korisnik { KorisnikID = 31, Ime = "Bojan", Prezime = "Pavlović", Email = "student17@gmail.com", Telefon = "+38700000017", KorisnickoIme = "student17", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 4 },
-                new Korisnik { KorisnikID = 32, Ime = "Maja", Prezime = "Savić", Email = "student18@gmail.com", Telefon = "+38700000018", KorisnickoIme = "student18", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 4 },
-                new Korisnik { KorisnikID = 33, Ime = "Alen", Prezime = "Todorović", Email = "student19@gmail.com", Telefon = "+38700000019", KorisnickoIme = "student19", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 5 },
-                new Korisnik { KorisnikID = 34, Ime = "Dina", Prezime = "Barić", Email = "student20@gmail.com", Telefon = "+38700000020", KorisnickoIme = "student20", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 5 },
-                new Korisnik { KorisnikID = 35, Ime = "Nedim", Prezime = "Kalinović", Email = "student21@gmail.com", Telefon = "+38700000021", KorisnickoIme = "student21", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 5 },
-                new Korisnik { KorisnikID = 36, Ime = "Mina", Prezime = "Milin", Email = "student22@gmail.com", Telefon = "+38700000022", KorisnickoIme = "student22", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 5 },
-                new Korisnik { KorisnikID = 37, Ime = "Semir", Prezime = "Džafić", Email = "student23@gmail.com", Telefon = "+38700000023", KorisnickoIme = "student23", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
-                new Korisnik { KorisnikID = 38, Ime = "Tamara", Prezime = "Nikolić", Email = "student24@gmail.com", Telefon = "+38700000024", KorisnickoIme = "student24", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
-                new Korisnik { KorisnikID = 39, Ime = "Zoran", Prezime = "Cvjetković", Email = "student25@gmail.com", Telefon = "+38700000025", KorisnickoIme = "student25", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
-                new Korisnik { KorisnikID = 40, Ime = "Anja", Prezime = "Lukić", Email = "student26@gmail.com", Telefon = "+38700000026", KorisnickoIme = "student26", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
-                new Korisnik { KorisnikID = 41, Ime = "Ramo", Prezime = "Hukić", Email = "student27@gmail.com", Telefon = "+38700000027", KorisnickoIme = "student27", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
-                new Korisnik { KorisnikID = 42, Ime = "Maida", Prezime = "Sulejmanović", Email = "student28@gmail.com", Telefon = "+38700000028", KorisnickoIme = "student28", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 43, Ime = "Mirela", Prezime = "Bajramović", Email = "student29@gmail.com", Telefon = "+38700000029", KorisnickoIme = "student29", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 44, Ime = "Filip", Prezime = "Lukić", Email = "student30@gmail.com", Telefon = "+38700000030", KorisnickoIme = "student30", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 45, Ime = "Mirza", Prezime = "Redžović", Email = "student31@gmail.com", Telefon = "+38700000031", KorisnickoIme = "student31", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 46, Ime = "Sara", Prezime = "Bulić", Email = "student32@gmail.com", Telefon = "+38700000032", KorisnickoIme = "student32", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
-                new Korisnik { KorisnikID = 47, Ime = "Svetlana", Prezime = "Trivić", Email = "student33@gmail.com", Telefon = "+38700000033", KorisnickoIme = "student33", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 9 },
-                new Korisnik { KorisnikID = 48, Ime = "Tarik", Prezime = "Banjac", Email = "student34@gmail.com", Telefon = "+38700000034", KorisnickoIme = "student34", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 9 },
-                new Korisnik { KorisnikID = 49, Ime = "Jasmina", Prezime = "Kovačević", Email = "student35@gmail.com", Telefon = "+38700000035", KorisnickoIme = "student35", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 9 },
-                new Korisnik { KorisnikID = 50, Ime = "Dino", Prezime = "Hodžić", Email = "student36@gmail.com", Telefon = "+38700000036", KorisnickoIme = "student36", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 10 },
-                new Korisnik { KorisnikID = 51, Ime = "Amar", Prezime = "Kovačević", Email = "student37@gmail.com", Telefon = "+38700000037", KorisnickoIme = "student37", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 10 },
-                new Korisnik { KorisnikID = 52, Ime = "Ivana", Prezime = "Savić", Email = "student38@gmail.com", Telefon = "+38700000038", KorisnickoIme = "student38", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 53, Ime = "Haris", Prezime = "Marić", Email = "student39@gmail.com", Telefon = "+38700000039", KorisnickoIme = "student39", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 54, Ime = "Selma", Prezime = "Džafić", Email = "student40@gmail.com", Telefon = "+38700000040", KorisnickoIme = "student40", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 55, Ime = "Marko", Prezime = "Lukić", Email = "student41@gmail.com", Telefon = "+38700000041", KorisnickoIme = "student41", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 56, Ime = "Aida", Prezime = "Halilović", Email = "student42@gmail.com", Telefon = "+38700000042", KorisnickoIme = "student42", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 57, Ime = "Džana", Prezime = "Begić", Email = "student43@gmail.com", Telefon = "+38700000043", KorisnickoIme = "student43", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 58, Ime = "Elma", Prezime = "Imamović", Email = "student44@gmail.com", Telefon = "+38700000044", KorisnickoIme = "student44", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 59, Ime = "Zlatan", Prezime = "Radić", Email = "student45@gmail.com", Telefon = "+38700000045", KorisnickoIme = "student45", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 60, Ime = "Anja", Prezime = "Petrović", Email = "student46@gmail.com", Telefon = "+38700000046", KorisnickoIme = "student46", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 61, Ime = "Dževad", Prezime = "Mehić", Email = "dzevad.mehic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "dzevad", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 62, Ime = "Anes", Prezime = "Horozović", Email = "anes.horozovic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "anes", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 63, Ime = "Nijaz", Prezime = "Kajtaz", Email = "nijaz.kajtaz@gmail.com", Telefon = "+38700000000", KorisnickoIme = "nijaz", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 64, Ime = "Enes", Prezime = "Čepalo", Email = "enes.cepalo@gmail.com", Telefon = "+38700000000", KorisnickoIme = "enes", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 65, Ime = "Esad", Prezime = "Mehić", Email = "esad.mehic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "esad", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 66, Ime = "Tarik", Prezime = "Čomor", Email = "tarik.comor@gmail.com", Telefon = "+38700000000", KorisnickoIme = "tarik2", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 67, Ime = "Armin", Prezime = "Palačkić", Email = "armin.palackic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "armin", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 68, Ime = "Jašar", Prezime = "Hozić", Email = "jasar.hozic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "jasar", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
-                new Korisnik { KorisnikID = 69, Ime = "Hamza", Prezime = "Memić", Email = "hamza.memic@gmail.com", Telefon = "+38700000000", KorisnickoIme = "hamza", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" }
+                new Korisnik { KorisnikID = 3, Ime = "Tarik", Prezime = "Mehić", Email = "tarik.mehic@gmail.com", Telefon = "060 000 002", KorisnickoIme = "tarik", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 4, Ime = "Denis", Prezime = "Musić", Email = "denis.music@gmail.com", Telefon = "060 000 003", KorisnickoIme = "denis", LozinkaHash = "JfJzsL3ngGWki+Dn67C+8WLy73I=", LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg==" },
+                new Korisnik { KorisnikID = 5, Ime = "Amar", Prezime = "Alić", Email = "amar.alic@gmail.com", Telefon = "060 000 004", KorisnickoIme = "amar", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 6, Ime = "Almir", Prezime = "Gogolo", Email = "almir.gogolo@gmail.com", Telefon = "060 000 005", KorisnickoIme = "almir", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 7, Ime = "Sefer", Prezime = "Seferović", Email = "sefer.seferovic@gmail.com", Telefon = "060 000 0006", KorisnickoIme = "sefer", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 8, Ime = "Sinan", Prezime = "Ahmedovski", Email = "sinan.ahmedovski@gmail.com", Telefon = "060 000 007", KorisnickoIme = "sinan", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 9, Ime = "Iman", Prezime = "Gosto", Email = "iman.gosto@gmail.com", Telefon = "060 000 008", KorisnickoIme = "iman", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 10, Ime = "Imad", Prezime = "Alić", Email = "imad.alic@gmail.com", Telefon = "060 000 009", KorisnickoIme = "imad", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 11, Ime = "Benaid", Prezime = "Ahmetović", Email = "benaid.ahmetovic@gmail.com", Telefon = "060 000 010", KorisnickoIme = "benaid", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 12, Ime = "Azer", Prezime = "Sultanović", Email = "azer.sultanović@gmail.com", Telefon = "060 000 011", KorisnickoIme = "azer", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 13, Ime = "Goran", Prezime = "Škondrić", Email = "goran.skondric@gmail.com", Telefon = "060 000 012", KorisnickoIme = "goran", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 14, Ime = "Emina", Prezime = "Junuz", Email = "emina.junuz@gmail.com", Telefon = "060 000 013", KorisnickoIme = "emina", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 15, Ime = "Amel", Prezime = "Musić", Email = "student1@gmail.com", Telefon = "060 000 014", KorisnickoIme = "student1", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 16, Ime = "Dragi", Prezime = "Tiro", Email = "student2@gmail.com", Telefon = "060 000 015", KorisnickoIme = "student2", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 17, Ime = "Adil", Prezime = "Joldić", Email = "student3@gmail.com", Telefon = "060 000 016", KorisnickoIme = "student3", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 18, Ime = "Lejla", Prezime = "Jazvin", Email = "student4@gmail.com", Telefon = "060 000 017", KorisnickoIme = "student4", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 19, Ime = "Elmir", Prezime = "Babović", Email = "student5@gmail.com", Telefon = "060 000 018", KorisnickoIme = "student5", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 20, Ime = "Sanja", Prezime = "Kovač", Email = "student6@gmail.com", Telefon = "060 000 019", KorisnickoIme = "student6", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
+                new Korisnik { KorisnikID = 21, Ime = "Faruk", Prezime = "Hasanović", Email = "student7@gmail.com", Telefon = "060 000 020", KorisnickoIme = "student7", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
+                new Korisnik { KorisnikID = 22, Ime = "Amra", Prezime = "Smajović", Email = "student8@gmail.com", Telefon = "060 000 021", KorisnickoIme = "student8", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
+                new Korisnik { KorisnikID = 23, Ime = "Nina", Prezime = "Hajrović", Email = "student9@gmail.com", Telefon = "060 000 022", KorisnickoIme = "student9", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
+                new Korisnik { KorisnikID = 24, Ime = "Denis", Prezime = "Vuković", Email = "student10@gmail.com", Telefon = "060 000 023", KorisnickoIme = "student10", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
+                new Korisnik { KorisnikID = 25, Ime = "Emina", Prezime = "Avdić", Email = "student11@gmail.com", Telefon = "060 000 024", KorisnickoIme = "student11", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
+                new Korisnik { KorisnikID = 26, Ime = "Anja", Prezime = "Blagojević", Email = "student12@gmail.com", Telefon = "060 000 025", KorisnickoIme = "student12", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 2 },
+                new Korisnik { KorisnikID = 27, Ime = "Omer", Prezime = "Fetić", Email = "student13@gmail.com", Telefon = "060 000 026", KorisnickoIme = "student13", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 3 },
+                new Korisnik { KorisnikID = 28, Ime = "Lana", Prezime = "Hodžić", Email = "student14@gmail.com", Telefon = "060 000 027", KorisnickoIme = "student14", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 3 },
+                new Korisnik { KorisnikID = 29, Ime = "Tarik", Prezime = "Krajišnik", Email = "student15@gmail.com", Telefon = "060 000 028", KorisnickoIme = "student15", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 3 },
+                new Korisnik { KorisnikID = 30, Ime = "Iva", Prezime = "Milenić", Email = "student16@gmail.com", Telefon = "060 000 029", KorisnickoIme = "student16", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 3 },
+                new Korisnik { KorisnikID = 31, Ime = "Bojan", Prezime = "Pavlović", Email = "student17@gmail.com", Telefon = "060 000 030", KorisnickoIme = "student17", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 3 },
+                new Korisnik { KorisnikID = 32, Ime = "Maja", Prezime = "Savić", Email = "student18@gmail.com", Telefon = "060 000 031", KorisnickoIme = "student18", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 3 },
+                new Korisnik { KorisnikID = 33, Ime = "Alen", Prezime = "Todorović", Email = "student19@gmail.com", Telefon = "060 000 032", KorisnickoIme = "student19", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 4 },
+                new Korisnik { KorisnikID = 34, Ime = "Dina", Prezime = "Barić", Email = "student20@gmail.com", Telefon = "060 000 033", KorisnickoIme = "student20", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 4 },
+                new Korisnik { KorisnikID = 35, Ime = "Nedim", Prezime = "Kalinović", Email = "student21@gmail.com", Telefon = "060 000 034", KorisnickoIme = "student21", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 4 },
+                new Korisnik { KorisnikID = 36, Ime = "Mina", Prezime = "Milin", Email = "student22@gmail.com", Telefon = "060 000 035", KorisnickoIme = "student22", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 4 },
+                new Korisnik { KorisnikID = 37, Ime = "Semir", Prezime = "Džafić", Email = "student23@gmail.com", Telefon = "060 000 036", KorisnickoIme = "student23", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 5 },
+                new Korisnik { KorisnikID = 38, Ime = "Tamara", Prezime = "Nikolić", Email = "student24@gmail.com", Telefon = "060 000 037", KorisnickoIme = "student24", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 5 },
+                new Korisnik { KorisnikID = 39, Ime = "Zoran", Prezime = "Cvjetković", Email = "student25@gmail.com", Telefon = "060 000 038", KorisnickoIme = "student25", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 5 },
+                new Korisnik { KorisnikID = 40, Ime = "Anja", Prezime = "Lukić", Email = "student26@gmail.com", Telefon = "060 000 039", KorisnickoIme = "student26", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 5 },
+                new Korisnik { KorisnikID = 41, Ime = "Ramo", Prezime = "Hukić", Email = "student27@gmail.com", Telefon = "060 000 040", KorisnickoIme = "student27", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 5 },
+                new Korisnik { KorisnikID = 42, Ime = "Maida", Prezime = "Sulejmanović", Email = "student28@gmail.com", Telefon = "060 000 041", KorisnickoIme = "student28", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 43, Ime = "Mirela", Prezime = "Bajramović", Email = "student29@gmail.com", Telefon = "060 000 042", KorisnickoIme = "student29", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 44, Ime = "Filip", Prezime = "Lukić", Email = "student30@gmail.com", Telefon = "060 000 043", KorisnickoIme = "student30", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 45, Ime = "Mirza", Prezime = "Redžović", Email = "student31@gmail.com", Telefon = "060 000 044", KorisnickoIme = "student31", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 46, Ime = "Sara", Prezime = "Bulić", Email = "student32@gmail.com", Telefon = "060 000 045", KorisnickoIme = "student32", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 1 },
+                new Korisnik { KorisnikID = 47, Ime = "Svetlana", Prezime = "Trivić", Email = "student33@gmail.com", Telefon = "060 000 046", KorisnickoIme = "student33", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
+                new Korisnik { KorisnikID = 48, Ime = "Tarik", Prezime = "Banjac", Email = "student34@gmail.com", Telefon = "060 000 047", KorisnickoIme = "student34", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
+                new Korisnik { KorisnikID = 49, Ime = "Jasmina", Prezime = "Kovačević", Email = "student35@gmail.com", Telefon = "060 000 048", KorisnickoIme = "student35", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
+                new Korisnik { KorisnikID = 50, Ime = "Dino", Prezime = "Hodžić", Email = "student36@gmail.com", Telefon = "060 000 049", KorisnickoIme = "student36", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
+                new Korisnik { KorisnikID = 51, Ime = "Amar", Prezime = "Kovačević", Email = "student37@gmail.com", Telefon = "060 000 050", KorisnickoIme = "student37", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==", OdjeljenjeID = 6 },
+                new Korisnik { KorisnikID = 52, Ime = "Ivana", Prezime = "Savić", Email = "student38@gmail.com", Telefon = "060 000 051", KorisnickoIme = "student38", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 53, Ime = "Haris", Prezime = "Marić", Email = "student39@gmail.com", Telefon = "060 000 052", KorisnickoIme = "student39", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 54, Ime = "Selma", Prezime = "Džafić", Email = "student40@gmail.com", Telefon = "060 000 053", KorisnickoIme = "student40", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 55, Ime = "Marko", Prezime = "Lukić", Email = "student41@gmail.com", Telefon = "060 000 054", KorisnickoIme = "student41", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 56, Ime = "Aida", Prezime = "Halilović", Email = "student42@gmail.com", Telefon = "060 000 055", KorisnickoIme = "student42", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 57, Ime = "Džana", Prezime = "Begić", Email = "student43@gmail.com", Telefon = "060 000 056", KorisnickoIme = "student43", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 58, Ime = "Elma", Prezime = "Imamović", Email = "student44@gmail.com", Telefon = "060 000 057", KorisnickoIme = "student44", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 59, Ime = "Zlatan", Prezime = "Radić", Email = "student45@gmail.com", Telefon = "060 000 058", KorisnickoIme = "student45", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 60, Ime = "Anja", Prezime = "Petrović", Email = "student46@gmail.com", Telefon = "060 000 059", KorisnickoIme = "student46", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 61, Ime = "Dževad", Prezime = "Mehić", Email = "dzevad.mehic@gmail.com", Telefon = "060 000 060", KorisnickoIme = "dzevad", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 62, Ime = "Anes", Prezime = "Horozović", Email = "anes.horozovic@gmail.com", Telefon = "060 000 061", KorisnickoIme = "anes", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 63, Ime = "Nijaz", Prezime = "Kajtaz", Email = "nijaz.kajtaz@gmail.com", Telefon = "060 000 062", KorisnickoIme = "nijaz", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 64, Ime = "Enes", Prezime = "Čepalo", Email = "enes.cepalo@gmail.com", Telefon = "060 000 063", KorisnickoIme = "enes", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 65, Ime = "Esad", Prezime = "Mehić", Email = "esad.mehic@gmail.com", Telefon = "060 000 064", KorisnickoIme = "esad", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 66, Ime = "Tarik", Prezime = "Čomor", Email = "tarik.comor@gmail.com", Telefon = "060 000 065", KorisnickoIme = "tarik2", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 67, Ime = "Armin", Prezime = "Palačkić", Email = "armin.palackic@gmail.com", Telefon = "060 000 066", KorisnickoIme = "armin", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 68, Ime = "Jašar", Prezime = "Hozić", Email = "jasar.hozic@gmail.com", Telefon = "060 000 067", KorisnickoIme = "jasar", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" },
+                new Korisnik { KorisnikID = 69, Ime = "Hamza", Prezime = "Memić", Email = "hamza.memic@gmail.com", Telefon = "060 000 068", KorisnickoIme = "hamza", LozinkaHash = "Tyitt2sn+I+DQuydy0SzIv8Olio=", LozinkaSalt = "iM34ef0JCEUAzA7lkWld9w==" }
                 );
         }
     }

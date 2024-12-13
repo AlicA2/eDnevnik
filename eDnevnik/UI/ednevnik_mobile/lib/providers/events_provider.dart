@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 class EventsProvider extends BaseProvider<Events> {
   EventsProvider(): super("Dogadjaji");
 
-  static const String _baseUrl = String.fromEnvironment("baseUrl", defaultValue: "https://10.0.2.2:7260/");
+  static const String _baseUrl = String.fromEnvironment("baseUrl", defaultValue: "http://10.0.2.2:7260/");
   static const String _endpoint = "Dogadjaji";
 
   @override
