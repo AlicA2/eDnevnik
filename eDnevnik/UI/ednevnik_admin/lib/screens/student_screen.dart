@@ -554,12 +554,12 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         }
 
         String? _validatePhone(String? value) {
-          final phoneRegex = RegExp(r'^\d{3} \d{3} \d{3}$');
+          final phoneRegex = RegExp(r'^\d{9,}$');
           if (value == null || value.isEmpty) {
             return "Unesite broj telefona";
           }
           if (!phoneRegex.hasMatch(value)) {
-            return "Telefon mora biti u formatu 000 000 000";
+            return "Unesite ispravan telefon (minimum 9 cifara, samo brojevi)";
           }
           if (_isDuplicatePhone(value)) {
             return "Ovaj telefon se već koristi";
@@ -952,12 +952,12 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         }
 
         String? _validatePhone(String? value) {
-          final phoneRegex = RegExp(r'^\d{3} \d{3} \d{3}$');
+          final phoneRegex = RegExp(r'^\d{9,}$');
           if (value == null || value.isEmpty) {
             return "Unesite broj telefona";
           }
           if (!phoneRegex.hasMatch(value)) {
-            return "Telefon mora biti u formatu 000 000 000";
+            return "Unesite ispravan telefon (minimum 9 cifara, samo brojevi)";
           }
           // if (_isDuplicatePhone(value)) {
           //   return "Ovaj telefon se već koristi";

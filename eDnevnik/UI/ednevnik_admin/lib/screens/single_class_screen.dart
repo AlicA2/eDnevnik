@@ -320,7 +320,7 @@ String? _validateOpis(String? value) {
         }
       }
     } catch (e) {
-      _showErrorDialog("Ne možete obrisati časovi koji su održani.");
+      _showErrorDialog("Ne možete obrisati časove koji su održani.");
     }
   }
 
