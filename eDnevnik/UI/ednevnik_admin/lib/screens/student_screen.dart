@@ -1002,8 +1002,8 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         return AlertDialog(
           title: Text("Uredi učenika/cu"),
           content: SizedBox(
-            width: 600,
-            height: 350,
+            width: 400,
+            height: 150,
             child: Form(
               key: _formKey,
               child: SingleChildScrollView(
