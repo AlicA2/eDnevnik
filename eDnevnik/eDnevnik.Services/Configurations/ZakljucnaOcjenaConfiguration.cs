@@ -11,6 +11,9 @@ namespace eDnevnik.Services.Configurations
             base.Configure(builder);
             builder.HasKey(z => z.ZakljucnaOcjenaID);
 
+            builder.Property(z => z.vrijednostZakljucneOcjene)
+               .HasPrecision(18, 2);
+
             builder.HasOne(z => z.Korisnik)
                    .WithMany()
                    .HasForeignKey(z => z.KorisnikID)
